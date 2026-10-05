@@ -1,0 +1,61 @@
+{
+  "schema_version": "3.0",
+  "product_name": "AI换脸涉案图像智能鉴伪与原始素材溯源系统",
+  "product_version": "0.4.0",
+  "runtime": {
+    "tasks_root": "{DATA_ROOT}/runtime/tasks",
+    "inbox_root": "{DATA_ROOT}/runtime/inbox",
+    "identity_cache": "{DATA_ROOT}/runtime/cache/identity",
+    "persistent_workers_enabled": true,
+    "persistent_startup_timeout_seconds": 180
+  },
+  "deepfake": {
+    "enabled": true,
+    "persistent_enabled": true,
+    "python": "{APP_ROOT}\\packaging_v0.3\\resources\\portable_python\\python.exe",
+    "python_args": ["-E", "-S", "-B"],
+    "runner": "{APP_ROOT}\\modules\\deepfake_detection\\run_deepfake_detection.py",
+    "install_root": "{APP_ROOT}\\packaging_v0.3\\resources\\deepfake_runtime",
+    "install_root_read_only": true,
+    "device": "cpu",
+    "timeout_seconds": 180,
+    "hide_console": true,
+    "extra_args": [],
+    "known_sha256": {
+      "executable": "bc67e52b77fa0559d4d6fe04f024dcdb4a8edf43128f80f7d70947e3da490203",
+      "spatial_model": "5bb4b33936eb3adc631828ea271a466d62070a2b8de1902e5d96122317534794",
+      "frequency_model": "2ec6828eb2a3151784667eb0c105f07cdb41de6ec2df587d28b2766ceee063eb",
+      "fusion_config": "8f76abeabb55da1119b28689e15ccd31eac7f1066e401e766987efbb4603e0b2",
+      "adapter": "373ce764a5b05c03c56b204414218df6ef7d4d8173ecba696f4b189b587f0f3b",
+      "adapter_runtime": "e117ef6aeef718c4ddbc5eb92e0a615f0239bebe85f7bd830a0963c245e9ef54",
+      "adapter_inspector": "f2b46b0102afcca041f8a173ac9e9279548483632ba4932f25a4086eede03dba"
+    },
+    "boundary_notice": {
+      "enabled": false,
+      "reason": "当前版本没有经独立验证的决策边界带，仅显示实际阈值差值。"
+    }
+  },
+  "identity": {
+    "persistent_enabled": true,
+    "executable": "{APP_ROOT}\\packaging_v0.3\\work\\dist\\app\\workers\\identity\\identity_worker.exe",
+    "worker_executable": "{APP_ROOT}\\packaging_v0.3\\work\\dist\\app\\workers\\identity\\identity_worker.exe",
+    "worker_executable_args": ["--persistent-worker"],
+    "library": "{APP_ROOT}\\packaging_v0.3\\resources\\data\\identity_library",
+    "top_k": 5,
+    "timeout_seconds": 180,
+    "ctx": -1,
+    "model_root": "{APP_ROOT}\\packaging_v0.3\\resources",
+    "offline": true
+  },
+  "source": {
+    "executable": "{APP_ROOT}\\packaging_v0.3\\work\\dist\\app\\workers\\source\\source_search.exe",
+    "library": "{APP_ROOT}\\packaging_v0.3\\resources\\data\\source_library",
+    "top_k": 5,
+    "timeout_seconds": 600
+  },
+  "frontend": {
+    "python": "{CURRENT_PYTHON}",
+    "address": "127.0.0.1",
+    "port": 8767
+  }
+}

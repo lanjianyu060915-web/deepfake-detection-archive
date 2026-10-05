@@ -1,0 +1,3265 @@
+{
+  "status": "source_export_ready_delta_building",
+  "exports": [
+    {
+      "path": "D:\\GitHub备份\\deepfake-detection-archive\\systems\\upgrade-20260921",
+      "file_count": 752,
+      "bytes": 59891074
+    },
+    {
+      "path": "D:\\GitHub备份\\deepfake-detection-archive\\upgrade-research",
+      "file_count": 57,
+      "bytes": 422185
+    }
+  ],
+  "forbidden_vendor_or_cache_exports": [],
+  "secret_audit": {
+    "text_files_scanned": 538,
+    "findings": [],
+    "method": "Static GitHub/provider/AWS/private-key/credentialed-URL and credential-literal pattern scan; values not emitted."
+  },
+  "source_export_files": [
+    {
+      "path": "systems/upgrade-20260921/audit_summary.json",
+      "bytes": 1108
+    },
+    {
+      "path": "systems/upgrade-20260921/BASELINE_INTEGRITY.md",
+      "bytes": 1143
+    },
+    {
+      "path": "systems/upgrade-20260921/build_release.ps1",
+      "bytes": 18671
+    },
+    {
+      "path": "systems/upgrade-20260921/CHANGELOG.md",
+      "bytes": 2349
+    },
+    {
+      "path": "systems/upgrade-20260921/check_environment.py",
+      "bytes": 10335
+    },
+    {
+      "path": "systems/upgrade-20260921/config.json",
+      "bytes": 9317
+    },
+    {
+      "path": "systems/upgrade-20260921/KNOWN_ISSUES.md",
+      "bytes": 4261
+    },
+    {
+      "path": "systems/upgrade-20260921/launcher.py",
+      "bytes": 2325
+    },
+    {
+      "path": "systems/upgrade-20260921/orchestrator.py",
+      "bytes": 98654
+    },
+    {
+      "path": "systems/upgrade-20260921/progress_events.py",
+      "bytes": 15075
+    },
+    {
+      "path": "systems/upgrade-20260921/pytest.ini",
+      "bytes": 165
+    },
+    {
+      "path": "systems/upgrade-20260921/README.md",
+      "bytes": 12827
+    },
+    {
+      "path": "systems/upgrade-20260921/RELEASE_MANIFEST.md",
+      "bytes": 2401
+    },
+    {
+      "path": "systems/upgrade-20260921/requirements-aigc-frozen.txt",
+      "bytes": 379
+    },
+    {
+      "path": "systems/upgrade-20260921/requirements.txt",
+      "bytes": 340
+    },
+    {
+      "path": "systems/upgrade-20260921/runtime_services.py",
+      "bytes": 41008
+    },
+    {
+      "path": "systems/upgrade-20260921/run_app.bat",
+      "bytes": 79
+    },
+    {
+      "path": "systems/upgrade-20260921/run_case.bat",
+      "bytes": 575
+    },
+    {
+      "path": "systems/upgrade-20260921/SHA256SUMS.csv",
+      "bytes": 12938
+    },
+    {
+      "path": "systems/upgrade-20260921/start.bat",
+      "bytes": 188
+    },
+    {
+      "path": "systems/upgrade-20260921/start.ps1",
+      "bytes": 3159
+    },
+    {
+      "path": "systems/upgrade-20260921/system_status.py",
+      "bytes": 36641
+    },
+    {
+      "path": "systems/upgrade-20260921/版本与测试说明.txt",
+      "bytes": 4917
+    },
+    {
+      "path": "systems/upgrade-20260921/decision/evidence_matrix.py",
+      "bytes": 10853
+    },
+    {
+      "path": "systems/upgrade-20260921/decision/open_set.py",
+      "bytes": 18285
+    },
+    {
+      "path": "systems/upgrade-20260921/decision/__init__.py",
+      "bytes": 672
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/AIGC_SOURCE_LOCATION_AUDIT.md",
+      "bytes": 5004
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/BASELINE_COPY_RECORD.md",
+      "bytes": 1411
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/BASELINE_INTEGRITY.md",
+      "bytes": 1143
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/BASELINE_V0.2_SHA256.csv",
+      "bytes": 4778686
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/CHATGPT_REVIEW_PACKAGE_README.md",
+      "bytes": 1132
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/CHATGPT_REVIEW_STATUS.md",
+      "bytes": 2253
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/DATABASE_AUDIT.md",
+      "bytes": 3007
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/DEPENDENCY_AUDIT.md",
+      "bytes": 2200
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/EQUIVALENT_DIFF.md",
+      "bytes": 172736
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/EXCEPTION_TEST.md",
+      "bytes": 682
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/FRONTEND_VERIFICATION.md",
+      "bytes": 1477
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/INTEGRATION_CASES.json",
+      "bytes": 1957
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/MODEL_AND_RUNTIME.md",
+      "bytes": 11571
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/MODIFIED_FILES.md",
+      "bytes": 3698
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/REGRESSION_TEST_PLAN.md",
+      "bytes": 3117
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/REGRESSION_TEST_REPORT.md",
+      "bytes": 7399
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/RUN_STATUS.md",
+      "bytes": 1535
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/THREE_MODULE_ARCHITECTURE.md",
+      "bytes": 5601
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/THREE_MODULE_GUIDE.md",
+      "bytes": 6990
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/TWO_SEARCH_INTEGRATION_REPORT.md",
+      "bytes": 3082
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/acceptance/screenshots/01_系统启动就绪.png",
+      "bytes": 45814
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/acceptance/screenshots/02_AIGC动态运行过程.png",
+      "bytes": 81206
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/acceptance/screenshots/03_身份搜索动态运行过程.png",
+      "bytes": 71047
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/acceptance/screenshots/04_底图库扫描数量进度.png",
+      "bytes": 64704
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/acceptance/screenshots/05_底图局部复核进度.png",
+      "bytes": 64705
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/acceptance/screenshots/06_三模块最终证据汇总.png",
+      "bytes": 77974
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/acceptance/screenshots/07_AIGC完整解释.png",
+      "bytes": 80287
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/acceptance/screenshots/08_身份搜索完整解释.png",
+      "bytes": 84428
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/acceptance/screenshots/09_底图搜索完整解释.png",
+      "bytes": 85645
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/acceptance/screenshots/10_完整检测报告页面.png",
+      "bytes": 76675
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/aigc_fix/修复前关键文件SHA256.csv",
+      "bytes": 17821
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/aigc_fix/模型根因与checkpoint审计.md",
+      "bytes": 10937
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/aigc_fix/自动化测试说明.md",
+      "bytes": 3050
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/backend_tests.log",
+      "bytes": 101
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/baseline_aigc_boundaries.json",
+      "bytes": 16588
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/baseline_aigc_boundaries.log",
+      "bytes": 3970
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/baseline_integrated_002_003.json",
+      "bytes": 13955
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/baseline_integrated_002_003.log",
+      "bytes": 4156
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/baseline_manifest_summary.json",
+      "bytes": 592
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/baseline_manifest_verification.json",
+      "bytes": 471
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/baseline_real_smoke.log",
+      "bytes": 3573
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/baseline_real_smoke_summary.json",
+      "bytes": 10301
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/check_environment.log",
+      "bytes": 2103
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/frontend_tests.log",
+      "bytes": 1792
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/system_status.log",
+      "bytes": 12881
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/.deepfake_service_result.json",
+      "bytes": 2530
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/.identity_service_result.json",
+      "bytes": 1454
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/detection_result.json",
+      "bytes": 2530
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/identity_result.json",
+      "bytes": 1497
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/query.jpg",
+      "bytes": 295848
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/source_result.json",
+      "bytes": 2293
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/source_result.runtime.log",
+      "bytes": 426
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/task_status.json",
+      "bytes": 3378
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/unified_result.json",
+      "bytes": 761
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/logs/deepfake.json",
+      "bytes": 798
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/logs/deepfake.log",
+      "bytes": 243
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/logs/deepfake_command.json",
+      "bytes": 462
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/logs/deepfake_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/logs/deepfake_stdout.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/logs/identity.json",
+      "bytes": 798
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/logs/identity.log",
+      "bytes": 243
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/logs/identity_command.json",
+      "bytes": 549
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/logs/identity_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/logs/identity_stdout.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/logs/orchestrator.log",
+      "bytes": 194
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/logs/progress.json",
+      "bytes": 2006
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/logs/source.json",
+      "bytes": 787
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/logs/source.log",
+      "bytes": 242
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/logs/source_command.json",
+      "bytes": 1082
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/logs/source_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/logs/source_stdout.log",
+      "bytes": 2293
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/visualizations/source_result_8b1c6f43491d_match_001.jpg",
+      "bytes": 8493124
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/visualizations/source_result_8b1c6f43491d_match_002.jpg",
+      "bytes": 1923413
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/visualizations/source_result_8b1c6f43491d_match_003.jpg",
+      "bytes": 1723016
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/visualizations/source_result_8b1c6f43491d_match_004.jpg",
+      "bytes": 1756218
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/visualizations/source_result_8b1c6f43491d_match_005.jpg",
+      "bytes": 2279997
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/visualizations/deepfake/20260825T234018_4a567de90446/frame_predictions.csv",
+      "bytes": 307
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/visualizations/deepfake/20260825T234018_4a567de90446/report.html",
+      "bytes": 3886
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/visualizations/deepfake/20260825T234018_4a567de90446/result.json",
+      "bytes": 3745
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/visualizations/deepfake/20260825T234018_4a567de90446/runtime.log",
+      "bytes": 101
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260825_234018_7127/visualizations/deepfake/20260825T234018_4a567de90446/keyframes/keyframe_01.jpg",
+      "bytes": 10884
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/.deepfake_service_result.json",
+      "bytes": 2527
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/.identity_service_result.json",
+      "bytes": 1452
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/detection_result.json",
+      "bytes": 2527
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/identity_result.json",
+      "bytes": 1495
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/query.jpg",
+      "bytes": 52719
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/source_result.json",
+      "bytes": 2276
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/source_result.runtime.log",
+      "bytes": 426
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/task_status.json",
+      "bytes": 3381
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/unified_result.json",
+      "bytes": 764
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/logs/deepfake.json",
+      "bytes": 798
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/logs/deepfake.log",
+      "bytes": 243
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/logs/deepfake_command.json",
+      "bytes": 461
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/logs/deepfake_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/logs/deepfake_stdout.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/logs/identity.json",
+      "bytes": 798
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/logs/identity.log",
+      "bytes": 243
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/logs/identity_command.json",
+      "bytes": 549
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/logs/identity_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/logs/identity_stdout.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/logs/orchestrator.log",
+      "bytes": 194
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/logs/progress.json",
+      "bytes": 2006
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/logs/source.json",
+      "bytes": 789
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/logs/source.log",
+      "bytes": 242
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/logs/source_command.json",
+      "bytes": 1082
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/logs/source_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/logs/source_stdout.log",
+      "bytes": 2276
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/visualizations/source_result_fc9999f381a4_match_001.jpg",
+      "bytes": 1427502
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/visualizations/source_result_fc9999f381a4_match_002.jpg",
+      "bytes": 497313
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/visualizations/source_result_fc9999f381a4_match_003.jpg",
+      "bytes": 531014
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/visualizations/source_result_fc9999f381a4_match_004.jpg",
+      "bytes": 722347
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/visualizations/source_result_fc9999f381a4_match_005.jpg",
+      "bytes": 623473
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/visualizations/deepfake/20260826T000222_3e68efba7da2/frame_predictions.csv",
+      "bytes": 306
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/visualizations/deepfake/20260826T000222_3e68efba7da2/report.html",
+      "bytes": 3883
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/visualizations/deepfake/20260826T000222_3e68efba7da2/result.json",
+      "bytes": 3730
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/visualizations/deepfake/20260826T000222_3e68efba7da2/runtime.log",
+      "bytes": 100
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000222_b59a/visualizations/deepfake/20260826T000222_3e68efba7da2/keyframes/keyframe_01.jpg",
+      "bytes": 13375
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/.deepfake_service_result.json",
+      "bytes": 2529
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/.identity_service_result.json",
+      "bytes": 1454
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/detection_result.json",
+      "bytes": 2529
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/identity_result.json",
+      "bytes": 1497
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/query.jpg",
+      "bytes": 36905
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/source_result.json",
+      "bytes": 2281
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/source_result.runtime.log",
+      "bytes": 426
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/task_status.json",
+      "bytes": 3382
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/unified_result.json",
+      "bytes": 765
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/logs/deepfake.json",
+      "bytes": 798
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/logs/deepfake.log",
+      "bytes": 243
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/logs/deepfake_command.json",
+      "bytes": 462
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/logs/deepfake_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/logs/deepfake_stdout.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/logs/identity.json",
+      "bytes": 798
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/logs/identity.log",
+      "bytes": 243
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/logs/identity_command.json",
+      "bytes": 548
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/logs/identity_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/logs/identity_stdout.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/logs/orchestrator.log",
+      "bytes": 194
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/logs/progress.json",
+      "bytes": 2006
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/logs/source.json",
+      "bytes": 790
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/logs/source.log",
+      "bytes": 242
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/logs/source_command.json",
+      "bytes": 1082
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/logs/source_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/logs/source_stdout.log",
+      "bytes": 2281
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/visualizations/source_result_e7d701f05d0f_match_001.jpg",
+      "bytes": 1266608
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/visualizations/source_result_e7d701f05d0f_match_002.jpg",
+      "bytes": 527527
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/visualizations/source_result_e7d701f05d0f_match_003.jpg",
+      "bytes": 649532
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/visualizations/source_result_e7d701f05d0f_match_004.jpg",
+      "bytes": 492161
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/visualizations/source_result_e7d701f05d0f_match_005.jpg",
+      "bytes": 603966
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/visualizations/deepfake/20260826T000258_3f62ac334a2f/frame_predictions.csv",
+      "bytes": 306
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/visualizations/deepfake/20260826T000258_3f62ac334a2f/report.html",
+      "bytes": 3883
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/visualizations/deepfake/20260826T000258_3f62ac334a2f/result.json",
+      "bytes": 3745
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/visualizations/deepfake/20260826T000258_3f62ac334a2f/runtime.log",
+      "bytes": 101
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000258_4347/visualizations/deepfake/20260826T000258_3f62ac334a2f/keyframes/keyframe_01.jpg",
+      "bytes": 17653
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000354_afee/.deepfake_service_result.json",
+      "bytes": 2525
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000354_afee/detection_result.json",
+      "bytes": 2525
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000354_afee/identity_result.json",
+      "bytes": 303
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000354_afee/query.jpg",
+      "bytes": 2713
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000354_afee/source_result.json",
+      "bytes": 303
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000354_afee/task_status.json",
+      "bytes": 3350
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000354_afee/unified_result.json",
+      "bytes": 742
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000354_afee/logs/deepfake.json",
+      "bytes": 798
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000354_afee/logs/deepfake.log",
+      "bytes": 243
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000354_afee/logs/deepfake_command.json",
+      "bytes": 461
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000354_afee/logs/deepfake_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000354_afee/logs/deepfake_stdout.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000354_afee/logs/identity.json",
+      "bytes": 800
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000354_afee/logs/identity.log",
+      "bytes": 242
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000354_afee/logs/identity_command.json",
+      "bytes": 250
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000354_afee/logs/identity_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000354_afee/logs/identity_stdout.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000354_afee/logs/orchestrator.log",
+      "bytes": 177
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000354_afee/logs/progress.json",
+      "bytes": 1142
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000354_afee/logs/source.json",
+      "bytes": 793
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000354_afee/logs/source.log",
+      "bytes": 240
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000354_afee/logs/source_command.json",
+      "bytes": 246
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000354_afee/logs/source_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000354_afee/logs/source_stdout.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000354_afee/visualizations/deepfake/20260826T000354_3e822eeba147/frame_predictions.csv",
+      "bytes": 304
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000354_afee/visualizations/deepfake/20260826T000354_3e822eeba147/report.html",
+      "bytes": 3882
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000354_afee/visualizations/deepfake/20260826T000354_3e822eeba147/result.json",
+      "bytes": 3726
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000354_afee/visualizations/deepfake/20260826T000354_3e822eeba147/runtime.log",
+      "bytes": 100
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000354_afee/visualizations/deepfake/20260826T000354_3e822eeba147/keyframes/keyframe_01.jpg",
+      "bytes": 7708
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_26f1/.deepfake_service_result.json",
+      "bytes": 2527
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_26f1/detection_result.json",
+      "bytes": 2527
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_26f1/identity_result.json",
+      "bytes": 303
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_26f1/query.jpg",
+      "bytes": 3394
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_26f1/source_result.json",
+      "bytes": 303
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_26f1/task_status.json",
+      "bytes": 3350
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_26f1/unified_result.json",
+      "bytes": 742
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_26f1/logs/deepfake.json",
+      "bytes": 798
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_26f1/logs/deepfake.log",
+      "bytes": 243
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_26f1/logs/deepfake_command.json",
+      "bytes": 461
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_26f1/logs/deepfake_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_26f1/logs/deepfake_stdout.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_26f1/logs/identity.json",
+      "bytes": 800
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_26f1/logs/identity.log",
+      "bytes": 242
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_26f1/logs/identity_command.json",
+      "bytes": 250
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_26f1/logs/identity_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_26f1/logs/identity_stdout.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_26f1/logs/orchestrator.log",
+      "bytes": 177
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_26f1/logs/progress.json",
+      "bytes": 1142
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_26f1/logs/source.json",
+      "bytes": 792
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_26f1/logs/source.log",
+      "bytes": 240
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_26f1/logs/source_command.json",
+      "bytes": 246
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_26f1/logs/source_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_26f1/logs/source_stdout.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_26f1/visualizations/deepfake/20260826T000355_05a1623be405/frame_predictions.csv",
+      "bytes": 306
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_26f1/visualizations/deepfake/20260826T000355_05a1623be405/report.html",
+      "bytes": 3882
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_26f1/visualizations/deepfake/20260826T000355_05a1623be405/result.json",
+      "bytes": 3736
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_26f1/visualizations/deepfake/20260826T000355_05a1623be405/runtime.log",
+      "bytes": 100
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_26f1/visualizations/deepfake/20260826T000355_05a1623be405/keyframes/keyframe_01.jpg",
+      "bytes": 9893
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_7972/.deepfake_service_result.json",
+      "bytes": 2576
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_7972/detection_result.json",
+      "bytes": 2576
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_7972/identity_result.json",
+      "bytes": 303
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_7972/query.jpg",
+      "bytes": 13645
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_7972/source_result.json",
+      "bytes": 303
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_7972/task_status.json",
+      "bytes": 3350
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_7972/unified_result.json",
+      "bytes": 744
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_7972/logs/deepfake.json",
+      "bytes": 799
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_7972/logs/deepfake.log",
+      "bytes": 243
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_7972/logs/deepfake_command.json",
+      "bytes": 462
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_7972/logs/deepfake_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_7972/logs/deepfake_stdout.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_7972/logs/identity.json",
+      "bytes": 801
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_7972/logs/identity.log",
+      "bytes": 242
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_7972/logs/identity_command.json",
+      "bytes": 250
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_7972/logs/identity_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_7972/logs/identity_stdout.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_7972/logs/orchestrator.log",
+      "bytes": 177
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_7972/logs/progress.json",
+      "bytes": 1142
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_7972/logs/source.json",
+      "bytes": 792
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_7972/logs/source.log",
+      "bytes": 240
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_7972/logs/source_command.json",
+      "bytes": 246
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_7972/logs/source_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_7972/logs/source_stdout.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_7972/visualizations/deepfake/20260826T000355_6e4d3b371c4f/frame_predictions.csv",
+      "bytes": 272
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_7972/visualizations/deepfake/20260826T000355_6e4d3b371c4f/report.html",
+      "bytes": 3967
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_7972/visualizations/deepfake/20260826T000355_6e4d3b371c4f/result.json",
+      "bytes": 3093
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/baseline_test_results/case_20260826_000355_7972/visualizations/deepfake/20260826T000355_6e4d3b371c4f/runtime.log",
+      "bytes": 215
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/delivery/FINAL_DELIVERY_VERIFICATION.json",
+      "bytes": 1635
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/delivery/使用说明.txt",
+      "bytes": 13400
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/delivery/安装包SHA256.txt",
+      "bytes": 1352
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/delivery/版本与测试说明.txt",
+      "bytes": 14268
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/regression_evidence_validation.json",
+      "bytes": 2416
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/v0.2_v0.3_query001_comparison.json",
+      "bytes": 11247
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/v0.2_v0.3_query001_comparison.txt",
+      "bytes": 2802
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/v0.3_aigc_boundaries.log",
+      "bytes": 6125
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/v0.3_aigc_boundaries_summary.json",
+      "bytes": 20548
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/v0.3_no_face_postfix.log",
+      "bytes": 4040
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/v0.3_no_face_postfix_summary.json",
+      "bytes": 10717
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/v0.3_query001.log",
+      "bytes": 4527
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/v0.3_query001_summary.json",
+      "bytes": 11622
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/v0.3_query002_003.log",
+      "bytes": 5954
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/v0.3_query002_003_summary.json",
+      "bytes": 16557
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/.deepfake_service_result.json",
+      "bytes": 7383
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/.identity_service_result.json",
+      "bytes": 9599
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/detection_result.json",
+      "bytes": 7489
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/final_report.json",
+      "bytes": 79386
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/identity_result.json",
+      "bytes": 9980
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/query.jpg",
+      "bytes": 295848
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/source_result.json",
+      "bytes": 11345
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/source_result.runtime.log",
+      "bytes": 2738
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/task_status.json",
+      "bytes": 4513
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/unified_result.json",
+      "bytes": 1033
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/检测结果_case_20260826_001607_552e.html",
+      "bytes": 8866
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/检测结果_case_20260826_001607_552e.txt",
+      "bytes": 7613
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/logs/deepfake.json",
+      "bytes": 764
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/logs/deepfake.log",
+      "bytes": 243
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/logs/deepfake_command.json",
+      "bytes": 440
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/logs/deepfake_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/logs/deepfake_stdout.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/logs/identity.json",
+      "bytes": 764
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/logs/identity.log",
+      "bytes": 243
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/logs/identity_command.json",
+      "bytes": 527
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/logs/identity_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/logs/identity_stdout.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/logs/orchestrator.log",
+      "bytes": 194
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/logs/progress.json",
+      "bytes": 13620
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/logs/progress_events.jsonl",
+      "bytes": 63204
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/logs/progress_events.lock",
+      "bytes": 1
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/logs/progress_latest.json",
+      "bytes": 533
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/logs/source.json",
+      "bytes": 755
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/logs/source.log",
+      "bytes": 242
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/logs/source_command.json",
+      "bytes": 1436
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/logs/source_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/logs/source_stdout.log",
+      "bytes": 11248
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/visualizations/source_result_8b1c6f43491d_match_001.jpg",
+      "bytes": 8493124
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/visualizations/source_result_8b1c6f43491d_match_002.jpg",
+      "bytes": 1923413
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/visualizations/source_result_8b1c6f43491d_match_003.jpg",
+      "bytes": 1723016
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/visualizations/source_result_8b1c6f43491d_match_004.jpg",
+      "bytes": 1756218
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/visualizations/source_result_8b1c6f43491d_match_005.jpg",
+      "bytes": 2279997
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/visualizations/source_result_8b1c6f43491d_query_face_masked.jpg",
+      "bytes": 633915
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/visualizations/deepfake/20260826T001607_b44b730bace8/frame_predictions.csv",
+      "bytes": 308
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/visualizations/deepfake/20260826T001607_b44b730bace8/report.html",
+      "bytes": 3886
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/visualizations/deepfake/20260826T001607_b44b730bace8/result.json",
+      "bytes": 3730
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/visualizations/deepfake/20260826T001607_b44b730bace8/runtime.log",
+      "bytes": 101
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_001607_552e/visualizations/deepfake/20260826T001607_b44b730bace8/keyframes/keyframe_01.jpg",
+      "bytes": 10884
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/.deepfake_service_result.json",
+      "bytes": 7383
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/.identity_service_result.json",
+      "bytes": 9427
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/detection_result.json",
+      "bytes": 7491
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/final_report.json",
+      "bytes": 78602
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/identity_result.json",
+      "bytes": 9805
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/query.jpg",
+      "bytes": 52719
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/source_result.json",
+      "bytes": 11231
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/source_result.runtime.log",
+      "bytes": 2742
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/task_status.json",
+      "bytes": 4514
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/unified_result.json",
+      "bytes": 1033
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/检测结果_case_20260826_002255_45d9.html",
+      "bytes": 8855
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/检测结果_case_20260826_002255_45d9.txt",
+      "bytes": 7602
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/logs/deepfake.json",
+      "bytes": 765
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/logs/deepfake.log",
+      "bytes": 243
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/logs/deepfake_command.json",
+      "bytes": 440
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/logs/deepfake_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/logs/deepfake_stdout.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/logs/identity.json",
+      "bytes": 764
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/logs/identity.log",
+      "bytes": 243
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/logs/identity_command.json",
+      "bytes": 527
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/logs/identity_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/logs/identity_stdout.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/logs/orchestrator.log",
+      "bytes": 194
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/logs/progress.json",
+      "bytes": 13616
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/logs/progress_events.jsonl",
+      "bytes": 71321
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/logs/progress_events.lock",
+      "bytes": 1
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/logs/progress_latest.json",
+      "bytes": 533
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/logs/source.json",
+      "bytes": 755
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/logs/source.log",
+      "bytes": 242
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/logs/source_command.json",
+      "bytes": 1436
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/logs/source_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/logs/source_stdout.log",
+      "bytes": 11134
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/visualizations/source_result_fc9999f381a4_match_001.jpg",
+      "bytes": 1427502
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/visualizations/source_result_fc9999f381a4_match_002.jpg",
+      "bytes": 497313
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/visualizations/source_result_fc9999f381a4_match_003.jpg",
+      "bytes": 531014
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/visualizations/source_result_fc9999f381a4_match_004.jpg",
+      "bytes": 722347
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/visualizations/source_result_fc9999f381a4_match_005.jpg",
+      "bytes": 623473
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/visualizations/source_result_fc9999f381a4_query_face_masked.jpg",
+      "bytes": 72097
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/visualizations/deepfake/20260826T002255_7ae6b910a701/frame_predictions.csv",
+      "bytes": 306
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/visualizations/deepfake/20260826T002255_7ae6b910a701/report.html",
+      "bytes": 3883
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/visualizations/deepfake/20260826T002255_7ae6b910a701/result.json",
+      "bytes": 3720
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/visualizations/deepfake/20260826T002255_7ae6b910a701/runtime.log",
+      "bytes": 100
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002255_45d9/visualizations/deepfake/20260826T002255_7ae6b910a701/keyframes/keyframe_01.jpg",
+      "bytes": 13375
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/.deepfake_service_result.json",
+      "bytes": 7407
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/.identity_service_result.json",
+      "bytes": 9426
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/detection_result.json",
+      "bytes": 7515
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/final_report.json",
+      "bytes": 78792
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/identity_result.json",
+      "bytes": 9805
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/query.jpg",
+      "bytes": 36905
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/source_result.json",
+      "bytes": 11277
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/source_result.runtime.log",
+      "bytes": 2740
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/task_status.json",
+      "bytes": 4520
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/unified_result.json",
+      "bytes": 1037
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/检测结果_case_20260826_002414_64bf.html",
+      "bytes": 8874
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/检测结果_case_20260826_002414_64bf.txt",
+      "bytes": 7621
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/logs/deepfake.json",
+      "bytes": 765
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/logs/deepfake.log",
+      "bytes": 243
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/logs/deepfake_command.json",
+      "bytes": 440
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/logs/deepfake_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/logs/deepfake_stdout.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/logs/identity.json",
+      "bytes": 765
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/logs/identity.log",
+      "bytes": 243
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/logs/identity_command.json",
+      "bytes": 527
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/logs/identity_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/logs/identity_stdout.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/logs/orchestrator.log",
+      "bytes": 194
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/logs/progress.json",
+      "bytes": 13616
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/logs/progress_events.jsonl",
+      "bytes": 53217
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/logs/progress_events.lock",
+      "bytes": 1
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/logs/progress_latest.json",
+      "bytes": 533
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/logs/source.json",
+      "bytes": 756
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/logs/source.log",
+      "bytes": 242
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/logs/source_command.json",
+      "bytes": 1436
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/logs/source_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/logs/source_stdout.log",
+      "bytes": 11179
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/visualizations/source_result_e7d701f05d0f_match_001.jpg",
+      "bytes": 1266608
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/visualizations/source_result_e7d701f05d0f_match_002.jpg",
+      "bytes": 527527
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/visualizations/source_result_e7d701f05d0f_match_003.jpg",
+      "bytes": 649532
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/visualizations/source_result_e7d701f05d0f_match_004.jpg",
+      "bytes": 492161
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/visualizations/source_result_e7d701f05d0f_match_005.jpg",
+      "bytes": 603966
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/visualizations/source_result_e7d701f05d0f_query_face_masked.jpg",
+      "bytes": 50396
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/visualizations/deepfake/20260826T002414_57aa879f33bc/frame_predictions.csv",
+      "bytes": 307
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/visualizations/deepfake/20260826T002414_57aa879f33bc/report.html",
+      "bytes": 3883
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/visualizations/deepfake/20260826T002414_57aa879f33bc/result.json",
+      "bytes": 3734
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/visualizations/deepfake/20260826T002414_57aa879f33bc/runtime.log",
+      "bytes": 101
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002414_64bf/visualizations/deepfake/20260826T002414_57aa879f33bc/keyframes/keyframe_01.jpg",
+      "bytes": 17653
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/.deepfake_service_result.json",
+      "bytes": 7382
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/detection_result.json",
+      "bytes": 7489
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/final_report.json",
+      "bytes": 25562
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/identity_result.json",
+      "bytes": 728
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/query.jpg",
+      "bytes": 2713
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/source_result.json",
+      "bytes": 723
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/task_status.json",
+      "bytes": 4509
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/unified_result.json",
+      "bytes": 1015
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/检测结果_case_20260826_002534_2abe.html",
+      "bytes": 6394
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/检测结果_case_20260826_002534_2abe.txt",
+      "bytes": 5141
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/logs/deepfake.json",
+      "bytes": 765
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/logs/deepfake.log",
+      "bytes": 243
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/logs/deepfake_command.json",
+      "bytes": 440
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/logs/deepfake_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/logs/deepfake_stdout.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/logs/identity.json",
+      "bytes": 768
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/logs/identity.log",
+      "bytes": 242
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/logs/identity_command.json",
+      "bytes": 239
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/logs/identity_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/logs/identity_stdout.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/logs/orchestrator.log",
+      "bytes": 177
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/logs/progress.json",
+      "bytes": 9961
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/logs/progress_events.jsonl",
+      "bytes": 7837
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/logs/progress_events.lock",
+      "bytes": 1
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/logs/progress_latest.json",
+      "bytes": 532
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/logs/source.json",
+      "bytes": 759
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/logs/source.log",
+      "bytes": 240
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/logs/source_command.json",
+      "bytes": 235
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/logs/source_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/logs/source_stdout.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/visualizations/deepfake/20260826T002534_212a8c1a8094/frame_predictions.csv",
+      "bytes": 305
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/visualizations/deepfake/20260826T002534_212a8c1a8094/report.html",
+      "bytes": 3882
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/visualizations/deepfake/20260826T002534_212a8c1a8094/result.json",
+      "bytes": 3716
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/visualizations/deepfake/20260826T002534_212a8c1a8094/runtime.log",
+      "bytes": 100
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002534_2abe/visualizations/deepfake/20260826T002534_212a8c1a8094/keyframes/keyframe_01.jpg",
+      "bytes": 7708
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/.deepfake_service_result.json",
+      "bytes": 7401
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/detection_result.json",
+      "bytes": 7511
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/final_report.json",
+      "bytes": 25628
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/identity_result.json",
+      "bytes": 727
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/query.jpg",
+      "bytes": 3394
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/source_result.json",
+      "bytes": 723
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/task_status.json",
+      "bytes": 4511
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/unified_result.json",
+      "bytes": 1017
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/检测结果_case_20260826_002535_42e8.html",
+      "bytes": 6412
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/检测结果_case_20260826_002535_42e8.txt",
+      "bytes": 5159
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/logs/deepfake.json",
+      "bytes": 766
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/logs/deepfake.log",
+      "bytes": 243
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/logs/deepfake_command.json",
+      "bytes": 440
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/logs/deepfake_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/logs/deepfake_stdout.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/logs/identity.json",
+      "bytes": 767
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/logs/identity.log",
+      "bytes": 242
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/logs/identity_command.json",
+      "bytes": 239
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/logs/identity_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/logs/identity_stdout.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/logs/orchestrator.log",
+      "bytes": 177
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/logs/progress.json",
+      "bytes": 9965
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/logs/progress_events.jsonl",
+      "bytes": 7841
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/logs/progress_events.lock",
+      "bytes": 1
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/logs/progress_latest.json",
+      "bytes": 531
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/logs/source.json",
+      "bytes": 759
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/logs/source.log",
+      "bytes": 240
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/logs/source_command.json",
+      "bytes": 235
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/logs/source_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/logs/source_stdout.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/visualizations/deepfake/20260826T002535_39399616254f/frame_predictions.csv",
+      "bytes": 307
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/visualizations/deepfake/20260826T002535_39399616254f/report.html",
+      "bytes": 3882
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/visualizations/deepfake/20260826T002535_39399616254f/result.json",
+      "bytes": 3726
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/visualizations/deepfake/20260826T002535_39399616254f/runtime.log",
+      "bytes": 100
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002535_42e8/visualizations/deepfake/20260826T002535_39399616254f/keyframes/keyframe_01.jpg",
+      "bytes": 9893
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002536_55f5/.deepfake_service_result.json",
+      "bytes": 6913
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002536_55f5/detection_result.json",
+      "bytes": 7023
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002536_55f5/final_report.json",
+      "bytes": 24750
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002536_55f5/identity_result.json",
+      "bytes": 727
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002536_55f5/query.jpg",
+      "bytes": 13645
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002536_55f5/source_result.json",
+      "bytes": 724
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002536_55f5/task_status.json",
+      "bytes": 4509
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002536_55f5/unified_result.json",
+      "bytes": 1016
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002536_55f5/检测结果_case_20260826_002536_55f5.html",
+      "bytes": 6193
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002536_55f5/检测结果_case_20260826_002536_55f5.txt",
+      "bytes": 4940
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002536_55f5/logs/deepfake.json",
+      "bytes": 766
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002536_55f5/logs/deepfake.log",
+      "bytes": 243
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002536_55f5/logs/deepfake_command.json",
+      "bytes": 440
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002536_55f5/logs/deepfake_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002536_55f5/logs/deepfake_stdout.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002536_55f5/logs/identity.json",
+      "bytes": 767
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002536_55f5/logs/identity.log",
+      "bytes": 242
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002536_55f5/logs/identity_command.json",
+      "bytes": 239
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002536_55f5/logs/identity_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002536_55f5/logs/identity_stdout.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002536_55f5/logs/orchestrator.log",
+      "bytes": 177
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002536_55f5/logs/progress.json",
+      "bytes": 9894
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002536_55f5/logs/progress_events.jsonl",
+      "bytes": 7770
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002536_55f5/logs/progress_events.lock",
+      "bytes": 1
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002536_55f5/logs/progress_latest.json",
+      "bytes": 532
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002536_55f5/logs/source.json",
+      "bytes": 760
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002536_55f5/logs/source.log",
+      "bytes": 240
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002536_55f5/logs/source_command.json",
+      "bytes": 235
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002536_55f5/logs/source_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002536_55f5/logs/source_stdout.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002536_55f5/visualizations/deepfake/20260826T002536_e9cb20baa82f/frame_predictions.csv",
+      "bytes": 272
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002536_55f5/visualizations/deepfake/20260826T002536_e9cb20baa82f/report.html",
+      "bytes": 3967
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002536_55f5/visualizations/deepfake/20260826T002536_e9cb20baa82f/result.json",
+      "bytes": 3082
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002536_55f5/visualizations/deepfake/20260826T002536_e9cb20baa82f/runtime.log",
+      "bytes": 215
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002835_3829/.deepfake_service_result.json",
+      "bytes": 6906
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002835_3829/detection_result.json",
+      "bytes": 7014
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002835_3829/final_report.json",
+      "bytes": 24731
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002835_3829/identity_result.json",
+      "bytes": 727
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002835_3829/query.jpg",
+      "bytes": 13645
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002835_3829/source_result.json",
+      "bytes": 723
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002835_3829/task_status.json",
+      "bytes": 4505
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002835_3829/unified_result.json",
+      "bytes": 1014
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002835_3829/检测结果_case_20260826_002835_3829.html",
+      "bytes": 6193
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002835_3829/检测结果_case_20260826_002835_3829.txt",
+      "bytes": 4940
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002835_3829/logs/deepfake.json",
+      "bytes": 765
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002835_3829/logs/deepfake.log",
+      "bytes": 243
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002835_3829/logs/deepfake_command.json",
+      "bytes": 440
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002835_3829/logs/deepfake_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002835_3829/logs/deepfake_stdout.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002835_3829/logs/identity.json",
+      "bytes": 767
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002835_3829/logs/identity.log",
+      "bytes": 242
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002835_3829/logs/identity_command.json",
+      "bytes": 239
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002835_3829/logs/identity_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002835_3829/logs/identity_stdout.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002835_3829/logs/orchestrator.log",
+      "bytes": 177
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002835_3829/logs/progress.json",
+      "bytes": 8951
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002835_3829/logs/progress_events.jsonl",
+      "bytes": 7041
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002835_3829/logs/progress_events.lock",
+      "bytes": 1
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002835_3829/logs/progress_latest.json",
+      "bytes": 532
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002835_3829/logs/source.json",
+      "bytes": 759
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002835_3829/logs/source.log",
+      "bytes": 240
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002835_3829/logs/source_command.json",
+      "bytes": 235
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002835_3829/logs/source_stderr.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002835_3829/logs/source_stdout.log",
+      "bytes": 0
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002835_3829/visualizations/deepfake/20260826T002836_49fdb4b84717/frame_predictions.csv",
+      "bytes": 272
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002835_3829/visualizations/deepfake/20260826T002836_49fdb4b84717/report.html",
+      "bytes": 3967
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002835_3829/visualizations/deepfake/20260826T002836_49fdb4b84717/result.json",
+      "bytes": 3080
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/regression_test_results/case_20260826_002835_3829/visualizations/deepfake/20260826T002836_49fdb4b84717/runtime.log",
+      "bytes": 215
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/test_results/check_environment_v0.3.log",
+      "bytes": 1912
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/test_results/port_collision_regression.json",
+      "bytes": 871
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/test_results/pytest_full.log",
+      "bytes": 99
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/test_results/system_status_v0.3.log",
+      "bytes": 12933
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/upgrade_v0.4.0/baseline_before_sha256.csv",
+      "bytes": 1888527
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/upgrade_v0.4.0/baseline_case_20260831_114829_c45e.json",
+      "bytes": 1732
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/upgrade_v0.4.0/交付说明.txt",
+      "bytes": 3112
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/upgrade_v0.4.0/关键源码变更清单.txt",
+      "bytes": 6551
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/upgrade_v0.4.0/前端可视化升级说明.md",
+      "bytes": 2769
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/upgrade_v0.4.0/升级前后结果对比.md",
+      "bytes": 1466
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/upgrade_v0.4.0/后端中间证据接口说明.md",
+      "bytes": 3234
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/upgrade_v0.4.0/回归测试报告.md",
+      "bytes": 7220
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/upgrade_v0.4.0/回归测试矩阵.json",
+      "bytes": 14497
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/upgrade_v0.4.0/回归测试矩阵.md",
+      "bytes": 14699
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/upgrade_v0.4.0/安装验收报告.md",
+      "bytes": 7212
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/upgrade_v0.4.0/已知限制.md",
+      "bytes": 1288
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/upgrade_v0.4.0/底图溯源后端中间证据接口说明.md",
+      "bytes": 5171
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/upgrade_v0.4.0/底图溯源真实回归测试报告.md",
+      "bytes": 3659
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/upgrade_v0.4.0/用户使用说明.txt",
+      "bytes": 2549
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/upgrade_v0.4.0/绝对路径与离线依赖审计.txt",
+      "bytes": 9250
+    },
+    {
+      "path": "systems/upgrade-20260921/docs/upgrade_v0.4.0/身份检索后端中间证据与回归.md",
+      "bytes": 6640
+    },
+    {
+      "path": "systems/upgrade-20260921/examples/aigc_fake_image.jpg",
+      "bytes": 2713
+    },
+    {
+      "path": "systems/upgrade-20260921/examples/aigc_real_image.jpg",
+      "bytes": 3394
+    },
+    {
+      "path": "systems/upgrade-20260921/examples/integrated_query_001.jpg",
+      "bytes": 295848
+    },
+    {
+      "path": "systems/upgrade-20260921/examples/integrated_query_002.jpg",
+      "bytes": 52719
+    },
+    {
+      "path": "systems/upgrade-20260921/examples/integrated_query_003.jpg",
+      "bytes": 36905
+    },
+    {
+      "path": "systems/upgrade-20260921/examples/no_face_image.jpg",
+      "bytes": 13645
+    },
+    {
+      "path": "systems/upgrade-20260921/examples/README.md",
+      "bytes": 636
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/app.py",
+      "bytes": 40428
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/FRONTEND_INTEGRATION_REPORT.md",
+      "bytes": 3393
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/README.md",
+      "bytes": 2635
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/requirements.txt",
+      "bytes": 22
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/TASK_DIRECTORY_CONTRACT.md",
+      "bytes": 2403
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/components/data_loader.py",
+      "bytes": 23281
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/components/evidence_dashboard.py",
+      "bytes": 78514
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/components/explainability.py",
+      "bytes": 803
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/components/live_progress.py",
+      "bytes": 10727
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/components/path_security.py",
+      "bytes": 6085
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/components/report_views.py",
+      "bytes": 6399
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/components/result_views.py",
+      "bytes": 22018
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/components/status_adapter.py",
+      "bytes": 6860
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/components/__init__.py",
+      "bytes": 47
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/mock_results/detection_result.json",
+      "bytes": 454
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/mock_results/identity_result.json",
+      "bytes": 1069
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/mock_results/source_result.json",
+      "bytes": 1184
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/mock_task/detection_result.json",
+      "bytes": 441
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/mock_task/identity_result.json",
+      "bytes": 876
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/mock_task/query.svg",
+      "bytes": 370
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/mock_task/README.md",
+      "bytes": 266
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/mock_task/source_result.json",
+      "bytes": 986
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/mock_task/visualizations/task_match_001.svg",
+      "bytes": 415
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/mock_task/visualizations/task_match_002.svg",
+      "bytes": 415
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/mock_task/visualizations/task_match_003.svg",
+      "bytes": 415
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/mock_task/visualizations/task_match_004.svg",
+      "bytes": 415
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/mock_task/visualizations/task_match_005.svg",
+      "bytes": 415
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/sample_data/PLACEHOLDERS.md",
+      "bytes": 263
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/sample_data/identity_libraries/demo/person_001/reference.svg",
+      "bytes": 338
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/sample_data/identity_libraries/demo/person_002/reference.svg",
+      "bytes": 338
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/sample_data/identity_libraries/demo/person_003/reference.svg",
+      "bytes": 338
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/sample_data/identity_libraries/demo/person_004/reference.svg",
+      "bytes": 338
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/sample_data/identity_libraries/demo/person_005/reference.svg",
+      "bytes": 338
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/sample_data/queries/mock_query.svg",
+      "bytes": 370
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/sample_data/source_libraries/demo/source_001.svg",
+      "bytes": 344
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/sample_data/source_libraries/demo/source_002.svg",
+      "bytes": 342
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/sample_data/source_libraries/demo/source_003.svg",
+      "bytes": 343
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/sample_data/source_libraries/demo/source_004.svg",
+      "bytes": 343
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/sample_data/source_libraries/demo/source_005.svg",
+      "bytes": 342
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/sample_data/visualizations/match_001.svg",
+      "bytes": 463
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/sample_data/visualizations/match_002.svg",
+      "bytes": 463
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/sample_data/visualizations/match_003.svg",
+      "bytes": 463
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/sample_data/visualizations/match_004.svg",
+      "bytes": 463
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/sample_data/visualizations/match_005.svg",
+      "bytes": 463
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/tests/disabled_services_config.json",
+      "bytes": 934
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/tests/evidence_harness_app.py",
+      "bytes": 1517
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/tests/test_evidence_dashboard.py",
+      "bytes": 8341
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/tests/test_explainability_reporting.py",
+      "bytes": 27319
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/tests/test_three_module_frontend.py",
+      "bytes": 10309
+    },
+    {
+      "path": "systems/upgrade-20260921/frontend/tests/verify_evidence_state_regression.py",
+      "bytes": 4006
+    },
+    {
+      "path": "systems/upgrade-20260921/manifests/A_CODE_SHA256.csv",
+      "bytes": 1406
+    },
+    {
+      "path": "systems/upgrade-20260921/manifests/B_CODE_SHA256.csv",
+      "bytes": 2190
+    },
+    {
+      "path": "systems/upgrade-20260921/manifests/INPUT_DATA_SHA256.csv",
+      "bytes": 23121
+    },
+    {
+      "path": "systems/upgrade-20260921/manifests/MODEL_ACTUAL_SHA256.csv",
+      "bytes": 928
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/deepfake_detection/AIGC_VISUAL_EVIDENCE_ACCEPTANCE.md",
+      "bytes": 4024
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/deepfake_detection/inspect_installed_archive.py",
+      "bytes": 880
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/deepfake_detection/persistent_worker.py",
+      "bytes": 9168
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/deepfake_detection/pyinstaller_pyz_runtime.py",
+      "bytes": 10548
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/deepfake_detection/README.md",
+      "bytes": 4065
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/deepfake_detection/run_deepfake_detection.py",
+      "bytes": 29158
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/deepfake_detection_v2/frozen_branch.py",
+      "bytes": 5045
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/deepfake_detection_v2/persistent_worker_v2.py",
+      "bytes": 13513
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/deepfake_detection_v2/README.md",
+      "bytes": 2337
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/deepfake_detection_v2/vit_detector.py",
+      "bytes": 6923
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/identity_search/MODEL_POLICY.md",
+      "bytes": 501
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/identity_search/persistent_worker.py",
+      "bytes": 13343
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/identity_search/README.md",
+      "bytes": 5624
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/identity_search/requirements.txt",
+      "bytes": 269
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/identity_search/run_identity_search.py",
+      "bytes": 325
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/identity_search/identity_search/cli.py",
+      "bytes": 14992
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/identity_search/identity_search/errors.py",
+      "bytes": 1544
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/identity_search/identity_search/evidence.py",
+      "bytes": 20177
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/identity_search/identity_search/extractor.py",
+      "bytes": 8566
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/identity_search/identity_search/model.py",
+      "bytes": 4889
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/identity_search/identity_search/searcher.py",
+      "bytes": 46379
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/identity_search/identity_search/__init__.py",
+      "bytes": 112
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/identity_search_v2/persistent_worker_v2.py",
+      "bytes": 10019
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/identity_search_v2/run_identity_search_v2.py",
+      "bytes": 9912
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/identity_search_v2/scale_fallback.py",
+      "bytes": 5604
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/source_search/README.md",
+      "bytes": 6312
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/source_search/requirements.lock.txt",
+      "bytes": 287
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/source_search/requirements.txt",
+      "bytes": 67
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/source_search/run_source_search.py",
+      "bytes": 9600
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/source_search/source_search/face_mask.py",
+      "bytes": 1709
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/source_search/source_search/global_features.py",
+      "bytes": 4837
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/source_search/source_search/image_io.py",
+      "bytes": 2066
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/source_search/source_search/local_matcher.py",
+      "bytes": 7725
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/source_search/source_search/pipeline.py",
+      "bytes": 36663
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/source_search/source_search/visualizer.py",
+      "bytes": 5762
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/source_search/source_search/__init__.py",
+      "bytes": 124
+    },
+    {
+      "path": "systems/upgrade-20260921/modules/video_frames_v2/run_video_frames_v2.py",
+      "bytes": 21388
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging/config.packaged.json",
+      "bytes": 818
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging/THIRD_PARTY_AND_DATA_NOTICE.md",
+      "bytes": 1263
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging/installer/build_installer.ps1",
+      "bytes": 3412
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging/installer/换脸寻源双搜索系统.iss",
+      "bytes": 2428
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging/pyinstaller/frontend.spec",
+      "bytes": 1749
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging/pyinstaller/frontend_version_info.txt",
+      "bytes": 920
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging/pyinstaller/identity_search.spec",
+      "bytes": 2074
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging/pyinstaller/identity_version_info.txt",
+      "bytes": 717
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging/pyinstaller/source_search.spec",
+      "bytes": 1387
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging/pyinstaller/source_version_info.txt",
+      "bytes": 715
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging/requirements/frontend-build.lock.txt",
+      "bytes": 238
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging/requirements/worker-build.lock.txt",
+      "bytes": 308
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging/scripts/assemble_app.ps1",
+      "bytes": 4743
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging/scripts/export_runtime_licenses.py",
+      "bytes": 4728
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging/scripts/test_dist.ps1",
+      "bytes": 8264
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging/scripts/verify_source_hashes.ps1",
+      "bytes": 3229
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging/scripts/write_release_metadata.ps1",
+      "bytes": 6282
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging/src/app_launcher.py",
+      "bytes": 9083
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging/tests/run_business_smoke.py",
+      "bytes": 3495
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging/tests/test_install.ps1",
+      "bytes": 12184
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging/tests/verify_dist.py",
+      "bytes": 4501
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging_v0.3/build_installer_v0.3.ps1",
+      "bytes": 13958
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging_v0.3/config.packaged.json",
+      "bytes": 3174
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging_v0.3/README.md",
+      "bytes": 3555
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging_v0.3/resource_allowlist.json",
+      "bytes": 758
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging_v0.3/static_validation.json",
+      "bytes": 438
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging_v0.3/THIRD_PARTY_AND_DATA_NOTICE.md",
+      "bytes": 793
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging_v0.3/installer/换脸寻源系统_v0.3.iss",
+      "bytes": 2878
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging_v0.3/pyinstaller/frontend.spec",
+      "bytes": 3897
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging_v0.3/pyinstaller/frontend_version_info.txt",
+      "bytes": 844
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging_v0.3/pyinstaller/identity_version_info.txt",
+      "bytes": 720
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging_v0.3/pyinstaller/identity_worker.spec",
+      "bytes": 2321
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging_v0.3/pyinstaller/source_search.spec",
+      "bytes": 1427
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging_v0.3/pyinstaller/source_version_info.txt",
+      "bytes": 716
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging_v0.3/requirements/frontend-build.lock.txt",
+      "bytes": 38
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging_v0.3/requirements/worker-build.lock.txt",
+      "bytes": 146
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging_v0.3/scripts/assemble_app_v0.3.ps1",
+      "bytes": 9467
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging_v0.3/scripts/New-ApprovedResourceManifest.ps1",
+      "bytes": 4112
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging_v0.3/scripts/Test-PackagingStatic.ps1",
+      "bytes": 13608
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging_v0.3/scripts/Update-PackagedResourceHashes.ps1",
+      "bytes": 3736
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging_v0.3/src/app_launcher.py",
+      "bytes": 18957
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging_v0.3/src/identity_worker_entry.py",
+      "bytes": 440
+    },
+    {
+      "path": "systems/upgrade-20260921/packaging_v0.3/src/stop_system.ps1",
+      "bytes": 5441
+    },
+    {
+      "path": "systems/upgrade-20260921/reporting/explainability.py",
+      "bytes": 55234
+    },
+    {
+      "path": "systems/upgrade-20260921/reporting/report_builder.py",
+      "bytes": 35866
+    },
+    {
+      "path": "systems/upgrade-20260921/reporting/__init__.py",
+      "bytes": 833
+    },
+    {
+      "path": "systems/upgrade-20260921/tests/build_installed_business_evidence.py",
+      "bytes": 8037
+    },
+    {
+      "path": "systems/upgrade-20260921/tests/build_v040_regression_matrix_report.py",
+      "bytes": 18661
+    },
+    {
+      "path": "systems/upgrade-20260921/tests/README.md",
+      "bytes": 761
+    },
+    {
+      "path": "systems/upgrade-20260921/tests/run_and_capture.py",
+      "bytes": 1451
+    },
+    {
+      "path": "systems/upgrade-20260921/tests/run_real_integration.py",
+      "bytes": 4019
+    },
+    {
+      "path": "systems/upgrade-20260921/tests/test_aigc_model_resource_contract.py",
+      "bytes": 19324
+    },
+    {
+      "path": "systems/upgrade-20260921/tests/test_deepfake_visual_evidence.py",
+      "bytes": 9960
+    },
+    {
+      "path": "systems/upgrade-20260921/tests/test_evidence_manifest.py",
+      "bytes": 2136
+    },
+    {
+      "path": "systems/upgrade-20260921/tests/test_identity_persistent_worker_v2.py",
+      "bytes": 16486
+    },
+    {
+      "path": "systems/upgrade-20260921/tests/test_identity_scale_fallback.py",
+      "bytes": 5623
+    },
+    {
+      "path": "systems/upgrade-20260921/tests/test_identity_visual_evidence.py",
+      "bytes": 7502
+    },
+    {
+      "path": "systems/upgrade-20260921/tests/test_open_set_decision.py",
+      "bytes": 13074
+    },
+    {
+      "path": "systems/upgrade-20260921/tests/test_orchestrator_contract.py",
+      "bytes": 4721
+    },
+    {
+      "path": "systems/upgrade-20260921/tests/test_packaging_launcher.py",
+      "bytes": 5468
+    },
+    {
+      "path": "systems/upgrade-20260921/tests/test_regression_evidence_artifacts.py",
+      "bytes": 911
+    },
+    {
+      "path": "systems/upgrade-20260921/tests/test_runtime_services.py",
+      "bytes": 6282
+    },
+    {
+      "path": "systems/upgrade-20260921/tests/test_source_visual_evidence.py",
+      "bytes": 8896
+    },
+    {
+      "path": "systems/upgrade-20260921/tests/test_three_module_backend.py",
+      "bytes": 16000
+    },
+    {
+      "path": "systems/upgrade-20260921/tests/test_v040_regression_edges.py",
+      "bytes": 2934
+    },
+    {
+      "path": "systems/upgrade-20260921/tests/test_v3_module_diagnostics.py",
+      "bytes": 10963
+    },
+    {
+      "path": "systems/upgrade-20260921/tests/test_video_orchestration.py",
+      "bytes": 11511
+    },
+    {
+      "path": "systems/upgrade-20260921/tests/test_video_pipeline.py",
+      "bytes": 19669
+    },
+    {
+      "path": "systems/upgrade-20260921/tests/verify_identity_real_regression.py",
+      "bytes": 8448
+    },
+    {
+      "path": "systems/upgrade-20260921/tests/verify_live_frontend.py",
+      "bytes": 3392
+    },
+    {
+      "path": "systems/upgrade-20260921/tests/verify_v040_regression_matrix.py",
+      "bytes": 13582
+    },
+    {
+      "path": "systems/upgrade-20260921/tests/fixtures/failing_identity_runner.py",
+      "bytes": 681
+    },
+    {
+      "path": "systems/upgrade-20260921/tests/fixtures/failing_video_runner.py",
+      "bytes": 870
+    },
+    {
+      "path": "systems/upgrade-20260921/tests/fixtures/fake_video_runner.py",
+      "bytes": 2950
+    },
+    {
+      "path": "systems/upgrade-20260921/tests/fixtures/mock_persistent_worker.py",
+      "bytes": 2492
+    },
+    {
+      "path": "systems/upgrade-20260921/tests/fixtures/not_an_image.txt",
+      "bytes": 153
+    },
+    {
+      "path": "systems/upgrade-20260921/tests/fixtures/README.md",
+      "bytes": 555
+    },
+    {
+      "path": "systems/upgrade-20260921/tests/fixtures/slow_search_runner.py",
+      "bytes": 234
+    },
+    {
+      "path": "systems/upgrade-20260921/tests/fixtures/successful_source_runner.py",
+      "bytes": 840
+    },
+    {
+      "path": "systems/upgrade-20260921/tools/generate_equivalent_diff.py",
+      "bytes": 6285
+    },
+    {
+      "path": "systems/upgrade-20260921/tools/Rebuild-BaselineManifest.ps1",
+      "bytes": 3080
+    },
+    {
+      "path": "systems/upgrade-20260921/tools/Test-BaselineManifest.ps1",
+      "bytes": 3747
+    },
+    {
+      "path": "systems/upgrade-20260921/tools/verify_regression_evidence.py",
+      "bytes": 25967
+    },
+    {
+      "path": "systems/upgrade-20260921/video_pipeline/aggregate.py",
+      "bytes": 41203
+    },
+    {
+      "path": "systems/upgrade-20260921/video_pipeline/selection.py",
+      "bytes": 12845
+    },
+    {
+      "path": "systems/upgrade-20260921/video_pipeline/__init__.py",
+      "bytes": 1089
+    },
+    {
+      "path": "upgrade-research/README.md",
+      "bytes": 4135
+    },
+    {
+      "path": "upgrade-research/docs/M1_开放集三态与证据质量层.md",
+      "bytes": 12777
+    },
+    {
+      "path": "upgrade-research/docs/M2_人脸预处理_尺度回退实验.md",
+      "bytes": 11893
+    },
+    {
+      "path": "upgrade-research/docs/M3_二代鉴伪检测器_选型校准与集成.md",
+      "bytes": 11859
+    },
+    {
+      "path": "upgrade-research/docs/M3_展示层适配_二代内核与证据分带.md",
+      "bytes": 5220
+    },
+    {
+      "path": "upgrade-research/docs/M3_检测器鲁棒性评测.md",
+      "bytes": 11319
+    },
+    {
+      "path": "upgrade-research/docs/M4.1_视频级分带校准.md",
+      "bytes": 17056
+    },
+    {
+      "path": "upgrade-research/docs/M4_视频入口.md",
+      "bytes": 27188
+    },
+    {
+      "path": "upgrade-research/docs/V0.4.0_系统深度解析.md",
+      "bytes": 29431
+    },
+    {
+      "path": "upgrade-research/docs/升级方案评审与路线.md",
+      "bytes": 7497
+    },
+    {
+      "path": "upgrade-research/experiments/baseline/compute_aigc_metrics.py",
+      "bytes": 4476
+    },
+    {
+      "path": "upgrade-research/experiments/baseline/run_aigc_baseline.py",
+      "bytes": 5012
+    },
+    {
+      "path": "upgrade-research/experiments/freeze/freeze_source_system.py",
+      "bytes": 4093
+    },
+    {
+      "path": "upgrade-research/experiments/m1_open_set/calibrate_open_set.py",
+      "bytes": 11295
+    },
+    {
+      "path": "upgrade-research/experiments/m1_open_set/extract_source_signals.py",
+      "bytes": 3027
+    },
+    {
+      "path": "upgrade-research/experiments/m1_open_set/run_identity_holdout.py",
+      "bytes": 3370
+    },
+    {
+      "path": "upgrade-research/experiments/m1_open_set/run_source_holdout.py",
+      "bytes": 2960
+    },
+    {
+      "path": "upgrade-research/experiments/m1_open_set/test_render_paths_m1.py",
+      "bytes": 5769
+    },
+    {
+      "path": "upgrade-research/experiments/m1_open_set/verify_open_set_e2e.py",
+      "bytes": 6875
+    },
+    {
+      "path": "upgrade-research/experiments/m1_open_set/_render_probe_m1.py",
+      "bytes": 1892
+    },
+    {
+      "path": "upgrade-research/experiments/m2_preprocess/build_montage.py",
+      "bytes": 1169
+    },
+    {
+      "path": "upgrade-research/experiments/m2_preprocess/eval_cross_scale_fallback.py",
+      "bytes": 4914
+    },
+    {
+      "path": "upgrade-research/experiments/m2_preprocess/eval_identity_multiscale.py",
+      "bytes": 4651
+    },
+    {
+      "path": "upgrade-research/experiments/m2_preprocess/probe_face_recovery.py",
+      "bytes": 4384
+    },
+    {
+      "path": "upgrade-research/experiments/m2_preprocess/probe_persistent_worker_v2.py",
+      "bytes": 15093
+    },
+    {
+      "path": "upgrade-research/experiments/m2_preprocess/run_identity_v2_batch.py",
+      "bytes": 5930
+    },
+    {
+      "path": "upgrade-research/experiments/m3_detector/build_v2_calibration.py",
+      "bytes": 8102
+    },
+    {
+      "path": "upgrade-research/experiments/m3_detector/cross_domain_eval.py",
+      "bytes": 7478
+    },
+    {
+      "path": "upgrade-research/experiments/m3_detector/download_models.py",
+      "bytes": 1874
+    },
+    {
+      "path": "upgrade-research/experiments/m3_detector/eval_dataset.py",
+      "bytes": 5267
+    },
+    {
+      "path": "upgrade-research/experiments/m3_detector/eval_swan_df.py",
+      "bytes": 10702
+    },
+    {
+      "path": "upgrade-research/experiments/m3_detector/fusion_eval.py",
+      "bytes": 11314
+    },
+    {
+      "path": "upgrade-research/experiments/m3_detector/m3_calibration.py",
+      "bytes": 4397
+    },
+    {
+      "path": "upgrade-research/experiments/m3_detector/onnx_validate.py",
+      "bytes": 5072
+    },
+    {
+      "path": "upgrade-research/experiments/m3_detector/robustness_eval.py",
+      "bytes": 13521
+    },
+    {
+      "path": "upgrade-research/experiments/m3_detector/robust_fusion_eval.py",
+      "bytes": 3460
+    },
+    {
+      "path": "upgrade-research/experiments/m3_detector/run_v040_batch.py",
+      "bytes": 6203
+    },
+    {
+      "path": "upgrade-research/experiments/m3_detector/test_render_paths.py",
+      "bytes": 1071
+    },
+    {
+      "path": "upgrade-research/experiments/m3_detector/test_report_text.py",
+      "bytes": 863
+    },
+    {
+      "path": "upgrade-research/experiments/m3_detector/test_service_integration.py",
+      "bytes": 3631
+    },
+    {
+      "path": "upgrade-research/experiments/m3_detector/test_v2_worker.py",
+      "bytes": 5783
+    },
+    {
+      "path": "upgrade-research/experiments/m3_detector/ui_contract_check.py",
+      "bytes": 1654
+    },
+    {
+      "path": "upgrade-research/experiments/m3_detector/verify_v2_batch.py",
+      "bytes": 6344
+    },
+    {
+      "path": "upgrade-research/experiments/m3_detector/_env.py",
+      "bytes": 775
+    },
+    {
+      "path": "upgrade-research/experiments/m3_detector/_render_probe.py",
+      "bytes": 823
+    },
+    {
+      "path": "upgrade-research/experiments/m4_video/analyze_m4_results.py",
+      "bytes": 8035
+    },
+    {
+      "path": "upgrade-research/experiments/m4_video/download_swan_df.py",
+      "bytes": 4113
+    },
+    {
+      "path": "upgrade-research/experiments/m4_video/probe_overview_app.py",
+      "bytes": 2942
+    },
+    {
+      "path": "upgrade-research/experiments/m4_video/run_m4_video_eval.py",
+      "bytes": 12982
+    },
+    {
+      "path": "upgrade-research/experiments/m4_video_calibration/calibrate_video_bands.py",
+      "bytes": 15535
+    },
+    {
+      "path": "upgrade-research/experiments/m4_video_calibration/download_dfdc.py",
+      "bytes": 6996
+    },
+    {
+      "path": "upgrade-research/experiments/m4_video_calibration/run_video_calibration_eval.py",
+      "bytes": 9287
+    },
+    {
+      "path": "upgrade-research/experiments/m4_video_calibration/test_render_video_bands.py",
+      "bytes": 4904
+    },
+    {
+      "path": "upgrade-research/experiments/m5_source_beyond/frozen_source.py",
+      "bytes": 11237
+    },
+    {
+      "path": "upgrade-research/experiments/m5_source_beyond/run_library_scale.py",
+      "bytes": 11044
+    },
+    {
+      "path": "upgrade-research/experiments/m5_source_beyond/run_propagation.py",
+      "bytes": 8694
+    },
+    {
+      "path": "upgrade-research/experiments/m5_source_beyond/verify_replica.py",
+      "bytes": 4797
+    }
+  ],
+  "delta_archive_pending": "D:\\GitHub备份\\deepfake-detection-archive-artifacts\\upgrade-workspace-delta-20261005.zip",
+  "delta_manifest_schema": {
+    "files": "list of {relative_path,size_bytes,sha256,status}",
+    "deleted": "list of paths"
+  },
+  "originals_modified": false
+}

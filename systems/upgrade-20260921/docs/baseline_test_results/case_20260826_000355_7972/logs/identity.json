@@ -1,0 +1,16 @@
+{
+  "module": "identity",
+  "status": "skipped",
+  "started_at": "2026-08-26T00:03:55.290+08:00",
+  "finished_at": "2026-08-26T00:03:55.294+08:00",
+  "runtime_seconds": 4.4200001866556704e-05,
+  "returncode": null,
+  "timed_out": false,
+  "skipped": true,
+  "execution_mode": "skipped",
+  "fallback_reason": null,
+  "stdout_log": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.2_dev\\runtime\\tasks\\case_20260826_000355_7972\\logs\\identity_stdout.log",
+  "stderr_log": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.2_dev\\runtime\\tasks\\case_20260826_000355_7972\\logs\\identity_stderr.log",
+  "command_log": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.2_dev\\runtime\\tasks\\case_20260826_000355_7972\\logs\\identity_command.json",
+  "error": null
+}

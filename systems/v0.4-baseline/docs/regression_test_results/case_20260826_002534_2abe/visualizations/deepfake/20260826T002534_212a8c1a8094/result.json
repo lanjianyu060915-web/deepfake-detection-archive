@@ -1,0 +1,96 @@
+{
+  "run_id": "20260826T002534_212a8c1a8094",
+  "status": "SUCCESS",
+  "created_at": "2026-08-26T00:25:34+08:00",
+  "media_type": "image",
+  "input_file_name": "query.jpg",
+  "input_sha256": "796ba61010dc071ea19e8f0b2877c68beae085a26e4d2e4b26acf4317b5da9f7",
+  "file_size": 2713,
+  "actual_device": "cpu",
+  "model_paths": {
+    "spatial": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem\\models\\spatial_mobilenet_finetuned_gpu\\spatial_mobilenet_finetuned_gpu.pt",
+    "frequency": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem\\models\\frequency_stat_formal\\frequency_stat_detector.joblib"
+  },
+  "model_versions": {
+    "fusion_method": "weighted_probability",
+    "preprocessing_version": "opencv_largest_face_expand_224 + MobileNetV3_DEFAULT / FrequencyStat_v1.0.0"
+  },
+  "fusion_config_path": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem\\models\\fusion_formal\\fusion_config.json",
+  "fusion_config_hash": "8f76abeabb55da1119b28689e15ccd31eac7f1066e401e766987efbb4603e0b2",
+  "spatial_weight": 0.62,
+  "frequency_weight": 0.38,
+  "frame_threshold": 0.36360106194654707,
+  "video_threshold": 0.4583425493641632,
+  "video_aggregation": "median",
+  "decision_threshold": 0.36360106194654707,
+  "final_fake_score": 0.7451661368925726,
+  "final_label": "FAKE",
+  "provisional_label": "FAKE",
+  "valid_frame_count": 1,
+  "invalid_frame_count": 0,
+  "candidate_frame_count": 1,
+  "warnings": [],
+  "error_message": "",
+  "total_elapsed_seconds": 0.7581018999990192,
+  "timing": {
+    "sha256_seconds": 0.0012851999999838881,
+    "metadata_and_decode_seconds": 0.0013675000009243377,
+    "model_load_seconds": 0.0,
+    "face_detection_seconds": 0.6131064000001061,
+    "inference_seconds": 0.12359680000372464,
+    "report_seconds": 0.005313200003001839
+  },
+  "media_metadata": {
+    "width": 112,
+    "height": 112,
+    "format": "JPG",
+    "channels": 3
+  },
+  "spatial_score_summary": {
+    "mean": 0.8250169157981873,
+    "median": 0.8250169157981873,
+    "min": 0.8250169157981873,
+    "max": 0.8250169157981873
+  },
+  "frequency_score_summary": {
+    "mean": 0.6148832870992015,
+    "median": 0.6148832870992015,
+    "min": 0.6148832870992015,
+    "max": 0.6148832870992015
+  },
+  "fusion_score_summary": {
+    "mean": 0.7451661368925726,
+    "median": 0.7451661368925726,
+    "min": 0.7451661368925726,
+    "max": 0.7451661368925726
+  },
+  "frame_results": [
+    {
+      "candidate_index": 1,
+      "source_frame_index": 0,
+      "timestamp_seconds": 0.0,
+      "status": "VALID",
+      "invalid_reason": "",
+      "spatial_score": 0.8250169157981873,
+      "frequency_score": 0.6148832870992015,
+      "fusion_score": 0.7451661368925726,
+      "frame_threshold": 0.36360106194654707,
+      "predicted_label": "FAKE",
+      "risk_level": "中风险",
+      "inference_ms": 123.58230000245385
+    }
+  ],
+  "keyframe_paths": [
+    "keyframes/keyframe_01.jpg"
+  ],
+  "run_directory": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002534_2abe\\visualizations\\deepfake\\20260826T002534_212a8c1a8094",
+  "model_load_count_for_pipeline_instance": 1,
+  "temporary_files_cleaned": true,
+  "report_paths": {
+    "result_json": "result.json",
+    "frame_predictions_csv": "frame_predictions.csv",
+    "report_html": "report.html",
+    "runtime_log": "runtime.log"
+  },
+  "disclaimer": "本结果由自动化模型生成，仅用于深度伪造风险筛查和辅助研判，不应单独作为司法鉴定或案件定性依据。应结合原始文件、传播来源、设备信息及其他证据进行综合判断。"
+}

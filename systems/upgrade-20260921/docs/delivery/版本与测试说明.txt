@@ -1,0 +1,260 @@
+AI换脸涉案图像智能鉴伪与原始素材溯源系统
+版本与测试说明
+
+一、版本与交付信息
+
+版本号：0.3.1
+结果结构版本：3.0
+修复版开发目录：D:\刑侦查竞赛\face_source_trace_three_module_v0.3.1_fix_dev
+正式安装器：
+D:\刑侦查竞赛\face_source_trace_three_module_v0.3.1_fix_dev\packaging_v0.3\output\换脸寻源系统_v0.3.1_Setup.exe
+安装器大小：951605809 字节（951,605,809 字节）
+安装器 SHA-256：8F4E8E63B40FD8D15B0CBABF48D655CFD2CFEEB4688888A314132771C117111B
+安装器 PE ProductVersion：0.3.1.0
+v0.3.1 使用独立 AppId：
+{E2F10239-04C7-45D9-9716-41D5D1312C61}
+主程序、安装目录、开始菜单、桌面快捷方式、启动状态文件和卸载项均与 v0.3 隔离，不覆盖既有 v0.3。
+
+二、本次修复原因与旧问题
+
+旧版空间域模型加载器在读取本项目微调 checkpoint 之前，先通过 torch.hub.get_dir() 查找并强制校验 torchvision 官方 ImageNet 权重：
+
+C:\Users\lanji\.cache\torch\hub\checkpoints\mobilenet_v3_small-047dcff4.pth
+
+当前进程没有设置 TORCH_HOME，torch.hub.get_dir() 实际落到上述个人缓存；目标文件不存在时，流程在项目 checkpoint 加载前立即终止，输入图片没有进入完整的人脸检测、空间域、频域和融合推理。因此页面出现“证据不足、分数不可用、有效帧 0”，且约 0.1 秒结束。
+
+旧 fusion_detector 又把模型加载阶段的所有异常统一包装成“GPU微调空间模型加载失败”。该错误文字与实际设备无关：CPU 运行时也会显示“GPU失败”，掩盖了真正的模型资源依赖问题。
+
+审计找到的 mobilenet_v3_small-047dcff4.pth 是 torchvision 官方 ImageNet 1000 类预训练权重，大小 10,306,551 字节，SHA-256 为：
+
+047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f
+
+它不是本项目训练后的二分类模型。
+
+三、checkpoint 结构检查与最终加载方式
+
+本项目正式空间域 checkpoint：
+
+deepfake_runtime\models\spatial_mobilenet_finetuned_gpu\spatial_mobilenet_finetuned_gpu.pt
+
+大小：6,202,455 字节
+SHA-256：5bb4b33936eb3adc631828ea271a466d62070a2b8de1902e5d96122317534794
+
+实际安全读取 checkpoint 和 state_dict 后确认其属于 Case A，即完整 checkpoint：
+
+1. state_dict 共 244 个 tensor/key。
+2. features.* 共 240 个，包含完整 MobileNetV3-Small 骨干参数和 BatchNorm buffers。
+3. classifier.* 共 4 个，包含项目二分类头；classifier.3.weight shape 为 [2, 1024]。
+4. state_dict 参数总量为 1,532,052。
+5. 保存代码使用完整 model.state_dict()，不是只保存解冻层、分类头或差量参数。
+
+使用以下正式推理方式进行实际结构验证：
+
+model = mobilenet_v3_small(weights=None)
+model.classifier[-1] = nn.Linear(model.classifier[-1].in_features, 2)
+model.load_state_dict(checkpoint["state_dict"], strict=True)
+
+验证结果：
+
+目标架构 keys：244
+checkpoint 匹配 keys：244
+missing keys：0
+unexpected keys：0
+shape mismatch：0
+strict=True：加载成功
+
+另将“weights=None 后严格加载项目 checkpoint”和“官方 DEFAULT 权重初始化后严格加载同一项目 checkpoint”进行逐 tensor 与固定输入 logits 对比：全部参数完全相等，输出最大绝对差为 0.0。官方 ImageNet 权重会被完整项目 checkpoint 全部覆盖。
+
+最终结论：正式推理不再需要 mobilenet_v3_small-047dcff4.pth；正式包不包含该官方基础权重，也不访问用户 Torch 缓存。只有将来改为部分/差量 checkpoint，或从 ImageNet 初始化重新训练时，才需要重新审计基础权重需求。
+
+四、正式 AIGC 模型资源与融合配置
+
+空间域 checkpoint：
+SHA-256：5bb4b33936eb3adc631828ea271a466d62070a2b8de1902e5d96122317534794
+
+频域模型：
+deepfake_runtime\models\frequency_stat_formal\frequency_stat_detector.joblib
+SHA-256：2ec6828eb2a3151784667eb0c105f07cdb41de6ec2df587d28b2766ceee063eb
+模型：FrequencyStatDetector 1.0.0，87 维统计特征
+
+融合配置：
+deepfake_runtime\models\fusion_formal\fusion_config.json
+SHA-256：8f76abeabb55da1119b28689e15ccd31eac7f1066e401e766987efbb4603e0b2
+方法：weighted_probability
+空间域权重：0.62
+频域权重：0.38
+单图最终判定阈值：0.36360106194654707
+
+正式单图融合公式：
+
+融合风险分数 = 0.62 × 空间域分数 + 0.38 × 频域分数
+
+checkpoint 自身记录的空间分支阈值 0.19513355195522308 是训练元数据，不用于当前单图最终融合判定；最终结论使用融合配置中的 0.36360106194654707，未修改模型参数、融合权重或阈值。
+
+五、代码修复与资源自检
+
+1. 空间模型改为 weights=None 构造两分类 MobileNetV3-Small，再用 strict=True 加载完整项目 checkpoint。
+2. 移除正式配置、资源清单、适配器和启动检查中的官方基础权重必需项。
+3. 正式运行不再依赖 C:\Users\lanji\.cache\torch，也不依赖 D:\刑侦查竞赛 或 D:\python。
+4. 将模型资源缺失、checkpoint 解析失败、输入图片损坏、无人脸、CUDA 不可用及 CUDA 推理失败分开处理。
+5. CUDA 不可用但 CPU 正常时继续推理；设备状态和模型加载状态分别展示。
+6. 启动前资源自检覆盖空间域模型、频域模型、融合配置、判定阈值、Python、torch、torchvision、sklearn、OpenCV 和 CUDA 状态。
+7. AIGC 解释页面继续显示真实空间分、频域分、融合权重及公式、融合分、阈值、阈值差值、结论、实际设备、模型哈希、输入哈希和耗时。
+
+安装后路径依赖扫描结果：
+
+installed_runtime_match_count：0
+runtime_log_torch_cache_match_count：0
+runtime_log_development_root_match_count：0
+bundled_official_mobilenet_weight_count：0
+结论：passed
+
+扫描范围覆盖正式安装配置、modules、deepfake_runtime\src、workers、停止脚本及运行日志；禁止项包括 C:\Users\lanji、.cache\torch、D:\刑侦查竞赛 和 D:\python。
+
+六、自动化测试
+
+AIGC 专项资源契约测试：16 passed。
+全量后端回归：52 passed in 11.83s，0 failed。
+正式打包静态检查：passed。
+PowerShell 语法检查：passed。
+Python launcher 常量、状态文件与语法检查：passed。
+Inno Setup 编译检查：passed，PE ProductVersion=0.3.1.0。
+
+52 项后端回归覆盖模型资源契约、weights=None + strict 加载、资源自检、错误分类、CPU 就绪、CUDA 失败后 CPU 重试契约、编排器、运行服务、报告及既有后端行为。自动化的 CUDA 降级契约通过不等同于在真实 GPU 上完成正式全流程验收。
+
+另在非正式 CUDA 开发环境中完成了空间域 checkpoint 的真实 GPU 兼容性冒烟：Python 为 D:\python\.venv\Scripts\python.exe，torch 为 2.12.0.dev20260408+cu128，GPU 为 NVIDIA GeForce RTX 5060 Laptop GPU。测试仍以 mobilenet_v3_small(weights=None) 构造 2 类模型，strict=True 加载 244 个键，missing/unexpected 均为 0；对真实 AI 换脸示例执行正式预处理和 CUDA 前向，FAKE 概率为 0.8169485926628113，同步前向耗时 928.108 ms。证据文件为：
+
+D:\刑侦查竞赛\face_source_trace_three_module_v0.3.1_fix_dev\test_results\aigc_fix\cuda_spatial_checkpoint_smoke.json
+
+证据 SHA-256：F73E5F14668313B79BE6525F59B4C4033FCA457BBB702F20EEF289EA9DEC1482
+
+该冒烟证明完整空间域 checkpoint 可在 CUDA 上严格加载并真实前向，不代表频域模型、融合流程和正式安装包已完成 GPU 全流程验收。
+
+七、正式安装版四图片 CPU 回归
+
+以下结果均由安装后的正式程序、真实 AIGC 模型和 CPU 运行时产生，不使用 Mock。融合权重均为 0.62/0.38，单图阈值均来自同一正式融合配置。
+
+1. AI 换脸样例 aigc_fake_image.jpg
+
+任务：case_20260826_140906_3acf
+空间域分数：0.8250169157981873
+频域分数：0.6148832870992015
+融合分数：0.7451661368925726
+判定阈值：0.36360106194654707
+最终判断：deepfake
+有效人脸/帧：1
+实际设备：cpu
+模型加载状态：loaded
+任务终态 elapsed_seconds：0.879524
+
+2. 真实图片样例 aigc_real_image.jpg
+
+任务：case_20260826_140942_45e4
+空间域分数：0.018030032515525818
+频域分数：0.6342823441124555
+融合分数：0.2522059109223591
+判定阈值：0.36360106194654707
+最终判断：real
+有效人脸/帧：1
+实际设备：cpu
+模型加载状态：loaded
+任务终态 elapsed_seconds：0.638197
+
+3. 当前问题回归样例 query_009.jpg
+
+任务：case_20260826_141006_06cb
+空间域分数：0.0006946694920770824
+频域分数：5.318512781853584e-16
+融合分数：0.00043069508508799317
+判定阈值：0.36360106194654707
+最终判断：real
+有效人脸/帧：1
+实际设备：cpu
+模型加载状态：loaded
+任务终态 elapsed_seconds：0.716911
+
+4. 无人脸样例 no_face_image.jpg
+
+任务：case_20260826_140954_1512
+空间域分数：null
+频域分数：null
+融合分数：null
+判定阈值：null
+最终标签：no_face
+原生状态：INSUFFICIENT_EVIDENCE
+错误码：NO_VALID_FACE
+有效人脸/帧：0
+实际设备：cpu
+模型加载状态：loaded
+任务终态 elapsed_seconds：0.548977
+准确说明：未检测到有效人脸，当前图片无法完成空间域人脸伪造分析。
+
+无人脸样例证明模型已经成功加载，失败边界来自输入中没有有效人脸；系统没有生成虚构风险分数或真假结论，也没有把它误报成“模型加载失败”或“GPU失败”。
+
+重启后再次运行 aigc_fake_image.jpg，任务 case_20260826_141502_40e4；空间域、频域和融合分数分别仍为 0.8250169157981873、0.6148832870992015、0.7451661368925726，实际设备 cpu，结果 deepfake，证明重新启动后的真实模型检测仍正常。
+
+八、正式安装、启动、业务与卸载验收
+
+验收运行目录：
+D:\AIGC修复验收\run_20260826_140215_f2e88ad8
+
+实际安装目录：
+D:\AIGC修复验收\run_20260826_140215_f2e88ad8\中文 空格安装\应用
+
+验收结果：
+
+1. 安装器校验、中文及空格路径安装：通过。
+2. 主程序、停止脚本、卸载器、便携 Python、三个真实模块及资源清单检查：通过。
+3. 开始菜单启动快捷方式、停止快捷方式和桌面快捷方式创建及目标校验：通过。
+4. 首次启动：通过；PID 24932，端口 57202，HTTP 健康检查返回 200/ok。
+5. 首选端口 8767 已被旧进程占用时，新版选择独立端口，未连接或干扰旧版。
+6. 安装版四图片 UI 回归：通过；四次页面 exception/error 计数均为 0。
+7. 身份模块真实任务 case_20260826_141114_5521：success。
+8. 底图模块真实任务 case_20260826_141138_06b7：success；实际解码/扫描 203/203，Top-20 几何复核 20/20。
+9. 三模块综合任务 case_20260826_141244_bb4f：deepfake、identity、source 均 success，真实模式校验通过，未发现 Mock 标记。
+10. JSON、TXT、HTML 报告生成与导出：通过，文件均非空且有 SHA-256 证据。
+11. 停止并重新启动：通过；重启 PID 17924，端口 53245，HTTP 健康检查返回 200/ok。
+12. 重启后再次执行安装版 AIGC：通过，结果与首次同一样例一致。
+13. 停止脚本：首次及重启后退出码均为 0。
+14. 静默卸载：通过，退出码 0。
+
+最终 acceptance_summary.json：
+
+status：passed
+install_root_removed：true
+registry_removed：true
+shortcuts_removed：true
+reports_preserved：true
+protected_install_unchanged：true
+
+即卸载后本次安装目录、v0.3.1 注册表卸载项和快捷方式均已移除；隔离用户数据中的报告得到保留；受保护旧安装 D:\刑侦查竞赛\换脸寻源3.0 的逐文件大小与 SHA-256 清单未变化。
+
+机器可复核证据：
+
+D:\AIGC修复验收\run_20260826_140215_f2e88ad8\evidence\setup.json
+D:\AIGC修复验收\run_20260826_140215_f2e88ad8\phase1_state.json
+D:\AIGC修复验收\run_20260826_140215_f2e88ad8\business_evidence.json
+D:\AIGC修复验收\run_20260826_140215_f2e88ad8\acceptance_summary.json
+
+九、正式资源包含情况
+
+正式包包含项目完整空间域 checkpoint、频域模型、融合配置、正式 CPU PyTorch/torchvision 运行时、便携 Python、身份与底图工作进程、buffalo_l 五个 ONNX、示例身份库、示例底图库、正式前端、启动/停止/卸载资源及示例图片。AIGC 正式推理无需联网下载模型。
+
+正式包明确不包含且不要求官方 mobilenet_v3_small-047dcff4.pth。模型资源由安装目录相对路径解析；任务、日志、报告和缓存写入当前用户 LOCALAPPDATA\FaceSourceTrace。
+
+模型、运行库、示例图片和数据库的实际所有权及再分发许可仍须由交付单位独立留档确认；本次技术验收只证明资源字节、加载逻辑和运行结果。
+
+十、已知限制
+
+1. 本次正式包提供 PyTorch 2.11.0+cpu 与 torchvision 0.26.0+cpu，正式全流程使用 CPU。
+2. 验收机器可见 NVIDIA CUDA 硬件，空间域 checkpoint 的真实 CUDA 冒烟已通过；但正式安装包是 CPU 运行时，频域模型所在 CUDA 开发环境的 sklearn 版本与正式 checkpoint 不兼容，因此本轮没有完成真实 CUDA/GPU 正式融合全流程验收。不得把空间域冒烟或 CPU 安装验收描述为 GPU 正式全流程验收。
+3. GPU 不可用不会构成检测失败，正式版会自动使用 CPU；自动化测试已覆盖 CUDA 构造或推理失败后的 CPU 重试契约。
+4. 本轮回归矩阵为四张图片，视频没有纳入本轮正式安装验收；不得据此声称视频流程已通过本轮回归。
+5. AIGC 融合风险分数不是模型准确率，也不是司法鉴定结论；无人脸“证据不足”与模型加载失败是不同状态。
+6. 本次安装器未声明已完成 Authenticode 代码签名，不应声称已签名。
+
+十一、正式模式和证据边界
+
+正式配置 mock_enabled=false，安装版四图片、身份、底图和综合任务均为真实模块结果。三个模块的分数属于不同任务，不能相加或转换为跨模块概率。
+
+本系统用于深度伪造风险筛查、身份候选检索和底图候选检索，仅提供侦查线索和辅助研判信息，不替代原始介质固定、文件哈希校验、人工复核或司法鉴定。

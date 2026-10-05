@@ -1,0 +1,146 @@
+换脸寻源系统 v0.4.0 关键源码变更清单
+========================================
+
+一、审计基准
+
+基线文件：docs\upgrade_v0.4.0\baseline_before_sha256.csv
+基线记录数：12,124
+基线文件大小：1,888,527 bytes
+基线文件 SHA-256：1F449002C96FB727B54BB1DE930D1E56B4EE67496EDA62D7D102B3E12738704F
+比较算法：SHA-256（路径不区分大小写；内容哈希不同即判定为修改）
+
+本清单聚焦可维护的业务源码、正式配置、打包源码、自动化测试和本次升级文档。以下生成物不纳入差异计数：build、work、output、test_results、screenshots、__pycache__、.pytest_cache、vendor、dist、.git、.venv*。打包资源中只纳入 deepfake_runtime\src、受控资源清单和正式打包脚本，不把第三方运行库逐文件列为源码变化。
+
+为避免自引用，本文件“关键源码变更清单.txt”、同批生成的“绝对路径与离线依赖审计.txt”以及基线 CSV 自身不计入结果。
+
+最终快照结果：
+
+新增：33 个
+修改：45 个
+删除：0 个
+合计变化：78 个
+
+二、新增文件（33）
+
+1. 版本与测试说明.txt
+2. docs\upgrade_v0.4.0\安装验收报告.md
+3. docs\upgrade_v0.4.0\底图溯源后端中间证据接口说明.md
+4. docs\upgrade_v0.4.0\底图溯源真实回归测试报告.md
+5. docs\upgrade_v0.4.0\后端中间证据接口说明.md
+6. docs\upgrade_v0.4.0\回归测试报告.md
+7. docs\upgrade_v0.4.0\回归测试矩阵.json
+8. docs\upgrade_v0.4.0\回归测试矩阵.md
+9. docs\upgrade_v0.4.0\交付说明.txt
+10. docs\upgrade_v0.4.0\前端可视化升级说明.md
+11. docs\upgrade_v0.4.0\身份检索后端中间证据与回归.md
+12. docs\upgrade_v0.4.0\升级前后结果对比.md
+13. docs\upgrade_v0.4.0\已知限制.md
+14. docs\upgrade_v0.4.0\用户使用说明.txt
+15. docs\upgrade_v0.4.0\baseline_case_20260831_114829_c45e.json
+16. frontend\components\evidence_dashboard.py
+17. frontend\tests\evidence_harness_app.py
+18. frontend\tests\test_evidence_dashboard.py
+19. frontend\tests\verify_evidence_state_regression.py
+20. modules\deepfake_detection\AIGC_VISUAL_EVIDENCE_ACCEPTANCE.md
+21. modules\identity_search\identity_search\evidence.py
+22. packaging_v0.3\resources\deepfake_runtime\src\reporting\visual_evidence.py
+23. pytest.ini
+24. tests\build_installed_business_evidence.py
+25. tests\build_v040_regression_matrix_report.py
+26. tests\run_and_capture.py
+27. tests\test_deepfake_visual_evidence.py
+28. tests\test_evidence_manifest.py
+29. tests\test_identity_visual_evidence.py
+30. tests\test_source_visual_evidence.py
+31. tests\test_v040_regression_edges.py
+32. tests\verify_identity_real_regression.py
+33. tests\verify_v040_regression_matrix.py
+
+三、修改文件（45）
+
+1. CHANGELOG.md
+2. config.json
+3. frontend\app.py
+4. frontend\components\data_loader.py
+5. frontend\components\live_progress.py
+6. frontend\tests\test_three_module_frontend.py
+7. KNOWN_ISSUES.md
+8. modules\deepfake_detection\persistent_worker.py
+9. modules\deepfake_detection\README.md
+10. modules\deepfake_detection\run_deepfake_detection.py
+11. modules\identity_search\identity_search\cli.py
+12. modules\identity_search\identity_search\extractor.py
+13. modules\identity_search\identity_search\searcher.py
+14. modules\identity_search\persistent_worker.py
+15. modules\identity_search\README.md
+16. modules\source_search\README.md
+17. modules\source_search\run_source_search.py
+18. modules\source_search\source_search\global_features.py
+19. modules\source_search\source_search\local_matcher.py
+20. modules\source_search\source_search\pipeline.py
+21. modules\source_search\source_search\visualizer.py
+22. orchestrator.py
+23. packaging_v0.3\acceptance\acceptance_common.ps1
+24. packaging_v0.3\acceptance\phase1_install_start.ps1
+25. packaging_v0.3\acceptance\README.md
+26. packaging_v0.3\build_installer_v0.3.ps1
+27. packaging_v0.3\config.packaged.json
+28. packaging_v0.3\installer\换脸寻源系统_v0.3.iss
+29. packaging_v0.3\pyinstaller\frontend_version_info.txt
+30. packaging_v0.3\pyinstaller\frontend.spec
+31. packaging_v0.3\pyinstaller\identity_version_info.txt
+32. packaging_v0.3\pyinstaller\source_version_info.txt
+33. packaging_v0.3\README.md
+34. packaging_v0.3\resources\deepfake_runtime\src\detectors\frequency_stat.py
+35. packaging_v0.3\resources\deepfake_runtime\src\detectors\fusion_detector.py
+36. packaging_v0.3\resources\deepfake_runtime\src\detectors\spatial_mobilenet.py
+37. packaging_v0.3\resources\deepfake_runtime\src\pipeline\deepfake_detection_pipeline.py
+38. packaging_v0.3\resources\manifests\deepfake_runtime.sha256.json
+39. packaging_v0.3\scripts\assemble_app_v0.3.ps1
+40. packaging_v0.3\scripts\Test-PackagingStatic.ps1
+41. packaging_v0.3\scripts\Update-PackagedResourceHashes.ps1
+42. packaging_v0.3\src\app_launcher.py
+43. packaging_v0.3\src\stop_system.ps1
+44. packaging_v0.3\static_validation.json
+45. README.md
+
+四、删除文件（0）
+
+无。基线范围内未发现源码、正式配置、测试或升级文档被删除。
+
+五、关键文件当前 SHA-256
+
+frontend\components\evidence_dashboard.py
+8FB0264076354D2915077F161F5A526513FC143C6A3098781377D814CB5C5A6B
+
+frontend\app.py
+A70B5EC52927747DBB507DD84F39CEAF17B2F3CFD4D85B56C83824D6A8DDABB3
+
+orchestrator.py
+C3F11218B5FB53A2734EE043DDA2F7D7060ED819190FDE1E4F8D523C535DF0AF
+
+modules\deepfake_detection\run_deepfake_detection.py
+373CE764A5B05C03C56B204414218DF6EF7D4D8173ECBA696F4B189B587F0F3B
+
+modules\identity_search\identity_search\evidence.py
+831EC3979C9DB89D00D65B86D8F1F92349ED19D6C7F028E96B1FAD7B0378C0C9
+
+modules\source_search\source_search\pipeline.py
+8AA7E931BF2746E25F73AEBC511E2E3C91F6E146E6D2E916F104EB1B2EE4A6A5
+
+packaging_v0.3\config.packaged.json
+A655DC91C50442D9E7F90F8899BCB2B3B379E1BF7D876E9EEF5E57FC6461A15E
+
+packaging_v0.3\resources\deepfake_runtime\src\detectors\spatial_mobilenet.py
+DF4DFE15836C4BA056B035269EAA5CAF96343ACE2F45C0AACA8312F91B7A5158
+
+packaging_v0.3\resources\manifests\deepfake_runtime.sha256.json
+75B0940303B1EDCD275DD1E942700F850409D08CB2F106AC74FEDB1A74B78366
+
+正式安装器 packaging_v0.3\output\换脸寻源系统_v0.4.0_Setup.exe
+大小：951,734,453 bytes
+SHA-256：7437B79907A2835DBC6CDA08AE55CB714D5BEC6D9CE1EF51EDE0664187FFAA65
+
+六、结论
+
+本次升级没有删除基线业务文件；变化集中在真实证据生成、五页证据前端、任务级 artifact manifest、三模块进度事件、安装版 v0.4.0 配置/构建/验收链和配套回归测试与说明文档。上述计数来自最终稳定工作区的逐文件 SHA-256 比较，不是按修改时间推测。

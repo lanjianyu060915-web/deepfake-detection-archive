@@ -1,0 +1,245 @@
+{
+  "snapshot_date": "2026-10-05",
+  "source_path": "C:\\Users\\lanji\\Desktop\\dist\\DeepfakeDetectionSystem",
+  "files_copied": 38,
+  "copied_bytes": 314804,
+  "scope": "app.py, own src Python modules, config JSON, 2 usage READMEs, model metadata JSON; model binaries and bundled dependencies are in external dist archive",
+  "files": [
+    {
+      "path": "app.py",
+      "bytes": 17325,
+      "sha256": "cbace78795458eb0ab81d20cca96825633af058cf5a339fd9b86ebc737edd0e5"
+    },
+    {
+      "path": "config/runtime_pipeline.json",
+      "bytes": 482,
+      "sha256": "146f2f0748dcb0000c92cbb268bbc22e4ed5019450f5c33cae80bc6004b86330"
+    },
+    {
+      "path": "config/streamlit_ui.json",
+      "bytes": 381,
+      "sha256": "5b2006f6dc9dc3500df2c879ed5dc1154301e2e00f4d679be02ef21fa04f117f"
+    },
+    {
+      "path": "models/frequency_stat_formal/data_integrity_report.json",
+      "bytes": 8563,
+      "sha256": "28e121cbd7b03e85ac141c16e93514b132615f725550e56f3e47b4704e283711"
+    },
+    {
+      "path": "models/frequency_stat_formal/feature_schema.json",
+      "bytes": 9805,
+      "sha256": "239470080b3759ea30e061035fedb0b993959e600cc79aeb81e055fdc4cb2dcd"
+    },
+    {
+      "path": "models/frequency_stat_formal/metadata.json",
+      "bytes": 916,
+      "sha256": "4c9e517e6bbe14ebe52fde0949d92660d70f4b95049a446e3fd5282200694c3d"
+    },
+    {
+      "path": "models/frequency_stat_formal/training_summary.json",
+      "bytes": 2196,
+      "sha256": "abe0217df74d683e6e86dfed80e3ca8a6546f11ef42588ead997d9523b3da415"
+    },
+    {
+      "path": "models/fusion_formal/fusion_config.json",
+      "bytes": 1077,
+      "sha256": "8f76abeabb55da1119b28689e15ccd31eac7f1066e401e766987efbb4603e0b2"
+    },
+    {
+      "path": "models/spatial_mobilenet_finetuned_gpu/metadata.json",
+      "bytes": 2195,
+      "sha256": "04b4f28a9b9a7fd2b18f482552a2dd8f98961f4b614245bee4cdf6c24ef7cdad"
+    },
+    {
+      "path": "models/spatial_mobilenet_finetuned_gpu/model_file_sha256.json",
+      "bytes": 133,
+      "sha256": "a4de24b100d4659dbccadcfbed60a6fe78056f25636ad85d76a36e7f8db7e114"
+    },
+    {
+      "path": "README.md",
+      "bytes": 1027,
+      "sha256": "262ce446087e5e6a2f6861c50b5178d66c0747ec18cd2337c64876c069f752a8"
+    },
+    {
+      "path": "src/__init__.py",
+      "bytes": 25,
+      "sha256": "5ecba613af204e1811ee64b23ef4378a7bbd5e749a6f43efe77dde79b6cd6c68"
+    },
+    {
+      "path": "src/core/__init__.py",
+      "bytes": 28,
+      "sha256": "1ff55ca2cb4bbff0eb178166464fb9babeb18e445296338390be34d6b6a6632a"
+    },
+    {
+      "path": "src/core/paths.py",
+      "bytes": 2447,
+      "sha256": "6a157bdae19a8276c204512ad8d924f5b65e0859db22ccf7dee7107be31415a8"
+    },
+    {
+      "path": "src/detectors/__init__.py",
+      "bytes": 559,
+      "sha256": "b10a16f12f063ef3b0eff6ceb05ae92548832fbe10b129eaab7a5bec6beee1d0"
+    },
+    {
+      "path": "src/detectors/base.py",
+      "bytes": 1006,
+      "sha256": "c59bc8a54158df74ae3da455970a1a90e8db8dfff6f261d446110a82c729c9c5"
+    },
+    {
+      "path": "src/detectors/frequency_stat.py",
+      "bytes": 15121,
+      "sha256": "2ad5a64a67bb2ef407305b78a25aa6e23b5ac5423d73ad56e79583d53152de22"
+    },
+    {
+      "path": "src/detectors/frequency_training.py",
+      "bytes": 26704,
+      "sha256": "d67a20d18da5bfc53d4a493425871e6209aaefbd842a51bc40af610b6177c081"
+    },
+    {
+      "path": "src/detectors/fusion_detector.py",
+      "bytes": 10895,
+      "sha256": "f935841b5984f092203d1e570807bd5dbf791cc8ddb2fed894c364e7028bb055"
+    },
+    {
+      "path": "src/detectors/spatial_finetuning.py",
+      "bytes": 27011,
+      "sha256": "fe7f59c3159642d66884a83948c2f24b60f511fcce43af3027ab2b5b4a41e4bd"
+    },
+    {
+      "path": "src/detectors/spatial_mobilenet.py",
+      "bytes": 8918,
+      "sha256": "f3631e6000189eb4105211a05cee59dd7f32ee1557091b4aa4993b648e9fb9db"
+    },
+    {
+      "path": "src/detectors/spatial_training.py",
+      "bytes": 18770,
+      "sha256": "ae5d50ed2ebc3d23e865e066f2a94c3f830c1ad72a3bf2aa450ddb8965ff733a"
+    },
+    {
+      "path": "src/fusion/__init__.py",
+      "bytes": 440,
+      "sha256": "55354150f10ec420667d36f04a6e96ac96131ed32622da239665c8fecee915bf"
+    },
+    {
+      "path": "src/fusion/formal_experiment.py",
+      "bytes": 52434,
+      "sha256": "0bdaf8d43aa253b7e70fe2914ce54184de8bed19813734b4ca5a4c96e26d4375"
+    },
+    {
+      "path": "src/fusion/fusion_optimizer.py",
+      "bytes": 8802,
+      "sha256": "cc6594b92d747003af85190bb30c4a1cc1d4ea8455a0a15dfc0c0ba2eca42d38"
+    },
+    {
+      "path": "src/fusion/video_aggregation.py",
+      "bytes": 4029,
+      "sha256": "b16d5aa3b959e81c7a1f9f8fc1e1f375d3e0a72efc39cf0bf080d07b347f1b52"
+    },
+    {
+      "path": "src/models/__init__.py",
+      "bytes": 37,
+      "sha256": "b33d881b562e6a98dc13a1cd94331922e30ff05a4c27de573e1b69837aaad2d6"
+    },
+    {
+      "path": "src/pipeline/__init__.py",
+      "bytes": 254,
+      "sha256": "a8122eb772bfaa320928e337d4c7c2ccdf99ebdfbbb49ae9affdc6beb3d6cc2b"
+    },
+    {
+      "path": "src/pipeline/deepfake_detection_pipeline.py",
+      "bytes": 31524,
+      "sha256": "dcdc10ffc132c9a0f76b35dda68af1a595eb6d1a098f4e7dfb34224d009ef81a"
+    },
+    {
+      "path": "src/preprocessing/__init__.py",
+      "bytes": 726,
+      "sha256": "8bf1df9c7b5755faad1870e3cb28d2b93ae67f0a3e6651c2a184a55d808f691d"
+    },
+    {
+      "path": "src/preprocessing/media.py",
+      "bytes": 16040,
+      "sha256": "36abf675b25f5aa406bfee5c60dc41c09a40078226d28bbb797ea982c926d8d4"
+    },
+    {
+      "path": "src/reporting/__init__.py",
+      "bytes": 148,
+      "sha256": "4c4d431a4c4487d8e9bdad09c10a44d0c485014d955017ab4f2a3d54d2cd92c3"
+    },
+    {
+      "path": "src/reporting/pipeline_implementation_report.py",
+      "bytes": 5766,
+      "sha256": "3343062f1ee95ff4dc63e21fa1f9b4d3787296ecf6571e5d20a7c8537cd62151"
+    },
+    {
+      "path": "src/reporting/runtime_report_service.py",
+      "bytes": 7820,
+      "sha256": "a0b2dded8a17a26a62ed69fbec194374d6bff60a71f3b47090619e47dd15b8d7"
+    },
+    {
+      "path": "src/reporting/spatial_finetune_report.py",
+      "bytes": 22053,
+      "sha256": "ab66531e041e314e1d301aede473445079f043be41cb0d4258a7dc52ad4c68f2"
+    },
+    {
+      "path": "src/ui/__init__.py",
+      "bytes": 586,
+      "sha256": "e18f231a1b7ab9f093c0f26dfa17be53466c77db69114d08506605dd333f0337"
+    },
+    {
+      "path": "src/ui/streamlit_helpers.py",
+      "bytes": 7678,
+      "sha256": "d027ed6b1a512c5755ef6e6768387fffda3f1bc6e603cb107dafbb4d047d85b8"
+    },
+    {
+      "path": "STANDALONE_README.md",
+      "bytes": 883,
+      "sha256": "bde79342d4a6ea2c618fa6d59fd4cffbcfb73595ab39bbfa5195f2c3f67fb39f"
+    }
+  ],
+  "original_installer_duplicates": {
+    "identical": true,
+    "installers": [
+      {
+        "path": "C:\\Users\\lanji\\Desktop\\深度伪造识别系统_通用版_Setup(2).exe",
+        "bytes": 214244624,
+        "sha256": "347ed97e43afdb1032109928b6731880d4eaa1b98a5d95f0fb7f6ebc9bdd61f2"
+      },
+      {
+        "path": "D:\\刑侦查竞赛\\AIGC检测\\集成系统\\深度伪造识别系统_通用版_Setup(2).exe",
+        "bytes": 214244624,
+        "sha256": "347ed97e43afdb1032109928b6731880d4eaa1b98a5d95f0fb7f6ebc9bdd61f2"
+      }
+    ]
+  },
+  "builds": [
+    {
+      "name": "DeepfakeDetectionSystem",
+      "original_path": "C:\\Users\\lanji\\Desktop\\dist\\DeepfakeDetectionSystem",
+      "core_source_files_compared": 27,
+      "same_core_source_as_current": true,
+      "differences": [],
+      "has_default_face_cascade": true,
+      "purpose": "current complete portable"
+    },
+    {
+      "name": "DeepfakeDetectionSystem_first_build_20260714_110447",
+      "original_path": "C:\\Users\\lanji\\Desktop\\dist\\DeepfakeDetectionSystem_first_build_20260714_110447",
+      "core_source_files_compared": 27,
+      "same_core_source_as_current": true,
+      "differences": [],
+      "has_default_face_cascade": false,
+      "purpose": "historical build; missing OpenCV face cascade data"
+    },
+    {
+      "name": "DeepfakeDetectionSystem_notk_missing_cv2data_20260714_111814",
+      "original_path": "C:\\Users\\lanji\\Desktop\\dist\\DeepfakeDetectionSystem_notk_missing_cv2data_20260714_111814",
+      "core_source_files_compared": 27,
+      "same_core_source_as_current": true,
+      "differences": [],
+      "has_default_face_cascade": false,
+      "purpose": "historical build; missing OpenCV face cascade data"
+    }
+  ],
+  "historical_logs_path": "C:\\Users\\lanji\\Desktop\\dist\\logs",
+  "historical_logs_note": "launcher.log references past D:\\信安大作业\\dist root startup; not a current runtime verification"
+}

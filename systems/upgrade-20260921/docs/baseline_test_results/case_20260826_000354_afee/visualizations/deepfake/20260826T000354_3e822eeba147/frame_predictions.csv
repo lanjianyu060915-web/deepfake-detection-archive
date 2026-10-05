@@ -1,0 +1,2 @@
+﻿candidate_index,source_frame_index,timestamp_seconds,status,invalid_reason,spatial_score,frequency_score,fusion_score,frame_threshold,predicted_label,risk_level,inference_ms
+1,0,0.0,VALID,,0.8250169157981873,0.6148832870992015,0.7451661368925726,0.36360106194654707,FAKE,中风险,78.96189999883063

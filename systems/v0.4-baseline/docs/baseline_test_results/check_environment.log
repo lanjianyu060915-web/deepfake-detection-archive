@@ -1,0 +1,19 @@
+PASS | AIGC Python | 存在：D:\python\python.exe
+PASS | AIGC adapter | 存在：D:\刑侦查竞赛\face_source_trace_three_module_v0.2_dev\modules\deepfake_detection\run_deepfake_detection.py
+PASS | A Python | 存在：D:\刑侦查竞赛\first_week\_round1_work\backend\envs\A_env\Scripts\python.exe
+PASS | B Python | 存在：D:\刑侦查竞赛\first_week\_round1_work\backend\envs\B_env\Scripts\python.exe
+PASS | A runner | 存在：D:\刑侦查竞赛\face_source_trace_three_module_v0.2_dev\modules\identity_search\run_identity_search.py
+PASS | B runner | 存在：D:\刑侦查竞赛\face_source_trace_three_module_v0.2_dev\modules\source_search\run_source_search.py
+PASS | identity_library | 存在：D:\刑侦查竞赛\first_week\data\identity_library
+PASS | source_library | 存在：D:\刑侦查竞赛\first_week\data\source_library
+PASS | buffalo_l/1k3d68.onnx | 存在：C:\Users\lanji\.insightface\models\buffalo_l\1k3d68.onnx
+PASS | buffalo_l/2d106det.onnx | 存在：C:\Users\lanji\.insightface\models\buffalo_l\2d106det.onnx
+PASS | buffalo_l/det_10g.onnx | 存在：C:\Users\lanji\.insightface\models\buffalo_l\det_10g.onnx
+PASS | buffalo_l/genderage.onnx | 存在：C:\Users\lanji\.insightface\models\buffalo_l\genderage.onnx
+PASS | buffalo_l/w600k_r50.onnx | 存在：C:\Users\lanji\.insightface\models\buffalo_l\w600k_r50.onnx
+PASS | AIGC EXE/模型/config/SHA | AIGC EXE、适配器、配置与模型 SHA-256 均通过只读检查
+PASS | 身份库/embedding/index | 身份库可用：9 人、45 张图片
+PASS | 底图库/实时扫描状态 | 底图库可用：203 张图片；无持久 index，检索时实时扫描
+PASS | 运算设备 | 检测到 NVIDIA GPU：NVIDIA GeForce RTX 5060 Laptop GPU；AIGC 实际设备=cpu
+PASS | frontend 依赖 | streamlit 可由 D:\python_3.14\python.exe 导入
+PASS | runtime 目录可写 | 可写：D:\刑侦查竞赛\face_source_trace_three_module_v0.2_dev\runtime\tasks, D:\刑侦查竞赛\face_source_trace_three_module_v0.2_dev\runtime\inbox, D:\刑侦查竞赛\face_source_trace_three_module_v0.2_dev\runtime\cache\identity

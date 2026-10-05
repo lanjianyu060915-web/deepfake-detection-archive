@@ -1,0 +1,22 @@
+{
+  "module": "source",
+  "mode": "subprocess",
+  "argv": [
+    "D:\\刑侦查竞赛\\first_week\\_round1_work\\backend\\envs\\B_env\\Scripts\\python.exe",
+    "-B",
+    "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.2_dev\\modules\\source_search\\run_source_search.py",
+    "--query",
+    "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.2_dev\\runtime\\tasks\\case_20260825_234018_7127\\query.jpg",
+    "--library",
+    "D:\\刑侦查竞赛\\first_week\\data\\source_library",
+    "--top-k",
+    "5",
+    "--output",
+    "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.2_dev\\runtime\\tasks\\case_20260825_234018_7127\\source_result.json"
+  ],
+  "cwd": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.2_dev\\modules\\source_search",
+  "library": "D:\\刑侦查竞赛\\first_week\\data\\source_library",
+  "output": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.2_dev\\runtime\\tasks\\case_20260825_234018_7127\\source_result.json",
+  "service_fallback_reason": null,
+  "attempt_timeout_seconds": 599.9972091999953
+}

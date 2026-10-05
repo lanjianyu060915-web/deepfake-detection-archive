@@ -1,0 +1,423 @@
+[
+  {
+    "event_id": "db78dbe73b264463a9d8ba09108d55d3",
+    "timestamp": "2026-08-26T00:24:14.348+08:00",
+    "task_id": "case_20260826_002414_64bf",
+    "module": "overall",
+    "stage": "task_created",
+    "status": "running",
+    "message": "已创建独立分析任务。",
+    "progress_current": 0,
+    "progress_total": 4,
+    "progress_percent": 0.0,
+    "elapsed_seconds": 0.001504,
+    "details": {
+      "task_dir": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002414_64bf",
+      "selected_modules": [
+        "deepfake",
+        "identity",
+        "source"
+      ],
+      "query_file": "query.jpg"
+    }
+  },
+  {
+    "event_id": "88342c3da6b140d7868fd3c1ff14f127",
+    "timestamp": "2026-08-26T00:24:14.358+08:00",
+    "task_id": "case_20260826_002414_64bf",
+    "module": "deepfake",
+    "stage": "deepfake_started",
+    "status": "running",
+    "message": "开始执行 deepfake 真实模块。",
+    "progress_current": 0,
+    "progress_total": 1,
+    "progress_percent": 0.0,
+    "elapsed_seconds": 0.008214,
+    "details": {
+      "execution_order": 1
+    }
+  },
+  {
+    "event_id": "be294fbf55424ce6976155e7e74043c7",
+    "timestamp": "2026-08-26T00:24:14.359+08:00",
+    "task_id": "case_20260826_002414_64bf",
+    "module": "deepfake",
+    "stage": "input_validated",
+    "status": "running",
+    "message": "输入图片存在且已复制到独立任务目录。",
+    "progress_current": null,
+    "progress_total": null,
+    "progress_percent": null,
+    "elapsed_seconds": 0.01115,
+    "details": {
+      "file_name": "query.jpg",
+      "size_bytes": 36905
+    }
+  },
+  {
+    "event_id": "b5e140102b714dcd945f068ffaa96130",
+    "timestamp": "2026-08-26T00:24:14.460+08:00",
+    "task_id": "case_20260826_002414_64bf",
+    "module": "deepfake",
+    "stage": "model_hash_validation",
+    "status": "running",
+    "message": "AIGC模型、融合配置和适配器哈希校验通过。",
+    "progress_current": null,
+    "progress_total": null,
+    "progress_percent": null,
+    "elapsed_seconds": 0.10982,
+    "details": {
+      "ok": true,
+      "actual_sha256": {
+        "executable": "bc67e52b77fa0559d4d6fe04f024dcdb4a8edf43128f80f7d70947e3da490203",
+        "spatial_model": "5bb4b33936eb3adc631828ea271a466d62070a2b8de1902e5d96122317534794",
+        "frequency_model": "2ec6828eb2a3151784667eb0c105f07cdb41de6ec2df587d28b2766ceee063eb",
+        "fusion_config": "8f76abeabb55da1119b28689e15ccd31eac7f1066e401e766987efbb4603e0b2",
+        "base_weight": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+        "adapter": "ad69a01f225dfbba31911d08339dc9f2a566ac6338f729be97d7688e93305489",
+        "adapter_runtime": "c6f3836d4c9252cbb2fc315acfd97e78b5f0b8bf10941e607bea996bcb86d836",
+        "adapter_inspector": "f2b46b0102afcca041f8a173ac9e9279548483632ba4932f25a4086eede03dba"
+      },
+      "missing": [],
+      "mismatches": [],
+      "checked_resource_count": 8
+    }
+  },
+  {
+    "event_id": "66d6a0067bc0464991c6acde53f37bf0",
+    "timestamp": "2026-08-26T00:24:14.464+08:00",
+    "task_id": "case_20260826_002414_64bf",
+    "module": "deepfake",
+    "stage": "deepfake_service_reuse",
+    "status": "running",
+    "message": "正在启动或复用 AIGC 真实模型服务。",
+    "progress_current": null,
+    "progress_total": null,
+    "progress_percent": null,
+    "elapsed_seconds": 0.113981,
+    "details": {}
+  },
+  {
+    "event_id": "a75f3a049a984e9dac159412e68cbc4b",
+    "timestamp": "2026-08-26T00:24:14.465+08:00",
+    "task_id": "case_20260826_002414_64bf",
+    "module": "deepfake",
+    "stage": "deepfake_inference_running",
+    "status": "running",
+    "message": "正在读取图片、检测有效人脸并执行空间域与频域模型。",
+    "progress_current": null,
+    "progress_total": null,
+    "progress_percent": null,
+    "elapsed_seconds": 0.117424,
+    "details": {}
+  },
+  {
+    "event_id": "d4aad0e66f65483da817d8dda18a1f1a",
+    "timestamp": "2026-08-26T00:24:14.611+08:00",
+    "task_id": "case_20260826_002414_64bf",
+    "module": "deepfake",
+    "stage": "face_and_crop_completed",
+    "status": "running",
+    "message": "有效人脸/有效帧处理完成：1。",
+    "progress_current": null,
+    "progress_total": null,
+    "progress_percent": null,
+    "elapsed_seconds": 0.261962,
+    "details": {
+      "valid_frame_count": 1,
+      "invalid_frame_count": 0
+    }
+  },
+  {
+    "event_id": "f947478639af4f00b7cb3d884173f02c",
+    "timestamp": "2026-08-26T00:24:14.618+08:00",
+    "task_id": "case_20260826_002414_64bf",
+    "module": "deepfake",
+    "stage": "spatial_inference_completed",
+    "status": "running",
+    "message": "空间域模型推理完成。",
+    "progress_current": null,
+    "progress_total": null,
+    "progress_percent": null,
+    "elapsed_seconds": 0.267704,
+    "details": {
+      "spatial_score": 0.04868368059396744
+    }
+  },
+  {
+    "event_id": "2918fcbb5d2e488e9dabf36eeca80911",
+    "timestamp": "2026-08-26T00:24:14.623+08:00",
+    "task_id": "case_20260826_002414_64bf",
+    "module": "deepfake",
+    "stage": "frequency_inference_completed",
+    "status": "running",
+    "message": "频域模型推理完成。",
+    "progress_current": null,
+    "progress_total": null,
+    "progress_percent": null,
+    "elapsed_seconds": 0.273051,
+    "details": {
+      "frequency_score": 0.07546445815525894
+    }
+  },
+  {
+    "event_id": "1f11f3912dfb407f999b4a2a05680660",
+    "timestamp": "2026-08-26T00:24:14.628+08:00",
+    "task_id": "case_20260826_002414_64bf",
+    "module": "deepfake",
+    "stage": "fusion_and_threshold_completed",
+    "status": "running",
+    "message": "已按真实权重计算融合分数并与判定阈值比较。",
+    "progress_current": null,
+    "progress_total": null,
+    "progress_percent": null,
+    "elapsed_seconds": 0.277334,
+    "details": {
+      "spatial_weight": 0.62,
+      "frequency_weight": 0.38,
+      "fusion_score": 0.05886037606725821,
+      "decision_threshold": 0.36360106194654707,
+      "decision_margin": -0.3047406858792889
+    }
+  },
+  {
+    "event_id": "d4e7a1eab4f5462986e744ff572f5ffc",
+    "timestamp": "2026-08-26T00:24:14.645+08:00",
+    "task_id": "case_20260826_002414_64bf",
+    "module": "deepfake",
+    "stage": "deepfake_finished",
+    "status": "success",
+    "message": "deepfake 模块完成：success",
+    "progress_current": 1,
+    "progress_total": 1,
+    "progress_percent": 100.0,
+    "elapsed_seconds": 0.294948,
+    "details": {
+      "runtime_seconds": 0.2719604000012623
+    }
+  },
+  {
+    "event_id": "74fb1042f4dc47589a3bc51bec84c43f",
+    "timestamp": "2026-08-26T00:24:14.654+08:00",
+    "task_id": "case_20260826_002414_64bf",
+    "module": "overall",
+    "stage": "modules_completed",
+    "status": "running",
+    "message": "已完成所选模块：1 / 3",
+    "progress_current": 1,
+    "progress_total": 4,
+    "progress_percent": 25.0,
+    "elapsed_seconds": 0.301877,
+    "details": {
+      "last_completed_module": "deepfake"
+    }
+  },
+  {
+    "event_id": "fa7fc17fd5194189a23b6c8b5c10cc77",
+    "timestamp": "2026-08-26T00:24:14.664+08:00",
+    "task_id": "case_20260826_002414_64bf",
+    "module": "identity",
+    "stage": "identity_started",
+    "status": "running",
+    "message": "开始执行 identity 真实模块。",
+    "progress_current": 0,
+    "progress_total": 1,
+    "progress_percent": 0.0,
+    "elapsed_seconds": 0.312753,
+    "details": {
+      "execution_order": 2
+    }
+  },
+  {
+    "event_id": "eb20cb45bd0a439388a51ea25b80f580",
+    "timestamp": "2026-08-26T00:24:14.672+08:00",
+    "task_id": "case_20260826_002414_64bf",
+    "module": "identity",
+    "stage": "library_checked",
+    "status": "running",
+    "message": "身份库检查完成：9 人、45 张参考图片。",
+    "progress_current": null,
+    "progress_total": null,
+    "progress_percent": null,
+    "elapsed_seconds": 0.321787,
+    "details": {
+      "library_image_count": 45,
+      "library_identity_count": 9,
+      "top_k": 5
+    }
+  },
+  {
+    "event_id": "1df07246bca042e3b2161d30093f0569",
+    "timestamp": "2026-08-26T00:24:14.677+08:00",
+    "task_id": "case_20260826_002414_64bf",
+    "module": "identity",
+    "stage": "identity_service_reuse",
+    "status": "running",
+    "message": "正在启动或复用 InsightFace 身份服务。",
+    "progress_current": null,
+    "progress_total": null,
+    "progress_percent": null,
+    "elapsed_seconds": 0.325917,
+    "details": {}
+  },
+  {
+    "event_id": "adcc37c800bd4f76bb0328812e2ca562",
+    "timestamp": "2026-08-26T00:24:15.603+08:00",
+    "task_id": "case_20260826_002414_64bf",
+    "module": "identity",
+    "stage": "identity_finished",
+    "status": "success",
+    "message": "identity 模块完成：success",
+    "progress_current": 1,
+    "progress_total": 1,
+    "progress_percent": 100.0,
+    "elapsed_seconds": 1.25435,
+    "details": {
+      "runtime_seconds": 0.9268260000026203
+    }
+  },
+  {
+    "event_id": "ee8d3dd69bac4778a1f8ee4a6f7ad9a7",
+    "timestamp": "2026-08-26T00:24:15.611+08:00",
+    "task_id": "case_20260826_002414_64bf",
+    "module": "overall",
+    "stage": "modules_completed",
+    "status": "running",
+    "message": "已完成所选模块：2 / 3",
+    "progress_current": 2,
+    "progress_total": 4,
+    "progress_percent": 50.0,
+    "elapsed_seconds": 1.260128,
+    "details": {
+      "last_completed_module": "identity"
+    }
+  },
+  {
+    "event_id": "5a7326e1fc7f46599b33bee2e222b37b",
+    "timestamp": "2026-08-26T00:24:15.616+08:00",
+    "task_id": "case_20260826_002414_64bf",
+    "module": "source",
+    "stage": "source_started",
+    "status": "running",
+    "message": "开始执行 source 真实模块。",
+    "progress_current": 0,
+    "progress_total": 1,
+    "progress_percent": 0.0,
+    "elapsed_seconds": 1.264997,
+    "details": {
+      "execution_order": 3
+    }
+  },
+  {
+    "event_id": "bff6dc861aa84d7ca3691e6b6fd59036",
+    "timestamp": "2026-08-26T00:24:15.622+08:00",
+    "task_id": "case_20260826_002414_64bf",
+    "module": "source",
+    "stage": "library_checked",
+    "status": "running",
+    "message": "底图库检查完成：发现 203 张支持格式图片。",
+    "progress_current": null,
+    "progress_total": null,
+    "progress_percent": null,
+    "elapsed_seconds": 1.271535,
+    "details": {
+      "library_image_count": 203,
+      "library_identity_count": null,
+      "top_k": 5
+    }
+  },
+  {
+    "event_id": "f3119cb186d3464798f059a8db86a0d5",
+    "timestamp": "2026-08-26T00:25:06.581+08:00",
+    "task_id": "case_20260826_002414_64bf",
+    "module": "source",
+    "stage": "source_finished",
+    "status": "success",
+    "message": "source 模块完成：success",
+    "progress_current": 1,
+    "progress_total": 1,
+    "progress_percent": 100.0,
+    "elapsed_seconds": 52.228821,
+    "details": {
+      "runtime_seconds": 50.94374709999829
+    }
+  },
+  {
+    "event_id": "ea250baebf9f4eed9919f4a598705d4c",
+    "timestamp": "2026-08-26T00:25:06.598+08:00",
+    "task_id": "case_20260826_002414_64bf",
+    "module": "overall",
+    "stage": "modules_completed",
+    "status": "running",
+    "message": "已完成所选模块：3 / 3",
+    "progress_current": 3,
+    "progress_total": 4,
+    "progress_percent": 75.0,
+    "elapsed_seconds": 52.245177,
+    "details": {
+      "last_completed_module": "source"
+    }
+  },
+  {
+    "event_id": "efda0c3c366449d7a4e144d936a90a59",
+    "timestamp": "2026-08-26T00:25:06.611+08:00",
+    "task_id": "case_20260826_002414_64bf",
+    "module": "overall",
+    "stage": "report_generation",
+    "status": "running",
+    "message": "正在根据三个模块的结构化真实结果生成统一报告。",
+    "progress_current": 3,
+    "progress_total": 4,
+    "progress_percent": 75.0,
+    "elapsed_seconds": 52.258962,
+    "details": {
+      "report_formats": [
+        "json",
+        "txt",
+        "html"
+      ],
+      "module_statuses": {
+        "deepfake": "success",
+        "identity": "success",
+        "source": "success"
+      }
+    }
+  },
+  {
+    "event_id": "99ab67878ed5472bbb9d8bd848195578",
+    "timestamp": "2026-08-26T00:25:06.650+08:00",
+    "task_id": "case_20260826_002414_64bf",
+    "module": "overall",
+    "stage": "report_generated",
+    "status": "success",
+    "message": "检测与检索结果报告已生成。",
+    "progress_current": 4,
+    "progress_total": 4,
+    "progress_percent": 100.0,
+    "elapsed_seconds": 52.29813,
+    "details": {
+      "report_files": {
+        "json": "final_report.json",
+        "txt": "检测结果_case_20260826_002414_64bf.txt",
+        "html": "检测结果_case_20260826_002414_64bf.html"
+      }
+    }
+  },
+  {
+    "event_id": "2a0da139acf14df982c765b8ac1aad09",
+    "timestamp": "2026-08-26T00:25:06.666+08:00",
+    "task_id": "case_20260826_002414_64bf",
+    "module": "overall",
+    "stage": "completed",
+    "status": "success",
+    "message": "检测与检索结果已生成。",
+    "progress_current": 4,
+    "progress_total": 4,
+    "progress_percent": 100.0,
+    "elapsed_seconds": 52.315763,
+    "details": {
+      "task_status": "success",
+      "task_dir": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002414_64bf"
+    }
+  }
+]

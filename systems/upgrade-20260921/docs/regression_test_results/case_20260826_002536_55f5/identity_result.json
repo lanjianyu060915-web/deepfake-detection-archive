@@ -1,0 +1,26 @@
+{
+  "status": "skipped",
+  "query_image": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002536_55f5\\query.jpg",
+  "candidates": [],
+  "runtime_seconds": 0.0,
+  "error_message": null,
+  "details": {
+    "reason": "用户未选择此模块"
+  },
+  "schema_version": "3.0",
+  "module": "identity",
+  "method": {
+    "name": "identity module"
+  },
+  "metrics": {},
+  "explanation": {},
+  "warnings": [],
+  "limitations": [
+    "本模块仅提供风险筛查或当前库内候选线索，不替代人工复核或司法鉴定。"
+  ],
+  "runtime": {
+    "module_elapsed_seconds": 0.0,
+    "orchestrator_elapsed_seconds": 7.170000026235357e-05
+  },
+  "provenance": {}
+}

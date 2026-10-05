@@ -1,0 +1,16 @@
+{
+  "module": "source",
+  "status": "skipped",
+  "started_at": "2026-08-26T00:03:55.159+08:00",
+  "finished_at": "2026-08-26T00:03:55.163+08:00",
+  "runtime_seconds": 2.849999873433262e-05,
+  "returncode": null,
+  "timed_out": false,
+  "skipped": true,
+  "execution_mode": "skipped",
+  "fallback_reason": null,
+  "stdout_log": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.2_dev\\runtime\\tasks\\case_20260826_000355_26f1\\logs\\source_stdout.log",
+  "stderr_log": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.2_dev\\runtime\\tasks\\case_20260826_000355_26f1\\logs\\source_stderr.log",
+  "command_log": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.2_dev\\runtime\\tasks\\case_20260826_000355_26f1\\logs\\source_command.json",
+  "error": null
+}

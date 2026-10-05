@@ -1,0 +1,23 @@
+{
+  "spatial_model_path": "models/spatial_mobilenet_finetuned_gpu/spatial_mobilenet_finetuned_gpu.pt",
+  "frequency_model_path": "models/frequency_stat_formal/frequency_stat_detector.joblib",
+  "fusion_method": "weighted_probability",
+  "spatial_weight": 0.62,
+  "frequency_weight": 0.38,
+  "frame_threshold": 0.36360106194654707,
+  "video_aggregation": "median",
+  "video_threshold": 0.4583425493641632,
+  "label_mapping": {
+    "REAL": 0,
+    "FAKE": 1
+  },
+  "preprocessing_version": "opencv_largest_face_expand_224 + MobileNetV3_DEFAULT / FrequencyStat_v1.0.0",
+  "created_at": "2026-07-13T09:46:09+08:00",
+  "validation_selection_metric": "ROC-AUC; within 0.002 use F1, Accuracy, simplicity and stability",
+  "validation_sample_count": 145,
+  "validation_video_count": 30,
+  "spatial_model_sha256": "5bb4b33936eb3adc631828ea271a466d62070a2b8de1902e5d96122317534794",
+  "frequency_model_sha256": "2ec6828eb2a3151784667eb0c105f07cdb41de6ec2df587d28b2766ceee063eb",
+  "test_set_used_for_selection": false,
+  "frame_fusion_then_video_aggregation": true
+}

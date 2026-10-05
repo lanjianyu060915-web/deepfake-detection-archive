@@ -1,0 +1,2 @@
+2026-08-25 23:40:20,609 INFO source search started query=D:\刑侦查竞赛\face_source_trace_three_module_v0.2_dev\runtime\tasks\case_20260825_234018_7127\query.jpg library=D:\刑侦查竞赛\first_week\data\source_library top_k=5
+2026-08-25 23:41:12,803 INFO source search success diagnostics={'runtime_seconds': 51.867964, 'library_decoded': 203, 'library_skipped': [], 'query_face_detected': True, 'shortlist_size': 20}

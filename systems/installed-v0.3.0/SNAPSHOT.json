@@ -1,0 +1,171 @@
+{
+  "source": "D:\\刑侦查竞赛\\换脸寻源3.0",
+  "files": 41,
+  "bytes": 358900,
+  "inventory": {
+    "config.json": {
+      "bytes": 3592,
+      "sha256": "f0a657e21c10a2601d7a05f945ad429cf68ffbe476d6c961eb9ded6abb55b12c"
+    },
+    "resources_manifest.sha256.json": {
+      "bytes": 3417,
+      "sha256": "b7abf89276e018c7d6fa750da9272b62be120ec587a7dcdac09e15de50ee138b"
+    },
+    "stop_system.ps1": {
+      "bytes": 5431,
+      "sha256": "190498d6078e2f2b7b561eb9c6a9e475c14986bca7e4a5f6c3f65809e49431c1"
+    },
+    "modules/deepfake_detection/inspect_installed_archive.py": {
+      "bytes": 880,
+      "sha256": "f2b46b0102afcca041f8a173ac9e9279548483632ba4932f25a4086eede03dba"
+    },
+    "modules/deepfake_detection/persistent_worker.py": {
+      "bytes": 8912,
+      "sha256": "a0ebcff09909a991478fb489762f07367ac1395b21b64162ba43e7fc6ff8c356"
+    },
+    "modules/deepfake_detection/pyinstaller_pyz_runtime.py": {
+      "bytes": 9988,
+      "sha256": "c6f3836d4c9252cbb2fc315acfd97e78b5f0b8bf10941e607bea996bcb86d836"
+    },
+    "modules/deepfake_detection/run_deepfake_detection.py": {
+      "bytes": 14649,
+      "sha256": "ad69a01f225dfbba31911d08339dc9f2a566ac6338f729be97d7688e93305489"
+    },
+    "deepfake_runtime/src/__init__.py": {
+      "bytes": 25,
+      "sha256": "5ecba613af204e1811ee64b23ef4378a7bbd5e749a6f43efe77dde79b6cd6c68"
+    },
+    "deepfake_runtime/src/core/paths.py": {
+      "bytes": 2447,
+      "sha256": "6a157bdae19a8276c204512ad8d924f5b65e0859db22ccf7dee7107be31415a8"
+    },
+    "deepfake_runtime/src/core/__init__.py": {
+      "bytes": 28,
+      "sha256": "1ff55ca2cb4bbff0eb178166464fb9babeb18e445296338390be34d6b6a6632a"
+    },
+    "deepfake_runtime/src/detectors/base.py": {
+      "bytes": 1006,
+      "sha256": "c59bc8a54158df74ae3da455970a1a90e8db8dfff6f261d446110a82c729c9c5"
+    },
+    "deepfake_runtime/src/detectors/frequency_stat.py": {
+      "bytes": 15121,
+      "sha256": "2ad5a64a67bb2ef407305b78a25aa6e23b5ac5423d73ad56e79583d53152de22"
+    },
+    "deepfake_runtime/src/detectors/frequency_training.py": {
+      "bytes": 26704,
+      "sha256": "d67a20d18da5bfc53d4a493425871e6209aaefbd842a51bc40af610b6177c081"
+    },
+    "deepfake_runtime/src/detectors/fusion_detector.py": {
+      "bytes": 10895,
+      "sha256": "f935841b5984f092203d1e570807bd5dbf791cc8ddb2fed894c364e7028bb055"
+    },
+    "deepfake_runtime/src/detectors/spatial_finetuning.py": {
+      "bytes": 27011,
+      "sha256": "fe7f59c3159642d66884a83948c2f24b60f511fcce43af3027ab2b5b4a41e4bd"
+    },
+    "deepfake_runtime/src/detectors/spatial_mobilenet.py": {
+      "bytes": 8918,
+      "sha256": "f3631e6000189eb4105211a05cee59dd7f32ee1557091b4aa4993b648e9fb9db"
+    },
+    "deepfake_runtime/src/detectors/spatial_training.py": {
+      "bytes": 18770,
+      "sha256": "ae5d50ed2ebc3d23e865e066f2a94c3f830c1ad72a3bf2aa450ddb8965ff733a"
+    },
+    "deepfake_runtime/src/detectors/__init__.py": {
+      "bytes": 559,
+      "sha256": "b10a16f12f063ef3b0eff6ceb05ae92548832fbe10b129eaab7a5bec6beee1d0"
+    },
+    "deepfake_runtime/src/fusion/formal_experiment.py": {
+      "bytes": 52434,
+      "sha256": "0bdaf8d43aa253b7e70fe2914ce54184de8bed19813734b4ca5a4c96e26d4375"
+    },
+    "deepfake_runtime/src/fusion/fusion_optimizer.py": {
+      "bytes": 8802,
+      "sha256": "cc6594b92d747003af85190bb30c4a1cc1d4ea8455a0a15dfc0c0ba2eca42d38"
+    },
+    "deepfake_runtime/src/fusion/video_aggregation.py": {
+      "bytes": 4029,
+      "sha256": "b16d5aa3b959e81c7a1f9f8fc1e1f375d3e0a72efc39cf0bf080d07b347f1b52"
+    },
+    "deepfake_runtime/src/fusion/__init__.py": {
+      "bytes": 440,
+      "sha256": "55354150f10ec420667d36f04a6e96ac96131ed32622da239665c8fecee915bf"
+    },
+    "deepfake_runtime/src/models/__init__.py": {
+      "bytes": 37,
+      "sha256": "b33d881b562e6a98dc13a1cd94331922e30ff05a4c27de573e1b69837aaad2d6"
+    },
+    "deepfake_runtime/src/pipeline/deepfake_detection_pipeline.py": {
+      "bytes": 31524,
+      "sha256": "dcdc10ffc132c9a0f76b35dda68af1a595eb6d1a098f4e7dfb34224d009ef81a"
+    },
+    "deepfake_runtime/src/pipeline/__init__.py": {
+      "bytes": 254,
+      "sha256": "a8122eb772bfaa320928e337d4c7c2ccdf99ebdfbbb49ae9affdc6beb3d6cc2b"
+    },
+    "deepfake_runtime/src/preprocessing/media.py": {
+      "bytes": 16040,
+      "sha256": "36abf675b25f5aa406bfee5c60dc41c09a40078226d28bbb797ea982c926d8d4"
+    },
+    "deepfake_runtime/src/preprocessing/__init__.py": {
+      "bytes": 726,
+      "sha256": "8bf1df9c7b5755faad1870e3cb28d2b93ae67f0a3e6651c2a184a55d808f691d"
+    },
+    "deepfake_runtime/src/reporting/pipeline_implementation_report.py": {
+      "bytes": 5766,
+      "sha256": "3343062f1ee95ff4dc63e21fa1f9b4d3787296ecf6571e5d20a7c8537cd62151"
+    },
+    "deepfake_runtime/src/reporting/runtime_report_service.py": {
+      "bytes": 7820,
+      "sha256": "a0b2dded8a17a26a62ed69fbec194374d6bff60a71f3b47090619e47dd15b8d7"
+    },
+    "deepfake_runtime/src/reporting/spatial_finetune_report.py": {
+      "bytes": 22053,
+      "sha256": "ab66531e041e314e1d301aede473445079f043be41cb0d4258a7dc52ad4c68f2"
+    },
+    "deepfake_runtime/src/reporting/__init__.py": {
+      "bytes": 148,
+      "sha256": "4c4d431a4c4487d8e9bdad09c10a44d0c485014d955017ab4f2a3d54d2cd92c3"
+    },
+    "deepfake_runtime/src/ui/streamlit_helpers.py": {
+      "bytes": 7678,
+      "sha256": "d027ed6b1a512c5755ef6e6768387fffda3f1bc6e603cb107dafbb4d047d85b8"
+    },
+    "deepfake_runtime/src/ui/__init__.py": {
+      "bytes": 586,
+      "sha256": "e18f231a1b7ab9f093c0f26dfa17be53466c77db69114d08506605dd333f0337"
+    },
+    "deepfake_runtime/app.py": {
+      "bytes": 17325,
+      "sha256": "cbace78795458eb0ab81d20cca96825633af058cf5a339fd9b86ebc737edd0e5"
+    },
+    "deepfake_runtime/models/frequency_stat_formal/data_integrity_report.json": {
+      "bytes": 8563,
+      "sha256": "28e121cbd7b03e85ac141c16e93514b132615f725550e56f3e47b4704e283711"
+    },
+    "deepfake_runtime/models/frequency_stat_formal/feature_schema.json": {
+      "bytes": 9805,
+      "sha256": "239470080b3759ea30e061035fedb0b993959e600cc79aeb81e055fdc4cb2dcd"
+    },
+    "deepfake_runtime/models/frequency_stat_formal/metadata.json": {
+      "bytes": 916,
+      "sha256": "4c9e517e6bbe14ebe52fde0949d92660d70f4b95049a446e3fd5282200694c3d"
+    },
+    "deepfake_runtime/models/frequency_stat_formal/training_summary.json": {
+      "bytes": 2196,
+      "sha256": "abe0217df74d683e6e86dfed80e3ca8a6546f11ef42588ead997d9523b3da415"
+    },
+    "deepfake_runtime/models/fusion_formal/fusion_config.json": {
+      "bytes": 1077,
+      "sha256": "8f76abeabb55da1119b28689e15ccd31eac7f1066e401e766987efbb4603e0b2"
+    },
+    "deepfake_runtime/models/spatial_mobilenet_finetuned_gpu/metadata.json": {
+      "bytes": 2195,
+      "sha256": "04b4f28a9b9a7fd2b18f482552a2dd8f98961f4b614245bee4cdf6c24ef7cdad"
+    },
+    "deepfake_runtime/models/spatial_mobilenet_finetuned_gpu/model_file_sha256.json": {
+      "bytes": 133,
+      "sha256": "a4de24b100d4659dbccadcfbed60a6fe78056f25636ad85d76a36e7f8db7e114"
+    }
+  }
+}

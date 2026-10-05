@@ -1,0 +1,11 @@
+module=identity
+status=skipped
+started_at=2026-08-26T00:25:36.650+08:00
+finished_at=2026-08-26T00:25:36.667+08:00
+runtime_seconds=0.000072
+returncode=None
+timed_out=false
+skipped=true
+execution_mode=skipped
+fallback_reason=
+error=

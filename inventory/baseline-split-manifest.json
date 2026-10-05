@@ -1,0 +1,27 @@
+{
+  "original_name": "源系统_v0.4.0_完整冻结_20260920.zip",
+  "source": "C:\\Users\\lanji\\Desktop\\换脸寻源_v0.4.0_源系统冻结_20260920\\源系统_v0.4.0_完整冻结_20260920.zip",
+  "bytes": 5750804886,
+  "sha256": "5e8b6d04eb496c425b15fdca938bff47a9581f5404e7877d73507f96256675e3",
+  "parts": [
+    {
+      "name": "baseline-v0.4.0-full.zip.part001",
+      "bytes": 1992294400,
+      "sha256": "4520d97a733fbca48e988ce376b2508fd6637b2eb68e86cc3cbb07dc358e5db7",
+      "order": 1
+    },
+    {
+      "name": "baseline-v0.4.0-full.zip.part002",
+      "bytes": 1992294400,
+      "sha256": "9561ffa81f836cf5c2894711605488ff764c473559f7c764d58b8473c27aade1",
+      "order": 2
+    },
+    {
+      "name": "baseline-v0.4.0-full.zip.part003",
+      "bytes": 1766216086,
+      "sha256": "55edb1ddaacc545524f3c040368315ae2e1b22cb95175b8fe651cac826e14e8d",
+      "order": 3
+    }
+  ],
+  "reassemble": "Concatenate the parts in order as binary; verify original SHA256; then extract ZIP."
+}

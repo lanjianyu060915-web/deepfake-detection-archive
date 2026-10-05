@@ -1,0 +1,243 @@
+{
+  "schema_version": "1.0",
+  "baseline_id": "face_source_trace_v0.2-dev-deepfake-20260820",
+  "frozen_at": "2026-08-20T11:55:38.6519486+08:00",
+  "capture_mode": "read_only_hash_and_static_configuration_inspection_no_model_inference",
+  "scope": {
+    "product_root": "D:\\刑侦查竞赛\\face_source_trace_v0.2_dev",
+    "installed_module_root": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem",
+    "included": [
+      "v0.2 modules/deepfake_detection/*.py",
+      "v0.2 orchestrator.py",
+      "installed native main EXE including its PyInstaller PYZ runtime code",
+      "installed app.py and every installed src/**/*.py source snapshot",
+      "native runtime_pipeline.json",
+      "MobileNetV3 and torchvision classification-transform source snapshots",
+      "OpenCV Haar frontal-face cascade asset",
+      "spatial/frequency models, required sidecars, fusion config and official backbone weight"
+    ],
+    "integrity_manifests": [
+      "DEEPFAKE_CODE_SHA256.csv",
+      "DEEPFAKE_MODEL_SHA256.csv"
+    ],
+    "verification_script": "VERIFY_BASELINE.ps1"
+  },
+  "source_config": {
+    "path": "D:\\刑侦查竞赛\\face_source_trace_v0.2_dev\\config.json",
+    "size_bytes": 1418,
+    "sha256": "c82b3f0729016c313fd279d7de36623ffb6956fecb7b99aa039b3b1a32dce0fd",
+    "deepfake_section_canonicalization": "UTF-8 JSON, ensure_ascii=false, sort_keys=true, separators=(',', ':')",
+    "deepfake_section_canonical_size_bytes": 322,
+    "deepfake_section_canonical_sha256": "388fd1986287b778c342f7db32296190815135b6f0481018e362f44bdaca5b83",
+    "deepfake": {
+      "enabled": true,
+      "python": "D:\\python\\python.exe",
+      "python_args": [
+        "-S",
+        "-B"
+      ],
+      "runner": "modules/deepfake_detection/run_deepfake_detection.py",
+      "install_root": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem",
+      "torch_home": "runtime/cache/deepfake/torch",
+      "device": "cpu",
+      "timeout_seconds": 180,
+      "extra_args": []
+    }
+  },
+  "resolved_runtime_paths": {
+    "adapter_runner": "D:\\刑侦查竞赛\\face_source_trace_v0.2_dev\\modules\\deepfake_detection\\run_deepfake_detection.py",
+    "pyinstaller_importer": "D:\\刑侦查竞赛\\face_source_trace_v0.2_dev\\modules\\deepfake_detection\\pyinstaller_pyz_runtime.py",
+    "native_executable": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem\\深度伪造识别系统.exe",
+    "native_fusion_config": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem\\models\\fusion_formal\\fusion_config.json",
+    "native_runtime_config": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem\\config\\runtime_pipeline.json",
+    "torch_home": "D:\\刑侦查竞赛\\face_source_trace_v0.2_dev\\runtime\\cache\\deepfake\\torch",
+    "official_backbone_weight": "D:\\刑侦查竞赛\\face_source_trace_v0.2_dev\\runtime\\cache\\deepfake\\torch\\hub\\checkpoints\\mobilenet_v3_small-047dcff4.pth"
+  },
+  "runtime_environment": {
+    "configured_device": "cpu",
+    "adapter_python": {
+      "path": "D:\\python\\python.exe",
+      "version": "3.12.10",
+      "size_bytes": 104952,
+      "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a",
+      "arguments": [
+        "-S",
+        "-B"
+      ]
+    },
+    "installed_python_dll": {
+      "path": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem\\python312.dll",
+      "version": "3.12.10",
+      "size_bytes": 6945272,
+      "sha256": "9a0e3435aaa680d868150f87ab3e388ad2eebc22f87e036155c7b4eda8cd2120"
+    },
+    "bundled_packages": {
+      "torch": "2.11.0",
+      "torchvision": "0.26.0+cpu",
+      "scikit_learn": "1.9.0",
+      "numpy": "2.5.1",
+      "joblib": "1.5.3",
+      "opencv_python": "4.11.0.86"
+    },
+    "runtime_loading": "The adapter inserts a read-only PyInstaller PYZ importer ahead of PathFinder; therefore the frozen main EXE is the authoritative pure-Python runtime-code container. Installed app.py/src/**/*.py are frozen readable source snapshots."
+  },
+  "models": {
+    "spatial": {
+      "architecture": "torchvision mobilenet_v3_small with the final classifier layer replaced by a 2-class linear layer",
+      "checkpoint_path": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem\\models\\spatial_mobilenet_finetuned_gpu\\spatial_mobilenet_finetuned_gpu.pt",
+      "checkpoint_sha256": "5bb4b33936eb3adc631828ea271a466d62070a2b8de1902e5d96122317534794",
+      "checkpoint_classification_threshold": 0.19513355195522308,
+      "checkpoint_threshold_role": "model metadata only; the integrated final image decision uses fusion.frame_threshold",
+      "backbone_weights": "MobileNet_V3_Small_Weights.DEFAULT / IMAGENET1K_V1",
+      "official_backbone_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f"
+    },
+    "frequency": {
+      "model_name": "FrequencyStatDetector",
+      "model_version": "1.0.0",
+      "model_path": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem\\models\\frequency_stat_formal\\frequency_stat_detector.joblib",
+      "model_sha256": "2ec6828eb2a3151784667eb0c105f07cdb41de6ec2df587d28b2766ceee063eb",
+      "feature_dimension": 87,
+      "classification_threshold": 0.3246554908447828,
+      "threshold_role": "branch label only; the integrated final image decision fuses the continuous FAKE probability"
+    },
+    "label_mapping": {
+      "REAL": 0,
+      "FAKE": 1
+    }
+  },
+  "fusion": {
+    "config_path": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem\\models\\fusion_formal\\fusion_config.json",
+    "config_size_bytes": 1077,
+    "config_sha256": "8f76abeabb55da1119b28689e15ccd31eac7f1066e401e766987efbb4603e0b2",
+    "method": "weighted_probability",
+    "spatial_weight": 0.62,
+    "frequency_weight": 0.38,
+    "formula": "fusion_fake_score = 0.62 * spatial_fake_probability + 0.38 * frequency_fake_probability",
+    "frame_threshold": 0.36360106194654707,
+    "frame_decision": "FAKE if fusion_fake_score >= frame_threshold else REAL",
+    "video_aggregation": "median",
+    "video_threshold": 0.4583425493641632,
+    "video_decision": "FAKE if median(frame fusion_fake_score) >= video_threshold else REAL",
+    "score_semantics": "Continuous FAKE-risk probability emitted as native final_fake_score; larger values mean more FAKE-like. It is not overall accuracy, calibrated forensic certainty, or a judicial conclusion."
+  },
+  "preprocessing": {
+    "supported_image_extensions": [
+      ".jpg",
+      ".jpeg",
+      ".png",
+      ".webp"
+    ],
+    "supported_video_extensions": [
+      ".mp4",
+      ".avi",
+      ".mov",
+      ".mkv"
+    ],
+    "image_decode": "numpy.fromfile followed by cv2.imdecode(..., cv2.IMREAD_COLOR), preserving Windows Chinese-path compatibility",
+    "face_detector": {
+      "implementation": "OpenCV Haar frontal face cascade",
+      "cascade_file": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem\\cv2\\data\\haarcascade_frontalface_default.xml",
+      "cascade_sha256": "0f7d4527844eb514d4a4948e822da90fbb16a34a0bbbbc6adc6498747a5aafb0",
+      "gray_conversion": "cv2.COLOR_BGR2GRAY",
+      "histogram_equalization": true,
+      "scale_factor": 1.1,
+      "min_neighbors": 5,
+      "min_size": [
+        30,
+        30
+      ],
+      "selection": "largest detected face by width * height",
+      "retry_if_no_face": "BORDER_REPLICATE padding on each axis by max(16, dimension // 2), then remap the largest detection to the original image"
+    },
+    "face_crop": {
+      "face_expand_ratio": 0.25,
+      "coordinate_rule": "round(width * 0.25) and round(height * 0.25), clipped to image bounds",
+      "output_size": [
+        224,
+        224
+      ],
+      "resize_interpolation": "cv2.INTER_AREA"
+    },
+    "spatial_transform": {
+      "color_conversion": "BGR to RGB, then PIL.Image",
+      "preset": "MobileNet_V3_Small_Weights.DEFAULT.transforms()",
+      "resize_shorter_side": 256,
+      "resize_interpolation": "bilinear",
+      "antialias": true,
+      "center_crop": [
+        224,
+        224
+      ],
+      "value_range_before_normalization": [
+        0.0,
+        1.0
+      ],
+      "mean": [
+        0.485,
+        0.456,
+        0.406
+      ],
+      "std": [
+        0.229,
+        0.224,
+        0.225
+      ]
+    },
+    "frequency_transform": "The same 224x224 expanded largest-face crop is converted BGR to grayscale, scaled to [0,1], and converted to the frozen 87-dimensional FFT/DCT/texture feature vector.",
+    "image_pipeline_note": "The native image pipeline performs a preliminary face gate/preview crop and then FusionDetector predicts from the original image using the same shared face detector and preprocessing configuration."
+  },
+  "native_runtime_strategy": {
+    "config_path": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem\\config\\runtime_pipeline.json",
+    "size_bytes": 482,
+    "sha256": "146f2f0748dcb0000c92cbb268bbc22e4ed5019450f5c33cae80bc6004b86330",
+    "target_valid_frames": 5,
+    "min_valid_frames": 3,
+    "candidate_multiplier": 3,
+    "max_candidate_frames": 20,
+    "keyframe_count": 3,
+    "cleanup_temporary": true,
+    "preprocessing_declaration": {
+      "face_detector": "OpenCV Haar frontal face; padded retry near image boundaries",
+      "largest_face_only": true,
+      "face_expand_ratio": 0.25,
+      "face_size": [
+        224,
+        224
+      ]
+    }
+  },
+  "adapter_contract": {
+    "success_native_label_mapping": {
+      "FAKE": {
+        "label": "deepfake",
+        "is_deepfake": true
+      },
+      "REAL": {
+        "label": "real",
+        "is_deepfake": false
+      }
+    },
+    "score_source": "native final_fake_score",
+    "higher_score_means": "more FAKE-like",
+    "uncertain_native_statuses": [
+      "LOW_CONFIDENCE",
+      "INSUFFICIENT_EVIDENCE"
+    ],
+    "uncertain_mapping": "status=success, is_deepfake=null, label=lowercase native status, score preserved when present",
+    "error_mapping": "status=error with non-zero adapter exit code and a structured error_message"
+  },
+  "immutability_policy": {
+    "must_not_change_during_d_v2": [
+      "adapter and PyInstaller loading code",
+      "native PyInstaller executable and installed source snapshot",
+      "spatial model and MobileNetV3 structure/base weight",
+      "frequency model and 87-dimensional feature definition",
+      "fusion method and weights 0.62/0.38",
+      "frame/image decision threshold 0.36360106194654707",
+      "video median aggregation and threshold 0.4583425493641632",
+      "input preprocessing and Haar cascade",
+      "label mapping REAL=0/FAKE=1"
+    ],
+    "verification_result_rule": "All rows in both SHA-256 manifests plus the source config hash and frozen deepfake configuration values must match."
+  }
+}

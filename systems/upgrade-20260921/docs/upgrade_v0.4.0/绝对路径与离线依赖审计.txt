@@ -1,0 +1,137 @@
+换脸寻源系统 v0.4.0 绝对路径与离线依赖审计
+================================================
+
+一、审计结论
+
+正式安装版运行时审计通过：未发现对 C:\Users\lanji、C:\Users\lanji\.cache\torch、D:\刑侦查竞赛、D:\python 或任一开发工作目录的强制运行依赖。
+
+正式配置使用 {APP_ROOT} 解析只读程序、模型和数据库资源，使用 {DATA_ROOT}（由启动器落到 LOCALAPPDATA\FaceSourceTrace）保存任务、缓存、日志和持久服务状态。AIGC、身份检索和底图溯源所需的正式资源均随安装包提供；正式推理没有运行时下载步骤。
+
+仓库中仍可搜索到少量个人路径或外部 URL 字符串，但均属于开发期构建默认值、历史审计文档、测试夹具、历史运行结果或训练工具说明，不会被正式安装版运行路径读取。具体分类见下文。
+
+二、审计范围与方法
+
+1. 正式运行代码：frontend、orchestrator.py、runtime_services.py、system_status.py、reporting、modules 三个业务模块。
+2. 正式打包代码与配置：packaging_v0.3\config.packaged.json、src、scripts、acceptance、pyinstaller、installer、deepfake_runtime\src。
+3. 已组装安装树：packaging_v0.3\work\dist\app（只读核验）。
+4. 安装后真实任务数据：
+   D:\刑侦查竞赛\installer_acceptance\v0.4.0_证据可视化验收\run_20260831_132928_78d37f28\用户 配置\LocalAppData\FaceSourceTrace
+5. 扫描关键词：C:\Users\lanji、D:\刑侦查竞赛、.cache\torch、D:\python、http://、https://、torch.hub、load_state_dict_from_url、download_url_to_file、requests、urllib.request、pretrained=True、weights=...DEFAULT。
+6. 对命中逐行读取上下文，不将说明文本、测试数据或环回地址误判为外网依赖。
+
+三、正式路径解析结果
+
+packaging_v0.3\config.packaged.json 的关键路径全部采用占位符：
+
+- 任务、收件箱、身份缓存和持久服务：{DATA_ROOT}/...
+- AIGC Python、适配器、模型运行目录：{APP_ROOT}/...
+- 身份 worker、buffalo_l 模型、身份库：{APP_ROOT}/...
+- 底图 worker、203 张底图库：{APP_ROOT}/...
+- 资源清单：{APP_ROOT}/resources_manifest.sha256.json
+
+packaging_v0.3\src\app_launcher.py 从 LOCALAPPDATA 解析用户可写数据根；packaging_v0.3\src\stop_system.ps1 同样优先 FSTS_DATA_ROOT，其次 LOCALAPPDATA\FaceSourceTrace。正式资源目录标记为只读，不把任务结果写回安装目录。
+
+packaging_v0.3\static_validation.json 的最终结果为：
+
+- status：passed
+- fixed_drive_path_findings：0
+- formal_mock_enabled：false
+- product_version：0.4.0
+- side_by_side_isolated_from_v0_3：true
+
+因此，正式配置和最终打包源中没有固定盘符路径。
+
+四、AIGC 离线模型核验
+
+正式空间域加载链为：
+
+mobilenet_v3_small(weights=None)
++ 项目完整 checkpoint
++ load_state_dict(..., strict=True)
+
+packaging_v0.3\resources\deepfake_runtime\src\detectors\spatial_mobilenet.py 的 build_model 默认 use_imagenet_pretrained=False；正式 load_verified_finetuned_model 也显式传入 False。项目 checkpoint 含完整 backbone 和 classifier，因此正式推理不需要官方 mobilenet_v3_small-047dcff4.pth。
+
+已组装安装树中该官方 PTH 的数量为 0；这不是缺包，而是正式推理不再需要它。安装树自带并受 SHA-256 清单约束的 AIGC 资源为：
+
+- 空间域完整 checkpoint：6,202,455 bytes；SHA-256 5BB4B33936EB3ADC631828EA271A466D62070A2B8DE1902E5D96122317534794
+- 频域模型：4,129 bytes；SHA-256 2EC6828EB2A3151784667EB0C105F07CDB41DE6EC2DF587D28B2766CEEE063EB
+- 融合配置：1,077 bytes；SHA-256 8F76ABEABB55DA1119B28689E15CCD31EAC7F1066E401E766987EFBB4603E0B2
+
+代码中 MobileNet_V3_Small_Weights.DEFAULT.transforms() 只读取 torchvision 内置的预处理元数据，不下载权重。official_weights_path()/torch.hub.get_dir() 仅服务于显式 opt-in 的历史训练流程；正式推理不会调用该分支，且正式源码中没有“.cache\torch”硬编码。
+
+五、身份检索和底图溯源离线资源
+
+身份模块正式配置为 offline=true，model_root={APP_ROOT}/model_runtime。正式安装树提供 buffalo_l 的 5 个 ONNX 文件，总计 341,268,726 bytes；运行前 preflight_model 会先校验模型文件，缺失时直接报错，不进入 InsightFace 的模型下载路径。extractor.py 还强制设置 NO_ALBUMENTATIONS_UPDATE=1，关闭依赖导入时的 PyPI 版本检查。
+
+身份库随包提供 45 张图片（9 人）；底图库随包提供 203 张图片。两者均从 {APP_ROOT}/data 读取，不访问开发机数据库目录。
+
+reporting.external_language_model_enabled=false，报告生成不调用外部语言模型。
+
+六、HTTP/HTTPS 与下载相关命中分类
+
+正式运行路径中的 HTTP 地址仅为 127.0.0.1：
+
+- app_launcher.py 使用 http://127.0.0.1:<port> 做 Streamlit 健康检查并打开本机页面；
+- acceptance 脚本使用同类环回地址验证启动/重启。
+
+这些是进程内本机通信，不是互联网依赖。
+
+外部 URL 命中均不属于正式推理：
+
+- build_release.ps1 的 https://pypi.org/simple 是开发期创建/安装 Python 环境用的可覆盖参数；
+- deepfake_runtime\src\detectors\spatial_finetuning.py 和 reporting\spatial_finetune_report.py 中的 download.pytorch.org 是训练环境安装命令/报告文本；
+- spatial_training.py 的 use_imagenet_pretrained=True 只用于显式训练入口，正式推理加载函数固定为 False。
+
+正式推理源码未发现 load_state_dict_from_url、download_url_to_file 或 requests 外网请求；app_launcher.py 的 urllib.request.urlopen 目标经上下文确认仅为 127.0.0.1 健康检查。
+
+七、个人绝对路径命中分类
+
+1. 开发期构建默认值（不是安装版运行依赖）
+
+根目录旧 build_release.ps1 仍有两个开发机默认参数：
+
+- D:\PythonProject\.venv\Scripts\python.exe
+- C:\Users\lanji\.insightface\models\buffalo_l
+
+本次正式安装器走 packaging_v0.3\build_installer_v0.3.ps1 和随包资源，不调用该旧脚本。它们不进入 config.packaged.json 或安装树运行配置。该项属于开发构建便携性遗留，不影响终端用户运行；若未来重新启用旧 build_release.ps1，应通过参数传入本机路径。
+
+2. 测试夹具（不是运行配置）
+
+frontend\tests\test_explainability_reporting.py 中的 C:\Users\lanji、D:\刑侦查竞赛 是用于验证路径脱敏的虚构输入；tests\test_aigc_model_resource_contract.py 中“.cache\torch”是禁止项断言。测试中的命中用于证明正式输出不泄露这些路径。
+
+3. 历史文档和样例命令（不是运行配置）
+
+docs\aigc_fix、docs\delivery、BASELINE_INTEGRITY.md、RELEASE_MANIFEST.md、各模块 README 等文件保留旧问题、审计来源或开发命令，因而含历史绝对路径。modules\identity_search\README.md 的个人模型路径是开发环境示例，正式包实际使用 {APP_ROOT}/model_runtime。
+
+4. 历史运行结果（不是当前程序输入）
+
+runtime\validation 下的绝对路径来自 v0.2 历史验证结果；docs\baseline_test_results、docs\regression_test_results 和 packaging\manual_smoke 下的路径也属于留存测试证据。它们不是 config.json/config.packaged.json 的配置项，正式启动器和三个 worker 不读取这些历史目录。
+
+5. 开发审计工具（不是安装版运行依赖）
+
+tools\Test-BaselineManifest.ps1 和 tools\Rebuild-BaselineManifest.ps1 的固定路径用于旧基线核验；这些工具未进入正式安装启动链。
+
+八、安装后真实任务日志复核
+
+对安装验收隔离数据根中的 128 个 JSON、JSONL、LOG、TXT、HTML 文件执行精确扫描，结果如下：
+
+- C:\Users\lanji\.cache\torch：0 个匹配文件
+- D:\刑侦查竞赛\face_source_trace_three_module_v0.4.0_visualization_dev：0 个匹配文件
+- D:\刑侦查竞赛\face_source_trace_three_module_v0.3.1_fix_dev：0 个匹配文件
+- D:\python：0 个匹配文件
+- download.pytorch.org：0 个匹配文件
+- pypi.org：0 个匹配文件
+- load_state_dict_from_url：0 个匹配文件
+- download_url_to_file：0 个匹配文件
+- torch.hub：0 个匹配文件
+- mobilenet_v3_small-047dcff4.pth：0 个匹配文件
+
+同一安装验收完成了三个单模块任务和重启后的综合任务，四个任务均 success；综合任务验证 48 个 artifact，最终安装、重启、停止和卸载验收状态为 passed。这说明真实安装运行没有回落到开发目录或用户 Torch 缓存。
+
+九、最终判定与边界
+
+正式安装运行：通过。不存在个人绝对路径或在线下载的强制依赖；CPU 环境可使用随包模型、解释器和数据库完成真实推理。
+
+开发构建便携性：根目录旧 build_release.ps1 仍含两个开发机默认值，已明确隔离为非正式构建链遗留。正式 packaging_v0.3 链不依赖它们。
+
+离线验收边界：本次静态调用链、资源完整性、安装后真实任务日志均未发现外网下载或访问；验收记录没有声称通过操作系统层面禁用网卡。该边界不改变“正式运行不需要联网和不执行模型下载”的代码与资源结论。

@@ -1,0 +1,5 @@
+# The frontend has its own virtual environment.  The two release-critical top
+# level packages are intentionally exact pins; transitive dependencies are
+# captured in build_facts.json on every build.
+PyInstaller==6.22.2
+streamlit==1.58.0

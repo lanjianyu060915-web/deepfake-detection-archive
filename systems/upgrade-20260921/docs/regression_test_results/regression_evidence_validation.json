@@ -1,0 +1,91 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "report_and_progress_validation",
+  "generated_at": "2026-08-26T00:29:59+08:00",
+  "task_id": "case_20260826_001607_552e",
+  "reports": {
+    "passed": true,
+    "files": {
+      "json": {
+        "path": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.3_explainable_dev\\docs\\regression_test_results\\case_20260826_001607_552e\\final_report.json",
+        "size_bytes": 79386
+      },
+      "txt": {
+        "path": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.3_explainable_dev\\docs\\regression_test_results\\case_20260826_001607_552e\\检测结果_case_20260826_001607_552e.txt",
+        "size_bytes": 7613
+      },
+      "html": {
+        "path": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.3_explainable_dev\\docs\\regression_test_results\\case_20260826_001607_552e\\检测结果_case_20260826_001607_552e.html",
+        "size_bytes": 8866
+      }
+    },
+    "utf8_decoding": true,
+    "raw_module_json_embedded_without_change": {
+      "deepfake": true,
+      "identity": true,
+      "source": true
+    },
+    "checked_numeric_values": [
+      "0.009079",
+      "0.363601",
+      "0.378594",
+      "0.593201",
+      "0.605071",
+      "0.934526",
+      "0.962237",
+      "0.996107"
+    ]
+  },
+  "progress": {
+    "passed": true,
+    "event_count": 140,
+    "all_json_lines_valid": true,
+    "required_fields_present": true,
+    "event_ids_unique": true,
+    "timestamps_monotonic": true,
+    "module_percentages_non_decreasing": {
+      "deepfake": true,
+      "identity": true,
+      "overall": true,
+      "source": true
+    },
+    "scan_source_library": {
+      "observed_event_count": 69,
+      "first_current": 1,
+      "last_current": 203,
+      "progress_total": 203,
+      "strictly_increasing": true,
+      "note": "按节流策略记录关键数量变化；真实范围从 1/203 到 203/203。"
+    },
+    "source_geometric_review": {
+      "observed_event_count": 20,
+      "currents": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "progress_total": 20,
+      "complete_1_through_20": true
+    },
+    "latest_matches_last_jsonl_event": true,
+    "final_event_success_100_percent": true
+  },
+  "overall_passed": true
+}

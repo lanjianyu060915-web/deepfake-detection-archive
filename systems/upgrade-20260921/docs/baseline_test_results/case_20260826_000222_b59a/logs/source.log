@@ -1,0 +1,11 @@
+module=source
+status=success
+started_at=2026-08-26T00:02:24.894+08:00
+finished_at=2026-08-26T00:02:58.456+08:00
+runtime_seconds=33.559569
+returncode=0
+timed_out=false
+skipped=false
+execution_mode=subprocess
+fallback_reason=
+error=

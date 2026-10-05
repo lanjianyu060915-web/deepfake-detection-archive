@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-26T02:05:09.4424833+08:00",
+  "platform": "Windows",
+  "defect": "SO_REUSEADDR allowed the formal v0.3 launcher to share the legacy Streamlit listener port",
+  "fix": "Use SO_EXCLUSIVEADDRUSE before bind on Windows and do not enable SO_REUSEADDR in the probe",
+  "launcher_sha256": "3B924CCCBAE8D3C144282C491101DBFF68EB9E549DF2E3198961BD74AC6A9A37",
+  "live_conflict_check": {
+    "preferred_port": 8767,
+    "preexisting_owner_pid": 23548,
+    "selected_port": 65001,
+    "selected_differs": true,
+    "selected_port_rebind_succeeded": true
+  },
+  "automated_tests": {
+    "port_selection_tests_passed": 3,
+    "full_suite_passed": 61,
+    "full_suite_elapsed_seconds": 6.09
+  },
+  "limitations": [
+    "The probe closes before Streamlit binds, leaving a small unavoidable time-of-check/time-of-use window."
+  ]
+}

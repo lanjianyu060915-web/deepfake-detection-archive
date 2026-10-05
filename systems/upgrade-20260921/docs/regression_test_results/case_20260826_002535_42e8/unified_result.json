@@ -1,0 +1,40 @@
+{
+  "schema_version": "3.0",
+  "task_id": "case_20260826_002535_42e8",
+  "status": "success",
+  "query_image": "query.jpg",
+  "selected_modules": [
+    "deepfake"
+  ],
+  "deepfake_detection": {
+    "selected": true,
+    "status": "success",
+    "result_file": "detection_result.json"
+  },
+  "identity_search": {
+    "selected": false,
+    "status": "skipped",
+    "result_file": "identity_result.json"
+  },
+  "source_search": {
+    "selected": false,
+    "status": "skipped",
+    "result_file": "source_result.json"
+  },
+  "runtime_seconds": {
+    "deepfake": 0.36996369999542367,
+    "identity": 5.999999848427251e-05,
+    "source": 6.030000076862052e-05,
+    "total": 0.48401530000410276
+  },
+  "errors": [],
+  "reports": {
+    "status": "success",
+    "runtime_seconds": 0.024101300004986115,
+    "files": {
+      "json": "final_report.json",
+      "txt": "检测结果_case_20260826_002535_42e8.txt",
+      "html": "检测结果_case_20260826_002535_42e8.html"
+    }
+  }
+}

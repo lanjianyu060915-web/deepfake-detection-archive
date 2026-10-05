@@ -1,0 +1,16 @@
+test_low_confidence_stays_uncertain (test_three_module_frontend.DetectionSchemaTests.test_low_confidence_stays_uncertain) ... ok
+test_skipped_schemas_are_explicit (test_three_module_frontend.DetectionSchemaTests.test_skipped_schemas_are_explicit) ... ok
+test_live_home_renders_without_starting_models (test_three_module_frontend.StreamlitSmokeTests.test_live_home_renders_without_starting_models) ... 2026-08-25 23:39:48.576 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_mock_mode_loads_three_result_tabs (test_three_module_frontend.StreamlitSmokeTests.test_mock_mode_loads_three_result_tabs) ... 2026-08-25 23:39:48.993 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_device_reports_effective_cpu_not_hardware_cuda (test_three_module_frontend.SystemStatusAdapterTests.test_device_reports_effective_cpu_not_hardware_cuda) ... ok
+test_realtime_source_index_with_zero_persistent_features_is_runnable (test_three_module_frontend.SystemStatusAdapterTests.test_realtime_source_index_with_zero_persistent_features_is_runnable) ... ok
+test_bundled_mock_has_all_three_results (test_three_module_frontend.TaskCompatibilityTests.test_bundled_mock_has_all_three_results) ... ok
+test_bundled_mock_task_loads_as_three_module_task (test_three_module_frontend.TaskCompatibilityTests.test_bundled_mock_task_loads_as_three_module_task) ... ok
+test_legacy_dual_module_task_gets_skipped_deepfake (test_three_module_frontend.TaskCompatibilityTests.test_legacy_dual_module_task_gets_skipped_deepfake) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.820s
+
+OK

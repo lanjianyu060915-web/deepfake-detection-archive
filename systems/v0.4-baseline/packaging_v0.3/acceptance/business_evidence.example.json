@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "status": "passed",
+  "deepfake": {
+    "status": "success",
+    "task_id": "replace_with_real_task_id"
+  },
+  "identity": {
+    "status": "success",
+    "task_id": "replace_with_real_task_id"
+  },
+  "source": {
+    "status": "success",
+    "task_id": "replace_with_real_task_id"
+  },
+  "comprehensive": {
+    "status": "success",
+    "task_id": "replace_with_real_task_id"
+  },
+  "reports": {
+    "json": "replace_with_absolute_final_report_path",
+    "txt": "replace_with_absolute_txt_report_path",
+    "html": "replace_with_absolute_html_report_path"
+  },
+  "notes": "所有 task_id 和报告路径必须来自安装后真实运行。"
+}

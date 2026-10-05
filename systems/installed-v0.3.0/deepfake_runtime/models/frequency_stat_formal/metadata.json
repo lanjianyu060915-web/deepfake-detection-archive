@@ -1,0 +1,33 @@
+{
+  "model_name": "FrequencyStatDetector",
+  "model_version": "1.0.0",
+  "created_at": "2026-07-12T20:02:45+08:00",
+  "python_version": "3.12.10",
+  "sklearn_version": "1.9.0",
+  "feature_dimension": 87,
+  "train_sample_count": 678,
+  "val_sample_count": 145,
+  "test_sample_count": 150,
+  "manifest_frame_counts": {
+    "train": 700,
+    "val": 150,
+    "test": 150
+  },
+  "video_row_counts": {
+    "train": 140,
+    "val": 30,
+    "test": 30
+  },
+  "pair_counts": {
+    "train": 70,
+    "val": 15,
+    "test": 15
+  },
+  "random_state": 20260712,
+  "classification_threshold": 0.3246554908447828,
+  "manifest_sha256": "928f95e0489429a36b01e8f0d1c15f21b2d01b0f8f9d46488e05e32b99c4ea72",
+  "model_file_sha256": "2ec6828eb2a3151784667eb0c105f07cdb41de6ec2df587d28b2766ceee063eb",
+  "model_file": "frequency_stat_detector.joblib",
+  "demo_only": false,
+  "not_for_final_metrics": false
+}

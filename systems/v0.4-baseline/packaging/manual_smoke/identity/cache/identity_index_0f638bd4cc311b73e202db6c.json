@@ -1,0 +1,222 @@
+{
+  "schema_version": 1,
+  "fingerprint": "fc1009a0f927947f0991f17015c994bf911dffb3ed43ff365df687faa83691cf",
+  "entries": [
+    {
+      "identity_id": "person_001",
+      "identity_name": "person_001",
+      "relative_path": "person_001/01.jpg"
+    },
+    {
+      "identity_id": "person_001",
+      "identity_name": "person_001",
+      "relative_path": "person_001/02.jpg"
+    },
+    {
+      "identity_id": "person_001",
+      "identity_name": "person_001",
+      "relative_path": "person_001/03.jpg"
+    },
+    {
+      "identity_id": "person_001",
+      "identity_name": "person_001",
+      "relative_path": "person_001/04.jpg"
+    },
+    {
+      "identity_id": "person_001",
+      "identity_name": "person_001",
+      "relative_path": "person_001/05.jpg"
+    },
+    {
+      "identity_id": "person_002",
+      "identity_name": "person_002",
+      "relative_path": "person_002/02.jpg"
+    },
+    {
+      "identity_id": "person_002",
+      "identity_name": "person_002",
+      "relative_path": "person_002/03.jpg"
+    },
+    {
+      "identity_id": "person_002",
+      "identity_name": "person_002",
+      "relative_path": "person_002/04.jpg"
+    },
+    {
+      "identity_id": "person_002",
+      "identity_name": "person_002",
+      "relative_path": "person_002/05.jpg"
+    },
+    {
+      "identity_id": "person_003",
+      "identity_name": "person_003",
+      "relative_path": "person_003/01.jpg"
+    },
+    {
+      "identity_id": "person_003",
+      "identity_name": "person_003",
+      "relative_path": "person_003/02.jpg"
+    },
+    {
+      "identity_id": "person_003",
+      "identity_name": "person_003",
+      "relative_path": "person_003/03.jpg"
+    },
+    {
+      "identity_id": "person_003",
+      "identity_name": "person_003",
+      "relative_path": "person_003/04.jpg"
+    },
+    {
+      "identity_id": "person_004",
+      "identity_name": "person_004",
+      "relative_path": "person_004/01.jpg"
+    },
+    {
+      "identity_id": "person_004",
+      "identity_name": "person_004",
+      "relative_path": "person_004/02.jpg"
+    },
+    {
+      "identity_id": "person_004",
+      "identity_name": "person_004",
+      "relative_path": "person_004/03.jpg"
+    },
+    {
+      "identity_id": "person_004",
+      "identity_name": "person_004",
+      "relative_path": "person_004/04.jpg"
+    },
+    {
+      "identity_id": "person_004",
+      "identity_name": "person_004",
+      "relative_path": "person_004/05.jpg"
+    },
+    {
+      "identity_id": "person_005",
+      "identity_name": "person_005",
+      "relative_path": "person_005/01.jpg"
+    },
+    {
+      "identity_id": "person_005",
+      "identity_name": "person_005",
+      "relative_path": "person_005/02.jpg"
+    },
+    {
+      "identity_id": "person_005",
+      "identity_name": "person_005",
+      "relative_path": "person_005/03.jpg"
+    },
+    {
+      "identity_id": "person_005",
+      "identity_name": "person_005",
+      "relative_path": "person_005/04.jpg"
+    },
+    {
+      "identity_id": "person_005",
+      "identity_name": "person_005",
+      "relative_path": "person_005/05.jpg"
+    },
+    {
+      "identity_id": "person_006",
+      "identity_name": "person_006",
+      "relative_path": "person_006/01.jpg"
+    },
+    {
+      "identity_id": "person_006",
+      "identity_name": "person_006",
+      "relative_path": "person_006/02.jpg"
+    },
+    {
+      "identity_id": "person_006",
+      "identity_name": "person_006",
+      "relative_path": "person_006/03.jpg"
+    },
+    {
+      "identity_id": "person_006",
+      "identity_name": "person_006",
+      "relative_path": "person_006/04.jpg"
+    },
+    {
+      "identity_id": "person_006",
+      "identity_name": "person_006",
+      "relative_path": "person_006/05.jpg"
+    },
+    {
+      "identity_id": "person_007",
+      "identity_name": "person_007",
+      "relative_path": "person_007/01.jpg"
+    },
+    {
+      "identity_id": "person_007",
+      "identity_name": "person_007",
+      "relative_path": "person_007/02.jpg"
+    },
+    {
+      "identity_id": "person_007",
+      "identity_name": "person_007",
+      "relative_path": "person_007/03.jpg"
+    },
+    {
+      "identity_id": "person_007",
+      "identity_name": "person_007",
+      "relative_path": "person_007/04.jpg"
+    },
+    {
+      "identity_id": "person_007",
+      "identity_name": "person_007",
+      "relative_path": "person_007/05.jpg"
+    },
+    {
+      "identity_id": "person_008",
+      "identity_name": "person_008",
+      "relative_path": "person_008/01.jpg"
+    },
+    {
+      "identity_id": "person_008",
+      "identity_name": "person_008",
+      "relative_path": "person_008/02.jpg"
+    },
+    {
+      "identity_id": "person_008",
+      "identity_name": "person_008",
+      "relative_path": "person_008/03.jpg"
+    },
+    {
+      "identity_id": "person_008",
+      "identity_name": "person_008",
+      "relative_path": "person_008/04.jpg"
+    },
+    {
+      "identity_id": "person_008",
+      "identity_name": "person_008",
+      "relative_path": "person_008/05.jpg"
+    },
+    {
+      "identity_id": "person_009",
+      "identity_name": "person_009",
+      "relative_path": "person_009/01.jpg"
+    },
+    {
+      "identity_id": "person_009",
+      "identity_name": "person_009",
+      "relative_path": "person_009/02.jpg"
+    },
+    {
+      "identity_id": "person_009",
+      "identity_name": "person_009",
+      "relative_path": "person_009/03.jpg"
+    },
+    {
+      "identity_id": "person_009",
+      "identity_name": "person_009",
+      "relative_path": "person_009/04.jpg"
+    },
+    {
+      "identity_id": "person_009",
+      "identity_name": "person_009",
+      "relative_path": "person_009/05.jpg"
+    }
+  ],
+  "data_sha256": "75bd239089ab5f65d6ac0b4ced3d71724596562f2031b387e9c42409107693b6"
+}

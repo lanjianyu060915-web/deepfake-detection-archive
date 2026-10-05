@@ -1,0 +1,16 @@
+{
+  "module": "identity",
+  "status": "skipped",
+  "started_at": "2026-08-26T00:25:36.110+08:00",
+  "finished_at": "2026-08-26T00:25:36.121+08:00",
+  "runtime_seconds": 5.999999848427251e-05,
+  "returncode": null,
+  "timed_out": false,
+  "skipped": true,
+  "execution_mode": "skipped",
+  "fallback_reason": null,
+  "stdout_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002535_42e8\\logs\\identity_stdout.log",
+  "stderr_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002535_42e8\\logs\\identity_stderr.log",
+  "command_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002535_42e8\\logs\\identity_command.json",
+  "error": null
+}

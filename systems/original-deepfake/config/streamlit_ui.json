@@ -1,0 +1,9 @@
+{
+  "application_name": "多域融合深度伪造辅助研判系统",
+  "application_version": "1.0.0",
+  "disagreement_threshold": 0.30,
+  "upload_extensions": ["jpg", "jpeg", "png", "mp4", "avi", "mov", "mkv", "webp"],
+  "image_extensions": ["jpg", "jpeg", "png", "webp"],
+  "video_extensions": ["mp4", "avi", "mov", "mkv"],
+  "upload_temp_directory": ".tmp/streamlit_uploads"
+}

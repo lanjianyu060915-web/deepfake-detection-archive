@@ -1,0 +1,96 @@
+[真实回归] 正在初始化 deepfake 持久工作进程
+[真实回归] deepfake 模型已初始化并可复用
+[真实回归] 正在初始化 identity 持久工作进程
+[真实回归] identity 模型已初始化并可复用
+{
+  "started": true,
+  "closed": false,
+  "ready": true,
+  "health": "ok",
+  "deepfake": {
+    "state": "ready",
+    "ready": true,
+    "healthy": true,
+    "health": "ok",
+    "pid": 13096,
+    "error": null,
+    "started_at": 1787674543.9312308,
+    "last_response_at": 1787674557.1043427,
+    "requests_completed": 0,
+    "details": {
+      "worker": "deepfake",
+      "pid": 13096,
+      "pipeline_initialized": true,
+      "model_load_count": 1,
+      "install_root": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem",
+      "torch_home": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.3_explainable_dev\\runtime\\cache\\deepfake\\torch",
+      "dependency_isolation": "dedicated_process"
+    },
+    "noise_lines_ignored": 0,
+    "noise_tail": [],
+    "stderr_tail": []
+  },
+  "identity": {
+    "state": "ready",
+    "ready": true,
+    "healthy": true,
+    "health": "ok",
+    "pid": 36844,
+    "error": null,
+    "started_at": 1787674557.1136177,
+    "last_response_at": 1787674567.0633907,
+    "requests_completed": 0,
+    "details": {
+      "worker": "identity",
+      "pid": 18608,
+      "model": "buffalo_l",
+      "model_fingerprint": "c280512512d104c2cc6eafabeac7fbab07b55b38c681a0003a24a17d011ba3f6",
+      "device": "cpu",
+      "ctx_id": -1,
+      "cached_libraries": 1,
+      "model_instances": 1,
+      "dependency_isolation": "dedicated_process"
+    },
+    "noise_lines_ignored": 11,
+    "noise_tail": [
+      "find model: C:\\Users\\lanji\\.insightface\\models\\buffalo_l\\1k3d68.onnx landmark_3d_68 ['None', 3, 192, 192] 0.0 1.0",
+      "Applied providers: ['CPUExecutionProvider'], with options: {'CPUExecutionProvider': {}}",
+      "find model: C:\\Users\\lanji\\.insightface\\models\\buffalo_l\\2d106det.onnx landmark_2d_106 ['None', 3, 192, 192] 0.0 1.0",
+      "Applied providers: ['CPUExecutionProvider'], with options: {'CPUExecutionProvider': {}}",
+      "find model: C:\\Users\\lanji\\.insightface\\models\\buffalo_l\\det_10g.onnx detection [1, 3, '?', '?'] 127.5 128.0",
+      "Applied providers: ['CPUExecutionProvider'], with options: {'CPUExecutionProvider': {}}",
+      "find model: C:\\Users\\lanji\\.insightface\\models\\buffalo_l\\genderage.onnx genderage ['None', 3, 96, 96] 0.0 1.0",
+      "Applied providers: ['CPUExecutionProvider'], with options: {'CPUExecutionProvider': {}}",
+      "find model: C:\\Users\\lanji\\.insightface\\models\\buffalo_l\\w600k_r50.onnx recognition ['None', 3, 112, 112] 127.5 127.5",
+      "set det-size: (1280, 1280)"
+    ],
+    "stderr_tail": []
+  }
+}
+[真实回归] 已创建独立分析任务。
+[真实回归] 开始执行 deepfake 真实模块。
+[真实回归] 输入图片存在且已复制到独立任务目录。
+[真实回归] AIGC模型、融合配置和适配器哈希校验通过。
+[真实回归] 正在启动或复用 AIGC 真实模型服务。
+[真实回归] 正在读取图片、检测有效人脸并执行空间域与频域模型。
+[真实回归] 有效人脸/有效帧处理完成：1。
+[真实回归] 空间域模型推理完成。
+[真实回归] 频域模型推理完成。
+[真实回归] 已按真实权重计算融合分数并与判定阈值比较。
+[真实回归] deepfake 模块完成：success
+[真实回归] 已完成所选模块：1 / 3
+[真实回归] 开始执行 identity 真实模块。
+[真实回归] 身份库检查完成：9 人、45 张参考图片。
+[真实回归] 正在启动或复用 InsightFace 身份服务。
+[真实回归] identity 模块完成：success
+[真实回归] 已完成所选模块：2 / 3
+[真实回归] 开始执行 source 真实模块。
+[真实回归] 底图库检查完成：发现 203 张支持格式图片。
+[真实回归] source 模块完成：success
+[真实回归] 已完成所选模块：3 / 3
+[真实回归] 正在根据三个模块的结构化真实结果生成统一报告。
+[真实回归] 检测与检索结果报告已生成。
+[真实回归] 检测与检索结果已生成。
+[真实回归] deepfake 持久工作进程已停止
+[真实回归] identity 持久工作进程已停止
+真实回归汇总：D:\刑侦查竞赛\face_source_trace_three_module_v0.3_explainable_dev\docs\regression_test_results\v0.3_query001_summary.json

@@ -1,0 +1,7 @@
+task_id=case_20260826_002534_2abe
+status=success
+selected_modules=deepfake
+deepfake_status=success
+identity_status=skipped
+source_status=skipped
+runtime_seconds=1.155216

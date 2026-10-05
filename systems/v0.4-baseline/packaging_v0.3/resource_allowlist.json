@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0",
+  "deepfake_adapter_files": [
+    "run_deepfake_detection.py",
+    "persistent_worker.py",
+    "pyinstaller_pyz_runtime.py",
+    "inspect_installed_archive.py"
+  ],
+  "identity_model_files": [
+    "1k3d68.onnx",
+    "2d106det.onnx",
+    "det_10g.onnx",
+    "genderage.onnx",
+    "w600k_r50.onnx"
+  ],
+  "portable_python_required_files": [
+    "python.exe",
+    "pythonw.exe",
+    "python3.dll",
+    "python312.dll",
+    "vcruntime140.dll",
+    "vcruntime140_1.dll",
+    "LICENSE.txt"
+  ],
+  "allowed_image_extensions": [
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".bmp",
+    ".webp",
+    ".tif",
+    ".tiff"
+  ],
+  "forbidden_resource_names": [
+    "__pycache__",
+    ".pytest_cache",
+    "unins000.exe",
+    "unins000.dat"
+  ]
+}

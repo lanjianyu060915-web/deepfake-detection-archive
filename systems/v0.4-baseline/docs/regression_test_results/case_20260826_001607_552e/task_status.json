@@ -1,0 +1,103 @@
+{
+  "schema_version": "3.0",
+  "task_id": "case_20260826_001607_552e",
+  "task_dir": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_001607_552e",
+  "status": "success",
+  "started_at": "2026-08-26T00:16:07.086+08:00",
+  "finished_at": "2026-08-26T00:17:36.867+08:00",
+  "query_source": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.3_explainable_dev\\examples\\integrated_query_001.jpg",
+  "query_image": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_001607_552e\\query.jpg",
+  "selected_modules": [
+    "deepfake",
+    "identity",
+    "source"
+  ],
+  "modules": {
+    "deepfake": {
+      "module": "deepfake",
+      "status": "success",
+      "stage": "finished",
+      "message": "模块完成：success",
+      "runtime_seconds": 6.408938000000489,
+      "error": null
+    },
+    "identity": {
+      "module": "identity",
+      "status": "success",
+      "stage": "finished",
+      "message": "模块完成：success",
+      "runtime_seconds": 5.204340100004629,
+      "error": null
+    },
+    "source": {
+      "module": "source",
+      "status": "success",
+      "stage": "finished",
+      "message": "模块完成：success",
+      "runtime_seconds": 77.8942354000028,
+      "error": null
+    }
+  },
+  "deepfake": {
+    "module": "deepfake",
+    "status": "success",
+    "started_at": "2026-08-26T00:16:07.149+08:00",
+    "finished_at": "2026-08-26T00:16:13.578+08:00",
+    "runtime_seconds": 6.408938000000489,
+    "returncode": null,
+    "timed_out": false,
+    "skipped": false,
+    "execution_mode": "service",
+    "fallback_reason": null,
+    "stdout_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_001607_552e\\logs\\deepfake_stdout.log",
+    "stderr_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_001607_552e\\logs\\deepfake_stderr.log",
+    "command_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_001607_552e\\logs\\deepfake_command.json",
+    "error": null
+  },
+  "identity": {
+    "module": "identity",
+    "status": "success",
+    "started_at": "2026-08-26T00:16:13.649+08:00",
+    "finished_at": "2026-08-26T00:16:18.873+08:00",
+    "runtime_seconds": 5.204340100004629,
+    "returncode": null,
+    "timed_out": false,
+    "skipped": false,
+    "execution_mode": "service",
+    "fallback_reason": null,
+    "stdout_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_001607_552e\\logs\\identity_stdout.log",
+    "stderr_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_001607_552e\\logs\\identity_stderr.log",
+    "command_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_001607_552e\\logs\\identity_command.json",
+    "error": null
+  },
+  "source": {
+    "module": "source",
+    "status": "success",
+    "started_at": "2026-08-26T00:16:18.952+08:00",
+    "finished_at": "2026-08-26T00:17:36.855+08:00",
+    "runtime_seconds": 77.8942354000028,
+    "returncode": 0,
+    "timed_out": false,
+    "skipped": false,
+    "execution_mode": "subprocess",
+    "fallback_reason": null,
+    "stdout_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_001607_552e\\logs\\source_stdout.log",
+    "stderr_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_001607_552e\\logs\\source_stderr.log",
+    "command_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_001607_552e\\logs\\source_command.json",
+    "error": null
+  },
+  "runtime_seconds": 89.77581099999952,
+  "progress_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_001607_552e\\logs\\progress_events.jsonl",
+  "progress_events": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_001607_552e\\logs\\progress_events.jsonl",
+  "progress_latest": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_001607_552e\\logs\\progress_latest.json",
+  "errors": [],
+  "reports": {
+    "status": "success",
+    "runtime_seconds": 0.06521839999913936,
+    "files": {
+      "json": "final_report.json",
+      "txt": "检测结果_case_20260826_001607_552e.txt",
+      "html": "检测结果_case_20260826_001607_552e.html"
+    }
+  }
+}

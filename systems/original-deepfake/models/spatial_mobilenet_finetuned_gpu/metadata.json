@@ -1,0 +1,73 @@
+{
+  "model_name": "SpatialMobileNetDetector GPU Finetuned",
+  "backbone": "mobilenet_v3_small",
+  "source_baseline_path": "D:\\信安大作业\\models\\spatial_mobilenet_formal\\spatial_mobilenet_state_dict.pt",
+  "source_baseline_sha256": "70d829e475de837c4fe225b8df3c098c26b8a5110288730b33109d65f68cdcf6",
+  "model_path": "D:\\信安大作业\\models\\spatial_mobilenet_finetuned_gpu\\spatial_mobilenet_finetuned_gpu.pt",
+  "model_sha256": "5bb4b33936eb3adc631828ea271a466d62070a2b8de1902e5d96122317534794",
+  "best_epoch": 15,
+  "epochs_completed": 20,
+  "classification_threshold": 0.19513355195522308,
+  "best_val_metrics_at_0_5": {
+    "Accuracy": 0.7379310344827587,
+    "Precision": 0.7571428571428571,
+    "Recall": 0.7162162162162162,
+    "Specificity": 0.7605633802816901,
+    "F1": 0.7361111111111112,
+    "ROC-AUC": 0.789208222306814,
+    "confusion_matrix": [
+      [
+        54,
+        17
+      ],
+      [
+        21,
+        53
+      ]
+    ],
+    "false_positive_count": 17,
+    "false_negative_count": 21,
+    "sample_count": 145,
+    "classification_threshold": 0.5
+  },
+  "best_val_metrics_at_selected_threshold": {
+    "Accuracy": 0.7655172413793103,
+    "Precision": 0.7,
+    "Recall": 0.9459459459459459,
+    "Specificity": 0.5774647887323944,
+    "F1": 0.8045977011494253,
+    "ROC-AUC": 0.789208222306814,
+    "confusion_matrix": [
+      [
+        41,
+        30
+      ],
+      [
+        4,
+        70
+      ]
+    ],
+    "false_positive_count": 30,
+    "false_negative_count": 4,
+    "sample_count": 145,
+    "classification_threshold": 0.19513355195522308
+  },
+  "unfrozen_feature_indices": [
+    10,
+    11,
+    12
+  ],
+  "train_valid_count": 678,
+  "val_valid_count": 145,
+  "test_images_used_during_training": 0,
+  "training_seconds": 297.4419634000001,
+  "average_epoch_seconds": 14.816932505000034,
+  "validation_model_inference_ms_per_sample": 1.7090413793116097,
+  "peak_gpu_memory_bytes": 68821504,
+  "peak_gpu_memory_mib": 65.63330078125,
+  "actual_batch_size": 16,
+  "device": "cuda",
+  "gpu_name": "NVIDIA GeForce RTX 5060 Laptop GPU",
+  "amp_enabled": true,
+  "random_seed": 20260712
+}

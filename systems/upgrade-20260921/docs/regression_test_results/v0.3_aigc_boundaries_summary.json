@@ -1,0 +1,444 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-26T00:25:16+08:00",
+  "config_path": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.3_explainable_dev\\config.json",
+  "selected_modules": [
+    "deepfake"
+  ],
+  "uses_mock": false,
+  "service_start": {
+    "started": true,
+    "closed": false,
+    "ready": true,
+    "health": "ok",
+    "deepfake": {
+      "state": "ready",
+      "ready": true,
+      "healthy": true,
+      "health": "ok",
+      "pid": 32652,
+      "error": null,
+      "started_at": 1787675116.0357687,
+      "last_response_at": 1787675127.8265388,
+      "requests_completed": 0,
+      "details": {
+        "worker": "deepfake",
+        "pid": 32652,
+        "pipeline_initialized": true,
+        "model_load_count": 1,
+        "install_root": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem",
+        "torch_home": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.3_explainable_dev\\runtime\\cache\\deepfake\\torch",
+        "dependency_isolation": "dedicated_process"
+      },
+      "noise_lines_ignored": 0,
+      "noise_tail": [],
+      "stderr_tail": []
+    },
+    "identity": {
+      "state": "ready",
+      "ready": true,
+      "healthy": true,
+      "health": "ok",
+      "pid": 23524,
+      "error": null,
+      "started_at": 1787675127.8409798,
+      "last_response_at": 1787675134.344926,
+      "requests_completed": 0,
+      "details": {
+        "worker": "identity",
+        "pid": 12464,
+        "model": "buffalo_l",
+        "model_fingerprint": "c280512512d104c2cc6eafabeac7fbab07b55b38c681a0003a24a17d011ba3f6",
+        "device": "cpu",
+        "ctx_id": -1,
+        "cached_libraries": 1,
+        "model_instances": 1,
+        "dependency_isolation": "dedicated_process"
+      },
+      "noise_lines_ignored": 11,
+      "noise_tail": [
+        "find model: C:\\Users\\lanji\\.insightface\\models\\buffalo_l\\1k3d68.onnx landmark_3d_68 ['None', 3, 192, 192] 0.0 1.0",
+        "Applied providers: ['CPUExecutionProvider'], with options: {'CPUExecutionProvider': {}}",
+        "find model: C:\\Users\\lanji\\.insightface\\models\\buffalo_l\\2d106det.onnx landmark_2d_106 ['None', 3, 192, 192] 0.0 1.0",
+        "Applied providers: ['CPUExecutionProvider'], with options: {'CPUExecutionProvider': {}}",
+        "find model: C:\\Users\\lanji\\.insightface\\models\\buffalo_l\\det_10g.onnx detection [1, 3, '?', '?'] 127.5 128.0",
+        "Applied providers: ['CPUExecutionProvider'], with options: {'CPUExecutionProvider': {}}",
+        "find model: C:\\Users\\lanji\\.insightface\\models\\buffalo_l\\genderage.onnx genderage ['None', 3, 96, 96] 0.0 1.0",
+        "Applied providers: ['CPUExecutionProvider'], with options: {'CPUExecutionProvider': {}}",
+        "find model: C:\\Users\\lanji\\.insightface\\models\\buffalo_l\\w600k_r50.onnx recognition ['None', 3, 112, 112] 127.5 127.5",
+        "set det-size: (1280, 1280)"
+      ],
+      "stderr_tail": []
+    }
+  },
+  "service_final": {
+    "started": true,
+    "closed": false,
+    "ready": true,
+    "health": "ok",
+    "deepfake": {
+      "state": "ready",
+      "ready": true,
+      "healthy": true,
+      "health": "ok",
+      "pid": 32652,
+      "error": null,
+      "started_at": 1787675116.0357687,
+      "last_response_at": 1787675136.578904,
+      "requests_completed": 3,
+      "details": {
+        "worker": "deepfake",
+        "pid": 32652,
+        "pipeline_initialized": true,
+        "model_load_count": 1,
+        "install_root": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem",
+        "torch_home": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.3_explainable_dev\\runtime\\cache\\deepfake\\torch",
+        "dependency_isolation": "dedicated_process"
+      },
+      "noise_lines_ignored": 0,
+      "noise_tail": [],
+      "stderr_tail": []
+    },
+    "identity": {
+      "state": "ready",
+      "ready": true,
+      "healthy": true,
+      "health": "ok",
+      "pid": 23524,
+      "error": null,
+      "started_at": 1787675127.8409798,
+      "last_response_at": 1787675134.344926,
+      "requests_completed": 0,
+      "details": {
+        "worker": "identity",
+        "pid": 12464,
+        "model": "buffalo_l",
+        "model_fingerprint": "c280512512d104c2cc6eafabeac7fbab07b55b38c681a0003a24a17d011ba3f6",
+        "device": "cpu",
+        "ctx_id": -1,
+        "cached_libraries": 1,
+        "model_instances": 1,
+        "dependency_isolation": "dedicated_process"
+      },
+      "noise_lines_ignored": 11,
+      "noise_tail": [
+        "find model: C:\\Users\\lanji\\.insightface\\models\\buffalo_l\\1k3d68.onnx landmark_3d_68 ['None', 3, 192, 192] 0.0 1.0",
+        "Applied providers: ['CPUExecutionProvider'], with options: {'CPUExecutionProvider': {}}",
+        "find model: C:\\Users\\lanji\\.insightface\\models\\buffalo_l\\2d106det.onnx landmark_2d_106 ['None', 3, 192, 192] 0.0 1.0",
+        "Applied providers: ['CPUExecutionProvider'], with options: {'CPUExecutionProvider': {}}",
+        "find model: C:\\Users\\lanji\\.insightface\\models\\buffalo_l\\det_10g.onnx detection [1, 3, '?', '?'] 127.5 128.0",
+        "Applied providers: ['CPUExecutionProvider'], with options: {'CPUExecutionProvider': {}}",
+        "find model: C:\\Users\\lanji\\.insightface\\models\\buffalo_l\\genderage.onnx genderage ['None', 3, 96, 96] 0.0 1.0",
+        "Applied providers: ['CPUExecutionProvider'], with options: {'CPUExecutionProvider': {}}",
+        "find model: C:\\Users\\lanji\\.insightface\\models\\buffalo_l\\w600k_r50.onnx recognition ['None', 3, 112, 112] 127.5 127.5",
+        "set det-size: (1280, 1280)"
+      ],
+      "stderr_tail": []
+    }
+  },
+  "tasks": [
+    {
+      "schema_version": "3.0",
+      "task_id": "case_20260826_002534_2abe",
+      "task_dir": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002534_2abe",
+      "status": "success",
+      "started_at": "2026-08-26T00:25:34.362+08:00",
+      "finished_at": "2026-08-26T00:25:35.517+08:00",
+      "query_source": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.3_explainable_dev\\examples\\aigc_fake_image.jpg",
+      "query_image": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002534_2abe\\query.jpg",
+      "selected_modules": [
+        "deepfake"
+      ],
+      "modules": {
+        "deepfake": {
+          "module": "deepfake",
+          "status": "success",
+          "stage": "finished",
+          "message": "模块完成：success",
+          "runtime_seconds": 1.0324210000035237,
+          "error": null
+        },
+        "identity": {
+          "module": "identity",
+          "status": "skipped",
+          "stage": "not_selected",
+          "message": "用户未选择此模块",
+          "runtime_seconds": 5.8099998568650335e-05,
+          "error": null
+        },
+        "source": {
+          "module": "source",
+          "status": "skipped",
+          "stage": "not_selected",
+          "message": "用户未选择此模块",
+          "runtime_seconds": 8.380000508623198e-05,
+          "error": null
+        }
+      },
+      "deepfake": {
+        "module": "deepfake",
+        "status": "success",
+        "started_at": "2026-08-26T00:25:34.403+08:00",
+        "finished_at": "2026-08-26T00:25:35.447+08:00",
+        "runtime_seconds": 1.0324210000035237,
+        "returncode": null,
+        "timed_out": false,
+        "skipped": false,
+        "execution_mode": "service",
+        "fallback_reason": null,
+        "stdout_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002534_2abe\\logs\\deepfake_stdout.log",
+        "stderr_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002534_2abe\\logs\\deepfake_stderr.log",
+        "command_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002534_2abe\\logs\\deepfake_command.json",
+        "error": null
+      },
+      "identity": {
+        "module": "identity",
+        "status": "skipped",
+        "started_at": "2026-08-26T00:25:35.467+08:00",
+        "finished_at": "2026-08-26T00:25:35.478+08:00",
+        "runtime_seconds": 5.8099998568650335e-05,
+        "returncode": null,
+        "timed_out": false,
+        "skipped": true,
+        "execution_mode": "skipped",
+        "fallback_reason": null,
+        "stdout_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002534_2abe\\logs\\identity_stdout.log",
+        "stderr_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002534_2abe\\logs\\identity_stderr.log",
+        "command_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002534_2abe\\logs\\identity_command.json",
+        "error": null
+      },
+      "source": {
+        "module": "source",
+        "status": "skipped",
+        "started_at": "2026-08-26T00:25:35.490+08:00",
+        "finished_at": "2026-08-26T00:25:35.500+08:00",
+        "runtime_seconds": 8.380000508623198e-05,
+        "returncode": null,
+        "timed_out": false,
+        "skipped": true,
+        "execution_mode": "skipped",
+        "fallback_reason": null,
+        "stdout_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002534_2abe\\logs\\source_stdout.log",
+        "stderr_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002534_2abe\\logs\\source_stderr.log",
+        "command_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002534_2abe\\logs\\source_command.json",
+        "error": null
+      },
+      "runtime_seconds": 1.1552155000026687,
+      "progress_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002534_2abe\\logs\\progress_events.jsonl",
+      "progress_events": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002534_2abe\\logs\\progress_events.jsonl",
+      "progress_latest": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002534_2abe\\logs\\progress_latest.json",
+      "errors": [],
+      "reports": {
+        "status": "success",
+        "runtime_seconds": 0.09335160000046017,
+        "files": {
+          "json": "final_report.json",
+          "txt": "检测结果_case_20260826_002534_2abe.txt",
+          "html": "检测结果_case_20260826_002534_2abe.html"
+        }
+      }
+    },
+    {
+      "schema_version": "3.0",
+      "task_id": "case_20260826_002535_42e8",
+      "task_dir": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002535_42e8",
+      "status": "success",
+      "started_at": "2026-08-26T00:25:35.673+08:00",
+      "finished_at": "2026-08-26T00:25:36.157+08:00",
+      "query_source": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.3_explainable_dev\\examples\\aigc_real_image.jpg",
+      "query_image": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002535_42e8\\query.jpg",
+      "selected_modules": [
+        "deepfake"
+      ],
+      "modules": {
+        "deepfake": {
+          "module": "deepfake",
+          "status": "success",
+          "stage": "finished",
+          "message": "模块完成：success",
+          "runtime_seconds": 0.36996369999542367,
+          "error": null
+        },
+        "identity": {
+          "module": "identity",
+          "status": "skipped",
+          "stage": "not_selected",
+          "message": "用户未选择此模块",
+          "runtime_seconds": 5.999999848427251e-05,
+          "error": null
+        },
+        "source": {
+          "module": "source",
+          "status": "skipped",
+          "stage": "not_selected",
+          "message": "用户未选择此模块",
+          "runtime_seconds": 6.030000076862052e-05,
+          "error": null
+        }
+      },
+      "deepfake": {
+        "module": "deepfake",
+        "status": "success",
+        "started_at": "2026-08-26T00:25:35.704+08:00",
+        "finished_at": "2026-08-26T00:25:36.085+08:00",
+        "runtime_seconds": 0.36996369999542367,
+        "returncode": null,
+        "timed_out": false,
+        "skipped": false,
+        "execution_mode": "service",
+        "fallback_reason": null,
+        "stdout_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002535_42e8\\logs\\deepfake_stdout.log",
+        "stderr_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002535_42e8\\logs\\deepfake_stderr.log",
+        "command_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002535_42e8\\logs\\deepfake_command.json",
+        "error": null
+      },
+      "identity": {
+        "module": "identity",
+        "status": "skipped",
+        "started_at": "2026-08-26T00:25:36.110+08:00",
+        "finished_at": "2026-08-26T00:25:36.121+08:00",
+        "runtime_seconds": 5.999999848427251e-05,
+        "returncode": null,
+        "timed_out": false,
+        "skipped": true,
+        "execution_mode": "skipped",
+        "fallback_reason": null,
+        "stdout_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002535_42e8\\logs\\identity_stdout.log",
+        "stderr_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002535_42e8\\logs\\identity_stderr.log",
+        "command_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002535_42e8\\logs\\identity_command.json",
+        "error": null
+      },
+      "source": {
+        "module": "source",
+        "status": "skipped",
+        "started_at": "2026-08-26T00:25:36.132+08:00",
+        "finished_at": "2026-08-26T00:25:36.143+08:00",
+        "runtime_seconds": 6.030000076862052e-05,
+        "returncode": null,
+        "timed_out": false,
+        "skipped": true,
+        "execution_mode": "skipped",
+        "fallback_reason": null,
+        "stdout_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002535_42e8\\logs\\source_stdout.log",
+        "stderr_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002535_42e8\\logs\\source_stderr.log",
+        "command_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002535_42e8\\logs\\source_command.json",
+        "error": null
+      },
+      "runtime_seconds": 0.48401530000410276,
+      "progress_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002535_42e8\\logs\\progress_events.jsonl",
+      "progress_events": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002535_42e8\\logs\\progress_events.jsonl",
+      "progress_latest": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002535_42e8\\logs\\progress_latest.json",
+      "errors": [],
+      "reports": {
+        "status": "success",
+        "runtime_seconds": 0.024101300004986115,
+        "files": {
+          "json": "final_report.json",
+          "txt": "检测结果_case_20260826_002535_42e8.txt",
+          "html": "检测结果_case_20260826_002535_42e8.html"
+        }
+      }
+    },
+    {
+      "schema_version": "3.0",
+      "task_id": "case_20260826_002536_55f5",
+      "task_dir": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002536_55f5",
+      "status": "success",
+      "started_at": "2026-08-26T00:25:36.221+08:00",
+      "finished_at": "2026-08-26T00:25:36.716+08:00",
+      "query_source": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.3_explainable_dev\\examples\\no_face_image.jpg",
+      "query_image": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002536_55f5\\query.jpg",
+      "selected_modules": [
+        "deepfake"
+      ],
+      "modules": {
+        "deepfake": {
+          "module": "deepfake",
+          "status": "success",
+          "stage": "finished",
+          "message": "模块完成：success",
+          "runtime_seconds": 0.35422039999684785,
+          "error": null
+        },
+        "identity": {
+          "module": "identity",
+          "status": "skipped",
+          "stage": "not_selected",
+          "message": "用户未选择此模块",
+          "runtime_seconds": 7.170000026235357e-05,
+          "error": null
+        },
+        "source": {
+          "module": "source",
+          "status": "skipped",
+          "stage": "not_selected",
+          "message": "用户未选择此模块",
+          "runtime_seconds": 0.00021070000366307795,
+          "error": null
+        }
+      },
+      "deepfake": {
+        "module": "deepfake",
+        "status": "success",
+        "started_at": "2026-08-26T00:25:36.255+08:00",
+        "finished_at": "2026-08-26T00:25:36.622+08:00",
+        "runtime_seconds": 0.35422039999684785,
+        "returncode": null,
+        "timed_out": false,
+        "skipped": false,
+        "execution_mode": "service",
+        "fallback_reason": null,
+        "stdout_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002536_55f5\\logs\\deepfake_stdout.log",
+        "stderr_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002536_55f5\\logs\\deepfake_stderr.log",
+        "command_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002536_55f5\\logs\\deepfake_command.json",
+        "error": null
+      },
+      "identity": {
+        "module": "identity",
+        "status": "skipped",
+        "started_at": "2026-08-26T00:25:36.650+08:00",
+        "finished_at": "2026-08-26T00:25:36.667+08:00",
+        "runtime_seconds": 7.170000026235357e-05,
+        "returncode": null,
+        "timed_out": false,
+        "skipped": true,
+        "execution_mode": "skipped",
+        "fallback_reason": null,
+        "stdout_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002536_55f5\\logs\\identity_stdout.log",
+        "stderr_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002536_55f5\\logs\\identity_stderr.log",
+        "command_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002536_55f5\\logs\\identity_command.json",
+        "error": null
+      },
+      "source": {
+        "module": "source",
+        "status": "skipped",
+        "started_at": "2026-08-26T00:25:36.687+08:00",
+        "finished_at": "2026-08-26T00:25:36.698+08:00",
+        "runtime_seconds": 0.00021070000366307795,
+        "returncode": null,
+        "timed_out": false,
+        "skipped": true,
+        "execution_mode": "skipped",
+        "fallback_reason": null,
+        "stdout_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002536_55f5\\logs\\source_stdout.log",
+        "stderr_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002536_55f5\\logs\\source_stderr.log",
+        "command_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002536_55f5\\logs\\source_command.json",
+        "error": null
+      },
+      "runtime_seconds": 0.4943682000011904,
+      "progress_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002536_55f5\\logs\\progress_events.jsonl",
+      "progress_events": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002536_55f5\\logs\\progress_events.jsonl",
+      "progress_latest": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002536_55f5\\logs\\progress_latest.json",
+      "errors": [],
+      "reports": {
+        "status": "success",
+        "runtime_seconds": 0.02780219999840483,
+        "files": {
+          "json": "final_report.json",
+          "txt": "检测结果_case_20260826_002536_55f5.txt",
+          "html": "检测结果_case_20260826_002536_55f5.html"
+        }
+      }
+    }
+  ]
+}

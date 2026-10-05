@@ -1,0 +1,88 @@
+{
+  "created_at": "2026-07-12T20:02:45+08:00",
+  "manifest_path": "D:\\信安大作业\\data_all\\data_formal\\manifest.csv",
+  "manifest_sha256": "928f95e0489429a36b01e8f0d1c15f21b2d01b0f8f9d46488e05e32b99c4ea72",
+  "label_mapping": {
+    "real": 0,
+    "fake": 1
+  },
+  "frame_paths_storage": "以竖线|分隔的Windows相对路径",
+  "manifest_frame_counts": {
+    "train": 700,
+    "val": 150,
+    "test": 150
+  },
+  "usable_sample_counts": {
+    "train": 678,
+    "val": 145,
+    "test": 150
+  },
+  "failed_feature_extractions": 27,
+  "leakage_check": {
+    "frame_path_cross_split": [],
+    "pair_id_cross_split": [],
+    "video_sha256_cross_split": [],
+    "local_video_cross_split": [],
+    "source_filename_cross_split": [],
+    "duplicate_frame_entries": [],
+    "frame_path_label_conflicts": [],
+    "video_sha256_label_conflicts": [],
+    "local_video_label_conflicts": [],
+    "missing_frame_paths": [],
+    "missing_video_paths": [],
+    "split_label_frame_counts": {
+      "train": {
+        "real": 350,
+        "fake": 350
+      },
+      "val": {
+        "real": 75,
+        "fake": 75
+      },
+      "test": {
+        "real": 75,
+        "fake": 75
+      }
+    },
+    "passed": true
+  },
+  "pipeline": {
+    "steps": [
+      "StandardScaler",
+      "LogisticRegression"
+    ],
+    "standard_scaler_params": {
+      "copy": true,
+      "with_mean": true,
+      "with_std": true
+    },
+    "logistic_regression_params": {
+      "C": 1.0,
+      "class_weight": "balanced",
+      "dual": false,
+      "fit_intercept": true,
+      "intercept_scaling": 1,
+      "l1_ratio": 0.0,
+      "max_iter": 2000,
+      "n_jobs": null,
+      "penalty": "deprecated",
+      "random_state": 20260712,
+      "solver": "lbfgs",
+      "tol": 0.0001,
+      "verbose": 0,
+      "warm_start": false
+    }
+  },
+  "threshold_selection": {
+    "primary_metric": "F1",
+    "tie_breakers": [
+      "Accuracy降序",
+      "与0.5距离升序",
+      "阈值升序"
+    ],
+    "selected_threshold": 0.3246554908447828,
+    "validation_F1": 0.7052631578947368
+  },
+  "demo_only": false,
+  "not_for_final_metrics": false
+}

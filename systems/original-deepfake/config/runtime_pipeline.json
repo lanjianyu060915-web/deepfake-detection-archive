@@ -1,0 +1,16 @@
+{
+  "target_valid_frames": 5,
+  "min_valid_frames": 3,
+  "candidate_multiplier": 3,
+  "max_candidate_frames": 20,
+  "keyframe_count": 3,
+  "cleanup_temporary": true,
+  "image_extensions": [".jpg", ".jpeg", ".png", ".webp"],
+  "video_extensions": [".mp4", ".avi", ".mov", ".mkv"],
+  "preprocessing": {
+    "face_detector": "OpenCV Haar frontal face; padded retry near image boundaries",
+    "largest_face_only": true,
+    "face_expand_ratio": 0.25,
+    "face_size": [224, 224]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "module": "identity",
+  "mode": "service",
+  "method": "run_identity",
+  "library": "D:\\刑侦查竞赛\\first_week\\data\\identity_library",
+  "top_k": 5,
+  "timeout_seconds": 180.0,
+  "attempt_timeout_seconds": 179.98400000000402,
+  "service_output": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002414_64bf\\.identity_service_result.json",
+  "output": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002414_64bf\\identity_result.json"
+}

@@ -1,0 +1,9 @@
+{
+  "module": "deepfake",
+  "mode": "service",
+  "method": "run_deepfake",
+  "timeout_seconds": 180.0,
+  "attempt_timeout_seconds": 179.90699999999924,
+  "service_output": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002414_64bf\\.deepfake_service_result.json",
+  "output": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002414_64bf\\detection_result.json"
+}

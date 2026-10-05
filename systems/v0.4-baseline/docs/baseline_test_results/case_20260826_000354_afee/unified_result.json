@@ -1,0 +1,31 @@
+{
+  "schema_version": "2.0",
+  "task_id": "case_20260826_000354_afee",
+  "status": "success",
+  "query_image": "query.jpg",
+  "selected_modules": [
+    "deepfake"
+  ],
+  "deepfake_detection": {
+    "selected": true,
+    "status": "success",
+    "result_file": "detection_result.json"
+  },
+  "identity_search": {
+    "selected": false,
+    "status": "skipped",
+    "result_file": "identity_result.json"
+  },
+  "source_search": {
+    "selected": false,
+    "status": "skipped",
+    "result_file": "source_result.json"
+  },
+  "runtime_seconds": {
+    "deepfake": 0.5215549999993527,
+    "identity": 4.410000110510737e-05,
+    "source": 2.6599998818710446e-05,
+    "total": 0.5441818999970565
+  },
+  "errors": []
+}

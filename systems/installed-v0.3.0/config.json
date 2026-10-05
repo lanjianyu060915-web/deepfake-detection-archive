@@ -1,0 +1,99 @@
+{
+  "schema_version": "3.0",
+  "product_name": "AI换脸涉案图像智能鉴伪与原始素材溯源系统",
+  "product_short_name": "换脸寻源系统 v0.3",
+  "product_version": "0.3.0",
+  "build_flavor": "formal",
+  "features": {
+    "real_modules_default": true,
+    "mock_enabled": false,
+    "live_progress_enabled": true,
+    "automatic_report_enabled": true
+  },
+  "runtime": {
+    "tasks_root": "{DATA_ROOT}/tasks",
+    "inbox_root": "{DATA_ROOT}/inbox",
+    "identity_cache": "{DATA_ROOT}/cache/identity",
+    "persistent_services_root": "{DATA_ROOT}/persistent_services",
+    "persistent_workers_enabled": true,
+    "persistent_startup_timeout_seconds": 300
+  },
+  "resources": {
+    "manifest": "{APP_ROOT}/resources_manifest.sha256.json",
+    "verify_manifest_on_start": true,
+    "install_root_read_only": true
+  },
+  "deepfake": {
+    "enabled": true,
+    "persistent_enabled": true,
+    "python": "{APP_ROOT}/python_runtime/python.exe",
+    "python_args": [
+      "-E",
+      "-S",
+      "-B"
+    ],
+    "runner": "{APP_ROOT}/modules/deepfake_detection/run_deepfake_detection.py",
+    "persistent_worker": "{APP_ROOT}/modules/deepfake_detection/persistent_worker.py",
+    "install_root": "{APP_ROOT}/deepfake_runtime",
+    "install_root_read_only": true,
+    "torch_home": "{APP_ROOT}/runtime_assets/deepfake_torch",
+    "base_weight": "{APP_ROOT}/runtime_assets/deepfake_torch/hub/checkpoints/mobilenet_v3_small-047dcff4.pth",
+    "persistent_writable_root": "{DATA_ROOT}/persistent_services/deepfake",
+    "device": "cpu",
+    "timeout_seconds": 300,
+    "startup_timeout_seconds": 300,
+    "preload_model": true,
+    "hide_console": true,
+    "extra_args": [],
+    "known_sha256": {
+      "executable": "bc67e52b77fa0559d4d6fe04f024dcdb4a8edf43128f80f7d70947e3da490203",
+      "spatial_model": "5bb4b33936eb3adc631828ea271a466d62070a2b8de1902e5d96122317534794",
+      "frequency_model": "2ec6828eb2a3151784667eb0c105f07cdb41de6ec2df587d28b2766ceee063eb",
+      "fusion_config": "8f76abeabb55da1119b28689e15ccd31eac7f1066e401e766987efbb4603e0b2",
+      "base_weight": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+      "adapter": "ad69a01f225dfbba31911d08339dc9f2a566ac6338f729be97d7688e93305489",
+      "adapter_runtime": "c6f3836d4c9252cbb2fc315acfd97e78b5f0b8bf10941e607bea996bcb86d836",
+      "adapter_inspector": "f2b46b0102afcca041f8a173ac9e9279548483632ba4932f25a4086eede03dba"
+    }
+  },
+  "identity": {
+    "persistent_enabled": true,
+    "executable": "{APP_ROOT}/workers/identity/identity_worker.exe",
+    "worker_executable": "{APP_ROOT}/workers/identity/identity_worker.exe",
+    "worker_executable_args": [
+      "--persistent-worker"
+    ],
+    "library": "{APP_ROOT}/data/identity_library",
+    "top_k": 5,
+    "timeout_seconds": 300,
+    "startup_timeout_seconds": 300,
+    "ctx": -1,
+    "device": "cpu",
+    "model_root": "{APP_ROOT}/model_runtime",
+    "offline": true,
+    "hide_console": true,
+    "open_set_rejection_enabled": false
+  },
+  "source": {
+    "executable": "{APP_ROOT}/workers/source/source_search.exe",
+    "library": "{APP_ROOT}/data/source_library",
+    "top_k": 5,
+    "timeout_seconds": 600,
+    "hide_console": true
+  },
+  "reporting": {
+    "enabled": true,
+    "formats": [
+      "json",
+      "txt",
+      "html"
+    ],
+    "output_scope": "task_directory",
+    "external_language_model_enabled": false
+  },
+  "frontend": {
+    "address": "127.0.0.1",
+    "port": 8767,
+    "auto_open_browser": true
+  }
+}

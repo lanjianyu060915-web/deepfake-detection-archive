@@ -1,0 +1,276 @@
+{
+  "manifest_path": "D:\\信安大作业\\data_all\\data_formal\\manifest.csv",
+  "manifest_sha256": "928f95e0489429a36b01e8f0d1c15f21b2d01b0f8f9d46488e05e32b99c4ea72",
+  "manifest_row_count": 200,
+  "pair_counts": {
+    "train": 70,
+    "val": 15,
+    "test": 15
+  },
+  "video_row_counts": {
+    "train": 140,
+    "val": 30,
+    "test": 30
+  },
+  "frame_counts": {
+    "train": 700,
+    "val": 150,
+    "test": 150
+  },
+  "label_mapping": {
+    "real": 0,
+    "fake": 1
+  },
+  "leakage_check": {
+    "frame_path_cross_split": [],
+    "pair_id_cross_split": [],
+    "video_sha256_cross_split": [],
+    "local_video_cross_split": [],
+    "source_filename_cross_split": [],
+    "duplicate_frame_entries": [],
+    "frame_path_label_conflicts": [],
+    "video_sha256_label_conflicts": [],
+    "local_video_label_conflicts": [],
+    "missing_frame_paths": [],
+    "missing_video_paths": [],
+    "split_label_frame_counts": {
+      "train": {
+        "real": 350,
+        "fake": 350
+      },
+      "val": {
+        "real": 75,
+        "fake": 75
+      },
+      "test": {
+        "real": 75,
+        "fake": 75
+      }
+    },
+    "passed": true
+  },
+  "missing_or_unreadable_frame_count": 0,
+  "face_or_feature_failure_count": 27,
+  "face_or_feature_success_count": 973,
+  "failures": [
+    {
+      "stage": "feature_extraction",
+      "split": "train",
+      "pair_id": "960",
+      "label": "FAKE",
+      "frame_path": "images/train/fake/960_999_f01_idx00036.jpg",
+      "reason": "图片中未检测到人脸：960_999_f01_idx00036.jpg"
+    },
+    {
+      "stage": "feature_extraction",
+      "split": "train",
+      "pair_id": "183",
+      "label": "FAKE",
+      "frame_path": "images/train/fake/183_253_f00_idx00000.jpg",
+      "reason": "图片中未检测到人脸：183_253_f00_idx00000.jpg"
+    },
+    {
+      "stage": "feature_extraction",
+      "split": "train",
+      "pair_id": "183",
+      "label": "FAKE",
+      "frame_path": "images/train/fake/183_253_f02_idx00073.jpg",
+      "reason": "图片中未检测到人脸：183_253_f02_idx00073.jpg"
+    },
+    {
+      "stage": "feature_extraction",
+      "split": "train",
+      "pair_id": "183",
+      "label": "FAKE",
+      "frame_path": "images/train/fake/183_253_f03_idx00110.jpg",
+      "reason": "图片中未检测到人脸：183_253_f03_idx00110.jpg"
+    },
+    {
+      "stage": "feature_extraction",
+      "split": "train",
+      "pair_id": "183",
+      "label": "FAKE",
+      "frame_path": "images/train/fake/183_253_f04_idx00147.jpg",
+      "reason": "图片中未检测到人脸：183_253_f04_idx00147.jpg"
+    },
+    {
+      "stage": "feature_extraction",
+      "split": "train",
+      "pair_id": "066",
+      "label": "REAL",
+      "frame_path": "images/train/real/066_f01_idx00036.jpg",
+      "reason": "图片中未检测到人脸：066_f01_idx00036.jpg"
+    },
+    {
+      "stage": "feature_extraction",
+      "split": "train",
+      "pair_id": "066",
+      "label": "REAL",
+      "frame_path": "images/train/real/066_f04_idx00147.jpg",
+      "reason": "图片中未检测到人脸：066_f04_idx00147.jpg"
+    },
+    {
+      "stage": "feature_extraction",
+      "split": "train",
+      "pair_id": "066",
+      "label": "FAKE",
+      "frame_path": "images/train/fake/066_062_f02_idx00073.jpg",
+      "reason": "图片中未检测到人脸：066_062_f02_idx00073.jpg"
+    },
+    {
+      "stage": "feature_extraction",
+      "split": "train",
+      "pair_id": "066",
+      "label": "FAKE",
+      "frame_path": "images/train/fake/066_062_f04_idx00147.jpg",
+      "reason": "图片中未检测到人脸：066_062_f04_idx00147.jpg"
+    },
+    {
+      "stage": "feature_extraction",
+      "split": "train",
+      "pair_id": "146",
+      "label": "FAKE",
+      "frame_path": "images/train/fake/146_256_f01_idx00036.jpg",
+      "reason": "图片中未检测到人脸：146_256_f01_idx00036.jpg"
+    },
+    {
+      "stage": "feature_extraction",
+      "split": "train",
+      "pair_id": "146",
+      "label": "FAKE",
+      "frame_path": "images/train/fake/146_256_f04_idx00147.jpg",
+      "reason": "图片中未检测到人脸：146_256_f04_idx00147.jpg"
+    },
+    {
+      "stage": "feature_extraction",
+      "split": "train",
+      "pair_id": "474",
+      "label": "FAKE",
+      "frame_path": "images/train/fake/474_281_f01_idx00036.jpg",
+      "reason": "图片中未检测到人脸：474_281_f01_idx00036.jpg"
+    },
+    {
+      "stage": "feature_extraction",
+      "split": "train",
+      "pair_id": "474",
+      "label": "FAKE",
+      "frame_path": "images/train/fake/474_281_f02_idx00073.jpg",
+      "reason": "图片中未检测到人脸：474_281_f02_idx00073.jpg"
+    },
+    {
+      "stage": "feature_extraction",
+      "split": "train",
+      "pair_id": "753",
+      "label": "FAKE",
+      "frame_path": "images/train/fake/753_789_f04_idx00147.jpg",
+      "reason": "图片中未检测到人脸：753_789_f04_idx00147.jpg"
+    },
+    {
+      "stage": "feature_extraction",
+      "split": "train",
+      "pair_id": "490",
+      "label": "FAKE",
+      "frame_path": "images/train/fake/490_534_f02_idx00073.jpg",
+      "reason": "图片中未检测到人脸：490_534_f02_idx00073.jpg"
+    },
+    {
+      "stage": "feature_extraction",
+      "split": "train",
+      "pair_id": "490",
+      "label": "FAKE",
+      "frame_path": "images/train/fake/490_534_f03_idx00110.jpg",
+      "reason": "图片中未检测到人脸：490_534_f03_idx00110.jpg"
+    },
+    {
+      "stage": "feature_extraction",
+      "split": "train",
+      "pair_id": "490",
+      "label": "FAKE",
+      "frame_path": "images/train/fake/490_534_f04_idx00147.jpg",
+      "reason": "图片中未检测到人脸：490_534_f04_idx00147.jpg"
+    },
+    {
+      "stage": "feature_extraction",
+      "split": "train",
+      "pair_id": "102",
+      "label": "REAL",
+      "frame_path": "images/train/real/102_f02_idx00073.jpg",
+      "reason": "图片中未检测到人脸：102_f02_idx00073.jpg"
+    },
+    {
+      "stage": "feature_extraction",
+      "split": "train",
+      "pair_id": "102",
+      "label": "REAL",
+      "frame_path": "images/train/real/102_f03_idx00110.jpg",
+      "reason": "图片中未检测到人脸：102_f03_idx00110.jpg"
+    },
+    {
+      "stage": "feature_extraction",
+      "split": "train",
+      "pair_id": "102",
+      "label": "FAKE",
+      "frame_path": "images/train/fake/102_114_f02_idx00073.jpg",
+      "reason": "图片中未检测到人脸：102_114_f02_idx00073.jpg"
+    },
+    {
+      "stage": "feature_extraction",
+      "split": "train",
+      "pair_id": "572",
+      "label": "REAL",
+      "frame_path": "images/train/real/572_f00_idx00000.jpg",
+      "reason": "图片中未检测到人脸：572_f00_idx00000.jpg"
+    },
+    {
+      "stage": "feature_extraction",
+      "split": "train",
+      "pair_id": "572",
+      "label": "FAKE",
+      "frame_path": "images/train/fake/572_554_f00_idx00000.jpg",
+      "reason": "图片中未检测到人脸：572_554_f00_idx00000.jpg"
+    },
+    {
+      "stage": "feature_extraction",
+      "split": "val",
+      "pair_id": "516",
+      "label": "REAL",
+      "frame_path": "images/val/real/516_f02_idx00073.jpg",
+      "reason": "图片中未检测到人脸：516_f02_idx00073.jpg"
+    },
+    {
+      "stage": "feature_extraction",
+      "split": "val",
+      "pair_id": "516",
+      "label": "FAKE",
+      "frame_path": "images/val/fake/516_555_f02_idx00073.jpg",
+      "reason": "图片中未检测到人脸：516_555_f02_idx00073.jpg"
+    },
+    {
+      "stage": "feature_extraction",
+      "split": "val",
+      "pair_id": "907",
+      "label": "REAL",
+      "frame_path": "images/val/real/907_f02_idx00073.jpg",
+      "reason": "图片中未检测到人脸：907_f02_idx00073.jpg"
+    },
+    {
+      "stage": "feature_extraction",
+      "split": "val",
+      "pair_id": "274",
+      "label": "REAL",
+      "frame_path": "images/val/real/274_f02_idx00073.jpg",
+      "reason": "图片中未检测到人脸：274_f02_idx00073.jpg"
+    },
+    {
+      "stage": "feature_extraction",
+      "split": "val",
+      "pair_id": "274",
+      "label": "REAL",
+      "frame_path": "images/val/real/274_f04_idx00147.jpg",
+      "reason": "图片中未检测到人脸：274_f04_idx00147.jpg"
+    }
+  ],
+  "passed": true,
+  "demo_only": false,
+  "not_for_final_metrics": false
+}

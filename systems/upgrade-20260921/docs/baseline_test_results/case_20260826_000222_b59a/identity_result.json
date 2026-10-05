@@ -1,0 +1,43 @@
+{
+  "status": "success",
+  "query_image": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.2_dev\\runtime\\tasks\\case_20260826_000222_b59a\\query.jpg",
+  "candidates": [
+    {
+      "rank": 1,
+      "identity_id": "person_002",
+      "identity_name": "person_002",
+      "score": 0.7607215642929077,
+      "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_002\\03.jpg"
+    },
+    {
+      "rank": 2,
+      "identity_id": "person_003",
+      "identity_name": "person_003",
+      "score": 0.19767500832676888,
+      "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_003\\01.jpg"
+    },
+    {
+      "rank": 3,
+      "identity_id": "person_005",
+      "identity_name": "person_005",
+      "score": 0.1114050030708313,
+      "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_005\\02.jpg"
+    },
+    {
+      "rank": 4,
+      "identity_id": "person_009",
+      "identity_name": "person_009",
+      "score": 0.07245551757514476,
+      "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_009\\01.jpg"
+    },
+    {
+      "rank": 5,
+      "identity_id": "person_004",
+      "identity_name": "person_004",
+      "score": 0.06410427093505859,
+      "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_004\\04.jpg"
+    }
+  ],
+  "runtime_seconds": 0.8868624000024283,
+  "error_message": null
+}

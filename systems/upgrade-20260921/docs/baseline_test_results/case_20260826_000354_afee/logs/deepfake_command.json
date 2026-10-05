@@ -1,0 +1,9 @@
+{
+  "module": "deepfake",
+  "mode": "service",
+  "method": "run_deepfake",
+  "timeout_seconds": 180.0,
+  "attempt_timeout_seconds": 179.9991469000015,
+  "service_output": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.2_dev\\runtime\\tasks\\case_20260826_000354_afee\\.deepfake_service_result.json",
+  "output": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.2_dev\\runtime\\tasks\\case_20260826_000354_afee\\detection_result.json"
+}

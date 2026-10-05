@@ -1,0 +1,393 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "real_model_regression_comparison",
+  "generated_at": "2026-08-26T00:29:59+08:00",
+  "sample": "integrated_query_001.jpg",
+  "uses_mock": false,
+  "baseline_inventory": [
+    {
+      "task_id": "case_20260825_234018_7127",
+      "directory": "case_20260825_234018_7127",
+      "query_file": "integrated_query_001.jpg",
+      "status": "success",
+      "selected_modules": [
+        "deepfake",
+        "identity",
+        "source"
+      ]
+    },
+    {
+      "task_id": "case_20260826_000222_b59a",
+      "directory": "case_20260826_000222_b59a",
+      "query_file": "integrated_query_002.jpg",
+      "status": "success",
+      "selected_modules": [
+        "deepfake",
+        "identity",
+        "source"
+      ]
+    },
+    {
+      "task_id": "case_20260826_000258_4347",
+      "directory": "case_20260826_000258_4347",
+      "query_file": "integrated_query_003.jpg",
+      "status": "success",
+      "selected_modules": [
+        "deepfake",
+        "identity",
+        "source"
+      ]
+    },
+    {
+      "task_id": "case_20260826_000354_afee",
+      "directory": "case_20260826_000354_afee",
+      "query_file": "aigc_fake_image.jpg",
+      "status": "success",
+      "selected_modules": [
+        "deepfake"
+      ]
+    },
+    {
+      "task_id": "case_20260826_000355_26f1",
+      "directory": "case_20260826_000355_26f1",
+      "query_file": "aigc_real_image.jpg",
+      "status": "success",
+      "selected_modules": [
+        "deepfake"
+      ]
+    },
+    {
+      "task_id": "case_20260826_000355_7972",
+      "directory": "case_20260826_000355_7972",
+      "query_file": "no_face_image.jpg",
+      "status": "success",
+      "selected_modules": [
+        "deepfake"
+      ]
+    }
+  ],
+  "artifacts": {
+    "v0.2_task": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.3_explainable_dev\\docs\\baseline_test_results\\case_20260825_234018_7127",
+    "v0.3_task": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.3_explainable_dev\\docs\\regression_test_results\\case_20260826_001607_552e"
+  },
+  "input_sha256": {
+    "v0.2": "8b1c6f43491d0f2e179d0950ff285f67001c9fce90eb9e0fc12facbc63249dd6",
+    "v0.3": "8b1c6f43491d0f2e179d0950ff285f67001c9fce90eb9e0fc12facbc63249dd6",
+    "equal": true
+  },
+  "tolerances": {
+    "deepfake": 1e-09,
+    "identity": 0.0001,
+    "source": 1e-06
+  },
+  "deepfake": {
+    "metrics": [
+      {
+        "metric": "spatial_score",
+        "v0.2": 0.6050708293914795,
+        "v0.3": 0.6050708293914795,
+        "absolute_difference": 0.0,
+        "signed_difference": 0.0,
+        "tolerance": 1e-09,
+        "passed": true
+      },
+      {
+        "metric": "frequency_score",
+        "v0.2": 0.009078680452695706,
+        "v0.3": 0.009078680452695706,
+        "absolute_difference": 0.0,
+        "signed_difference": 0.0,
+        "tolerance": 1e-09,
+        "passed": true
+      },
+      {
+        "metric": "fusion_score",
+        "v0.2": 0.37859381279474164,
+        "v0.3": 0.37859381279474164,
+        "absolute_difference": 0.0,
+        "signed_difference": 0.0,
+        "tolerance": 1e-09,
+        "passed": true
+      },
+      {
+        "metric": "decision_threshold",
+        "v0.2": 0.36360106194654707,
+        "v0.3": 0.36360106194654707,
+        "absolute_difference": 0.0,
+        "signed_difference": 0.0,
+        "tolerance": 1e-09,
+        "passed": true
+      }
+    ],
+    "classification_equal": true,
+    "v0.2_label": "deepfake",
+    "v0.3_label": "deepfake",
+    "passed": true
+  },
+  "identity": {
+    "candidate_count_equal": true,
+    "top_k": [
+      {
+        "rank": 1,
+        "v0.2_identity_id": "person_001",
+        "v0.3_identity_id": "person_001",
+        "ranking_equal": true,
+        "score_comparison": {
+          "metric": "rank_1_mean_cosine_similarity",
+          "v0.2": 0.5932032346725464,
+          "v0.3": 0.5932013511657714,
+          "absolute_difference": 1.8835067749911616e-06,
+          "signed_difference": -1.8835067749911616e-06,
+          "tolerance": 0.0001,
+          "passed": true
+        }
+      },
+      {
+        "rank": 2,
+        "v0.2_identity_id": "person_006",
+        "v0.3_identity_id": "person_006",
+        "ranking_equal": true,
+        "score_comparison": {
+          "metric": "rank_2_mean_cosine_similarity",
+          "v0.2": 0.08581861704587937,
+          "v0.3": 0.0858260989189148,
+          "absolute_difference": 7.481873035425357e-06,
+          "signed_difference": 7.481873035425357e-06,
+          "tolerance": 0.0001,
+          "passed": true
+        }
+      },
+      {
+        "rank": 3,
+        "v0.2_identity_id": "person_004",
+        "v0.3_identity_id": "person_004",
+        "ranking_equal": true,
+        "score_comparison": {
+          "metric": "rank_3_mean_cosine_similarity",
+          "v0.2": 0.06370714493095875,
+          "v0.3": 0.06372667551040649,
+          "absolute_difference": 1.95305794477435e-05,
+          "signed_difference": 1.95305794477435e-05,
+          "tolerance": 0.0001,
+          "passed": true
+        }
+      },
+      {
+        "rank": 4,
+        "v0.2_identity_id": "person_009",
+        "v0.3_identity_id": "person_009",
+        "ranking_equal": true,
+        "score_comparison": {
+          "metric": "rank_4_mean_cosine_similarity",
+          "v0.2": 0.061470160633325575,
+          "v0.3": 0.06146760359406471,
+          "absolute_difference": 2.5570392608656456e-06,
+          "signed_difference": -2.5570392608656456e-06,
+          "tolerance": 0.0001,
+          "passed": true
+        }
+      },
+      {
+        "rank": 5,
+        "v0.2_identity_id": "person_003",
+        "v0.3_identity_id": "person_003",
+        "ranking_equal": true,
+        "score_comparison": {
+          "metric": "rank_5_mean_cosine_similarity",
+          "v0.2": 0.04044126905500889,
+          "v0.3": 0.04043959639966488,
+          "absolute_difference": 1.6726553440093994e-06,
+          "signed_difference": -1.6726553440093994e-06,
+          "tolerance": 0.0001,
+          "passed": true
+        }
+      }
+    ],
+    "maximum_absolute_score_difference": 1.95305794477435e-05,
+    "passed": true
+  },
+  "source": {
+    "candidate_count_equal": true,
+    "top_k": [
+      {
+        "rank": 1,
+        "v0.2_file": "122.jpg",
+        "v0.3_file": "122.jpg",
+        "ranking_equal": true,
+        "score_comparisons": [
+          {
+            "metric": "rank_1_global_score",
+            "v0.2": 0.996107,
+            "v0.3": 0.996107,
+            "absolute_difference": 0.0,
+            "signed_difference": 0.0,
+            "tolerance": 1e-06,
+            "passed": true
+          },
+          {
+            "metric": "rank_1_local_score",
+            "v0.2": 0.934526,
+            "v0.3": 0.934526,
+            "absolute_difference": 0.0,
+            "signed_difference": 0.0,
+            "tolerance": 1e-06,
+            "passed": true
+          },
+          {
+            "metric": "rank_1_final_score",
+            "v0.2": 0.962237,
+            "v0.3": 0.962237,
+            "absolute_difference": 0.0,
+            "signed_difference": 0.0,
+            "tolerance": 1e-06,
+            "passed": true
+          }
+        ]
+      },
+      {
+        "rank": 2,
+        "v0.2_file": "074.jpg",
+        "v0.3_file": "074.jpg",
+        "ranking_equal": true,
+        "score_comparisons": [
+          {
+            "metric": "rank_2_global_score",
+            "v0.2": 0.549186,
+            "v0.3": 0.549186,
+            "absolute_difference": 0.0,
+            "signed_difference": 0.0,
+            "tolerance": 1e-06,
+            "passed": true
+          },
+          {
+            "metric": "rank_2_local_score",
+            "v0.2": 0.693896,
+            "v0.3": 0.693896,
+            "absolute_difference": 0.0,
+            "signed_difference": 0.0,
+            "tolerance": 1e-06,
+            "passed": true
+          },
+          {
+            "metric": "rank_2_final_score",
+            "v0.2": 0.628777,
+            "v0.3": 0.628777,
+            "absolute_difference": 0.0,
+            "signed_difference": 0.0,
+            "tolerance": 1e-06,
+            "passed": true
+          }
+        ]
+      },
+      {
+        "rank": 3,
+        "v0.2_file": "061.jpg",
+        "v0.3_file": "061.jpg",
+        "ranking_equal": true,
+        "score_comparisons": [
+          {
+            "metric": "rank_3_global_score",
+            "v0.2": 0.548721,
+            "v0.3": 0.548721,
+            "absolute_difference": 0.0,
+            "signed_difference": 0.0,
+            "tolerance": 1e-06,
+            "passed": true
+          },
+          {
+            "metric": "rank_3_local_score",
+            "v0.2": 0.492658,
+            "v0.3": 0.492658,
+            "absolute_difference": 0.0,
+            "signed_difference": 0.0,
+            "tolerance": 1e-06,
+            "passed": true
+          },
+          {
+            "metric": "rank_3_final_score",
+            "v0.2": 0.517887,
+            "v0.3": 0.517887,
+            "absolute_difference": 0.0,
+            "signed_difference": 0.0,
+            "tolerance": 1e-06,
+            "passed": true
+          }
+        ]
+      },
+      {
+        "rank": 4,
+        "v0.2_file": "155.jpg",
+        "v0.3_file": "155.jpg",
+        "ranking_equal": true,
+        "score_comparisons": [
+          {
+            "metric": "rank_4_global_score",
+            "v0.2": 0.552363,
+            "v0.3": 0.552363,
+            "absolute_difference": 0.0,
+            "signed_difference": 0.0,
+            "tolerance": 1e-06,
+            "passed": true
+          },
+          {
+            "metric": "rank_4_local_score",
+            "v0.2": 0.361429,
+            "v0.3": 0.361429,
+            "absolute_difference": 0.0,
+            "signed_difference": 0.0,
+            "tolerance": 1e-06,
+            "passed": true
+          },
+          {
+            "metric": "rank_4_final_score",
+            "v0.2": 0.447349,
+            "v0.3": 0.447349,
+            "absolute_difference": 0.0,
+            "signed_difference": 0.0,
+            "tolerance": 1e-06,
+            "passed": true
+          }
+        ]
+      },
+      {
+        "rank": 5,
+        "v0.2_file": "059.jpg",
+        "v0.3_file": "059.jpg",
+        "ranking_equal": true,
+        "score_comparisons": [
+          {
+            "metric": "rank_5_global_score",
+            "v0.2": 0.552714,
+            "v0.3": 0.552714,
+            "absolute_difference": 0.0,
+            "signed_difference": 0.0,
+            "tolerance": 1e-06,
+            "passed": true
+          },
+          {
+            "metric": "rank_5_local_score",
+            "v0.2": 0.354545,
+            "v0.3": 0.354545,
+            "absolute_difference": 0.0,
+            "signed_difference": 0.0,
+            "tolerance": 1e-06,
+            "passed": true
+          },
+          {
+            "metric": "rank_5_final_score",
+            "v0.2": 0.443721,
+            "v0.3": 0.443721,
+            "absolute_difference": 0.0,
+            "signed_difference": 0.0,
+            "tolerance": 1e-06,
+            "passed": true
+          }
+        ]
+      }
+    ],
+    "maximum_absolute_score_difference": 0.0,
+    "passed": true
+  },
+  "overall_passed": true,
+  "conclusion": "同一真实样例的核心算法分数和候选排名在规定绝对误差范围内保持一致。"
+}

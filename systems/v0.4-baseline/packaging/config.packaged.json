@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "product_name": "换脸寻源双搜索系统",
+  "product_version": "1.0.0",
+  "runtime": {
+    "tasks_root": "{DATA_ROOT}/tasks",
+    "inbox_root": "{DATA_ROOT}/inbox",
+    "identity_cache": "{DATA_ROOT}/cache/identity"
+  },
+  "identity": {
+    "executable": "{APP_ROOT}/workers/identity/identity_search.exe",
+    "library": "{APP_ROOT}/data/identity_library",
+    "top_k": 5,
+    "timeout_seconds": 600,
+    "ctx": -1,
+    "model_root": "{APP_ROOT}/model_runtime",
+    "offline": true,
+    "hide_console": true
+  },
+  "source": {
+    "executable": "{APP_ROOT}/workers/source/source_search.exe",
+    "library": "{APP_ROOT}/data/source_library",
+    "top_k": 5,
+    "timeout_seconds": 600,
+    "hide_console": true
+  },
+  "frontend": {
+    "address": "127.0.0.1",
+    "port": 8766
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "version": "v0.1-two-search-official",
+  "identity_baseline_integrity": true,
+  "source_baseline_integrity": true,
+  "model_baseline_integrity": true,
+  "identity_algorithm_modified": false,
+  "source_algorithm_modified": false,
+  "three_case_test": {
+    "total": 3,
+    "success": 3
+  },
+  "rank1_regression": {
+    "identity": true,
+    "source": true
+  },
+  "task_isolation": true,
+  "manual_algorithm_execution_required": false,
+  "manual_json_copy_required": false,
+  "frontend": {
+    "http_200": true,
+    "identity_top5_rendered": true,
+    "source_top5_rendered": true,
+    "visualization_rendered": true
+  },
+  "exception_tests": {
+    "missing_query_controlled": true,
+    "identity_failure_source_continues": true
+  },
+  "release_created": true,
+  "release_path": "D:\\刑侦查竞赛\\releases\\v0.1-two-search-official",
+  "git_tag_created": false,
+  "git_tag_reason": "repository not present",
+  "remaining_p0": [],
+  "remaining_p1": [],
+  "status": "PASS",
+  "recommended_next_step": "保留 v0.1 正式双搜索发布；不要在本轮继续开发 v0.2、接入鉴伪或优化 B。"
+}
+

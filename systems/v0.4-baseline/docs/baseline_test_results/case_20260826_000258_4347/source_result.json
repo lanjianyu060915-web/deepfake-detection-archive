@@ -1,0 +1,48 @@
+{
+  "status": "success",
+  "query_image": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.2_dev\\runtime\\tasks\\case_20260826_000258_4347\\query.jpg",
+  "candidates": [
+    {
+      "rank": 1,
+      "file_path": "D:\\刑侦查竞赛\\first_week\\data\\source_library\\019.jpg",
+      "global_score": 0.994466,
+      "local_score": 0.989513,
+      "final_score": 0.991742,
+      "visualization_path": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.2_dev\\runtime\\tasks\\case_20260826_000258_4347\\visualizations\\source_result_e7d701f05d0f_match_001.jpg"
+    },
+    {
+      "rank": 2,
+      "file_path": "D:\\刑侦查竞赛\\first_week\\data\\source_library\\135.jpg",
+      "global_score": 0.526616,
+      "local_score": 0.52,
+      "final_score": 0.522977,
+      "visualization_path": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.2_dev\\runtime\\tasks\\case_20260826_000258_4347\\visualizations\\source_result_e7d701f05d0f_match_002.jpg"
+    },
+    {
+      "rank": 3,
+      "file_path": "D:\\刑侦查竞赛\\first_week\\data\\source_library\\177.jpg",
+      "global_score": 0.584595,
+      "local_score": 0.451818,
+      "final_score": 0.511568,
+      "visualization_path": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.2_dev\\runtime\\tasks\\case_20260826_000258_4347\\visualizations\\source_result_e7d701f05d0f_match_003.jpg"
+    },
+    {
+      "rank": 4,
+      "file_path": "D:\\刑侦查竞赛\\first_week\\data\\source_library\\051.jpg",
+      "global_score": 0.576249,
+      "local_score": 0.44,
+      "final_score": 0.501312,
+      "visualization_path": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.2_dev\\runtime\\tasks\\case_20260826_000258_4347\\visualizations\\source_result_e7d701f05d0f_match_004.jpg"
+    },
+    {
+      "rank": 5,
+      "file_path": "D:\\刑侦查竞赛\\first_week\\data\\source_library\\195.jpg",
+      "global_score": 0.536647,
+      "local_score": 0.44,
+      "final_score": 0.483491,
+      "visualization_path": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.2_dev\\runtime\\tasks\\case_20260826_000258_4347\\visualizations\\source_result_e7d701f05d0f_match_005.jpg"
+    }
+  ],
+  "runtime_seconds": 33.505919,
+  "error_message": null
+}

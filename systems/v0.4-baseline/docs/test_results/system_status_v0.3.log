@@ -1,0 +1,310 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-26T00:33:01.058+08:00",
+  "config_path": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.3_explainable_dev\\config.json",
+  "overall_status": "available",
+  "available": true,
+  "device": {
+    "cuda_available": true,
+    "probe": "nvidia-smi",
+    "gpu_names": [
+      "NVIDIA GeForce RTX 5060 Laptop GPU"
+    ],
+    "message": "检测到 NVIDIA GPU：NVIDIA GeForce RTX 5060 Laptop GPU",
+    "deepfake_requested": "auto",
+    "deepfake_effective": "cpu",
+    "deepfake_runtime": {
+      "torch_version": "2.11.0+cpu",
+      "cuda_build": null,
+      "cuda_capable": false,
+      "version_file": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem\\torch\\version.py",
+      "message": "AIGC 安装运行时为 CPU 构建（torch 2.11.0+cpu）"
+    },
+    "deepfake_cuda_available": false,
+    "identity_ctx": -1,
+    "identity_effective": "cpu",
+    "effective": "cpu"
+  },
+  "deepfake": {
+    "status": "available",
+    "available": true,
+    "enabled": true,
+    "message": "AIGC EXE、适配器、配置与模型 SHA-256 均通过只读检查",
+    "python": {
+      "path": "D:\\python\\python.exe",
+      "exists": true,
+      "size_bytes": 104952,
+      "expected_size_bytes": null,
+      "size_status": "not_checked",
+      "expected_sha256": null,
+      "actual_sha256": null,
+      "hash_status": "not_checked",
+      "status": "ok"
+    },
+    "adapter": {
+      "path": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.3_explainable_dev\\modules\\deepfake_detection\\run_deepfake_detection.py",
+      "exists": true,
+      "size_bytes": 14649,
+      "expected_size_bytes": null,
+      "size_status": "not_checked",
+      "expected_sha256": "ad69a01f225dfbba31911d08339dc9f2a566ac6338f729be97d7688e93305489",
+      "actual_sha256": "ad69a01f225dfbba31911d08339dc9f2a566ac6338f729be97d7688e93305489",
+      "hash_status": "match",
+      "status": "ok"
+    },
+    "adapter_support": {
+      "pyinstaller_runtime": {
+        "path": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.3_explainable_dev\\modules\\deepfake_detection\\pyinstaller_pyz_runtime.py",
+        "exists": true,
+        "size_bytes": 9988,
+        "expected_size_bytes": null,
+        "size_status": "not_checked",
+        "expected_sha256": "c6f3836d4c9252cbb2fc315acfd97e78b5f0b8bf10941e607bea996bcb86d836",
+        "actual_sha256": "c6f3836d4c9252cbb2fc315acfd97e78b5f0b8bf10941e607bea996bcb86d836",
+        "hash_status": "match",
+        "status": "ok"
+      },
+      "archive_inspector": {
+        "path": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.3_explainable_dev\\modules\\deepfake_detection\\inspect_installed_archive.py",
+        "exists": true,
+        "size_bytes": 880,
+        "expected_size_bytes": null,
+        "size_status": "not_checked",
+        "expected_sha256": "f2b46b0102afcca041f8a173ac9e9279548483632ba4932f25a4086eede03dba",
+        "actual_sha256": "f2b46b0102afcca041f8a173ac9e9279548483632ba4932f25a4086eede03dba",
+        "hash_status": "match",
+        "status": "ok"
+      }
+    },
+    "install_root": {
+      "path": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem",
+      "exists": true,
+      "read_only_policy": true
+    },
+    "executable": {
+      "path": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem\\深度伪造识别系统.exe",
+      "exists": true,
+      "size_bytes": 54645537,
+      "expected_size_bytes": null,
+      "size_status": "not_checked",
+      "expected_sha256": "bc67e52b77fa0559d4d6fe04f024dcdb4a8edf43128f80f7d70947e3da490203",
+      "actual_sha256": "bc67e52b77fa0559d4d6fe04f024dcdb4a8edf43128f80f7d70947e3da490203",
+      "hash_status": "match",
+      "status": "ok"
+    },
+    "models": {
+      "spatial": {
+        "path": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem\\models\\spatial_mobilenet_finetuned_gpu\\spatial_mobilenet_finetuned_gpu.pt",
+        "exists": true,
+        "size_bytes": 6202455,
+        "expected_size_bytes": null,
+        "size_status": "not_checked",
+        "expected_sha256": "5bb4b33936eb3adc631828ea271a466d62070a2b8de1902e5d96122317534794",
+        "actual_sha256": "5bb4b33936eb3adc631828ea271a466d62070a2b8de1902e5d96122317534794",
+        "hash_status": "match",
+        "status": "ok"
+      },
+      "frequency": {
+        "path": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem\\models\\frequency_stat_formal\\frequency_stat_detector.joblib",
+        "exists": true,
+        "size_bytes": 4129,
+        "expected_size_bytes": null,
+        "size_status": "not_checked",
+        "expected_sha256": "2ec6828eb2a3151784667eb0c105f07cdb41de6ec2df587d28b2766ceee063eb",
+        "actual_sha256": "2ec6828eb2a3151784667eb0c105f07cdb41de6ec2df587d28b2766ceee063eb",
+        "hash_status": "match",
+        "status": "ok"
+      },
+      "base_weight": {
+        "path": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.3_explainable_dev\\runtime\\cache\\deepfake\\torch\\hub\\checkpoints\\mobilenet_v3_small-047dcff4.pth",
+        "exists": true,
+        "size_bytes": 10306551,
+        "expected_size_bytes": null,
+        "size_status": "not_checked",
+        "expected_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+        "actual_sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f",
+        "hash_status": "match",
+        "status": "ok"
+      }
+    },
+    "config": {
+      "path": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem\\models\\fusion_formal\\fusion_config.json",
+      "exists": true,
+      "size_bytes": 1077,
+      "expected_size_bytes": null,
+      "size_status": "not_checked",
+      "expected_sha256": "8f76abeabb55da1119b28689e15ccd31eac7f1066e401e766987efbb4603e0b2",
+      "actual_sha256": "8f76abeabb55da1119b28689e15ccd31eac7f1066e401e766987efbb4603e0b2",
+      "hash_status": "match",
+      "status": "ok"
+    }
+  },
+  "identity": {
+    "status": "available",
+    "available": true,
+    "message": "身份库可用：9 人、45 张图片",
+    "person_count": 9,
+    "image_count": 45,
+    "embedding_count": 43,
+    "index_status": "ready",
+    "library": {
+      "path": "D:\\刑侦查竞赛\\first_week\\data\\identity_library",
+      "status": "ready",
+      "available": true,
+      "person_count": 9,
+      "person_directory_count": 9,
+      "image_count": 45,
+      "message": "9 人、45 张图片"
+    },
+    "worker": {
+      "path": "D:\\刑侦查竞赛\\first_week\\_round1_work\\backend\\envs\\A_env\\Scripts\\python.exe",
+      "exists": true,
+      "size_bytes": 274424,
+      "expected_size_bytes": null,
+      "size_status": "not_checked",
+      "expected_sha256": null,
+      "actual_sha256": null,
+      "hash_status": "not_checked",
+      "status": "ok"
+    },
+    "runner": {
+      "path": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.3_explainable_dev\\modules\\identity_search\\run_identity_search.py",
+      "exists": true,
+      "size_bytes": 325,
+      "expected_size_bytes": null,
+      "size_status": "not_checked",
+      "expected_sha256": null,
+      "actual_sha256": null,
+      "hash_status": "not_checked",
+      "status": "ok"
+    },
+    "model": {
+      "name": "buffalo_l",
+      "path": "C:\\Users\\lanji\\.insightface\\models\\buffalo_l",
+      "files": {
+        "1k3d68.onnx": {
+          "path": "C:\\Users\\lanji\\.insightface\\models\\buffalo_l\\1k3d68.onnx",
+          "exists": true,
+          "size_bytes": 143607619,
+          "expected_size_bytes": 143607619,
+          "size_status": "match",
+          "expected_sha256": "df5c06b8a0c12e422b2ed8947b8869faa4105387f199c477af038aa01f9a45cc",
+          "actual_sha256": "df5c06b8a0c12e422b2ed8947b8869faa4105387f199c477af038aa01f9a45cc",
+          "hash_status": "match",
+          "status": "ok"
+        },
+        "2d106det.onnx": {
+          "path": "C:\\Users\\lanji\\.insightface\\models\\buffalo_l\\2d106det.onnx",
+          "exists": true,
+          "size_bytes": 5030888,
+          "expected_size_bytes": 5030888,
+          "size_status": "match",
+          "expected_sha256": "f001b856447c413801ef5c42091ed0cd516fcd21f2d6b79635b1e733a7109dbf",
+          "actual_sha256": "f001b856447c413801ef5c42091ed0cd516fcd21f2d6b79635b1e733a7109dbf",
+          "hash_status": "match",
+          "status": "ok"
+        },
+        "det_10g.onnx": {
+          "path": "C:\\Users\\lanji\\.insightface\\models\\buffalo_l\\det_10g.onnx",
+          "exists": true,
+          "size_bytes": 16923827,
+          "expected_size_bytes": 16923827,
+          "size_status": "match",
+          "expected_sha256": "5838f7fe053675b1c7a08b633df49e7af5495cee0493c7dcf6697200b85b5b91",
+          "actual_sha256": "5838f7fe053675b1c7a08b633df49e7af5495cee0493c7dcf6697200b85b5b91",
+          "hash_status": "match",
+          "status": "ok"
+        },
+        "genderage.onnx": {
+          "path": "C:\\Users\\lanji\\.insightface\\models\\buffalo_l\\genderage.onnx",
+          "exists": true,
+          "size_bytes": 1322532,
+          "expected_size_bytes": 1322532,
+          "size_status": "match",
+          "expected_sha256": "4fde69b1c810857b88c64a335084f1c3fe8f01246c9a191b48c7bb756d6652fb",
+          "actual_sha256": "4fde69b1c810857b88c64a335084f1c3fe8f01246c9a191b48c7bb756d6652fb",
+          "hash_status": "match",
+          "status": "ok"
+        },
+        "w600k_r50.onnx": {
+          "path": "C:\\Users\\lanji\\.insightface\\models\\buffalo_l\\w600k_r50.onnx",
+          "exists": true,
+          "size_bytes": 174383860,
+          "expected_size_bytes": 174383860,
+          "size_status": "match",
+          "expected_sha256": "4c06341c33c2ca1f86781dab0e829f88ad5b64be9fba56e56bc9ebdefc619e43",
+          "actual_sha256": "4c06341c33c2ca1f86781dab0e829f88ad5b64be9fba56e56bc9ebdefc619e43",
+          "hash_status": "match",
+          "status": "ok"
+        }
+      },
+      "fingerprint": "c280512512d104c2cc6eafabeac7fbab07b55b38c681a0003a24a17d011ba3f6",
+      "complete": true
+    },
+    "cache": {
+      "cache_root": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\cache\\identity",
+      "metadata_path": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\cache\\identity\\identity_index_0f638bd4cc311b73e202db6c.json",
+      "data_path": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\cache\\identity\\identity_index_0f638bd4cc311b73e202db6c.npz",
+      "embedding_count": 43,
+      "identity_count": 9,
+      "persistent": true,
+      "validation_scope": "实时图库清单+模型指纹+缓存 fingerprint、NPZ SHA-256/shape/dtype/有限值；不初始化模型",
+      "status": "ready",
+      "index_status": "ready",
+      "npz_sha256": "8e5a7476f8b6b4eb2b3b2786dfe363f5f41d70cf6e25417fad0ed729dc4ca203",
+      "fingerprint": "fc1009a0f927947f0991f17015c994bf911dffb3ed43ff365df687faa83691cf",
+      "embedding_shape": [
+        43,
+        512
+      ],
+      "embedding_value_count": 22016,
+      "message": "缓存可读：9 人、43 个 embedding"
+    }
+  },
+  "source": {
+    "status": "available",
+    "available": true,
+    "message": "底图库可用：203 张图片；无持久 index，检索时实时扫描",
+    "image_count": 203,
+    "feature_count": 0,
+    "index_status": "not_persistent",
+    "library": {
+      "path": "D:\\刑侦查竞赛\\first_week\\data\\source_library",
+      "status": "ready",
+      "available": true,
+      "person_count": null,
+      "person_directory_count": null,
+      "image_count": 203,
+      "message": "203 张图片"
+    },
+    "worker": {
+      "path": "D:\\刑侦查竞赛\\first_week\\_round1_work\\backend\\envs\\B_env\\Scripts\\python.exe",
+      "exists": true,
+      "size_bytes": 274424,
+      "expected_size_bytes": null,
+      "size_status": "not_checked",
+      "expected_sha256": null,
+      "actual_sha256": null,
+      "hash_status": "not_checked",
+      "status": "ok"
+    },
+    "runner": {
+      "path": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.3_explainable_dev\\modules\\source_search\\run_source_search.py",
+      "exists": true,
+      "size_bytes": 9342,
+      "expected_size_bytes": null,
+      "size_status": "not_checked",
+      "expected_sha256": null,
+      "actual_sha256": null,
+      "hash_status": "not_checked",
+      "status": "ok"
+    },
+    "index": {
+      "status": "not_persistent",
+      "persistent": false,
+      "feature_count": 0,
+      "build_policy": "realtime_scan",
+      "message": "底图模块没有持久 index；每次任务实时扫描图库并提取特征"
+    }
+  }
+}

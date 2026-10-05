@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "verified": true,
+  "verified_at": "2026-08-26T03:00:22.1969201+08:00",
+  "verification_scope": "all manifest rows; path containment, uniqueness, size, and SHA-256",
+  "file_count": 28957,
+  "total_bytes": 3722952801,
+  "manifest_sha256": "866dfa77318487137f14b850e8a9ca1f0c2788d402bef865ae71411a8ff6c26f",
+  "manifest_matches_summary": true,
+  "mismatch_count": 0,
+  "extra_file_count": 0,
+  "final_delivery_reverification": true
+}

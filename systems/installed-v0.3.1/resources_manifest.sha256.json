@@ -1,0 +1,88 @@
+{
+  "schema_version": "1.0",
+  "product_version": "0.3.1",
+  "generated_at": "2026-08-26T13:49:42.5208262+08:00",
+  "algorithm": "SHA-256",
+  "entries": [
+    {
+      "path": "deepfake_runtime/深度伪造识别系统.exe",
+      "size": 54645537,
+      "sha256": "bc67e52b77fa0559d4d6fe04f024dcdb4a8edf43128f80f7d70947e3da490203"
+    },
+    {
+      "path": "deepfake_runtime/models/spatial_mobilenet_finetuned_gpu/spatial_mobilenet_finetuned_gpu.pt",
+      "size": 6202455,
+      "sha256": "5bb4b33936eb3adc631828ea271a466d62070a2b8de1902e5d96122317534794"
+    },
+    {
+      "path": "deepfake_runtime/models/frequency_stat_formal/frequency_stat_detector.joblib",
+      "size": 4129,
+      "sha256": "2ec6828eb2a3151784667eb0c105f07cdb41de6ec2df587d28b2766ceee063eb"
+    },
+    {
+      "path": "deepfake_runtime/models/fusion_formal/fusion_config.json",
+      "size": 1077,
+      "sha256": "8f76abeabb55da1119b28689e15ccd31eac7f1066e401e766987efbb4603e0b2"
+    },
+    {
+      "path": "modules/deepfake_detection/run_deepfake_detection.py",
+      "size": 25643,
+      "sha256": "fc14c1209b7f46715eb252c309f23770cfab584b1c987a7e2a3e137c76ffd131"
+    },
+    {
+      "path": "modules/deepfake_detection/pyinstaller_pyz_runtime.py",
+      "size": 10548,
+      "sha256": "e117ef6aeef718c4ddbc5eb92e0a615f0239bebe85f7bd830a0963c245e9ef54"
+    },
+    {
+      "path": "modules/deepfake_detection/inspect_installed_archive.py",
+      "size": 880,
+      "sha256": "f2b46b0102afcca041f8a173ac9e9279548483632ba4932f25a4086eede03dba"
+    },
+    {
+      "path": "换脸寻源系统_v0.3.1.exe",
+      "size": 16599893,
+      "sha256": "5512394445a82686e5bf3c99bf2709f8aafee5f09a813bfe649ab46fcf44b45a"
+    },
+    {
+      "path": "workers/identity/identity_worker.exe",
+      "size": 23650751,
+      "sha256": "a64f17f00c69896f405ea4afe1e85784dc023fc0bf5c7cf4b369edd4dd16845a"
+    },
+    {
+      "path": "workers/source/source_search.exe",
+      "size": 5045535,
+      "sha256": "a633da8dedf6b580316fc9aa040c05838daa36c0b446472b22db6b547e054c92"
+    },
+    {
+      "path": "python_runtime/python.exe",
+      "size": 104952,
+      "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a"
+    },
+    {
+      "path": "model_runtime/models/buffalo_l/1k3d68.onnx",
+      "size": 143607619,
+      "sha256": "df5c06b8a0c12e422b2ed8947b8869faa4105387f199c477af038aa01f9a45cc"
+    },
+    {
+      "path": "model_runtime/models/buffalo_l/2d106det.onnx",
+      "size": 5030888,
+      "sha256": "f001b856447c413801ef5c42091ed0cd516fcd21f2d6b79635b1e733a7109dbf"
+    },
+    {
+      "path": "model_runtime/models/buffalo_l/det_10g.onnx",
+      "size": 16923827,
+      "sha256": "5838f7fe053675b1c7a08b633df49e7af5495cee0493c7dcf6697200b85b5b91"
+    },
+    {
+      "path": "model_runtime/models/buffalo_l/genderage.onnx",
+      "size": 1322532,
+      "sha256": "4fde69b1c810857b88c64a335084f1c3fe8f01246c9a191b48c7bb756d6652fb"
+    },
+    {
+      "path": "model_runtime/models/buffalo_l/w600k_r50.onnx",
+      "size": 174383860,
+      "sha256": "4c06341c33c2ca1f86781dab0e829f88ad5b64be9fba56e56bc9ebdefc619e43"
+    }
+  ]
+}

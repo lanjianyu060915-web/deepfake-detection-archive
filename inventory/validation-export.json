@@ -1,0 +1,269 @@
+{
+  "schema_version": 1,
+  "audited_date": "2026-10-05",
+  "source_root": "D:\\刑侦查竞赛\\deepfake_acceptance_v2",
+  "export_root": "D:\\GitHub备份\\deepfake-detection-archive\\validation\\deepfake_acceptance_v2",
+  "selected_file_count": 41,
+  "selected_bytes": 1823170,
+  "files": [
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\audit_summary.json",
+      "repository_path": "validation/deepfake_acceptance_v2/audit_summary.json",
+      "bytes": 1592,
+      "sha256": "9801708f0e7a98cfe0d265a0099646d8a745434d0a1710ed7fb6dc9f1aeb8ca0"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\candidate_inventory\\AUDIT_STATS.json",
+      "repository_path": "validation/deepfake_acceptance_v2/candidate_inventory/AUDIT_STATS.json",
+      "bytes": 2802,
+      "sha256": "3229bf8b3f8b4126cd1f18f42f8f5e121d6e1a8f9d2c7c641d9b9f54eb3fe4e7"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\candidate_inventory\\CANDIDATE_INVENTORY.csv",
+      "repository_path": "validation/deepfake_acceptance_v2/candidate_inventory/CANDIDATE_INVENTORY.csv",
+      "bytes": 1171129,
+      "sha256": "b6739352d005495b110120982ca24cc889d0cf86a360dedab021253c9b1a6a63"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\candidate_inventory\\OVERLAP_CHECK.csv",
+      "repository_path": "validation/deepfake_acceptance_v2/candidate_inventory/OVERLAP_CHECK.csv",
+      "bytes": 477099,
+      "sha256": "9f9e03f3827a1b240c6ee2fe8b95a1bf09a1530f71440e7d49a2d8eae8dd5759"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\candidate_inventory\\README.md",
+      "repository_path": "validation/deepfake_acceptance_v2/candidate_inventory/README.md",
+      "bytes": 1024,
+      "sha256": "2073f7cb0e429d12209bca24b2ce0587e5e1409d970b6e716c9741c1156ef244"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\dataset\\manifests\\deepfake_ground_truth_template.csv",
+      "repository_path": "validation/deepfake_acceptance_v2/dataset/manifests/deepfake_ground_truth_template.csv",
+      "bytes": 173,
+      "sha256": "66988bb4cfc309aa654034781b14868f13c916eeaae6399021df702bda66b491"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\dataset\\originals\\FAKE\\README.md",
+      "repository_path": "validation/deepfake_acceptance_v2/dataset/originals/FAKE/README.md",
+      "bytes": 215,
+      "sha256": "a161f12452c0b3b8deda6094dedf32f6259776f6dd5fa8d6055efd5a48ba7671"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\dataset\\originals\\REAL\\README.md",
+      "repository_path": "validation/deepfake_acceptance_v2/dataset/originals/REAL/README.md",
+      "bytes": 189,
+      "sha256": "43cdaf6bca4c1f2d45625bb13d8998cb3024995279393b5e9e4bc610849b92af"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\dataset\\perturbations\\README.md",
+      "repository_path": "validation/deepfake_acceptance_v2/dataset/perturbations/README.md",
+      "bytes": 167,
+      "sha256": "ab84294f4af086e4ec72fdc5103d6e554254022926ee7329eec162e88beff231"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\evaluator\\evaluate_deepfake.py",
+      "repository_path": "validation/deepfake_acceptance_v2/evaluator/evaluate_deepfake.py",
+      "bytes": 30844,
+      "sha256": "a48f1589be8f3ef1dfee12760adcc4018e4de700a30c009d17b2d58b4863683b"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\evaluator\\metrics.py",
+      "repository_path": "validation/deepfake_acceptance_v2/evaluator/metrics.py",
+      "bytes": 5010,
+      "sha256": "7b956b175f6fee23911c69b9d8cfb31b20503bb303dc34f997aaf8442b06828f"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\evaluator\\README.md",
+      "repository_path": "validation/deepfake_acceptance_v2/evaluator/README.md",
+      "bytes": 4986,
+      "sha256": "9cf431cae502bc7fcfaf682ed35ff5adf1ebad72cb851096dc63ce5a3a01127d"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\evaluator\\tests\\stub_deepfake_runner.py",
+      "repository_path": "validation/deepfake_acceptance_v2/evaluator/tests/stub_deepfake_runner.py",
+      "bytes": 4953,
+      "sha256": "d2a4185f813760a4898570be33199503586742346b6d5177f2d64deede3c5ee9"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\evaluator\\tests\\test_evaluator.py",
+      "repository_path": "validation/deepfake_acceptance_v2/evaluator/tests/test_evaluator.py",
+      "bytes": 15025,
+      "sha256": "de23a1ff79d469e4a2f18b860749da7552238de39f0f60135fd662b01ac06282"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\frozen_baseline\\DEEPFAKE_BASELINE_CONFIG.json",
+      "repository_path": "validation/deepfake_acceptance_v2/frozen_baseline/DEEPFAKE_BASELINE_CONFIG.json",
+      "bytes": 10799,
+      "sha256": "be2d6c12f1d696bca0e982e8068a065b0e4f79fdc6b6bc1cfc95004176a6e40f"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\frozen_baseline\\DEEPFAKE_CODE_SHA256.csv",
+      "repository_path": "validation/deepfake_acceptance_v2/frozen_baseline/DEEPFAKE_CODE_SHA256.csv",
+      "bytes": 10574,
+      "sha256": "ae8801a1c3bf172741941e3e09c02d872dd0b62b7df6e4ef21131cbfe5baf167"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\frozen_baseline\\DEEPFAKE_MODEL_SHA256.csv",
+      "repository_path": "validation/deepfake_acceptance_v2/frozen_baseline/DEEPFAKE_MODEL_SHA256.csv",
+      "bytes": 3162,
+      "sha256": "399c883265ce43a348d48941e9f6a3b5f37ba110c24fa41e865c5f2496a543fc"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\frozen_baseline\\VERIFY_BASELINE.ps1",
+      "repository_path": "validation/deepfake_acceptance_v2/frozen_baseline/VERIFY_BASELINE.ps1",
+      "bytes": 6204,
+      "sha256": "2cb07aa4afde198d05714eb2a1bd9897d0d55ff3738b5b8fbbf524a6c97c1fb2"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\logs\\NO_REAL_MODEL_EXECUTION.md",
+      "repository_path": "validation/deepfake_acceptance_v2/logs/NO_REAL_MODEL_EXECUTION.md",
+      "bytes": 508,
+      "sha256": "7cbb7723d07336039402c90e6567bcec312fb4c5080b48d76450d4e37b0a83af"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\protocols\\D_V2_DATA_SPECIFICATION.md",
+      "repository_path": "validation/deepfake_acceptance_v2/protocols/D_V2_DATA_SPECIFICATION.md",
+      "bytes": 3050,
+      "sha256": "43c9280636bf727572a019c367e8322491eb2191456d31e8ffb77a74d1494dbf"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\protocols\\D_V2_FORMAL_BLIND_TEST_PROTOCOL.md",
+      "repository_path": "validation/deepfake_acceptance_v2/protocols/D_V2_FORMAL_BLIND_TEST_PROTOCOL.md",
+      "bytes": 2324,
+      "sha256": "b11d015996d4bf1e7e7f1d6c1973312883e5a27a34187a7a77320fb9f33e09cf"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\protocols\\DATA_INDEPENDENCE_STATEMENT_TEMPLATE.md",
+      "repository_path": "validation/deepfake_acceptance_v2/protocols/DATA_INDEPENDENCE_STATEMENT_TEMPLATE.md",
+      "bytes": 1542,
+      "sha256": "b61dd855566391d1b8ec84c6cf055f012f5d517f9c3e202cecc58fecd3c3eb84"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\README.md",
+      "repository_path": "validation/deepfake_acceptance_v2/README.md",
+      "bytes": 2024,
+      "sha256": "326e98ac8b3401f558e64b3fc10c8fa45838cde103c9743b1fcbac6e07608759"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\reports\\BASELINE_INTEGRITY_REPORT.md",
+      "repository_path": "validation/deepfake_acceptance_v2/reports/BASELINE_INTEGRITY_REPORT.md",
+      "bytes": 1975,
+      "sha256": "bce9b036c198e84d04ac0f1b2ea028bcdc1ea27d97a3e790975b0e1f13f2c4ef"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\reports\\D_V2_DATA_GAP_REPORT.md",
+      "repository_path": "validation/deepfake_acceptance_v2/reports/D_V2_DATA_GAP_REPORT.md",
+      "bytes": 1597,
+      "sha256": "c26fd64b114d2f056ccd7e731137727f627bfb180b204c5f42809148cce1d11a"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\reports\\DATA_COLLECTION_ASSIGNMENT.md",
+      "repository_path": "validation/deepfake_acceptance_v2/reports/DATA_COLLECTION_ASSIGNMENT.md",
+      "bytes": 951,
+      "sha256": "fd500e720a4302602a9f8912303f2b06ec5d265fb9ec77d0467151adf51986a1"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\reports\\DATA_LEAKAGE_AUDIT.md",
+      "repository_path": "validation/deepfake_acceptance_v2/reports/DATA_LEAKAGE_AUDIT.md",
+      "bytes": 3091,
+      "sha256": "fc2cb9ae2ca14906796e385ad921487a8bf9d845607360f0fb66a895b7412139"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\reports\\DATASET_VALIDATION.json",
+      "repository_path": "validation/deepfake_acceptance_v2/reports/DATASET_VALIDATION.json",
+      "bytes": 820,
+      "sha256": "a9c0a3c7f288a674a6c86dd51f37cf7ff3025a5be93aa1beebbba557e55d8b03"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\reports\\DATASET_VALIDATION_REPORT.md",
+      "repository_path": "validation/deepfake_acceptance_v2/reports/DATASET_VALIDATION_REPORT.md",
+      "bytes": 364,
+      "sha256": "3f040559597f4d6f64127ae319dcc83f6ff7759a7f4138d88107507fe209e937"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\reports\\DATASET_VALIDATION_TOOL_SELFTEST.md",
+      "repository_path": "validation/deepfake_acceptance_v2/reports/DATASET_VALIDATION_TOOL_SELFTEST.md",
+      "bytes": 580,
+      "sha256": "0677f8c8317c0bdd059095b16fc98b44425e9f5e0834f2e8ab62c99dab55088e"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\reports\\ROUND2_5_SUMMARY.md",
+      "repository_path": "validation/deepfake_acceptance_v2/reports/ROUND2_5_SUMMARY.md",
+      "bytes": 1576,
+      "sha256": "86fd591218f3ac3767c8e0209c2af48deb339ff6fd9eb0714f36136ee1640826"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\requirements.txt",
+      "repository_path": "validation/deepfake_acceptance_v2/requirements.txt",
+      "bytes": 15,
+      "sha256": "e2fe85b176ffadb6e1b3c300a6a40b327305d7d53b5cd3861b250ed1c05c3075"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\test_results\\TEST_SUMMARY.json",
+      "repository_path": "validation/deepfake_acceptance_v2/test_results/TEST_SUMMARY.json",
+      "bytes": 822,
+      "sha256": "47c19be1d2449c18ddcd3216c0e05c385679ca46be8593df105505281ef0d63d"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\test_results\\TEST_SUMMARY.md",
+      "repository_path": "validation/deepfake_acceptance_v2/test_results/TEST_SUMMARY.md",
+      "bytes": 969,
+      "sha256": "353affaff0470d112b0bc7ea3a89ffea799fc931d07bb136f011e9ee56272725"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\tests\\test_data_governance.py",
+      "repository_path": "validation/deepfake_acceptance_v2/tests/test_data_governance.py",
+      "bytes": 6740,
+      "sha256": "e2dfbccc103f1ecd49c5c5f2e9bc5de1476da48d969124b29451fea68c92d7c6"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\tools\\audit_candidates.py",
+      "repository_path": "validation/deepfake_acceptance_v2/tools/audit_candidates.py",
+      "bytes": 24680,
+      "sha256": "e377b599d9eeb2e696bd160e274ad1f44dd0699a31be50221060b9c538c72184"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\tools\\build_manifest.py",
+      "repository_path": "validation/deepfake_acceptance_v2/tools/build_manifest.py",
+      "bytes": 4645,
+      "sha256": "7f071078d378bda16c7f3d514b544d880c6ca1e8dd03ead17bdc0936f91b2fe9"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\tools\\common.py",
+      "repository_path": "validation/deepfake_acceptance_v2/tools/common.py",
+      "bytes": 3653,
+      "sha256": "e0bac97e61cd25cca65509f66afd1d2b227fa1e27bd40a5cf9df6a47befcbe31"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\tools\\generate_perturbations.py",
+      "repository_path": "validation/deepfake_acceptance_v2/tools/generate_perturbations.py",
+      "bytes": 5930,
+      "sha256": "a21d641a93a92366a0c1d0cd3fead9afdb27a9414ae8956f4922f688bae849ab"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\tools\\README.md",
+      "repository_path": "validation/deepfake_acceptance_v2/tools/README.md",
+      "bytes": 771,
+      "sha256": "d286d6fa481d4fcc63c8aa4872a76272487d8e37f6d6fcbc1c6c7aa1f428429c"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\tools\\validate_dataset.py",
+      "repository_path": "validation/deepfake_acceptance_v2/tools/validate_dataset.py",
+      "bytes": 8596,
+      "sha256": "4814d6b870b7740b09ef3678027a9f2767c192dd3c8ecbc499022ee2ba0d60eb"
+    }
+  ],
+  "excluded": [
+    "delivery duplicate",
+    "virtual environments",
+    "caches",
+    "real image/video media",
+    "model weights and binary artifacts"
+  ],
+  "dataset_scope": "Only README files and the ground-truth CSV template were included from dataset.",
+  "secret_pattern_check": {
+    "files_checked": 43,
+    "findings_count": 0,
+    "value_output": false
+  }
+}

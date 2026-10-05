@@ -1,0 +1,16 @@
+{
+  "module": "deepfake",
+  "status": "success",
+  "started_at": "2026-08-26T00:22:55.716+08:00",
+  "finished_at": "2026-08-26T00:22:57.190+08:00",
+  "runtime_seconds": 1.4589346000066143,
+  "returncode": null,
+  "timed_out": false,
+  "skipped": false,
+  "execution_mode": "service",
+  "fallback_reason": null,
+  "stdout_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002255_45d9\\logs\\deepfake_stdout.log",
+  "stderr_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002255_45d9\\logs\\deepfake_stderr.log",
+  "command_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002255_45d9\\logs\\deepfake_command.json",
+  "error": null
+}

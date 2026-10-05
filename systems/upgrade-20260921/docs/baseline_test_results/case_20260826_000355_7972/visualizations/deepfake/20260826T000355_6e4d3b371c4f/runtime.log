@@ -1,0 +1,2 @@
+2026-08-26 00:03:55,266 | WARNING | 未检测到满足质量要求的人脸，无法形成可靠判断。
+2026-08-26 00:03:55,276 | INFO | 运行完成：status=INSUFFICIENT_EVIDENCE label=证据不足 score=None

@@ -1,0 +1,48 @@
+{
+  "round": "2.5",
+  "deepfake_baseline_unchanged": true,
+  "core_blind_target": {
+    "real": 100,
+    "fake": 100
+  },
+  "trusted_candidates": {
+    "real": 500,
+    "fake": 510,
+    "unknown": 319
+  },
+  "trusted_candidate_count_basis": "unique_sha256; evidence-backed label only; not Core eligibility",
+  "candidate_path_counts": {
+    "real": 530,
+    "fake": 540,
+    "unknown": 320,
+    "total": 1390
+  },
+  "candidate_unique_sha256_total": 1329,
+  "core_blind_eligible": {
+    "real": 0,
+    "fake": 0
+  },
+  "previously_exposed_count": 1014,
+  "previously_exposed_path_count": 1075,
+  "training_data_overlap_status": "UNKNOWN",
+  "candidate_audit_passed": true,
+  "archive_source_integrity_passed": true,
+  "baseline_integrity_checks": {
+    "passed": 50,
+    "total": 50
+  },
+  "core_blind_ready": false,
+  "dataset_validator_passed": true,
+  "current_core_manifest_validation": "DATA_PENDING_EMPTY_DATASET",
+  "perturbation_generator_passed": true,
+  "evaluator_stub_tests_passed": true,
+  "formal_real_model_test_executed": false,
+  "status": "ENGINEERING_PASS_DATA_PENDING",
+  "remaining_data_gaps": [
+    "100 independently sourced and evidence-backed REAL originals",
+    "100 independently sourced and evidence-backed FAKE originals",
+    "at least 3 documented FAKE generation methods",
+    "signed data-independence statements and a more complete upstream training inventory"
+  ],
+  "recommended_next_step": "Collect and isolate REAL 100 / FAKE 100 without running the current model; verify provenance and independence, then freeze and validate the Core Blind manifest."
+}

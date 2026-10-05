@@ -1,0 +1,48 @@
+{
+  "purpose": "v0.4.0 evidence-visualization numerical regression baseline; never consumed by the frontend",
+  "task_id": "case_20260831_114829_c45e",
+  "input": {
+    "file": "query.jpg",
+    "size_bytes": 6639434,
+    "sha256": "5A09A99A2E0B42ED7CFE923A15994F038CA815C03CBA972419A25D8AE0E3BAED"
+  },
+  "deepfake": {
+    "fusion_score": 0.20524829812412798,
+    "spatial_score": 0.3240990936756134,
+    "frequency_score": 0.01133384222433596,
+    "decision_threshold": 0.36360106194654707,
+    "decision_margin": -0.15835276382241908,
+    "label": "real"
+  },
+  "identity": {
+    "ranking": [
+      ["person_001", 0.6991182208061218],
+      ["person_004", 0.11019227802753448],
+      ["person_006", 0.09207640811800957],
+      ["person_009", 0.09165517836809159],
+      ["person_003", 0.07677632104605436]
+    ],
+    "top1_top2_margin": 0.5889259427785873,
+    "best_reference_file": "04.jpg",
+    "best_reference_score": 0.9999999403953552
+  },
+  "source": {
+    "ranking": [
+      ["051.jpg", 0.534041, 0.767547, 0.662469],
+      ["017.jpg", 0.56401, 0.477273, 0.516305],
+      ["020.jpg", 0.600578, 0.35, 0.46276],
+      ["173.jpg", 0.563732, 0.35, 0.44618],
+      ["144.jpg", 0.554576, 0.34, 0.436559]
+    ],
+    "top1_good_match_count": 53,
+    "top1_ransac_inlier_count": 36,
+    "top1_ransac_inlier_ratio": 0.6792452830188679,
+    "top1_top2_margin": 0.146164
+  },
+  "source_files": {
+    "detection_result.json": "3FE8EF2ADBD5433FF1C4F3D9558491715E71B08C00016EDF67FA3DF087C13054",
+    "identity_result.json": "2D81487F52BFA9667806AFBDE6950F482F1C58D8CA870A569335D5FCA5C2B1BF",
+    "source_result.json": "8534684F1870FE22138A758333ED4A36E418B13F11ACB56338A8CF008758A54C"
+  },
+  "maximum_allowed_absolute_error": 0.000001
+}

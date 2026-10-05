@@ -1,0 +1,93 @@
+{
+  "schema_version": "1.0",
+  "product_version": "0.3.0",
+  "generated_at": "2026-08-26T02:08:18.1422917+08:00",
+  "algorithm": "SHA-256",
+  "entries": [
+    {
+      "path": "deepfake_runtime/深度伪造识别系统.exe",
+      "size": 54645537,
+      "sha256": "bc67e52b77fa0559d4d6fe04f024dcdb4a8edf43128f80f7d70947e3da490203"
+    },
+    {
+      "path": "model_runtime/models/buffalo_l/det_10g.onnx",
+      "size": 16923827,
+      "sha256": "5838f7fe053675b1c7a08b633df49e7af5495cee0493c7dcf6697200b85b5b91"
+    },
+    {
+      "path": "model_runtime/models/buffalo_l/2d106det.onnx",
+      "size": 5030888,
+      "sha256": "f001b856447c413801ef5c42091ed0cd516fcd21f2d6b79635b1e733a7109dbf"
+    },
+    {
+      "path": "model_runtime/models/buffalo_l/1k3d68.onnx",
+      "size": 143607619,
+      "sha256": "df5c06b8a0c12e422b2ed8947b8869faa4105387f199c477af038aa01f9a45cc"
+    },
+    {
+      "path": "python_runtime/python.exe",
+      "size": 104952,
+      "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a"
+    },
+    {
+      "path": "workers/source/source_search.exe",
+      "size": 5045535,
+      "sha256": "073abed5abbfa02e8973887adcb5e67b332c8704a4ed18e43469e9d7011cde3f"
+    },
+    {
+      "path": "workers/identity/identity_worker.exe",
+      "size": 23650751,
+      "sha256": "146c26d15584527e5b2d1f88e051e7cb4712d8e1f8969ee74622596061a5e67a"
+    },
+    {
+      "path": "model_runtime/models/buffalo_l/genderage.onnx",
+      "size": 1322532,
+      "sha256": "4fde69b1c810857b88c64a335084f1c3fe8f01246c9a191b48c7bb756d6652fb"
+    },
+    {
+      "path": "换脸寻源系统_v0.3.exe",
+      "size": 16598921,
+      "sha256": "ec484e57afc9c979a2fdc6454293b3358ca22254e2bcc2fa6e13b8080d8ba5eb"
+    },
+    {
+      "path": "modules/deepfake_detection/pyinstaller_pyz_runtime.py",
+      "size": 9988,
+      "sha256": "c6f3836d4c9252cbb2fc315acfd97e78b5f0b8bf10941e607bea996bcb86d836"
+    },
+    {
+      "path": "modules/deepfake_detection/run_deepfake_detection.py",
+      "size": 14649,
+      "sha256": "ad69a01f225dfbba31911d08339dc9f2a566ac6338f729be97d7688e93305489"
+    },
+    {
+      "path": "runtime_assets/deepfake_torch/hub/checkpoints/mobilenet_v3_small-047dcff4.pth",
+      "size": 10306551,
+      "sha256": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f"
+    },
+    {
+      "path": "deepfake_runtime/models/fusion_formal/fusion_config.json",
+      "size": 1077,
+      "sha256": "8f76abeabb55da1119b28689e15ccd31eac7f1066e401e766987efbb4603e0b2"
+    },
+    {
+      "path": "deepfake_runtime/models/frequency_stat_formal/frequency_stat_detector.joblib",
+      "size": 4129,
+      "sha256": "2ec6828eb2a3151784667eb0c105f07cdb41de6ec2df587d28b2766ceee063eb"
+    },
+    {
+      "path": "deepfake_runtime/models/spatial_mobilenet_finetuned_gpu/spatial_mobilenet_finetuned_gpu.pt",
+      "size": 6202455,
+      "sha256": "5bb4b33936eb3adc631828ea271a466d62070a2b8de1902e5d96122317534794"
+    },
+    {
+      "path": "modules/deepfake_detection/inspect_installed_archive.py",
+      "size": 880,
+      "sha256": "f2b46b0102afcca041f8a173ac9e9279548483632ba4932f25a4086eede03dba"
+    },
+    {
+      "path": "model_runtime/models/buffalo_l/w600k_r50.onnx",
+      "size": 174383860,
+      "sha256": "4c06341c33c2ca1f86781dab0e829f88ad5b64be9fba56e56bc9ebdefc619e43"
+    }
+  ]
+}

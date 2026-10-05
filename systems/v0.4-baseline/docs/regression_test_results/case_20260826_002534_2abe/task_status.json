@@ -1,0 +1,101 @@
+{
+  "schema_version": "3.0",
+  "task_id": "case_20260826_002534_2abe",
+  "task_dir": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002534_2abe",
+  "status": "success",
+  "started_at": "2026-08-26T00:25:34.362+08:00",
+  "finished_at": "2026-08-26T00:25:35.517+08:00",
+  "query_source": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.3_explainable_dev\\examples\\aigc_fake_image.jpg",
+  "query_image": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002534_2abe\\query.jpg",
+  "selected_modules": [
+    "deepfake"
+  ],
+  "modules": {
+    "deepfake": {
+      "module": "deepfake",
+      "status": "success",
+      "stage": "finished",
+      "message": "模块完成：success",
+      "runtime_seconds": 1.0324210000035237,
+      "error": null
+    },
+    "identity": {
+      "module": "identity",
+      "status": "skipped",
+      "stage": "not_selected",
+      "message": "用户未选择此模块",
+      "runtime_seconds": 5.8099998568650335e-05,
+      "error": null
+    },
+    "source": {
+      "module": "source",
+      "status": "skipped",
+      "stage": "not_selected",
+      "message": "用户未选择此模块",
+      "runtime_seconds": 8.380000508623198e-05,
+      "error": null
+    }
+  },
+  "deepfake": {
+    "module": "deepfake",
+    "status": "success",
+    "started_at": "2026-08-26T00:25:34.403+08:00",
+    "finished_at": "2026-08-26T00:25:35.447+08:00",
+    "runtime_seconds": 1.0324210000035237,
+    "returncode": null,
+    "timed_out": false,
+    "skipped": false,
+    "execution_mode": "service",
+    "fallback_reason": null,
+    "stdout_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002534_2abe\\logs\\deepfake_stdout.log",
+    "stderr_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002534_2abe\\logs\\deepfake_stderr.log",
+    "command_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002534_2abe\\logs\\deepfake_command.json",
+    "error": null
+  },
+  "identity": {
+    "module": "identity",
+    "status": "skipped",
+    "started_at": "2026-08-26T00:25:35.467+08:00",
+    "finished_at": "2026-08-26T00:25:35.478+08:00",
+    "runtime_seconds": 5.8099998568650335e-05,
+    "returncode": null,
+    "timed_out": false,
+    "skipped": true,
+    "execution_mode": "skipped",
+    "fallback_reason": null,
+    "stdout_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002534_2abe\\logs\\identity_stdout.log",
+    "stderr_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002534_2abe\\logs\\identity_stderr.log",
+    "command_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002534_2abe\\logs\\identity_command.json",
+    "error": null
+  },
+  "source": {
+    "module": "source",
+    "status": "skipped",
+    "started_at": "2026-08-26T00:25:35.490+08:00",
+    "finished_at": "2026-08-26T00:25:35.500+08:00",
+    "runtime_seconds": 8.380000508623198e-05,
+    "returncode": null,
+    "timed_out": false,
+    "skipped": true,
+    "execution_mode": "skipped",
+    "fallback_reason": null,
+    "stdout_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002534_2abe\\logs\\source_stdout.log",
+    "stderr_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002534_2abe\\logs\\source_stderr.log",
+    "command_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002534_2abe\\logs\\source_command.json",
+    "error": null
+  },
+  "runtime_seconds": 1.1552155000026687,
+  "progress_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002534_2abe\\logs\\progress_events.jsonl",
+  "progress_events": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002534_2abe\\logs\\progress_events.jsonl",
+  "progress_latest": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002534_2abe\\logs\\progress_latest.json",
+  "errors": [],
+  "reports": {
+    "status": "success",
+    "runtime_seconds": 0.09335160000046017,
+    "files": {
+      "json": "final_report.json",
+      "txt": "检测结果_case_20260826_002534_2abe.txt",
+      "html": "检测结果_case_20260826_002534_2abe.html"
+    }
+  }
+}

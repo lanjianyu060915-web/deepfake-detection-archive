@@ -1,0 +1,249 @@
+{
+  "schema_version": "3.0",
+  "status": "success",
+  "query_image": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002414_64bf\\query.jpg",
+  "candidates": [
+    {
+      "rank": 1,
+      "identity_id": "person_003",
+      "identity_name": "person_003",
+      "score": 0.6875510066747665,
+      "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_003\\03.jpg",
+      "reference_count": 4,
+      "mean_similarity": 0.6875510066747665,
+      "best_reference_score": 0.8304463028907776,
+      "best_reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_003\\03.jpg",
+      "reference_scores": [
+        {
+          "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_003\\01.jpg",
+          "similarity": 0.617680013179779
+        },
+        {
+          "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_003\\02.jpg",
+          "similarity": 0.6512051820755005
+        },
+        {
+          "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_003\\03.jpg",
+          "similarity": 0.8304463028907776
+        },
+        {
+          "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_003\\04.jpg",
+          "similarity": 0.650872528553009
+        }
+      ]
+    },
+    {
+      "rank": 2,
+      "identity_id": "person_002",
+      "identity_name": "person_002",
+      "score": 0.08156969398260117,
+      "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_002\\03.jpg",
+      "reference_count": 4,
+      "mean_similarity": 0.08156969398260117,
+      "best_reference_score": 0.1037960797548294,
+      "best_reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_002\\03.jpg",
+      "reference_scores": [
+        {
+          "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_002\\02.jpg",
+          "similarity": 0.09715104848146439
+        },
+        {
+          "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_002\\03.jpg",
+          "similarity": 0.1037960797548294
+        },
+        {
+          "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_002\\04.jpg",
+          "similarity": 0.08164869248867035
+        },
+        {
+          "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_002\\05.jpg",
+          "similarity": 0.04368295520544052
+        }
+      ]
+    },
+    {
+      "rank": 3,
+      "identity_id": "person_006",
+      "identity_name": "person_006",
+      "score": 0.06157221123576164,
+      "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_006\\01.jpg",
+      "reference_count": 5,
+      "mean_similarity": 0.06157221123576164,
+      "best_reference_score": 0.09555137157440186,
+      "best_reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_006\\01.jpg",
+      "reference_scores": [
+        {
+          "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_006\\01.jpg",
+          "similarity": 0.09555137157440186
+        },
+        {
+          "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_006\\02.jpg",
+          "similarity": 0.06579099595546722
+        },
+        {
+          "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_006\\03.jpg",
+          "similarity": 0.0876760184764862
+        },
+        {
+          "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_006\\04.jpg",
+          "similarity": 0.016816459596157074
+        },
+        {
+          "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_006\\05.jpg",
+          "similarity": 0.04202621057629585
+        }
+      ]
+    },
+    {
+      "rank": 4,
+      "identity_id": "person_001",
+      "identity_name": "person_001",
+      "score": 0.05639122575521469,
+      "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_001\\01.jpg",
+      "reference_count": 5,
+      "mean_similarity": 0.05639122575521469,
+      "best_reference_score": 0.12374605238437653,
+      "best_reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_001\\01.jpg",
+      "reference_scores": [
+        {
+          "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_001\\01.jpg",
+          "similarity": 0.12374605238437653
+        },
+        {
+          "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_001\\02.jpg",
+          "similarity": 0.07224103808403015
+        },
+        {
+          "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_001\\03.jpg",
+          "similarity": -0.04092397540807724
+        },
+        {
+          "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_001\\04.jpg",
+          "similarity": 0.06305000185966492
+        },
+        {
+          "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_001\\05.jpg",
+          "similarity": 0.0638430118560791
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "identity_id": "person_008",
+      "identity_name": "person_008",
+      "score": 0.04077354036271572,
+      "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_008\\05.jpg",
+      "reference_count": 5,
+      "mean_similarity": 0.04077354036271572,
+      "best_reference_score": 0.07622925937175751,
+      "best_reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_008\\05.jpg",
+      "reference_scores": [
+        {
+          "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_008\\01.jpg",
+          "similarity": 0.05135798454284668
+        },
+        {
+          "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_008\\02.jpg",
+          "similarity": 0.04737251251935959
+        },
+        {
+          "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_008\\03.jpg",
+          "similarity": -0.006372833624482155
+        },
+        {
+          "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_008\\04.jpg",
+          "similarity": 0.035280779004096985
+        },
+        {
+          "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_008\\05.jpg",
+          "similarity": 0.07622925937175751
+        }
+      ]
+    }
+  ],
+  "runtime_seconds": 0.9067661000008229,
+  "error_message": null,
+  "method": {
+    "name": "insightface_closed_set_person_mean_cosine",
+    "model_name": "buffalo_l",
+    "face_detection_size": [
+      1280,
+      1280
+    ],
+    "embedding_dimension": 512,
+    "embedding_normalization": "l2",
+    "similarity": "cosine_similarity",
+    "aggregation_method": "mean",
+    "open_set_rejection_enabled": false
+  },
+  "metrics": {
+    "query_face_count": 1,
+    "selected_face_bbox": [
+      316.8967590332031,
+      50.74810791015625,
+      378.3228454589844,
+      134.2031707763672
+    ],
+    "face_detection_score": 0.783427357673645,
+    "embedding_dimension": 512,
+    "library_identity_count": 9,
+    "library_image_count": 45,
+    "valid_embedding_count": 43,
+    "skipped_library_image_count": 2,
+    "top1_top2_margin": 0.6059813126921654
+  },
+  "diagnostics": {
+    "query_face_count": 1,
+    "detected_faces": [
+      {
+        "bbox": [
+          316.8967590332031,
+          50.74810791015625,
+          378.3228454589844,
+          134.2031707763672
+        ],
+        "det_score": 0.783427357673645
+      }
+    ],
+    "selected_face_bbox": [
+      316.8967590332031,
+      50.74810791015625,
+      378.3228454589844,
+      134.2031707763672
+    ],
+    "face_detection_score": 0.783427357673645,
+    "embedding_dimension": 512,
+    "library_identity_count": 9,
+    "library_image_count": 45,
+    "valid_embedding_count": 43,
+    "skipped_library_images": [],
+    "cache_status": "hit",
+    "top1_top2_margin": 0.6059813126921654
+  },
+  "explanation": {
+    "summary": "这是当前身份库中的候选排序，不是最终身份确认。",
+    "ranking_basis": "查询图512维L2归一化特征与每张有效参考图计算余弦相似度，同一人员的相似度取均值后按人员排序。",
+    "top1_reason": "person_003 的人员级平均余弦相似度为 0.687551006675，与第二候选差值为 0.605981312692，因此排在当前身份库第一位。"
+  },
+  "warnings": [],
+  "limitations": [
+    "当前提供闭集候选排序，未启用未经独立验证的开放集拒识阈值。",
+    "候选相似度不是身份概率，不能单独据此确认人物身份。",
+    "查询图片必须恰好检测到一张人脸。"
+  ],
+  "runtime": {
+    "seconds": 0.9067661000008229,
+    "device": "cpu",
+    "ctx_id": -1,
+    "cache_status": "hit",
+    "module_elapsed_seconds": 0.9067661000008229,
+    "orchestrator_elapsed_seconds": 0.9268260000026203
+  },
+  "provenance": {
+    "library_path": "D:\\刑侦查竞赛\\first_week\\data\\identity_library",
+    "library_fingerprint": "fc1009a0f927947f0991f17015c994bf911dffb3ed43ff365df687faa83691cf",
+    "model_name": "buffalo_l",
+    "model_fingerprint": "c280512512d104c2cc6eafabeac7fbab07b55b38c681a0003a24a17d011ba3f6"
+  },
+  "module": "identity"
+}

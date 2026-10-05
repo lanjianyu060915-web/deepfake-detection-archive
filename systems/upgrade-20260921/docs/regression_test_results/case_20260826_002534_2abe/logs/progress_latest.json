@@ -1,0 +1,17 @@
+{
+  "event_id": "45ce8ed1938b4ec3ad77ce3cd3602fae",
+  "timestamp": "2026-08-26T00:25:35.645+08:00",
+  "task_id": "case_20260826_002534_2abe",
+  "module": "overall",
+  "stage": "completed",
+  "status": "success",
+  "message": "检测与检索结果已生成。",
+  "progress_current": 2,
+  "progress_total": 2,
+  "progress_percent": 100.0,
+  "elapsed_seconds": 1.273655,
+  "details": {
+    "task_status": "success",
+    "task_dir": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002534_2abe"
+  }
+}

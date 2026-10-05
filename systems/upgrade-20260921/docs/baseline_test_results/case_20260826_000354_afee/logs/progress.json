@@ -1,0 +1,44 @@
+[
+  {
+    "timestamp": "2026-08-26T00:03:54.498+08:00",
+    "stage": "task_created",
+    "module": null,
+    "message": "正在创建任务……"
+  },
+  {
+    "timestamp": "2026-08-26T00:03:54.499+08:00",
+    "stage": "loading_aigc",
+    "module": "deepfake",
+    "message": "正在加载AIGC模型……"
+  },
+  {
+    "timestamp": "2026-08-26T00:03:54.499+08:00",
+    "stage": "detecting_image",
+    "module": "deepfake",
+    "message": "正在检测图像……"
+  },
+  {
+    "timestamp": "2026-08-26T00:03:55.027+08:00",
+    "stage": "deepfake_finished",
+    "module": "deepfake",
+    "message": "deepfake 模块完成：success"
+  },
+  {
+    "timestamp": "2026-08-26T00:03:55.033+08:00",
+    "stage": "identity_skipped",
+    "module": "identity",
+    "message": "identity 模块已跳过。"
+  },
+  {
+    "timestamp": "2026-08-26T00:03:55.041+08:00",
+    "stage": "source_skipped",
+    "module": "source",
+    "message": "source 模块已跳过。"
+  },
+  {
+    "timestamp": "2026-08-26T00:03:55.043+08:00",
+    "stage": "completed",
+    "module": null,
+    "message": "分析完成。"
+  }
+]

@@ -1,0 +1,44 @@
+{
+  "status": "success",
+  "query_image": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.2_dev\\runtime\\tasks\\case_20260826_000354_afee\\query.jpg",
+  "is_deepfake": true,
+  "score": 0.7451661368925726,
+  "label": "deepfake",
+  "runtime_seconds": 0.516866600002686,
+  "details": {
+    "module_source": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem",
+    "native_status": "SUCCESS",
+    "native_label": "FAKE",
+    "score_semantics": "原模块空间域0.62与频域0.38加权后的FAKE风险概率；不是系统总体准确率。",
+    "decision_threshold": 0.36360106194654707,
+    "actual_device": "cpu",
+    "media_type": "image",
+    "input_sha256": "796ba61010dc071ea19e8f0b2877c68beae085a26e4d2e4b26acf4317b5da9f7",
+    "valid_frame_count": 1,
+    "invalid_frame_count": 0,
+    "spatial_score": 0.8250169157981873,
+    "frequency_score": 0.6148832870992015,
+    "fusion_score": 0.7451661368925726,
+    "model_paths": {
+      "spatial": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem\\models\\spatial_mobilenet_finetuned_gpu\\spatial_mobilenet_finetuned_gpu.pt",
+      "frequency": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem\\models\\frequency_stat_formal\\frequency_stat_detector.joblib"
+    },
+    "model_versions": {
+      "fusion_method": "weighted_probability",
+      "preprocessing_version": "opencv_largest_face_expand_224 + MobileNetV3_DEFAULT / FrequencyStat_v1.0.0"
+    },
+    "fusion_config_hash": "8f76abeabb55da1119b28689e15ccd31eac7f1066e401e766987efbb4603e0b2",
+    "native_runtime_seconds": 0.5118879000001471,
+    "native_run_directory": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.2_dev\\runtime\\tasks\\case_20260826_000354_afee\\visualizations\\deepfake\\20260826T000354_3e822eeba147",
+    "native_report_paths": {
+      "result_json": "result.json",
+      "frame_predictions_csv": "frame_predictions.csv",
+      "report_html": "report.html",
+      "runtime_log": "runtime.log"
+    },
+    "official_base_weight": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.2_dev\\runtime\\cache\\deepfake\\torch\\hub\\checkpoints\\mobilenet_v3_small-047dcff4.pth",
+    "warnings": [],
+    "disclaimer": "本结果由自动化模型生成，仅用于深度伪造风险筛查和辅助研判，不应单独作为司法鉴定或案件定性依据。应结合原始文件、传播来源、设备信息及其他证据进行综合判断。"
+  },
+  "error_message": null
+}

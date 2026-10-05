@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "status": "passed",
+  "verified_at": "2026-08-26T02:56:00+08:00",
+  "desktop_resolved_by_known_folder": "C:\\Users\\lanji\\Desktop",
+  "installer": {
+    "path": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.3_explainable_dev\\packaging_v0.3\\output\\换脸寻源系统_v0.3_Setup.exe",
+    "size": 961608215,
+    "sha256": "1B212B4A4883A8C36EF9C73F47FB79C9E38450C090B5D3BF4A9B359FCDADBD69",
+    "product_version": "0.3.0.0",
+    "mz_pe_readable": true
+  },
+  "desktop_zip": {
+    "path": "C:\\Users\\lanji\\Desktop\\换脸寻源系统_v0.3_可解释安装交付包_20260826_0256.zip",
+    "size": 962036614,
+    "sha256": "B455E384C8116A28D3AB13BCED8FD591387AA6608D5BB36076E302C848F3BB38",
+    "file_entry_count": 10,
+    "unsafe_entry_count": 0,
+    "extracted_files_match_staging_by_path_size_sha256": true,
+    "utf8_documents_valid": true,
+    "extracted_installer_sha256_matches": true
+  },
+  "delivery_entries": [
+    "换脸寻源系统_v0.3_Setup.exe",
+    "使用说明.txt",
+    "版本与测试说明.txt",
+    "安装包SHA256.txt",
+    "示例图片/aigc_fake_image.jpg",
+    "示例图片/aigc_real_image.jpg",
+    "示例图片/integrated_query_001.jpg",
+    "示例图片/integrated_query_002.jpg",
+    "示例图片/integrated_query_003.jpg",
+    "示例图片/no_face_image.jpg"
+  ],
+  "hash_manifest": {
+    "size": 1587,
+    "sha256": "C1C3D12BBBC2E9F559FF707937E5BCBE1B4D7A2DD953689A34A94F39344DBA70"
+  },
+  "automated_tests": "61 passed in 4.85s",
+  "business_acceptance": "passed",
+  "restart_uninstall_acceptance": "passed",
+  "protected_old_install_unchanged": true
+}

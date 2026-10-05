@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>深度伪造风险辅助研判报告</title><style>
+body{font-family:'Microsoft YaHei','Segoe UI',sans-serif;margin:0;background:#f4f6f8;color:#17202a}
+main{max-width:1100px;margin:24px auto;background:white;padding:28px;border-radius:10px;box-shadow:0 2px 12px #ccd3da}
+h1,h2{color:#123b5d}.verdict{padding:16px;border-left:5px solid #2471a3;background:#edf6fc}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}.card{background:#f7f9fa;padding:12px;border-radius:6px}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{border:1px solid #d5d8dc;padding:7px;text-align:left}th{background:#eaf2f8}
+.keyframes{display:flex;gap:12px;flex-wrap:wrap}.keyframes img{max-width:300px;max-height:220px;border:1px solid #ccd3da}
+.notice{margin-top:24px;padding:14px;background:#fff4e5;border:1px solid #f5c16c}.mono{word-break:break-all;font-family:Consolas,monospace}
+</style></head><body><main>
+<h1>深度伪造图片/视频检测辅助研判报告</h1>
+<section class="verdict"><strong>最终状态：</strong>SUCCESS<br>
+<strong>最终判断：</strong>FAKE<br>
+<strong>伪造风险评分：</strong>0.745166<br>
+<strong>判定阈值：</strong>0.363601</section>
+<h2>文件基本信息</h2><div class="grid">
+<div class="card"><strong>文件名</strong><br>query.jpg</div>
+<div class="card"><strong>媒体类型</strong><br>image</div>
+<div class="card"><strong>文件大小</strong><br>2713 bytes</div>
+<div class="card"><strong>检测时间</strong><br>2026-08-26T00:03:54+08:00</div>
+<div class="card"><strong>实际设备</strong><br>cpu</div>
+<div class="card"><strong>有效/无效帧</strong><br>1 / 0</div>
+</div><p><strong>SHA-256：</strong><span class="mono">796ba61010dc071ea19e8f0b2877c68beae085a26e4d2e4b26acf4317b5da9f7</span></p>
+<p><strong>媒体元数据：</strong>{&quot;width&quot;: 112, &quot;height&quot;: 112, &quot;format&quot;: &quot;JPG&quot;, &quot;channels&quot;: 3}</p>
+<h2>模型与融合配置</h2>
+<p>空间模型：<span class="mono">C:\Users\lanji\AppData\Local\Programs\DeepfakeDetectionSystem\models\spatial_mobilenet_finetuned_gpu\spatial_mobilenet_finetuned_gpu.pt</span><br>
+频域模型：<span class="mono">C:\Users\lanji\AppData\Local\Programs\DeepfakeDetectionSystem\models\frequency_stat_formal\frequency_stat_detector.joblib</span><br>
+融合配置SHA-256：<span class="mono">8f76abeabb55da1119b28689e15ccd31eac7f1066e401e766987efbb4603e0b2</span></p>
+<p>空间权重=0.620000，频域权重=0.380000，
+帧阈值=0.363601，视频阈值=0.458343，
+视频聚合=median</p>
+<h2>评分汇总</h2><p>空间域中位数：0.825017；
+频域中位数：0.614883；
+最终融合评分：0.745166</p>
+<h2>关键帧</h2><div class="keyframes"><figure><img src="keyframes/keyframe_01.jpg" alt="关键帧"><figcaption>keyframe_01.jpg</figcaption></figure></div>
+<h2>逐帧结果</h2><table><thead><tr><th>候选</th><th>源帧</th><th>时间(s)</th><th>状态</th><th>空间</th><th>频域</th><th>融合</th><th>判断</th><th>说明</th></tr></thead>
+<tbody><tr><td>1</td><td>0</td><td>0.000000</td><td>VALID</td><td>0.825017</td><td>0.614883</td><td>0.745166</td><td>FAKE</td><td></td></tr></tbody></table>
+<h2>警告信息</h2><ul><li>无</li></ul>
+<h2>适用边界</h2><p>模型结果是风险评分，不是系统总体准确率。无人脸、有效帧不足、严重压缩、遮挡、极端角度或未知编码可能降低可靠性。</p>
+<div class="notice">本结果由自动化模型生成，仅用于深度伪造风险筛查和辅助研判，不应单独作为司法鉴定或案件定性依据。应结合原始文件、传播来源、设备信息及其他证据进行综合判断。</div>
+</main></body></html>

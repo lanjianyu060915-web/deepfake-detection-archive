@@ -1,0 +1,28 @@
+{
+  "schema_version": "D-v2-validation-1.0",
+  "generated_utc": "2026-08-20T04:04:43.348068+00:00",
+  "status": "FAIL",
+  "manifest": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\dataset\\manifests\\deepfake_ground_truth_template.csv",
+  "dataset_root": "D:\\刑侦查竞赛\\deepfake_acceptance_v2\\dataset",
+  "sample_count": 0,
+  "label_counts": {},
+  "generation_method_counts": {},
+  "perturbation_type_counts": {},
+  "resolution_statistics": {
+    "decoded_count": 0,
+    "width_min": null,
+    "width_max": null,
+    "width_median": null,
+    "height_min": null,
+    "height_max": null,
+    "height_median": null
+  },
+  "duplicate_groups": [],
+  "errors": [
+    {
+      "code": "EMPTY_DATASET",
+      "message": "formal ground truth contains no samples"
+    }
+  ],
+  "warnings": []
+}

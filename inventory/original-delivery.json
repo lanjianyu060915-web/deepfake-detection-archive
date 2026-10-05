@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "audited_date": "2026-10-05",
+  "original_delivery": [
+    {
+      "source": "D:\\刑侦查竞赛\\AIGC检测\\源数据及数据来源\\data_all.zip",
+      "bytes": 135098544,
+      "sha256": "dccb56d88a1d91be7cf55d97be0804dbcaae8af71165b94bf98ff855c6a1c80f"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\AIGC检测\\系统使用手册\\多域融合深度伪造辅助研判系统_使用说明_修订版_最终.docx",
+      "bytes": 2631207,
+      "sha256": "2cd59001312b234200f9ea66bbf979c11fac57d33b5859ea7e22af055734613a"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\AIGC检测\\集成系统\\深度伪造识别系统_通用版_Setup(2).exe",
+      "bytes": 214244624,
+      "sha256": "347ed97e43afdb1032109928b6731880d4eaa1b98a5d95f0fb7f6ebc9bdd61f2"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\AIGC检测\\项目报告书\\面向实战的深度伪造内容检测与对抗策略研究_技术报告_修订版_最终.docx",
+      "bytes": 3812966,
+      "sha256": "d0da45423a0c1d7fc7236e55082da772db248a5aaec1a979f7761b092498a428"
+    }
+  ],
+  "summary_archive": {
+    "source": "D:\\刑侦查竞赛\\AI换脸检测项目结果汇总.zip",
+    "bytes": 353477859,
+    "sha256": "c58f23ef03b30e00cc43794e49bc481c82018d96bb793f021a7baf10101bcf35",
+    "same_four_formal_files": true,
+    "member_verification": [
+      {
+        "member": "AIGC检测/源数据及数据来源/data_all.zip",
+        "same_bytes": true,
+        "same_sha256": true
+      },
+      {
+        "member": "AIGC检测/系统使用手册/多域融合深度伪造辅助研判系统_使用说明_修订版_最终.docx",
+        "same_bytes": true,
+        "same_sha256": true
+      },
+      {
+        "member": "AIGC检测/集成系统/深度伪造识别系统_通用版_Setup(2).exe",
+        "same_bytes": true,
+        "same_sha256": true
+      },
+      {
+        "member": "AIGC检测/项目报告书/面向实战的深度伪造内容检测与对抗策略研究_技术报告_修订版_最终.docx",
+        "same_bytes": true,
+        "same_sha256": true
+      }
+    ],
+    "extra_nonformal_member": "Word temporary lock file; 162 bytes"
+  },
+  "documentation_copies": [
+    {
+      "source": "D:\\刑侦查竞赛\\AIGC检测\\系统使用手册\\多域融合深度伪造辅助研判系统_使用说明_修订版_最终.docx",
+      "repository_path": "documentation/original/多域融合深度伪造辅助研判系统_使用说明_修订版_最终.docx",
+      "bytes": 2631207,
+      "sha256": "2cd59001312b234200f9ea66bbf979c11fac57d33b5859ea7e22af055734613a"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\AIGC检测\\项目报告书\\面向实战的深度伪造内容检测与对抗策略研究_技术报告_修订版_最终.docx",
+      "repository_path": "documentation/original/面向实战的深度伪造内容检测与对抗策略研究_技术报告_修订版_最终.docx",
+      "bytes": 3812966,
+      "sha256": "d0da45423a0c1d7fc7236e55082da772db248a5aaec1a979f7761b092498a428"
+    }
+  ],
+  "note": "The installer and data/summary ZIP files are represented by inventory only; root task uploads original files as private Release assets. Source project files were read and never modified."
+}

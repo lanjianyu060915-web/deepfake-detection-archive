@@ -1,0 +1,7 @@
+{
+  "status": "error",
+  "query_image": "D:\\刑侦查竞赛\\first_week\\data\\换脸查询图\\query_001.jpg",
+  "candidates": [],
+  "runtime_seconds": 0.138412,
+  "error_message": "OpenCV Haar cascade could not be loaded"
+}

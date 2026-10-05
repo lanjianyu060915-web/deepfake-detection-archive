@@ -1,0 +1,11 @@
+module=deepfake
+status=success
+started_at=2026-08-26T00:25:34.403+08:00
+finished_at=2026-08-26T00:25:35.447+08:00
+runtime_seconds=1.032421
+returncode=None
+timed_out=false
+skipped=false
+execution_mode=service
+fallback_reason=
+error=

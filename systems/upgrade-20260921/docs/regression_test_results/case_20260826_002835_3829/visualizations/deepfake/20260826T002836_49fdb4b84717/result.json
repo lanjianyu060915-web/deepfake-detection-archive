@@ -1,0 +1,73 @@
+{
+  "run_id": "20260826T002836_49fdb4b84717",
+  "status": "INSUFFICIENT_EVIDENCE",
+  "created_at": "2026-08-26T00:28:36+08:00",
+  "media_type": "image",
+  "input_file_name": "query.jpg",
+  "input_sha256": "4d64895ea9a89816111eece5501d21cefe3ff865e64274b45373a426caff6dc2",
+  "file_size": 13645,
+  "actual_device": "cpu",
+  "model_paths": {
+    "spatial": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem\\models\\spatial_mobilenet_finetuned_gpu\\spatial_mobilenet_finetuned_gpu.pt",
+    "frequency": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem\\models\\frequency_stat_formal\\frequency_stat_detector.joblib"
+  },
+  "model_versions": {
+    "fusion_method": "weighted_probability",
+    "preprocessing_version": "opencv_largest_face_expand_224 + MobileNetV3_DEFAULT / FrequencyStat_v1.0.0"
+  },
+  "fusion_config_path": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem\\models\\fusion_formal\\fusion_config.json",
+  "fusion_config_hash": "8f76abeabb55da1119b28689e15ccd31eac7f1066e401e766987efbb4603e0b2",
+  "spatial_weight": 0.62,
+  "frequency_weight": 0.38,
+  "frame_threshold": 0.36360106194654707,
+  "video_threshold": 0.4583425493641632,
+  "video_aggregation": "median",
+  "decision_threshold": null,
+  "final_fake_score": null,
+  "final_label": "证据不足",
+  "provisional_label": null,
+  "valid_frame_count": 0,
+  "invalid_frame_count": 1,
+  "candidate_frame_count": 1,
+  "warnings": [
+    "未检测到满足质量要求的人脸，无法形成可靠判断。"
+  ],
+  "error_message": "",
+  "total_elapsed_seconds": 1.2825436999992235,
+  "timing": {
+    "sha256_seconds": 0.0016808999935165048,
+    "metadata_and_decode_seconds": 0.017595500001334585,
+    "model_load_seconds": 0.0,
+    "face_detection_seconds": 1.2447343999956502,
+    "report_seconds": 0.0054286000013235025
+  },
+  "media_metadata": {
+    "width": 768,
+    "height": 512,
+    "format": "JPG",
+    "channels": 3
+  },
+  "spatial_score_summary": {},
+  "frequency_score_summary": {},
+  "fusion_score_summary": {},
+  "frame_results": [
+    {
+      "candidate_index": 1,
+      "source_frame_index": 0,
+      "timestamp_seconds": 0.0,
+      "status": "NO_FACE",
+      "invalid_reason": "未检测到满足质量要求的人脸，无法形成可靠判断。"
+    }
+  ],
+  "keyframe_paths": [],
+  "run_directory": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002835_3829\\visualizations\\deepfake\\20260826T002836_49fdb4b84717",
+  "model_load_count_for_pipeline_instance": 1,
+  "temporary_files_cleaned": true,
+  "report_paths": {
+    "result_json": "result.json",
+    "frame_predictions_csv": "frame_predictions.csv",
+    "report_html": "report.html",
+    "runtime_log": "runtime.log"
+  },
+  "disclaimer": "本结果由自动化模型生成，仅用于深度伪造风险筛查和辅助研判，不应单独作为司法鉴定或案件定性依据。应结合原始文件、传播来源、设备信息及其他证据进行综合判断。"
+}

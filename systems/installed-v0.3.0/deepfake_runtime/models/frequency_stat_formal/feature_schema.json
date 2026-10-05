@@ -1,0 +1,442 @@
+{
+  "model_name": "FrequencyStatDetector",
+  "model_version": "1.0.0",
+  "feature_dimension": 87,
+  "features": [
+    {
+      "index": 0,
+      "name": "fft_radial_00_log_mean",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 1,
+      "name": "fft_radial_00_log_std",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 2,
+      "name": "fft_radial_00_energy_ratio",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 3,
+      "name": "fft_radial_01_log_mean",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 4,
+      "name": "fft_radial_01_log_std",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 5,
+      "name": "fft_radial_01_energy_ratio",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 6,
+      "name": "fft_radial_02_log_mean",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 7,
+      "name": "fft_radial_02_log_std",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 8,
+      "name": "fft_radial_02_energy_ratio",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 9,
+      "name": "fft_radial_03_log_mean",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 10,
+      "name": "fft_radial_03_log_std",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 11,
+      "name": "fft_radial_03_energy_ratio",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 12,
+      "name": "fft_radial_04_log_mean",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 13,
+      "name": "fft_radial_04_log_std",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 14,
+      "name": "fft_radial_04_energy_ratio",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 15,
+      "name": "fft_radial_05_log_mean",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 16,
+      "name": "fft_radial_05_log_std",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 17,
+      "name": "fft_radial_05_energy_ratio",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 18,
+      "name": "fft_radial_06_log_mean",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 19,
+      "name": "fft_radial_06_log_std",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 20,
+      "name": "fft_radial_06_energy_ratio",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 21,
+      "name": "fft_radial_07_log_mean",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 22,
+      "name": "fft_radial_07_log_std",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 23,
+      "name": "fft_radial_07_energy_ratio",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 24,
+      "name": "fft_radial_08_log_mean",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 25,
+      "name": "fft_radial_08_log_std",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 26,
+      "name": "fft_radial_08_energy_ratio",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 27,
+      "name": "fft_radial_09_log_mean",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 28,
+      "name": "fft_radial_09_log_std",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 29,
+      "name": "fft_radial_09_energy_ratio",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 30,
+      "name": "fft_radial_10_log_mean",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 31,
+      "name": "fft_radial_10_log_std",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 32,
+      "name": "fft_radial_10_energy_ratio",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 33,
+      "name": "fft_radial_11_log_mean",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 34,
+      "name": "fft_radial_11_log_std",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 35,
+      "name": "fft_radial_11_energy_ratio",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 36,
+      "name": "fft_radial_12_log_mean",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 37,
+      "name": "fft_radial_12_log_std",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 38,
+      "name": "fft_radial_12_energy_ratio",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 39,
+      "name": "fft_radial_13_log_mean",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 40,
+      "name": "fft_radial_13_log_std",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 41,
+      "name": "fft_radial_13_energy_ratio",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 42,
+      "name": "fft_radial_14_log_mean",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 43,
+      "name": "fft_radial_14_log_std",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 44,
+      "name": "fft_radial_14_energy_ratio",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 45,
+      "name": "fft_radial_15_log_mean",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 46,
+      "name": "fft_radial_15_log_std",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 47,
+      "name": "fft_radial_15_energy_ratio",
+      "category": "FFT径向分桶"
+    },
+    {
+      "index": 48,
+      "name": "fft_low_energy_ratio",
+      "category": "FFT能量关系"
+    },
+    {
+      "index": 49,
+      "name": "fft_mid_energy_ratio",
+      "category": "FFT能量关系"
+    },
+    {
+      "index": 50,
+      "name": "fft_high_energy_ratio",
+      "category": "FFT能量关系"
+    },
+    {
+      "index": 51,
+      "name": "fft_high_low_energy_ratio",
+      "category": "FFT能量关系"
+    },
+    {
+      "index": 52,
+      "name": "fft_center_energy_ratio",
+      "category": "FFT能量关系"
+    },
+    {
+      "index": 53,
+      "name": "fft_peripheral_energy_ratio",
+      "category": "FFT能量关系"
+    },
+    {
+      "index": 54,
+      "name": "fft_center_peripheral_energy_difference",
+      "category": "FFT能量关系"
+    },
+    {
+      "index": 55,
+      "name": "dct_abs_mean",
+      "category": "全局DCT"
+    },
+    {
+      "index": 56,
+      "name": "dct_abs_std",
+      "category": "全局DCT"
+    },
+    {
+      "index": 57,
+      "name": "dct_abs_max",
+      "category": "全局DCT"
+    },
+    {
+      "index": 58,
+      "name": "dct_abs_q25",
+      "category": "全局DCT"
+    },
+    {
+      "index": 59,
+      "name": "dct_abs_median",
+      "category": "全局DCT"
+    },
+    {
+      "index": 60,
+      "name": "dct_abs_q75",
+      "category": "全局DCT"
+    },
+    {
+      "index": 61,
+      "name": "dct_low_energy_ratio",
+      "category": "全局DCT"
+    },
+    {
+      "index": 62,
+      "name": "dct_mid_energy_ratio",
+      "category": "全局DCT"
+    },
+    {
+      "index": 63,
+      "name": "dct_high_energy_ratio",
+      "category": "全局DCT"
+    },
+    {
+      "index": 64,
+      "name": "dct_high_low_energy_ratio",
+      "category": "全局DCT"
+    },
+    {
+      "index": 65,
+      "name": "block_dct_abs_mean",
+      "category": "分块DCT"
+    },
+    {
+      "index": 66,
+      "name": "block_dct_abs_std",
+      "category": "分块DCT"
+    },
+    {
+      "index": 67,
+      "name": "block_dct_rms",
+      "category": "分块DCT"
+    },
+    {
+      "index": 68,
+      "name": "block_dct_low_abs_mean",
+      "category": "分块DCT"
+    },
+    {
+      "index": 69,
+      "name": "block_dct_low_abs_std",
+      "category": "分块DCT"
+    },
+    {
+      "index": 70,
+      "name": "block_dct_low_energy_ratio",
+      "category": "分块DCT"
+    },
+    {
+      "index": 71,
+      "name": "block_dct_mid_abs_mean",
+      "category": "分块DCT"
+    },
+    {
+      "index": 72,
+      "name": "block_dct_mid_abs_std",
+      "category": "分块DCT"
+    },
+    {
+      "index": 73,
+      "name": "block_dct_mid_energy_ratio",
+      "category": "分块DCT"
+    },
+    {
+      "index": 74,
+      "name": "block_dct_high_abs_mean",
+      "category": "分块DCT"
+    },
+    {
+      "index": 75,
+      "name": "block_dct_high_abs_std",
+      "category": "分块DCT"
+    },
+    {
+      "index": 76,
+      "name": "block_dct_high_energy_ratio",
+      "category": "分块DCT"
+    },
+    {
+      "index": 77,
+      "name": "pixel_mean",
+      "category": "灰度与纹理统计"
+    },
+    {
+      "index": 78,
+      "name": "pixel_std",
+      "category": "灰度与纹理统计"
+    },
+    {
+      "index": 79,
+      "name": "pixel_min",
+      "category": "灰度与纹理统计"
+    },
+    {
+      "index": 80,
+      "name": "pixel_max",
+      "category": "灰度与纹理统计"
+    },
+    {
+      "index": 81,
+      "name": "pixel_skewness",
+      "category": "灰度与纹理统计"
+    },
+    {
+      "index": 82,
+      "name": "pixel_excess_kurtosis",
+      "category": "灰度与纹理统计"
+    },
+    {
+      "index": 83,
+      "name": "gradient_magnitude_mean",
+      "category": "灰度与纹理统计"
+    },
+    {
+      "index": 84,
+      "name": "gradient_magnitude_std",
+      "category": "灰度与纹理统计"
+    },
+    {
+      "index": 85,
+      "name": "laplacian_variance",
+      "category": "灰度与纹理统计"
+    },
+    {
+      "index": 86,
+      "name": "gray_entropy_32bin",
+      "category": "灰度与纹理统计"
+    }
+  ]
+}

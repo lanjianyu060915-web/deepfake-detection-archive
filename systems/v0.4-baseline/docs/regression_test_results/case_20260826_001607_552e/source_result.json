@@ -1,0 +1,290 @@
+{
+  "schema_version": "3.0",
+  "module": "source",
+  "status": "success",
+  "query_image": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_001607_552e\\query.jpg",
+  "candidates": [
+    {
+      "rank": 1,
+      "file_path": "D:\\刑侦查竞赛\\first_week\\data\\source_library\\122.jpg",
+      "global_score": 0.996107,
+      "local_score": 0.934526,
+      "final_score": 0.962237,
+      "visualization_path": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_001607_552e\\visualizations\\source_result_8b1c6f43491d_match_001.jpg",
+      "query_keypoint_count": 2497,
+      "candidate_keypoint_count": 2489,
+      "good_match_count": 559,
+      "ransac_inlier_count": 498,
+      "ransac_inlier_ratio": 0.8908765652951699,
+      "lowe_ratio": 0.75,
+      "ransac_threshold": 5.0,
+      "ransac_attempted": true,
+      "ransac_applied": true,
+      "local_score_components": {
+        "mode": "normal",
+        "ransac_inlier_ratio": 0.8908765652951699,
+        "normalized_inlier_count": 1.0,
+        "inlier_ratio_weight": 0.6,
+        "inlier_count_weight": 0.4,
+        "score": 0.9345259391771019,
+        "formula": "0.6 * ransac_inlier_ratio + 0.4 * min(ransac_inlier_count / 40, 1)"
+      },
+      "global_weight": 0.45,
+      "local_weight": 0.55
+    },
+    {
+      "rank": 2,
+      "file_path": "D:\\刑侦查竞赛\\first_week\\data\\source_library\\074.jpg",
+      "global_score": 0.549186,
+      "local_score": 0.693896,
+      "final_score": 0.628777,
+      "visualization_path": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_001607_552e\\visualizations\\source_result_8b1c6f43491d_match_002.jpg",
+      "query_keypoint_count": 2497,
+      "candidate_keypoint_count": 756,
+      "good_match_count": 77,
+      "ransac_inlier_count": 39,
+      "ransac_inlier_ratio": 0.5064935064935064,
+      "lowe_ratio": 0.75,
+      "ransac_threshold": 5.0,
+      "ransac_attempted": true,
+      "ransac_applied": true,
+      "local_score_components": {
+        "mode": "normal",
+        "ransac_inlier_ratio": 0.5064935064935064,
+        "normalized_inlier_count": 0.975,
+        "inlier_ratio_weight": 0.6,
+        "inlier_count_weight": 0.4,
+        "score": 0.6938961038961038,
+        "formula": "0.6 * ransac_inlier_ratio + 0.4 * min(ransac_inlier_count / 40, 1)"
+      },
+      "global_weight": 0.45,
+      "local_weight": 0.55
+    },
+    {
+      "rank": 3,
+      "file_path": "D:\\刑侦查竞赛\\first_week\\data\\source_library\\061.jpg",
+      "global_score": 0.548721,
+      "local_score": 0.492658,
+      "final_score": 0.517887,
+      "visualization_path": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_001607_552e\\visualizations\\source_result_8b1c6f43491d_match_003.jpg",
+      "query_keypoint_count": 2497,
+      "candidate_keypoint_count": 2268,
+      "good_match_count": 79,
+      "ransac_inlier_count": 28,
+      "ransac_inlier_ratio": 0.35443037974683544,
+      "lowe_ratio": 0.75,
+      "ransac_threshold": 5.0,
+      "ransac_attempted": true,
+      "ransac_applied": true,
+      "local_score_components": {
+        "mode": "normal",
+        "ransac_inlier_ratio": 0.35443037974683544,
+        "normalized_inlier_count": 0.7,
+        "inlier_ratio_weight": 0.6,
+        "inlier_count_weight": 0.4,
+        "score": 0.4926582278481012,
+        "formula": "0.6 * ransac_inlier_ratio + 0.4 * min(ransac_inlier_count / 40, 1)"
+      },
+      "global_weight": 0.45,
+      "local_weight": 0.55
+    },
+    {
+      "rank": 4,
+      "file_path": "D:\\刑侦查竞赛\\first_week\\data\\source_library\\155.jpg",
+      "global_score": 0.552363,
+      "local_score": 0.361429,
+      "final_score": 0.447349,
+      "visualization_path": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_001607_552e\\visualizations\\source_result_8b1c6f43491d_match_004.jpg",
+      "query_keypoint_count": 2497,
+      "candidate_keypoint_count": 652,
+      "good_match_count": 105,
+      "ransac_inlier_count": 23,
+      "ransac_inlier_ratio": 0.21904761904761905,
+      "lowe_ratio": 0.75,
+      "ransac_threshold": 5.0,
+      "ransac_attempted": true,
+      "ransac_applied": true,
+      "local_score_components": {
+        "mode": "normal",
+        "ransac_inlier_ratio": 0.21904761904761905,
+        "normalized_inlier_count": 0.575,
+        "inlier_ratio_weight": 0.6,
+        "inlier_count_weight": 0.4,
+        "score": 0.36142857142857143,
+        "formula": "0.6 * ransac_inlier_ratio + 0.4 * min(ransac_inlier_count / 40, 1)"
+      },
+      "global_weight": 0.45,
+      "local_weight": 0.55
+    },
+    {
+      "rank": 5,
+      "file_path": "D:\\刑侦查竞赛\\first_week\\data\\source_library\\059.jpg",
+      "global_score": 0.552714,
+      "local_score": 0.354545,
+      "final_score": 0.443721,
+      "visualization_path": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_001607_552e\\visualizations\\source_result_8b1c6f43491d_match_005.jpg",
+      "query_keypoint_count": 2497,
+      "candidate_keypoint_count": 2493,
+      "good_match_count": 44,
+      "ransac_inlier_count": 15,
+      "ransac_inlier_ratio": 0.3409090909090909,
+      "lowe_ratio": 0.75,
+      "ransac_threshold": 5.0,
+      "ransac_attempted": true,
+      "ransac_applied": true,
+      "local_score_components": {
+        "mode": "normal",
+        "ransac_inlier_ratio": 0.3409090909090909,
+        "normalized_inlier_count": 0.375,
+        "inlier_ratio_weight": 0.6,
+        "inlier_count_weight": 0.4,
+        "score": 0.35454545454545455,
+        "formula": "0.6 * ransac_inlier_ratio + 0.4 * min(ransac_inlier_count / 40, 1)"
+      },
+      "global_weight": 0.45,
+      "local_weight": 0.55
+    }
+  ],
+  "runtime_seconds": 77.001234,
+  "error_message": null,
+  "method": {
+    "name": "face-masked global retrieval plus SIFT geometric verification",
+    "global_features": [
+      "HSV",
+      "grayscale",
+      "edge",
+      "border"
+    ],
+    "coarse_ranking": "global_similarity",
+    "local_features": "SIFT (nfeatures=2500)",
+    "matcher": "BFMatcher L2",
+    "lowe_ratio": 0.75,
+    "ransac_threshold": 5.0,
+    "local_score_formula": "0.6 * ransac_inlier_ratio + 0.4 * min(ransac_inlier_count / 40, 1)",
+    "insufficient_match_formula": "min(good_match_count / 40, 0.15)",
+    "final_score_formula": "0.45 * global_score + 0.55 * local_score",
+    "global_weight": 0.45,
+    "local_weight": 0.55
+  },
+  "metrics": {
+    "query_face_detected": true,
+    "query_face_bbox": [
+      3,
+      3072,
+      94,
+      3163
+    ],
+    "face_mask_applied": true,
+    "masked_query_path": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_001607_552e\\visualizations\\source_result_8b1c6f43491d_query_face_masked.jpg",
+    "library_file_count": 203,
+    "library_decoded": 203,
+    "library_skipped_count": 0,
+    "library_skipped_paths": [],
+    "shortlist_size": 20,
+    "lowe_ratio": 0.75,
+    "ransac_threshold": 5.0,
+    "global_weight": 0.45,
+    "local_weight": 0.55,
+    "top1_top2_margin": 0.33346
+  },
+  "explanation": [
+    "系统先在屏蔽查询图主要人脸区域后执行全局粗检索，再使用 SIFT、Lowe 比率检验和 RANSAC 几何验证进行局部复核。",
+    "当前库内第一候选的全局分为 0.996107，局部分为 0.934526；最终分按 0.45 × 0.996107 + 0.55 × 0.934526 计算并用于库内排序。"
+  ],
+  "warnings": [],
+  "limitations": [
+    "结果是当前底图库内的候选排序，不构成原始底图确认。",
+    "分数是检索相似度，不是来源概率。"
+  ],
+  "runtime": {
+    "seconds": 77.001234,
+    "module_elapsed_seconds": 77.001234,
+    "orchestrator_elapsed_seconds": 77.8942354000028
+  },
+  "provenance": {
+    "schema_version": "3.0",
+    "query_path": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_001607_552e\\query.jpg",
+    "library_path": "D:\\刑侦查竞赛\\first_week\\data\\source_library",
+    "input_sha256": "8b1c6f43491d0f2e179d0950ff285f67001c9fce90eb9e0fc12facbc63249dd6"
+  },
+  "diagnostics": {
+    "runtime_seconds": 77.001234,
+    "library_decoded": 203,
+    "library_skipped": [],
+    "query_face_detected": true,
+    "shortlist_size": 20,
+    "query_face_bbox": [
+      3,
+      3072,
+      94,
+      3163
+    ],
+    "face_mask_applied": true,
+    "masked_query_path": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_001607_552e\\visualizations\\source_result_8b1c6f43491d_query_face_masked.jpg",
+    "library_file_count": 203,
+    "library_skipped_count": 0,
+    "library_skipped_paths": [],
+    "lowe_ratio": 0.75,
+    "ransac_threshold": 5.0,
+    "global_weight": 0.45,
+    "local_weight": 0.55,
+    "top1_top2_margin": 0.33346,
+    "method": {
+      "name": "face-masked global retrieval plus SIFT geometric verification",
+      "global_features": [
+        "HSV",
+        "grayscale",
+        "edge",
+        "border"
+      ],
+      "coarse_ranking": "global_similarity",
+      "local_features": "SIFT (nfeatures=2500)",
+      "matcher": "BFMatcher L2",
+      "lowe_ratio": 0.75,
+      "ransac_threshold": 5.0,
+      "local_score_formula": "0.6 * ransac_inlier_ratio + 0.4 * min(ransac_inlier_count / 40, 1)",
+      "insufficient_match_formula": "min(good_match_count / 40, 0.15)",
+      "final_score_formula": "0.45 * global_score + 0.55 * local_score",
+      "global_weight": 0.45,
+      "local_weight": 0.55
+    },
+    "metrics": {
+      "query_face_detected": true,
+      "query_face_bbox": [
+        3,
+        3072,
+        94,
+        3163
+      ],
+      "face_mask_applied": true,
+      "masked_query_path": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_001607_552e\\visualizations\\source_result_8b1c6f43491d_query_face_masked.jpg",
+      "library_file_count": 203,
+      "library_decoded": 203,
+      "library_skipped_count": 0,
+      "library_skipped_paths": [],
+      "shortlist_size": 20,
+      "lowe_ratio": 0.75,
+      "ransac_threshold": 5.0,
+      "global_weight": 0.45,
+      "local_weight": 0.55,
+      "top1_top2_margin": 0.33346
+    },
+    "explanation": [
+      "系统先在屏蔽查询图主要人脸区域后执行全局粗检索，再使用 SIFT、Lowe 比率检验和 RANSAC 几何验证进行局部复核。",
+      "当前库内第一候选的全局分为 0.996107，局部分为 0.934526；最终分按 0.45 × 0.996107 + 0.55 × 0.934526 计算并用于库内排序。"
+    ],
+    "warnings": [],
+    "limitations": [
+      "结果是当前底图库内的候选排序，不构成原始底图确认。",
+      "分数是检索相似度，不是来源概率。"
+    ],
+    "runtime": {
+      "seconds": 77.001234
+    },
+    "provenance": {
+      "schema_version": "3.0",
+      "query_path": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_001607_552e\\query.jpg",
+      "library_path": "D:\\刑侦查竞赛\\first_week\\data\\source_library"
+    }
+  }
+}

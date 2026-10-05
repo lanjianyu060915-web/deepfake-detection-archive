@@ -1,0 +1,70 @@
+{
+  "schema_version": "D-v2-candidate-audit-1.0",
+  "generated_utc": "2026-08-20T04:13:59.554677+00:00",
+  "workspace": "D:\\刑侦查竞赛",
+  "scope": [
+    "first_week/data canonical A/B source holdings",
+    "first_week/source_search_package/sample_data canonical source-search fixtures",
+    "AIGC检测/源数据及数据来源/data_all.zip formal/demo image holdings"
+  ],
+  "candidate_path_count": 1390,
+  "candidate_unique_sha256_count": 1329,
+  "candidate_label_counts": {
+    "REAL": 530,
+    "FAKE": 540,
+    "UNKNOWN": 320
+  },
+  "core_blind_eligible_counts": {
+    "REAL": 0,
+    "FAKE": 0
+  },
+  "previously_exposed_count": 1075,
+  "known_training_membership_count": 700,
+  "overlap_row_counts": {
+    "FILENAME_DUPLICATE_DIFFERENT_CONTENT": 44,
+    "KNOWN_BASELINE_DATA_MEMBERSHIP": 1060,
+    "SHA256_EXACT_DUPLICATE": 61
+  },
+  "training_data_overlap_status": "UNKNOWN",
+  "training_data_overlap_reason": "The local fine-tune/development snapshot is exactly checkable and excluded, but complete sample-level inventories for all upstream/pretrained training sources are unavailable.",
+  "full_workspace_duplicate_statistics": {
+    "image_path_count": 3633,
+    "unique_sha256_count": 804,
+    "duplicate_sha256_group_count": 670,
+    "paths_in_duplicate_groups": 3499,
+    "maximum_duplicate_multiplicity": 450
+  },
+  "archive_source_integrity": {
+    "status": "PASS",
+    "archive": "D:\\刑侦查竞赛\\AIGC检测\\源数据及数据来源\\data_all.zip",
+    "archive_size_bytes": 135098544,
+    "archive_sha256": "dccb56d88a1d91be7cf55d97be0804dbcaae8af71165b94bf98ff855c6a1c80f",
+    "member_sha256": {
+      "data_all/data_formal/manifest.csv": "928f95e0489429a36b01e8f0d1c15f21b2d01b0f8f9d46488e05e32b99c4ea72",
+      "data_all/data_demo/manifest.csv": "eaae5d0c8bb2a432b4ed6356589725d72827c393e9969e8478a7367bf1c9d49d",
+      "data_all/deepfake_media_kit/README_数据获取与目录说明.md": "48eac9921e87f8f075ee3f64df2c0eda04ee78bb0564e004bdefc2a468f95e2e",
+      "data_all/deepfake_media_kit/prepare_deepfake_course_data.py": "07e51790de3b7ea399fe43d9ad9a4247c4d38ea06cfff56a9509fa40ab35be23"
+    },
+    "collections": {
+      "data_formal": {
+        "manifest_rows": 200,
+        "video_paths_checked": 200,
+        "frame_paths_checked": 1000,
+        "missing_video_count": 0,
+        "video_sha256_mismatch_count": 0,
+        "missing_frame_count": 0,
+        "status": "PASS"
+      },
+      "data_demo": {
+        "manifest_rows": 20,
+        "video_paths_checked": 20,
+        "frame_paths_checked": 60,
+        "missing_video_count": 0,
+        "video_sha256_mismatch_count": 0,
+        "missing_frame_count": 0,
+        "status": "PASS"
+      }
+    }
+  },
+  "real_model_executed": false
+}

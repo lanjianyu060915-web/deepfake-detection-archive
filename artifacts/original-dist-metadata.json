@@ -1,0 +1,58 @@
+{
+  "snapshot_date": "2026-10-05",
+  "artifact_path": "D:\\GitHub备份\\deepfake-detection-archive-artifacts\\original-dist-all-builds-20261005.zip",
+  "artifact_name": "original-dist-all-builds-20261005.zip",
+  "sha256": "753c4d0f0f644ac20dfe100ada16f329cbbc0b1c80df9354431e9cd83fcafb53",
+  "zip_bytes": 1010217550,
+  "members": 15509,
+  "uncompressed_bytes": 2417567826,
+  "all_source_files_recorded": true,
+  "verification": "ZIP member path and size set exactly matches all regular source files; source files unchanged in size; archive SHA256 computed; all ZIP members decompressed and CRC verified",
+  "roots": [
+    "DeepfakeDetectionSystem",
+    "DeepfakeDetectionSystem_first_build_20260714_110447",
+    "DeepfakeDetectionSystem_notk_missing_cv2data_20260714_111814",
+    "logs"
+  ],
+  "root_counts": {
+    "DeepfakeDetectionSystem": 5181,
+    "DeepfakeDetectionSystem_first_build_20260714_110447": 5163,
+    "DeepfakeDetectionSystem_notk_missing_cv2data_20260714_111814": 5164,
+    "logs": 1
+  },
+  "source_directory": "C:\\Users\\lanji\\Desktop\\dist",
+  "source_snapshot_path": "D:\\GitHub备份\\deepfake-detection-archive\\systems\\original-deepfake",
+  "source_snapshot_files": 38,
+  "source_snapshot_bytes": 314804,
+  "installer_same_sha256": true,
+  "builds": [
+    {
+      "name": "DeepfakeDetectionSystem",
+      "original_path": "C:\\Users\\lanji\\Desktop\\dist\\DeepfakeDetectionSystem",
+      "core_source_files_compared": 27,
+      "same_core_source_as_current": true,
+      "differences": [],
+      "has_default_face_cascade": true,
+      "purpose": "current complete portable"
+    },
+    {
+      "name": "DeepfakeDetectionSystem_first_build_20260714_110447",
+      "original_path": "C:\\Users\\lanji\\Desktop\\dist\\DeepfakeDetectionSystem_first_build_20260714_110447",
+      "core_source_files_compared": 27,
+      "same_core_source_as_current": true,
+      "differences": [],
+      "has_default_face_cascade": false,
+      "purpose": "historical build; missing OpenCV face cascade data"
+    },
+    {
+      "name": "DeepfakeDetectionSystem_notk_missing_cv2data_20260714_111814",
+      "original_path": "C:\\Users\\lanji\\Desktop\\dist\\DeepfakeDetectionSystem_notk_missing_cv2data_20260714_111814",
+      "core_source_files_compared": 27,
+      "same_core_source_as_current": true,
+      "differences": [],
+      "has_default_face_cascade": false,
+      "purpose": "historical build; missing OpenCV face cascade data"
+    }
+  ],
+  "zip_crc_integrity_verified": true
+}

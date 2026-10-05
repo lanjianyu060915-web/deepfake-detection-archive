@@ -1,0 +1,48 @@
+{
+  "status": "success",
+  "query_image": "D:\\刑侦查竞赛\\first_week\\data\\换脸查询图\\query_001.jpg",
+  "candidates": [
+    {
+      "rank": 1,
+      "file_path": "D:\\刑侦查竞赛\\first_week\\data\\source_library\\122.jpg",
+      "global_score": 0.996107,
+      "local_score": 0.934526,
+      "final_score": 0.962237,
+      "visualization_path": "D:\\刑侦查竞赛\\face_source_trace_two_search_v0.1_official\\packaging\\manual_smoke\\source_fixed\\visualizations\\source_result_8b1c6f43491d_match_001.jpg"
+    },
+    {
+      "rank": 2,
+      "file_path": "D:\\刑侦查竞赛\\first_week\\data\\source_library\\074.jpg",
+      "global_score": 0.549186,
+      "local_score": 0.693896,
+      "final_score": 0.628777,
+      "visualization_path": "D:\\刑侦查竞赛\\face_source_trace_two_search_v0.1_official\\packaging\\manual_smoke\\source_fixed\\visualizations\\source_result_8b1c6f43491d_match_002.jpg"
+    },
+    {
+      "rank": 3,
+      "file_path": "D:\\刑侦查竞赛\\first_week\\data\\source_library\\061.jpg",
+      "global_score": 0.548721,
+      "local_score": 0.492658,
+      "final_score": 0.517887,
+      "visualization_path": "D:\\刑侦查竞赛\\face_source_trace_two_search_v0.1_official\\packaging\\manual_smoke\\source_fixed\\visualizations\\source_result_8b1c6f43491d_match_003.jpg"
+    },
+    {
+      "rank": 4,
+      "file_path": "D:\\刑侦查竞赛\\first_week\\data\\source_library\\155.jpg",
+      "global_score": 0.552363,
+      "local_score": 0.361429,
+      "final_score": 0.447349,
+      "visualization_path": "D:\\刑侦查竞赛\\face_source_trace_two_search_v0.1_official\\packaging\\manual_smoke\\source_fixed\\visualizations\\source_result_8b1c6f43491d_match_004.jpg"
+    },
+    {
+      "rank": 5,
+      "file_path": "D:\\刑侦查竞赛\\first_week\\data\\source_library\\059.jpg",
+      "global_score": 0.552714,
+      "local_score": 0.354545,
+      "final_score": 0.443721,
+      "visualization_path": "D:\\刑侦查竞赛\\face_source_trace_two_search_v0.1_official\\packaging\\manual_smoke\\source_fixed\\visualizations\\source_result_8b1c6f43491d_match_005.jpg"
+    }
+  ],
+  "runtime_seconds": 44.58511,
+  "error_message": null
+}

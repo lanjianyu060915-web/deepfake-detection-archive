@@ -1,0 +1,44 @@
+{
+  "generated_date": "2026-08-20",
+  "data_governance": {
+    "status": "PASS",
+    "passed": 6,
+    "total": 6
+  },
+  "evaluator_stub": {
+    "status": "PASS",
+    "passed": 7,
+    "total": 7,
+    "stub_modes": [
+      "all_correct",
+      "partial_wrong",
+      "all_real",
+      "all_fake",
+      "crash",
+      "invalid_json",
+      "status_error",
+      "timeout",
+      "no_output",
+      "missing_label"
+    ],
+    "known_fixture": {
+      "N": 10,
+      "TP": 3,
+      "FP": 1,
+      "TN": 4,
+      "FN": 2,
+      "Accuracy": 0.7,
+      "Precision": 0.75,
+      "Recall": 0.6,
+      "Specificity": 0.8,
+      "F1": 0.6666666666666666,
+      "ROC_AUC_when_semantics_confirmed": 0.76
+    }
+  },
+  "baseline_integrity": {
+    "status": "PASS",
+    "passed": 50,
+    "total": 50
+  },
+  "real_model_executed": false
+}

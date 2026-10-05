@@ -1,0 +1,43 @@
+{
+  "status": "success",
+  "query_image": "D:\\刑侦查竞赛\\first_week\\data\\换脸查询图\\query_001.jpg",
+  "candidates": [
+    {
+      "rank": 1,
+      "identity_id": "person_001",
+      "identity_name": "person_001",
+      "score": 0.5932032346725464,
+      "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_001\\04.jpg"
+    },
+    {
+      "rank": 2,
+      "identity_id": "person_006",
+      "identity_name": "person_006",
+      "score": 0.08581861704587937,
+      "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_006\\03.jpg"
+    },
+    {
+      "rank": 3,
+      "identity_id": "person_004",
+      "identity_name": "person_004",
+      "score": 0.06370714493095875,
+      "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_004\\04.jpg"
+    },
+    {
+      "rank": 4,
+      "identity_id": "person_009",
+      "identity_name": "person_009",
+      "score": 0.061470160633325575,
+      "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_009\\02.jpg"
+    },
+    {
+      "rank": 5,
+      "identity_id": "person_003",
+      "identity_name": "person_003",
+      "score": 0.04044126905500889,
+      "reference_image": "D:\\刑侦查竞赛\\first_week\\data\\identity_library\\person_003\\01.jpg"
+    }
+  ],
+  "runtime_seconds": 33.37935390000348,
+  "error_message": null
+}

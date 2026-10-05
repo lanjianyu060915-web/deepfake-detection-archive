@@ -1,0 +1,159 @@
+{
+  "schema_version": "3.0",
+  "module": "deepfake",
+  "status": "success",
+  "query_image": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002534_2abe\\query.jpg",
+  "is_deepfake": true,
+  "score": 0.7451661368925726,
+  "label": "deepfake",
+  "runtime_seconds": 0.799664500002109,
+  "details": {
+    "module_source": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem",
+    "native_status": "SUCCESS",
+    "native_label": "FAKE",
+    "score_semantics": "原模块空间域与频域分支按配置权重融合后的FAKE风险分数；不是系统准确率。",
+    "decision_threshold": 0.36360106194654707,
+    "spatial_weight": 0.62,
+    "frequency_weight": 0.38,
+    "actual_device": "cpu",
+    "media_type": "image",
+    "input_sha256": "796ba61010dc071ea19e8f0b2877c68beae085a26e4d2e4b26acf4317b5da9f7",
+    "valid_frame_count": 1,
+    "invalid_frame_count": 0,
+    "spatial_score": 0.8250169157981873,
+    "frequency_score": 0.6148832870992015,
+    "fusion_score": 0.7451661368925726,
+    "candidate_frame_count": 1,
+    "model_paths": {
+      "spatial": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem\\models\\spatial_mobilenet_finetuned_gpu\\spatial_mobilenet_finetuned_gpu.pt",
+      "frequency": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem\\models\\frequency_stat_formal\\frequency_stat_detector.joblib"
+    },
+    "model_sha256": {
+      "spatial": "5bb4b33936eb3adc631828ea271a466d62070a2b8de1902e5d96122317534794",
+      "frequency": "2ec6828eb2a3151784667eb0c105f07cdb41de6ec2df587d28b2766ceee063eb",
+      "fusion_config": "8f76abeabb55da1119b28689e15ccd31eac7f1066e401e766987efbb4603e0b2",
+      "official_base_weight": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f"
+    },
+    "model_versions": {
+      "fusion_method": "weighted_probability",
+      "preprocessing_version": "opencv_largest_face_expand_224 + MobileNetV3_DEFAULT / FrequencyStat_v1.0.0"
+    },
+    "fusion_config_path": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem\\models\\fusion_formal\\fusion_config.json",
+    "fusion_config_hash": "8f76abeabb55da1119b28689e15ccd31eac7f1066e401e766987efbb4603e0b2",
+    "media_metadata": {
+      "width": 112,
+      "height": 112,
+      "format": "JPG",
+      "channels": 3
+    },
+    "timing": {
+      "sha256_seconds": 0.0012851999999838881,
+      "metadata_and_decode_seconds": 0.0013675000009243377,
+      "model_load_seconds": 0.0,
+      "face_detection_seconds": 0.6131064000001061,
+      "inference_seconds": 0.12359680000372464,
+      "report_seconds": 0.005313200003001839
+    },
+    "frame_results": [
+      {
+        "candidate_index": 1,
+        "source_frame_index": 0,
+        "timestamp_seconds": 0.0,
+        "status": "VALID",
+        "invalid_reason": "",
+        "spatial_score": 0.8250169157981873,
+        "frequency_score": 0.6148832870992015,
+        "fusion_score": 0.7451661368925726,
+        "frame_threshold": 0.36360106194654707,
+        "predicted_label": "FAKE",
+        "risk_level": "中风险",
+        "inference_ms": 123.58230000245385
+      }
+    ],
+    "keyframe_paths": [
+      "keyframes/keyframe_01.jpg"
+    ],
+    "native_runtime_seconds": 0.7581018999990192,
+    "native_run_directory": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002534_2abe\\visualizations\\deepfake\\20260826T002534_212a8c1a8094",
+    "native_report_paths": {
+      "result_json": "result.json",
+      "frame_predictions_csv": "frame_predictions.csv",
+      "report_html": "report.html",
+      "runtime_log": "runtime.log"
+    },
+    "official_base_weight": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.3_explainable_dev\\runtime\\cache\\deepfake\\torch\\hub\\checkpoints\\mobilenet_v3_small-047dcff4.pth",
+    "warnings": [],
+    "disclaimer": "本结果由自动化模型生成，仅用于深度伪造风险筛查和辅助研判，不应单独作为司法鉴定或案件定性依据。应结合原始文件、传播来源、设备信息及其他证据进行综合判断。"
+  },
+  "error_message": null,
+  "method": {
+    "name": "多域融合单图深伪风险甄别",
+    "spatial_model": "MobileNetV3-Small",
+    "frequency_model": "FrequencyStatDetector 87维统计特征 + LogisticRegression",
+    "fusion_method": "weighted_score"
+  },
+  "metrics": {
+    "spatial_score": 0.8250169157981873,
+    "frequency_score": 0.6148832870992015,
+    "spatial_weight": 0.62,
+    "frequency_weight": 0.38,
+    "fusion_score": 0.7451661368925726,
+    "decision_threshold": 0.36360106194654707,
+    "decision_margin": 0.38156507494602554,
+    "valid_frame_count": 1,
+    "invalid_frame_count": 0,
+    "candidate_frame_count": 1,
+    "media_metadata": {
+      "width": 112,
+      "height": 112,
+      "format": "JPG",
+      "channels": 3
+    }
+  },
+  "explanation": {
+    "decision_rule": "fusion_score >= decision_threshold",
+    "fusion_formula": "spatial_weight × spatial_score + frequency_weight × frequency_score",
+    "decision": "疑似AI换脸",
+    "boundary_band_enabled": false,
+    "boundary_band_reason": "当前版本没有经独立验证的决策边界带，仅报告实际阈值差值。"
+  },
+  "warnings": [],
+  "limitations": [
+    "模型输出为深伪风险筛查分数，不是系统准确率或司法鉴定结论。",
+    "三个模块的分数属于不同任务，不能相加或解释为综合概率。"
+  ],
+  "runtime": {
+    "elapsed_seconds": 0.7670576000018627,
+    "actual_device": "cpu",
+    "native_elapsed_seconds": 0.7581018999990192,
+    "timing": {
+      "sha256_seconds": 0.0012851999999838881,
+      "metadata_and_decode_seconds": 0.0013675000009243377,
+      "model_load_seconds": 0.0,
+      "face_detection_seconds": 0.6131064000001061,
+      "inference_seconds": 0.12359680000372464,
+      "report_seconds": 0.005313200003001839
+    }
+  },
+  "provenance": {
+    "input_sha256": "796ba61010dc071ea19e8f0b2877c68beae085a26e4d2e4b26acf4317b5da9f7",
+    "model_sha256": {
+      "spatial": "5bb4b33936eb3adc631828ea271a466d62070a2b8de1902e5d96122317534794",
+      "frequency": "2ec6828eb2a3151784667eb0c105f07cdb41de6ec2df587d28b2766ceee063eb",
+      "fusion_config": "8f76abeabb55da1119b28689e15ccd31eac7f1066e401e766987efbb4603e0b2",
+      "official_base_weight": "047dcff4addef86ea5bc2eff13c9614dc11f47ab1160d0a71a25e7db994f4e1f"
+    },
+    "fusion_config_sha256": "8f76abeabb55da1119b28689e15ccd31eac7f1066e401e766987efbb4603e0b2",
+    "model_paths": {
+      "spatial": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem\\models\\spatial_mobilenet_finetuned_gpu\\spatial_mobilenet_finetuned_gpu.pt",
+      "frequency": "C:\\Users\\lanji\\AppData\\Local\\Programs\\DeepfakeDetectionSystem\\models\\frequency_stat_formal\\frequency_stat_detector.joblib"
+    },
+    "native_run_directory": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002534_2abe\\visualizations\\deepfake\\20260826T002534_212a8c1a8094",
+    "native_report_paths": {
+      "result_json": "result.json",
+      "frame_predictions_csv": "frame_predictions.csv",
+      "report_html": "report.html",
+      "runtime_log": "runtime.log"
+    }
+  }
+}

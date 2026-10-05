@@ -1,0 +1,11 @@
+module=identity
+status=success
+started_at=2026-08-26T00:16:13.649+08:00
+finished_at=2026-08-26T00:16:18.873+08:00
+runtime_seconds=5.204340
+returncode=None
+timed_out=false
+skipped=false
+execution_mode=service
+fallback_reason=
+error=

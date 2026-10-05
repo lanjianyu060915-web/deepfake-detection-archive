@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "source_directory": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.2_dev",
+  "manifest_path": "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.3_explainable_dev\\docs\\BASELINE_V0.2_SHA256.csv",
+  "generated_at": "2026-08-26T00:27:33.5903593+08:00",
+  "file_count": 28957,
+  "total_bytes": 3722952801,
+  "manifest_size_bytes": 4778686,
+  "manifest_sha256": "866dfa77318487137f14b850e8a9ca1f0c2788d402bef865ae71411a8ff6c26f",
+  "generation_method": "PowerShell Get-ChildItem + Get-FileHash SHA256; atomic same-directory replacement"
+}

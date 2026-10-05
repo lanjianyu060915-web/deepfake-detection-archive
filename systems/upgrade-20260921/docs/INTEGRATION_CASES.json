@@ -1,0 +1,65 @@
+{
+  "schema_version": "1.0",
+  "cases": [
+    {
+      "case": "query_001",
+      "task_id": "case_20260820_161638_68f7",
+      "status": "success",
+      "identity_status": "success",
+      "identity_candidates": 5,
+      "identity_rank1": "person_001",
+      "identity_rank1_score": 0.5932032346725464,
+      "source_status": "success",
+      "source_candidates": 5,
+      "source_rank1": "122.jpg",
+      "source_rank1_score": 0.962237,
+      "identity_runtime_seconds": 33.464015,
+      "source_runtime_seconds": 63.039894,
+      "total_runtime_seconds": 96.508606,
+      "visualizations": 5,
+      "task_isolation": "PASS"
+    },
+    {
+      "case": "query_002",
+      "task_id": "case_20260820_161826_6e4b",
+      "status": "success",
+      "identity_status": "success",
+      "identity_candidates": 5,
+      "identity_rank1": "person_002",
+      "identity_rank1_score": 0.7607215642929077,
+      "source_status": "success",
+      "source_candidates": 5,
+      "source_rank1": "107.jpg",
+      "source_rank1_score": 0.988152,
+      "identity_runtime_seconds": 7.608879,
+      "source_runtime_seconds": 34.623488,
+      "total_runtime_seconds": 42.238987,
+      "visualizations": 5,
+      "task_isolation": "PASS"
+    },
+    {
+      "case": "query_003",
+      "task_id": "case_20260820_161917_2591",
+      "status": "success",
+      "identity_status": "success",
+      "identity_candidates": 5,
+      "identity_rank1": "person_003",
+      "identity_rank1_score": 0.6875555068254471,
+      "source_status": "success",
+      "source_candidates": 5,
+      "source_rank1": "019.jpg",
+      "source_rank1_score": 0.991742,
+      "identity_runtime_seconds": 6.702004,
+      "source_runtime_seconds": 32.798732,
+      "total_runtime_seconds": 39.507439,
+      "visualizations": 5,
+      "task_isolation": "PASS"
+    }
+  ],
+  "success": 3,
+  "failed": 0,
+  "identity_rank1_regression": "PASS",
+  "source_rank1_regression": "PASS",
+  "task_isolation": "PASS"
+}
+

@@ -1,0 +1,74 @@
+[
+  {
+    "timestamp": "2026-08-25T23:40:18.393+08:00",
+    "stage": "task_created",
+    "module": null,
+    "message": "正在创建任务……"
+  },
+  {
+    "timestamp": "2026-08-25T23:40:18.394+08:00",
+    "stage": "loading_aigc",
+    "module": "deepfake",
+    "message": "正在加载AIGC模型……"
+  },
+  {
+    "timestamp": "2026-08-25T23:40:18.395+08:00",
+    "stage": "detecting_image",
+    "module": "deepfake",
+    "message": "正在检测图像……"
+  },
+  {
+    "timestamp": "2026-08-25T23:40:19.692+08:00",
+    "stage": "deepfake_finished",
+    "module": "deepfake",
+    "message": "deepfake 模块完成：success"
+  },
+  {
+    "timestamp": "2026-08-25T23:40:19.694+08:00",
+    "stage": "detecting_face",
+    "module": "identity",
+    "message": "正在检测人脸……"
+  },
+  {
+    "timestamp": "2026-08-25T23:40:19.694+08:00",
+    "stage": "extracting_identity",
+    "module": "identity",
+    "message": "正在提取身份特征……"
+  },
+  {
+    "timestamp": "2026-08-25T23:40:19.694+08:00",
+    "stage": "searching_identity",
+    "module": "identity",
+    "message": "正在搜索身份数据库……"
+  },
+  {
+    "timestamp": "2026-08-25T23:40:20.524+08:00",
+    "stage": "identity_finished",
+    "module": "identity",
+    "message": "identity 模块完成：success"
+  },
+  {
+    "timestamp": "2026-08-25T23:40:20.526+08:00",
+    "stage": "extracting_source",
+    "module": "source",
+    "message": "正在提取底图特征……"
+  },
+  {
+    "timestamp": "2026-08-25T23:40:20.527+08:00",
+    "stage": "searching_source",
+    "module": "source",
+    "message": "正在搜索底图库……"
+  },
+  {
+    "timestamp": "2026-08-25T23:41:13.147+08:00",
+    "stage": "source_finished",
+    "module": "source",
+    "message": "source 模块完成：success"
+  },
+  {
+    "timestamp": "2026-08-25T23:41:13.148+08:00",
+    "stage": "completed",
+    "module": null,
+    "message": "分析完成。"
+  }
+]

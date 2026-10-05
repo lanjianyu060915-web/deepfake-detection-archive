@@ -1,0 +1,11 @@
+module=source
+status=skipped
+started_at=2026-08-26T00:25:36.687+08:00
+finished_at=2026-08-26T00:25:36.698+08:00
+runtime_seconds=0.000211
+returncode=None
+timed_out=false
+skipped=true
+execution_mode=skipped
+fallback_reason=
+error=

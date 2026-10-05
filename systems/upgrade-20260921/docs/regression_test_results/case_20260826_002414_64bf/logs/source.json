@@ -1,0 +1,16 @@
+{
+  "module": "source",
+  "status": "success",
+  "started_at": "2026-08-26T00:24:15.616+08:00",
+  "finished_at": "2026-08-26T00:25:06.573+08:00",
+  "runtime_seconds": 50.94374709999829,
+  "returncode": 0,
+  "timed_out": false,
+  "skipped": false,
+  "execution_mode": "subprocess",
+  "fallback_reason": null,
+  "stdout_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002414_64bf\\logs\\source_stdout.log",
+  "stderr_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002414_64bf\\logs\\source_stderr.log",
+  "command_log": "C:\\Users\\lanji\\AppData\\Local\\FaceSourceTrace\\runtime\\tasks\\case_20260826_002414_64bf\\logs\\source_command.json",
+  "error": null
+}
