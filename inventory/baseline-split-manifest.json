@@ -1,27 +1,141 @@
 {
-  "original_name": "源系统_v0.4.0_完整冻结_20260920.zip",
+  "original_name": "baseline-v0.4.0-full.zip",
   "source": "C:\\Users\\lanji\\Desktop\\换脸寻源_v0.4.0_源系统冻结_20260920\\源系统_v0.4.0_完整冻结_20260920.zip",
   "bytes": 5750804886,
   "sha256": "5e8b6d04eb496c425b15fdca938bff47a9581f5404e7877d73507f96256675e3",
+  "part_bytes": 268435456,
   "parts": [
     {
-      "name": "baseline-v0.4.0-full.zip.part001",
-      "bytes": 1992294400,
-      "sha256": "4520d97a733fbca48e988ce376b2508fd6637b2eb68e86cc3cbb07dc358e5db7",
-      "order": 1
+      "order": 1,
+      "name": "baseline-v0.4.0-full.zip.256m.part001",
+      "bytes": 268435456,
+      "sha256": "c9b7797d0ae2783e69a1d6edc2f38f21c735822bc57df17be04d6aa1f2ce2e74"
     },
     {
-      "name": "baseline-v0.4.0-full.zip.part002",
-      "bytes": 1992294400,
-      "sha256": "9561ffa81f836cf5c2894711605488ff764c473559f7c764d58b8473c27aade1",
-      "order": 2
+      "order": 2,
+      "name": "baseline-v0.4.0-full.zip.256m.part002",
+      "bytes": 268435456,
+      "sha256": "0bf6220515b64ad65c68505bd2498e328779d7b225c902987da380901762830d"
     },
     {
-      "name": "baseline-v0.4.0-full.zip.part003",
-      "bytes": 1766216086,
-      "sha256": "55edb1ddaacc545524f3c040368315ae2e1b22cb95175b8fe651cac826e14e8d",
-      "order": 3
+      "order": 3,
+      "name": "baseline-v0.4.0-full.zip.256m.part003",
+      "bytes": 268435456,
+      "sha256": "9881e5ed9891b6e26687dd041f500240442d2c8eaceba2832674ce6778ee7cd4"
+    },
+    {
+      "order": 4,
+      "name": "baseline-v0.4.0-full.zip.256m.part004",
+      "bytes": 268435456,
+      "sha256": "19a283814d90302bc5d0b5af81f0b9d2a49d71a27eb240cae2fbf33f57aa4c36"
+    },
+    {
+      "order": 5,
+      "name": "baseline-v0.4.0-full.zip.256m.part005",
+      "bytes": 268435456,
+      "sha256": "a7d27240fbfaa8a9adc00dfeef34d90cf995f08d5fe7e3b239355199122aa2f4"
+    },
+    {
+      "order": 6,
+      "name": "baseline-v0.4.0-full.zip.256m.part006",
+      "bytes": 268435456,
+      "sha256": "b6ac13df74d97058137367bff80a172892a769c8093ff92a46b55b358ff14e2a"
+    },
+    {
+      "order": 7,
+      "name": "baseline-v0.4.0-full.zip.256m.part007",
+      "bytes": 268435456,
+      "sha256": "6ec430d27d31d3a76bcec5fe222b4f634f37ad9b44669c6ea00f22c706bf9fd7"
+    },
+    {
+      "order": 8,
+      "name": "baseline-v0.4.0-full.zip.256m.part008",
+      "bytes": 268435456,
+      "sha256": "e79d474b6774f25029c28459aa4b7a2eb3bfead16fd41a5e2a9c06e2b1718620"
+    },
+    {
+      "order": 9,
+      "name": "baseline-v0.4.0-full.zip.256m.part009",
+      "bytes": 268435456,
+      "sha256": "de905cf185e20acf1c3de8713a2a2f79e2b5038c6cee16573493fb8c41c026d0"
+    },
+    {
+      "order": 10,
+      "name": "baseline-v0.4.0-full.zip.256m.part010",
+      "bytes": 268435456,
+      "sha256": "58c6bcd03246b0456c111a8a0ad3768f1bf5787768005b0038293c5fd54523fd"
+    },
+    {
+      "order": 11,
+      "name": "baseline-v0.4.0-full.zip.256m.part011",
+      "bytes": 268435456,
+      "sha256": "afc1fd7c741d434fc897be675912cfff1108d92d47f19282583567ce275c0797"
+    },
+    {
+      "order": 12,
+      "name": "baseline-v0.4.0-full.zip.256m.part012",
+      "bytes": 268435456,
+      "sha256": "4c8598faf43e89882f8f845e076b7c7862f0a32977fdf902b7d1b785e101c6c4"
+    },
+    {
+      "order": 13,
+      "name": "baseline-v0.4.0-full.zip.256m.part013",
+      "bytes": 268435456,
+      "sha256": "d0efe110329619f4e7da240a297ef1a768dbc41f2b570cf6f3bfbdb90e954fde"
+    },
+    {
+      "order": 14,
+      "name": "baseline-v0.4.0-full.zip.256m.part014",
+      "bytes": 268435456,
+      "sha256": "b05a2613eb008f752ee909be646b62af6650d5e6464de561684c48a071fd9e6a"
+    },
+    {
+      "order": 15,
+      "name": "baseline-v0.4.0-full.zip.256m.part015",
+      "bytes": 268435456,
+      "sha256": "bc772a9df182e1bee3a19c074b185fe56b481b772839e46b5a82e8197a3af72d"
+    },
+    {
+      "order": 16,
+      "name": "baseline-v0.4.0-full.zip.256m.part016",
+      "bytes": 268435456,
+      "sha256": "c192e56d51b893acfc50eb0ea86781a8155dd13804b8173a462d810097a5fde9"
+    },
+    {
+      "order": 17,
+      "name": "baseline-v0.4.0-full.zip.256m.part017",
+      "bytes": 268435456,
+      "sha256": "f48d229ae4cf60107e239c48174b9cede313f744e715b06158f5eeb10d5b86d2"
+    },
+    {
+      "order": 18,
+      "name": "baseline-v0.4.0-full.zip.256m.part018",
+      "bytes": 268435456,
+      "sha256": "5cab0791c7af1a4fe05bc117a11f7da437fc80fdb94f1dd539b15e4888f987f0"
+    },
+    {
+      "order": 19,
+      "name": "baseline-v0.4.0-full.zip.256m.part019",
+      "bytes": 268435456,
+      "sha256": "a3107c78338a6e32eae0c7750ba5abd92e2114adb492fac9071846072135ad39"
+    },
+    {
+      "order": 20,
+      "name": "baseline-v0.4.0-full.zip.256m.part020",
+      "bytes": 268435456,
+      "sha256": "97e3f36f77272efbbfcb9280f23f29e395a228bdf0f5636cb7072c15a1dd91fe"
+    },
+    {
+      "order": 21,
+      "name": "baseline-v0.4.0-full.zip.256m.part021",
+      "bytes": 268435456,
+      "sha256": "053a5986b06accac3246c823ac38ab89fc21ff6443d637bb6b3362a937afdd9f"
+    },
+    {
+      "order": 22,
+      "name": "baseline-v0.4.0-full.zip.256m.part022",
+      "bytes": 113660310,
+      "sha256": "7f2cc23fe27e02aded6189f155b44432a95709d6bd4f6c70b164bcdf5b746e2c"
     }
-  ],
-  "reassemble": "Concatenate the parts in order as binary; verify original SHA256; then extract ZIP."
+  ]
 }

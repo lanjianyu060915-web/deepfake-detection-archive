@@ -1,0 +1,33 @@
+{
+  "original_name": "original-dist-all-builds-20261005.zip",
+  "source": "D:\\GitHub备份\\deepfake-detection-archive-artifacts\\original-dist-all-builds-20261005.zip",
+  "bytes": 1010217550,
+  "sha256": "753c4d0f0f644ac20dfe100ada16f329cbbc0b1c80df9354431e9cd83fcafb53",
+  "part_bytes": 268435456,
+  "parts": [
+    {
+      "order": 1,
+      "name": "original-dist-all-builds-20261005.zip.256m.part001",
+      "bytes": 268435456,
+      "sha256": "988e049cc3e677abcac37a4a22a6d5008d5c03b233ec5fb1a3a862258c9ec150"
+    },
+    {
+      "order": 2,
+      "name": "original-dist-all-builds-20261005.zip.256m.part002",
+      "bytes": 268435456,
+      "sha256": "7d8cee21ed29f70a56cc99e06423cafa9e8f332074b8469902c6da5b5845f394"
+    },
+    {
+      "order": 3,
+      "name": "original-dist-all-builds-20261005.zip.256m.part003",
+      "bytes": 268435456,
+      "sha256": "ffa10f70b95a171bef72f3eb1c1057755b65f942a6a55023866ab5ee376f6d14"
+    },
+    {
+      "order": 4,
+      "name": "original-dist-all-builds-20261005.zip.256m.part004",
+      "bytes": 204911182,
+      "sha256": "554df58b1dd97789480a8370c71e81e2379153140221bfcf018633634b46d28c"
+    }
+  ]
+}

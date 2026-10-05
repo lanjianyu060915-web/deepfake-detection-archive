@@ -1,0 +1,39 @@
+{
+  "original_name": "installed-v0.3.0-full-20261005.zip",
+  "source": "D:\\GitHub备份\\deepfake-detection-archive-artifacts\\installed-v0.3.0-full-20261005.zip",
+  "bytes": 1243353475,
+  "sha256": "2fbdb7f3c47cca30aebcca573a8f20f952e2ccd09f2d1b4f409c2ab16e5c0220",
+  "part_bytes": 268435456,
+  "parts": [
+    {
+      "order": 1,
+      "name": "installed-v0.3.0-full-20261005.zip.256m.part001",
+      "bytes": 268435456,
+      "sha256": "e5ceb85c9fa00c8d9beba1724478e78d6035caf32dcaffe4312b8ab78081d290"
+    },
+    {
+      "order": 2,
+      "name": "installed-v0.3.0-full-20261005.zip.256m.part002",
+      "bytes": 268435456,
+      "sha256": "1880ff30b62d05d01acefa563a59c3c327dab681e38a8705fab6714606b65ef3"
+    },
+    {
+      "order": 3,
+      "name": "installed-v0.3.0-full-20261005.zip.256m.part003",
+      "bytes": 268435456,
+      "sha256": "aa32e98bc8cd718a8b4be679925a7420596bf79e5ce16e02f3231375fd53d116"
+    },
+    {
+      "order": 4,
+      "name": "installed-v0.3.0-full-20261005.zip.256m.part004",
+      "bytes": 268435456,
+      "sha256": "b92d855d4bdb551899c64ff9c7d162786870216be35d836bd5ec23f38f87238b"
+    },
+    {
+      "order": 5,
+      "name": "installed-v0.3.0-full-20261005.zip.256m.part005",
+      "bytes": 169611651,
+      "sha256": "4077e198c56f8f89001b335825c647ebe856b549af056146679b033e13deff2e"
+    }
+  ]
+}

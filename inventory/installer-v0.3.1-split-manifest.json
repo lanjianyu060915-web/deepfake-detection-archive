@@ -1,0 +1,33 @@
+{
+  "original_name": "installer-v0.3.1.exe",
+  "source": "D:\\GitHub备份\\deepfake-detection-archive-artifacts\\installer-v0.3.1.exe",
+  "bytes": 951605809,
+  "sha256": "8f4e8e63b40fd8d15b0cbabf48d655cfd2cfeeb4688888a314132771c117111b",
+  "part_bytes": 268435456,
+  "parts": [
+    {
+      "order": 1,
+      "name": "installer-v0.3.1.exe.256m.part001",
+      "bytes": 268435456,
+      "sha256": "40efcdcb01d6270c5da14d3584e3fc0b5f20c410c83fd0c2a8017ec22fcb3afe"
+    },
+    {
+      "order": 2,
+      "name": "installer-v0.3.1.exe.256m.part002",
+      "bytes": 268435456,
+      "sha256": "8bbc95b24fcfc7269ad3b6b4769f4c51829c25be3d8ca41df450282e5b31d986"
+    },
+    {
+      "order": 3,
+      "name": "installer-v0.3.1.exe.256m.part003",
+      "bytes": 268435456,
+      "sha256": "505da30e6c2c95c78a035b94319f2765b09a1f18c332fb0271403b6580a4534b"
+    },
+    {
+      "order": 4,
+      "name": "installer-v0.3.1.exe.256m.part004",
+      "bytes": 146299441,
+      "sha256": "4848d89a5334bdbae5479d11c5a98a84497601c55af79c1599fa15a8c645c853"
+    }
+  ]
+}

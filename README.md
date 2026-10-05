@@ -21,16 +21,18 @@
 
 Release `backup-2026-10-05` 保存以下内容：
 
-- v0.4.0 完整冻结 ZIP 的三个二进制分卷。分卷不能单独解压，需先拼接并校验。
+- v0.4.0 完整冻结 ZIP 的 22 个二进制分卷，每卷最多 256 MiB。分卷不能单独解压，需先拼接并校验。
 - 升级工作区的增量归档：以 v0.4.0 完整冻结包为基线，保存所有新增或变更文件，并记录删除清单。包含二代模型及其完整 Python 运行时。
 - 桌面原版 portable 与两份历史构建的完整归档。
 - 原版交付备份、v0.3.0 安装目录归档、v0.3.1 正式安装器、9 月 21 日升级交付 ZIP。
 
-恢复冻结包：下载三个 `baseline-v0.4.0-full.zip.partNNN` 与 `baseline-split-manifest.json`，运行：
+恢复冻结包：下载全部 `baseline-v0.4.0-full.zip.256m.partNNN` 与 `baseline-split-manifest.json`，运行：
 
 ```powershell
 python tools/restore_backup.py join --manifest baseline-split-manifest.json --parts-dir 下载目录 --output baseline-v0.4.0-full.zip
 ```
+
+原版运行目录、v0.3.0 运行目录和 v0.3.1 安装器也采用分卷。分别下载对应分卷与 `original-dist-split-manifest.json`、`installed-v0.3.0-split-manifest.json`、`installer-v0.3.1-split-manifest.json`，以相同 `join` 命令拼接，`--output` 使用该清单的 `original_name`。
 
 恢复升级工作区：先将完整冻结 ZIP 解压，得到 `face_source_trace_three_module_v0.4.0_visualization_dev` 目录，再将增量叠加到该目录：
 
@@ -49,4 +51,3 @@ python tools/restore_backup.py overlay --root 解压后的目录 --delta upgrade
 9 月 21 日的便携 ZIP 与升级输出 ZIP 逐字节相同，但原包存在资源路径与运行时不完整问题，不能认定解压即用。完整基线与增量备份可以恢复开发工作区的文件，运行依赖仍应按原项目说明检查；本次归档未修改算法或启动系统复测。
 
 原项目与第三方库的版权、许可证归属保留。未替上游完整训练仓库、训练数据和可复现训练流程作完整性承诺。
-
