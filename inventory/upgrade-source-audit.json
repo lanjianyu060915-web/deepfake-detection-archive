@@ -1,5 +1,5 @@
 {
-  "status": "source_export_ready_delta_building",
+  "status": "source_export_ready_delta_verified",
   "exports": [
     {
       "path": "D:\\GitHub备份\\deepfake-detection-archive\\systems\\upgrade-20260921",
@@ -3256,10 +3256,25 @@
       "bytes": 4797
     }
   ],
-  "delta_archive_pending": "D:\\GitHub备份\\deepfake-detection-archive-artifacts\\upgrade-workspace-delta-20261005.zip",
   "delta_manifest_schema": {
     "files": "list of {relative_path,size_bytes,sha256,status}",
     "deleted": "list of paths"
   },
-  "originals_modified": false
+  "originals_modified": false,
+  "delta_archive": {
+    "path": "D:\\GitHub备份\\deepfake-detection-archive-artifacts\\upgrade-workspace-delta-20261005.zip",
+    "size_bytes": 147103749,
+    "sha256": "d539bec148790f664d8e639dbfd091d6eda934f9039334291c46281962508d07",
+    "verified_content_file_count": 3150,
+    "archive_entry_count": 3151,
+    "logical_restored_file_count": 44589,
+    "all_required_v04_resources_present": true
+  },
+  "delta_counts": {
+    "added_file_count": 3125,
+    "modified_file_count": 25,
+    "deleted_file_count": 0,
+    "total_current_files": 44589,
+    "total_current_bytes": 6764517892
+  }
 }

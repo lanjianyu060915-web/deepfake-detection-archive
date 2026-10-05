@@ -1,0 +1,123 @@
+{
+  "repository": "https://github.com/lanjianyu060915-web/deepfake-detection-archive",
+  "visibility": "private",
+  "release_tag": "backup-2026-10-05",
+  "date": "2026-10-05",
+  "total_binary_bytes": 10062113259,
+  "assets": [
+    {
+      "asset_name": "baseline-v0.4.0-full.zip.part001",
+      "bytes": 1992294400,
+      "sha256": "4520d97a733fbca48e988ce376b2508fd6637b2eb68e86cc3cbb07dc358e5db7",
+      "source": "C:\\Users\\lanji\\Desktop\\换脸寻源_v0.4.0_源系统冻结_20260920\\源系统_v0.4.0_完整冻结_20260920.zip",
+      "destination": "GitHub Release backup-2026-10-05"
+    },
+    {
+      "asset_name": "baseline-v0.4.0-full.zip.part002",
+      "bytes": 1992294400,
+      "sha256": "9561ffa81f836cf5c2894711605488ff764c473559f7c764d58b8473c27aade1",
+      "source": "C:\\Users\\lanji\\Desktop\\换脸寻源_v0.4.0_源系统冻结_20260920\\源系统_v0.4.0_完整冻结_20260920.zip",
+      "destination": "GitHub Release backup-2026-10-05"
+    },
+    {
+      "asset_name": "baseline-v0.4.0-full.zip.part003",
+      "bytes": 1766216086,
+      "sha256": "55edb1ddaacc545524f3c040368315ae2e1b22cb95175b8fe651cac826e14e8d",
+      "source": "C:\\Users\\lanji\\Desktop\\换脸寻源_v0.4.0_源系统冻结_20260920\\源系统_v0.4.0_完整冻结_20260920.zip",
+      "destination": "GitHub Release backup-2026-10-05"
+    },
+    {
+      "asset_name": "installed-v0.3.0-full-20261005.zip",
+      "bytes": 1243353475,
+      "sha256": "2fbdb7f3c47cca30aebcca573a8f20f952e2ccd09f2d1b4f409c2ab16e5c0220",
+      "source": "D:\\刑侦查竞赛\\换脸寻源3.0",
+      "destination": "GitHub Release backup-2026-10-05"
+    },
+    {
+      "asset_name": "installer-v0.3.1.exe",
+      "bytes": 951605809,
+      "sha256": "8f4e8e63b40fd8d15b0cbabf48d655cfd2cfeeb4688888a314132771c117111b",
+      "source": "D:\\刑侦查竞赛\\releases\\换脸寻源系统_v0.3.1_AIGC修复正式版_20260826_1424\\换脸寻源系统_v0.3.1_Setup.exe",
+      "destination": "GitHub Release backup-2026-10-05"
+    },
+    {
+      "asset_name": "original-delivery-complete.zip",
+      "bytes": 353477859,
+      "sha256": "c58f23ef03b30e00cc43794e49bc481c82018d96bb793f021a7baf10101bcf35",
+      "source": "D:\\刑侦查竞赛\\AI换脸检测项目结果汇总.zip",
+      "destination": "GitHub Release backup-2026-10-05"
+    },
+    {
+      "asset_name": "original-dist-all-builds-20261005.zip",
+      "bytes": 1010217550,
+      "sha256": "753c4d0f0f644ac20dfe100ada16f329cbbc0b1c80df9354431e9cd83fcafb53",
+      "source": "C:\\Users\\lanji\\Desktop\\dist",
+      "destination": "GitHub Release backup-2026-10-05"
+    },
+    {
+      "asset_name": "upgrade-delivery-20260921.zip",
+      "bytes": 605549931,
+      "sha256": "fc1d3e41240e851e89d87b4d2a0fb1a1b3193bf8743b280f5e810ada9c6b8c05",
+      "source": "D:\\刑科技项目升级2.0\\输出\\换脸寻源系统_升级版_20260921.zip",
+      "destination": "GitHub Release backup-2026-10-05"
+    },
+    {
+      "asset_name": "upgrade-workspace-delta-20261005.zip",
+      "bytes": 147103749,
+      "sha256": "d539bec148790f664d8e639dbfd091d6eda934f9039334291c46281962508d07",
+      "source": "D:\\刑科技项目升级2.0\\workspace\\fsts",
+      "destination": "GitHub Release backup-2026-10-05"
+    }
+  ],
+  "duplicate_mapping": [
+    {
+      "sources": [
+        "C:\\Users\\lanji\\Desktop\\深度伪造识别系统_通用版_Setup(2).exe",
+        "D:\\刑侦查竞赛\\AIGC检测\\集成系统\\深度伪造识别系统_通用版_Setup(2).exe"
+      ],
+      "contained_in": "original-delivery-complete.zip"
+    },
+    {
+      "sources": [
+        "C:\\Users\\lanji\\Desktop\\9月21日版\\03_系统便携交付包（体积大，走网盘或U盘）\\换脸寻源系统_便携版_20260921.zip",
+        "D:\\刑科技项目升级2.0\\输出\\换脸寻源系统_升级版_20260921.zip"
+      ],
+      "asset": "upgrade-delivery-20260921.zip"
+    },
+    {
+      "sources": [
+        "D:\\刑侦查竞赛\\AIGC检测",
+        "D:\\刑侦查竞赛\\AI换脸检测项目结果汇总.zip"
+      ],
+      "asset": "original-delivery-complete.zip"
+    },
+    {
+      "source": "D:\\刑侦查竞赛\\4",
+      "restorable_from": "installer-v0.3.1.exe",
+      "readable_source_snapshot": "systems/installed-v0.3.1"
+    },
+    {
+      "sources": [
+        "D:\\刑侦查竞赛\\face_source_trace_three_module_v0.4.0_visualization_dev",
+        "C:\\Users\\lanji\\Desktop\\换脸寻源_v0.4.0_源系统冻结_20260920\\源系统_v0.4.0_完整冻结_20260920.zip"
+      ],
+      "assets": [
+        "baseline-v0.4.0-full.zip.part001",
+        "baseline-v0.4.0-full.zip.part002",
+        "baseline-v0.4.0-full.zip.part003"
+      ]
+    }
+  ],
+  "workspace_restoration": {
+    "baseline_sha256": "5e8b6d04eb496c425b15fdca938bff47a9581f5404e7877d73507f96256675e3",
+    "delta_asset": "upgrade-workspace-delta-20261005.zip",
+    "file_count": 44589,
+    "total_bytes": 6764517892,
+    "deletions": 0
+  },
+  "preservation_notes": [
+    "The frozen baseline archive includes the complete v0.4 installer and packaging outputs.",
+    "Large binaries are Release assets rather than Git blobs.",
+    "Exact duplicate original paths map to one remote asset."
+  ]
+}
