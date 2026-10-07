@@ -78,4 +78,5 @@ addopts = "-ra"
 [tool.mypy]
 python_version = "3.12"
 files = ["src/deepfake_detection_archive"]
+mypy_path = "$MYPY_CONFIG_FILE_DIR/src"
 strict = true
