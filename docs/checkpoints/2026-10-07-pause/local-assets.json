@@ -1,0 +1,40 @@
+{
+  "scope": "local ignored assets; Git clone does not include media/weights/cache",
+  "assets": [
+    {
+      "path": "cache/downloads/asvspoof2019-LA.zip.part",
+      "bytes": 7640952520,
+      "sha256": "see fixed resource or acquisition record; not rehashed during pause"
+    },
+    {
+      "path": "cache/downloads/vif/assets/source_videos.zip",
+      "bytes": 1294907616,
+      "sha256": "see fixed resource or acquisition record; not rehashed during pause"
+    },
+    {
+      "path": "data/vif-panda-research/manifest.jsonl",
+      "bytes": 4164170,
+      "sha256": "see fixed resource or acquisition record; not rehashed during pause"
+    },
+    {
+      "path": "data/envsdd-urban/manifest-v1-32fsid.json",
+      "bytes": 56323,
+      "sha256": "ade4742cc94a590bf55195ff512e91f6dba00eb7a88c7c17ffe10566757b458b"
+    },
+    {
+      "path": "outputs/experiment-planning/vif-pilot/selected.jsonl",
+      "bytes": 924578,
+      "sha256": "7576da1654c958205b808b86ac4e27bd7e37b5c641a81007398e88498a54ea63"
+    },
+    {
+      "path": "models/pretrained/resnet18-a1/encoder.pt",
+      "bytes": 44780495,
+      "sha256": "see fixed resource or acquisition record; not rehashed during pause"
+    },
+    {
+      "path": "models/pretrained/hubert-base-ls960/model.safetensors",
+      "bytes": 377510584,
+      "sha256": "see fixed resource or acquisition record; not rehashed during pause"
+    }
+  ]
+}
