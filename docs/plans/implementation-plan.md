@@ -1,8 +1,8 @@
 # AIGC 音视频伪造识别赛整体实施方案
 
-状态：**待用户确认**
+状态：**已确认，执行中（2026-10-07）**
 编制日期：2026-10-07
-适用范围：音频检测、视频检测两个项目；本方案获确认后才进入 P0 及后续算法实施。
+适用范围：音频检测、视频检测两个项目；用户已明确授权“开始执行，完成整个比赛项目”，按 P0 及后续阶段实施。
 
 ## 1. 目标、成功标准与边界
 
@@ -43,7 +43,7 @@
 
 ## 2. 已完成准备与当前约束
 
-### 2.1 已完成，不能误报为算法成果
+### 2.1 准备与工程实施；不能误报为鉴伪效果
 
 - 已核对公开赛题、规则和赛程，并把未知执行契约登记在
   [`docs/competition/requirements.md`](../../docs/competition/requirements.md#L24-L42)。
@@ -51,13 +51,12 @@
   [`docs/research/literature.md`](../../docs/research/literature.md#L5-L56)。
 - AASIST、ASVspoof 2021、Community Forensics 参考仓库已固定到具体提交，仅作为源码参考；登记见
   [`docs/research/reference-projects.json`](../../docs/research/reference-projects.json#L1-L29)。
-- FFmpeg 8.1.2、uv 0.12.13、三项研究辅助 skill 和开发锁已准备；用户补充授权后，另核验已有 ds-skills 并安装音视频/研究依赖及 CPU/CUDA 可选的 ML 环境。具体版本、安装和探针证据以 [`tooling.md`](../research/tooling.md) 为准；没有下载训练数据或预训练权重。
+- FFmpeg、uv、11 项 Git 跟踪的项目 skills 和音视频/研究依赖及互斥 CPU/CUDA 后端已准备。版本、来源和环境证据以 [`tooling.md`](../research/tooling.md) 为准；真实数据和权重的获取/验收进展见 [`status.md`](../status.md)。
 - 历史材料已移至 `archive/legacy-20261005/`；1,526 个文件、138,273,682 字节由 SHA-256 清单保护，见
   [`archive/README.md`](../../archive/README.md#L1-L17) 和
   [`archive/integrity-manifest.json`](../../archive/integrity-manifest.json)。
-- 新算法包仍只有占位入口，尚无数据、指标、训练或推理实现；见
-  [`src/deepfake_detection_archive/__init__.py`](../../src/deepfake_detection_archive/__init__.py#L1-L2)。
-- 当前只有 2 项归档完整性测试和旧评测器 7 项模拟测试通过；它们不证明算法能力。
+- 新包已有数据治理、指标、候选模型、训练、可恢复推理和打包代码，使用方法见 [`development.md`](../development.md)。合成行为测试和 GPU profile 不证明真实鉴伪效果。
+- 归档完整性、主动工程和旧评测器测试均有本地验证；数量和阶段门以 [`status.md`](../status.md) 及工作记录为准，不能代替真实数据验收。
 
 ### 2.2 资源约束
 
@@ -83,28 +82,30 @@
 [`docs/competition/source/赛程安排.md`](../../docs/competition/source/%E8%B5%9B%E7%A8%8B%E5%AE%89%E6%8E%92.md#L1-L15)。
 因此使用相对日计划，收到正式通知后再映射到日历，不能编造开赛日期。
 
-## 3. 总体架构与计划文件布局
+## 3. 总体架构与文件布局
 
-以下均为**拟新增路径**，实施时按最小需求创建，不预先生成空目录：
+当前按最小需求实现为以下布局；可选优化按阶段门增量扩展，不预先生成空目录：
 
 ```text
 configs/
-  {data,audio,video,submission}/  # 数据、模型与平台配置
+  *.example.json        # 数据、模型、推理与打包模板
 src/deepfake_detection_archive/
-  cli.py                # audit/train/evaluate/infer/package 统一入口
-  contracts.py          # Sample、Score、Failure、RunMetadata 契约
+  cli.py                # 数据治理、训练、评测、推理和打包入口
+  contracts.py          # 分数与失败记录契约
   config.py             # 严格配置加载、版本与哈希
-  data/{manifest,audit,split}.py   # 清单、审计、组级划分
-  metrics/{eer,bootstrap}.py       # EER 口径与组级 CI
-  media/{audio,video}.py           # 确定性解码和失败记录
-  models/audio/        # AASIST-L adapter、冻结 SSL 轻量头
-  models/video/        # 冻结视觉特征、帧分类头、媒体聚合
-  pipelines/            # 训练、评测、批量推理和缓存编排
-  submission/{adapter,runner}.py   # 官方转换与离线批处理
-  tracking/             # 运行元数据、哈希、耗时与资源记录
-tests/{unit,integration,regression}/
-scripts/                # 仅保留薄入口和平台要求脚本
-docs/experiments/       # 实验卡、消融表、决策记录
+  data/                 # 清单、许可审计、连通组与近重复候选
+  evaluation/           # EER、报告和配对组 bootstrap
+  media/                # 有资源限制的确定性音视频解码
+  models/               # AASIST-L、log-mel、冻结编码器与媒体级头
+  features.py           # 共享本地编码器及媒体特征提取
+  experiments.py        # train/dev 审计、缓存与训练编排
+  training.py           # AMP、梯度累积、早停与 checkpoint
+  scoring.py            # 常驻本地资源评分
+  submission/           # 格式适配、可恢复批处理和离线包
+  tracking.py           # 运行元数据、哈希与原子记录
+tests/                  # 单元、集成及行为回归
+tools/                  # 环境/模型探针和数据导入工具
+docs/worklog/           # 实施记录；真实实验另存实验卡
 data/ models/ outputs/  # 本地生成且 Git 忽略；各自含机器生成 manifest
 ```
 
@@ -346,26 +347,27 @@ T10k_safe = 1.25 * T10k_raw
 
 ## 12. 验证命令与交付证据
 
-计划实施后的标准验证入口应收敛为：
+当前标准验证入口如下；后续功能新增自己的行为回归。不要在精确同步时漏选模型后端：
 
 ```bash
 export UV_CACHE_DIR=/tmp/aigc-uv-cache
-uv sync --locked --all-groups
-uv run --no-sync ruff check src tests
-uv run --no-sync ruff format --check src tests
+uv sync --locked --group media --group research --extra cu130
+uv run --no-sync ruff check src tests tools/check_environment.py tools/profile_models.py tools/prepare_asvspoof2019.py
+uv run --no-sync ruff format --check src tests tools/check_environment.py tools/profile_models.py tools/prepare_asvspoof2019.py
 uv run --no-sync mypy
+uv run --no-sync mypy tools/profile_models.py tools/prepare_asvspoof2019.py
 uv run --no-sync pytest -q
 uv build --no-sources
-uv run deepfake-detection-archive audit --config configs/data/competition.yaml
-uv run deepfake-detection-archive evaluate --scores outputs/frozen/scores.jsonl
-uv run deepfake-detection-archive infer --config configs/submission/offline.yaml
 ```
 
-其中后三条是**未来 CLI 契约**，当前不可执行。每个里程碑由执行者附上命令、退出码、关键计数、耗时、产物路径和哈希；仅“脚本存在”不算验收。
+真实资产就绪后，按 [`development.md`](../development.md) 填写 JSON 配置并执行
+`audit/train/infer/evaluate/package`；其模板不包含实际数据或权重，不能照占位值运行。
+CPU 检查在独立环境选择 `--extra cpu`，保持主 CUDA 环境。每个里程碑由执行者附上
+命令、退出码、关键计数、耗时、产物路径和哈希；仅“脚本存在”不算验收。
 
 ## 13. 决策点与执行交接
 
-用户确认本方案后，下一执行代理从 P0 开始，顺序为 `P0 → P1 → P2 → P3 → P5 → P6`；P4 只按门禁插入。执行者不得直接从下载大数据或训练模型开始。
+当前按 `P0 → P1 → P2 → P3 → P5 → P6` 推进；P4 只按门禁插入。工程代码完成不等于阶段已验收，后续执行者先读 `docs/status.md` 和真实实验记录，不跳过数据与评测门。
 
 需要用户在相应时点提供或决定的事项：
 
@@ -374,4 +376,4 @@ uv run deepfake-detection-archive infer --config configs/submission/offline.yaml
 3. P4：是否启用云端、预算上限、供应商/GPU/时数；
 4. P6：正式上传和提交权限。
 
-当前停止点：**本方案、赛题资料、研究记录、工具和归档整理可以完成；在用户明确确认前，不实施 P0 的项目契约代码，也不下载数据/权重、添加模型依赖、训练模型或制作正式提交包。**
+当前执行点：**整体实施已获授权，按 P0 → P1 → P2 → P3 → P5 → P6 推进；合法公开数据和权重可在资源预算内自主获取。官方规范、平台资源、数据覆盖和正式提交须以实际证据验收；缺失项不影响独立本地开发，但不能据此宣称完整参赛交付完成。**
