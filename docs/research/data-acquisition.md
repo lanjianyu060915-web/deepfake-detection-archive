@@ -1,14 +1,14 @@
 # 数据获取候选与许可闸门
 
 核对日期：2026-10-07。范围是第七届中国人工智能大赛 AIGC 音视频伪造识别赛的
-**本地开发数据**。本记录只列出无需登录、无需付费即可发现的公开来源；本轮未下载
-媒体、权重或完整数据集。
+**本地开发数据**。本记录的初筛阶段只读取公开来源；实际获取进度以
+[项目状态](../status.md) 为准。预训练资源另见 [固定资源记录](pretrained-resources/README.md)。
 
 本轮实际使用项目的 [`huggingface-datasets`](../../.agents/skills/huggingface-datasets/SKILL.md)
 skill：按其只读 Dataset Viewer/数据卡流程核实公开数据卡、split、字段、大小和许可。
-本执行环境的直接 DNS 请求无法解析 Hugging Face Dataset Viewer，因此以下 Hugging Face
-元数据来自公开数据卡，而不是推测的下载结果。实际下载前应再以 `/is-valid`、`/splits`、
-`/size` 和 `/parquet` 的公开 GET 响应写入数据登记表。
+初筛时普通沙箱 DNS 请求失败；随后在获授权的联网环境中取得了 Viewer 响应和固定
+来源索引，具体证据随各项研究归档。实际下载仍须固定版本、清单、大小与哈希，不能
+把数据卡信息当作已经获取的媒体。
 
 ## 赛方数据与接口状态
 
@@ -25,7 +25,8 @@ skill：按其只读 Dataset Viewer/数据卡流程核实公开数据卡、split
 
 首批总媒体预算不超过 30 GiB，缓存不超过 20 GiB，项目累计不超过 100 GiB；本地为
 RTX 4060 Laptop 8 GiB。候选必须同时满足：媒体本身可公开 GET、许可和上游来源足以
-支持当前竞赛用途、真伪标签可追溯、且不会把同一原始媒体或其生成派生物分入不同集合。
+支持当前登记用途（本地研究与正式竞赛分别验收）、真伪标签可追溯，且已知同源媒体及
+生成派生物不能跨划分。未知关系显式保留，不能冒充已证实的统计独立组。
 
 每条登记均保存：`dataset_id`、版本/commit、直接 URL、下载日期和 SHA-256、原媒体 ID、
 `label`、标签语义、`split`、`group_id`、真实来源、生成器/版本、媒体参数和许可。目录名
@@ -41,12 +42,19 @@ RTX 4060 Laptop 8 GiB。候选必须同时满足：媒体本身可公开 GET、�
 | 标签与溯源 | 字段：`audio`、`label`（`real`/`fake`）、`attack_type`（`TTA`/`ATA`/`-`）、`generative_model`、`dataset`（真实源）、`filename`、`scene`、`event`、`caption` | `dataset`/`filename` 是分组和泄漏控制的首选键；同一原始音频及其多种生成版本必须落在同一 split。`generative_model` 用于未知生成器留出，不能从 `label` 反推。 |
 | 公布 split | train：139,055 条、25,899,407,707 B（约 24.12 GiB）；validation：39,710 条、7,397,011,712 B（约 6.89 GiB）；test：39,768；remain：107,259 | train+validation 约 31.01 GiB，违反首批 30 GiB 上限，也超过 20 GiB 缓存。首批只可从 train 选择具固定 `group_id` 的小分片，且不能为凑容量跨原始来源。 |
 
-**首批获取方案（未执行）**：先下载/读取元数据并按 `(dataset, filename)` 构造 group，按
+**首批获取方案（未执行）**：先下载/读取元数据，以 `(dataset, filename)` 关联切片的生成
+派生，再向原始录音合并；UrbanSound8K 按官方命名合同使用 `(dataset, fsID)` 划分。按
 真实源、`scene/event`、标签、生成器分层；选定若干完整 group 至多约 10 GiB 原媒体，留
 出若干完整真实源和至少一个生成器作外部开发留出。使用 Hub 的分片 URL/API，仅下载被
 选行所属分片；下载前逐一核对分片累计字节数，避免 `load_dataset(...)` 或
 `snapshot_download(...)` 无筛选拉取 24 GiB train。确认本地真实源许可后，才能把该集合
 标为可训练集。
+
+固定 `datasplit_dev.csv` 的实测审计见 [录音组审计](envsdd-group-audit.json)：
+UrbanSound8K 的 validation 380 个原录音中有 369 个也出现在 train。
+这是该 CSV 的 `usage` 交集，**尚未证明与当前 Hub 发布 split 一一对齐**；
+不得直接沿用它做独立开发集。可用 [原始审计脚本](source/envsdd-group-audit.py) 对固定
+SHA-256 的 CSV 重算；其元数据审计不涉及媒体下载或模型表现。
 
 来源依据：[EnvSDD 数据卡的规模、生成类型和字段](https://huggingface.co/datasets/EnvSDD/EnvSDD)，
 [其许可及上游许可提示](https://huggingface.co/datasets/EnvSDD/EnvSDD)。
@@ -104,17 +112,21 @@ WaveFake 与 MLAAD 不能被其“公开”状态替代这一多说话人、官�
 | [Video Dataset: Perceptual Judgments of Authenticity](https://doi.org/10.5281/zenodo.19463142) | 816.0 MB；24 个场景，每场景 1 个 Pixabay 真实视频与 4 个 T2V 假视频（Veo 3.1、Seedance Pro 1、Sora 2、Kling 2.6）；`metadata.csv` 提供真实下载 URL、prompt 与四个生成文件名，包含人类与非人类运动 | Zenodo 公共记录的 Rights/License 文本未显示具体许可证；且真实视频只有链接、权利回到 Pixabay 条目 | 很适合小型、语义配对的外部 holdout，但在逐条确认 Rights 与 Pixabay 条目之前不能下载或训练。 |
 | [OmerXYZ/comgenvid](https://huggingface.co/datasets/OmerXYZ/comgenvid) | 5,100 个视频，MSVD real 1,700、Sora fake 1,700、VEO3 fake 1,700；含 `subset`、`source_model`、路径和预计算嵌入；35.1 GB 完整媒体 | 卡片未声明数据许可；Sora 段说明权利属于原作者/OpenAI | 完整集超首批 30 GiB，且权利未清晰；不下载。预计算嵌入不能替代视频媒体训练集。 |
 | [AIGVDBench](https://huggingface.co/datasets/AIGVDBench/AIGVDBench) | 440k+ 视频、31 个生成模型，含 T2V/I2V/V2V；公开 split 清单可作未来 generator holdout 设计 | 卡片标 CC BY 4.0，但总量远超项目预算，且每个来源和实际媒体文件仍须核验 | 仅作为未来抽样来源；不得全量镜像。 |
-| [ViF-CoT-4K](https://huggingface.co/datasets/JoeLeelyf/ViF-CoT-4K) | 约 4,000 条语义对齐的 real/fake 视频，Sora-2、Wan2.1、Kling 等；含真伪、伪迹类型、时间戳、bbox、文本解释。Hub 显示 19.7 GB。 | 项目方声明 **CC BY 4.0**，并要求遵守 Kinetics-400、Panda-70M、HD-VILA-100M 的来源条款；Hub viewer 当前不可用且无完整主数据卡。 | 是当前最接近预算、具多生成器与配对结构的视频候选。先以公开 tree API 枚举实际索引与字节，按语义 pair 整体选取不超过约 10 GiB；在逐来源条款登记前保持 provisional。 |
+| [ViF-CoT-4K](https://huggingface.co/datasets/JoeLeelyf/ViF-CoT-4K) | 固定 `c9e9b30e47e216f72c50664c43750674a79c0ded` 的 `source_videos.zip` 为 1,294,907,616 B；Range 读取证实内置 `normalized.json` 有 3,502 对、7 个 CogVideoX/Hunyuan/Wan 生成器路径，来源为 Panda-70M 2,306 对、kinetics 1,196 对。18.36 GB 的 parsed_frames 不下载。 | Skyra 声明 **CC BY 4.0** 且要求遵守上游条款。[Panda/HD-VILA 原文](source/vif-panda/provenance.json)允许限定的本地非商业计算研究；竞赛用途仍未确认。Kinetics 媒体的研究授权未闭环，当前排除。 | 只准备 Panda 研究子集；核验完整 ZIP SHA-256、来源条款、已知配对及保守疑似关系约束后再解码/探索训练。未确认的原录制与身份保留 unknown，不报告独立组 CI 或完整阶段验收。另一个 Skyra 细粒度标注文件存在路径版本差异，不能直接 join。 |
 
 ## 执行前闸门
 
-1. 赛方明确外部数据、非商业/研究许可和预训练权重是否可用前，所有有条件候选保持
-   `provisional`，不得进入训练命令。
+1. 分别登记本地研究用途和竞赛用途。来源条款已明确允许的本地非商业研究可在该范围
+   训练，数据与产物须标记 `local_research_only`；许可未解决时仍停止相关训练。
+   外部数据、非商业/研究许可及预训练权重的赛用细则未确认前，有条件资源不得进入
+   正式提交候选或被登记为竞赛已批准。该区分用于继续独立研究，不扩大上游许可。
 2. 对 EnvSDD，先完成上游真实源许可和 group 关系抽查；下载选择必须由固定 manifest
    驱动，manifest 自身也记录 SHA-256。
-3. 对视频，优先取得一个许可清楚、具 `label + generator + real-source + group` 的小规模
-   二元集。当前检索未发现同时满足这些条件且可在 20 GiB 缓存内直接使用的通用视频集；
-   这是数据事实，不以人脸换脸集或无权利来源替代。
+3. 对视频，Panda 研究子集的二元索引已定位；许可原文、归属、媒体哈希、已知配对和
+   疑似关系约束须随清单登记。未知原录制 ID 不捏造，允许明确受限的探索性训练，
+   但不能报告统计独立性、正式晋级或完整阶段验收。关键帧近重复及编码捷径仍须检查。
+   当前没有已验收的正式赛用视频集，
+   不能将研究许可或人脸换脸集冒充通用生成视频赛用验收。
 4. 每次下载后立即用 `ffprobe` 抽查 codec、时长、音轨、分辨率和可解码性；对真实/伪造
    对称重编码。解码失败保留在 manifest，不能静默删除。
 
