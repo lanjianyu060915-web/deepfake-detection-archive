@@ -20,10 +20,10 @@ jobs:
         run: uv sync --locked --group media --extra cpu
       - name: Media decoder
         run: sudo apt-get update && sudo apt-get install -y ffmpeg
-      - run: uv run --no-sync ruff check src tests tools/check_environment.py tools/profile_models.py tools/prepare_asvspoof2019.py
-      - run: uv run --no-sync ruff format --check src tests tools/check_environment.py tools/profile_models.py tools/prepare_asvspoof2019.py
+      - run: uv run --no-sync ruff check src tests tools/check_environment.py tools/profile_models.py tools/prepare_asvspoof2019.py tools/finalize_asvspoof2019.py
+      - run: uv run --no-sync ruff format --check src tests tools/check_environment.py tools/profile_models.py tools/prepare_asvspoof2019.py tools/finalize_asvspoof2019.py
       - run: uv run --no-sync mypy
-      - run: uv run --no-sync mypy tools/profile_models.py tools/prepare_asvspoof2019.py
+      - run: uv run --no-sync mypy tools/profile_models.py tools/prepare_asvspoof2019.py tools/finalize_asvspoof2019.py
       - run: uv run --no-sync pytest -q
       - name: Legacy evaluator regression
         run: uv run --no-sync python -B -m unittest discover -s archive/legacy-20261005/validation/deepfake_acceptance_v2/evaluator/tests -p 'test_*.py' -v

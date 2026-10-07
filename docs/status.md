@@ -28,7 +28,7 @@
   默认自动使用 CUDA，不设固定卡时上限，以实验价值、资源故障和收益递减为停止条件。
   付费云资源仍须确认预算与数据合规。
 - `uv pip check` 核验 123 个已安装包兼容；离线锁校验通过；CPU/CUDA 同时请求按预期被拒绝。早期 `check_environment.py` 不更新参数，模型/训练器 profile 则验证了实际更新；CUDA wheel 的 CPU 执行路径亦通过。
-- 独立 `torch 2.14.1+cpu` 环境完成 **311 passed（16.30s，无跳过）**，74 个依赖兼容，项目环境仍为 CUDA 13.0。命令与原始输出见 [CPU wheel 验证记录](research/cpu-wheel-verification.json)。该检查验证后端兼容性，不是完整模型离线演练。
+- 独立 `torch 2.14.1+cpu` 环境首轮完成 311 项测试，加入归档校验工具后完成 **335 passed（11.82s，无跳过）**；74 个依赖兼容，项目环境仍为 CUDA 13.0。见 [后端原始验证记录](research/cpu-wheel-verification.json) 和 [归档工具集成结果](research/cpu-wheel-finalizer-verification.json)。该检查验证后端兼容性，不是完整模型离线演练。
 - 实际训练器的 bf16 合成运行见 [trainer-profile.json](research/trainer-profile.json)：LogMel 和媒体级头各有 2 次有效更新、0 次跳步，checkpoint 重载一致。新 wheel 在无 torch/numpy 的干净环境通过无网安装及基础评测；这只验收基础 CLI，完整模型环境仍待验证。
 - 尚无真实训练数据、预训练权重、真实鉴伪基线、比赛成绩或远端 CI 结果；模板占位值不是实验资产。
 - 上游代码、数据和权重的许可分别核对；文献表中的候选不能当作已批准使用的数据或提交代码。
@@ -49,5 +49,7 @@
 候选资源和边界见 [数据获取研究](research/data-acquisition.md)。Git 提交遵循 LoRA：
 Logical、Observable、Reversible、Atomic。工程测试通过不能解释为完整比赛项目已完成。
 
-官方 ASVspoof 2019 LA 下载进行中，尚未完整校验或导入。完成后核验官方 MD5，
-只导入 train/dev；归档导入器和许可快照已纳入 Git，不能将部分下载用于训练。
+官方 ASVspoof 2019 LA 在 5,689,458,656 bytes 处中断，续传与 HEAD 返回 HTTP 503；
+保留部分文件并核查备用来源，尚未完整校验或导入。归档校验工具须匹配官方大小和
+MD5 后才选择性发布 train/dev；新增 24 项测试不证明真实下载已通过校验。
+来源导入器和许可快照已纳入 Git，不能将部分下载用于训练。

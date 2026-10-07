@@ -26,10 +26,10 @@ Python 3.12，使用 uv 管理环境和锁文件。`media` 组提供数据与音
 export UV_CACHE_DIR=/tmp/aigc-uv-cache
 # 当前 RTX 4060 开发环境；仅做开发检查可使用 uv sync --locked。
 uv sync --locked --group media --group research --extra cu130
-uv run --no-sync ruff check src tests tools/check_environment.py tools/profile_models.py tools/prepare_asvspoof2019.py
-uv run --no-sync ruff format --check src tests tools/check_environment.py tools/profile_models.py tools/prepare_asvspoof2019.py
+uv run --no-sync ruff check src tests tools/check_environment.py tools/profile_models.py tools/prepare_asvspoof2019.py tools/finalize_asvspoof2019.py
+uv run --no-sync ruff format --check src tests tools/check_environment.py tools/profile_models.py tools/prepare_asvspoof2019.py tools/finalize_asvspoof2019.py
 uv run --no-sync mypy
-uv run --no-sync mypy tools/profile_models.py tools/prepare_asvspoof2019.py
+uv run --no-sync mypy tools/profile_models.py tools/prepare_asvspoof2019.py tools/finalize_asvspoof2019.py
 uv run --no-sync pytest -q
 uv build --no-sources
 
