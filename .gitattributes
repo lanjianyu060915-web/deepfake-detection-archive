@@ -12,4 +12,5 @@
 /docs/experiments/**/source/** -text -whitespace
 /docs/experiments/**/configs/** -text -whitespace
 /docs/experiments/**/launch.sh -text -whitespace
+/docs/checkpoints/**/asv-finalizer-draft/** -text -whitespace
 /tools/restore_backup.py -text -whitespace

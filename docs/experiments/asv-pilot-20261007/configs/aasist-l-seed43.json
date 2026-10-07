@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "manifest": "/home/maoxiao/WorkSpace/deepfake-detection-archive/data/asvspoof2019-la-pilot/manifest-decoded.jsonl",
+  "data_root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/data/asvspoof2019-la/LA",
+  "sources": "/home/maoxiao/WorkSpace/deepfake-detection-archive/data/asvspoof2019-la-pilot/sources.jsonl",
+  "output_dir": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/experiments/asv-pilot/aasist-l-seed43",
+  "modality": "audio",
+  "architecture": "aasist_l_v1",
+  "model_config": {},
+  "training": {
+    "device": "cuda",
+    "amp": true,
+    "amp_dtype": "bfloat16",
+    "max_epochs": 12,
+    "learning_rate": 0.0001,
+    "weight_decay": 0.0001,
+    "accumulation_steps": 4,
+    "patience": 4,
+    "min_delta": 0,
+    "max_grad_norm": 1,
+    "seed": 43,
+    "deterministic": true,
+    "max_seconds": null
+  },
+  "batch_size": 16,
+  "num_workers": 0,
+  "segment_samples": 64600,
+  "segments": 1,
+  "audio": {
+    "sample_rate": 16000,
+    "max_duration_seconds": 60,
+    "timeout_seconds": 30,
+    "max_samples": 960000
+  },
+  "feature_cache": "/home/maoxiao/WorkSpace/deepfake-detection-archive/cache/asvspoof2019-la-pilot/aasist_l_v1",
+  "cache_max_bytes": 1073741824
+}
