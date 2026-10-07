@@ -1,0 +1,30 @@
+[
+  {
+    "name": "aasist",
+    "repository": "https://github.com/clovaai/aasist",
+    "commit": "a04c9863f63d44471dde8a6abcb3b082b07cd1d1",
+    "local_path": "external/aasist",
+    "use": "source reference only; no dependencies, checkpoints or models executed",
+    "license_files": [
+      "LICENSE"
+    ]
+  },
+  {
+    "name": "community-forensics",
+    "repository": "https://github.com/s-jyeon/CommunityForensicsTrain",
+    "commit": "ba05607c783a3a70a733d6ffa76668c6f0efc7c7",
+    "local_path": "external/community-forensics",
+    "use": "source reference only; no dependencies, checkpoints or models executed",
+    "license_files": [
+      "LICENSE"
+    ]
+  },
+  {
+    "name": "asvspoof2021",
+    "repository": "https://github.com/asvspoof-challenge/2021",
+    "commit": "9b33f5eca887bd3bf629e3fb79428cd9bb7ac972",
+    "local_path": "external/asvspoof2021",
+    "use": "source reference only; no dependencies, checkpoints or models executed",
+    "license_files": []
+  }
+]

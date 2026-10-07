@@ -1,7 +1,7 @@
 [project]
 name = "deepfake-detection-archive"
 version = "0.1.0"
-description = "Add your description here"
+description = "Reproducible offline AIGC audio and video forgery detection competition project"
 readme = "README.md"
 authors = [
     { name = "maochuanjun", email = "10255501521@stu.ecnu.edu.cn" },
@@ -16,3 +16,16 @@ deepfake-detection-archive = "deepfake_detection_archive:main"
 [build-system]
 requires = ["uv_build>=0.12.13,<0.13.0"]
 build-backend = "uv_build"
+
+[dependency-groups]
+dev = ["mypy>=1.10", "pytest>=8", "ruff>=0.12"]
+research = ["pypdf>=5"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.mypy]
+python_version = "3.12"
+files = ["src/deepfake_detection_archive"]
+strict = true

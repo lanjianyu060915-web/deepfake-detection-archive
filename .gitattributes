@@ -1,0 +1,4 @@
+# Historical evidence and user-provided source snapshots retain exact bytes.
+archive/legacy-20261005/** -text
+docs/competition/source/** -text
+tools/restore_backup.py -text

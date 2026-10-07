@@ -41,6 +41,13 @@ exclude = [
     ".pytest_cache",
     "__pycache__",
     "temp",
+    "archive",
+    "external",
+    "data",
+    "models",
+    "outputs",
+    "cache",
+    "tmp",
 ]
 
 # -----------------------------------------------------------------------------

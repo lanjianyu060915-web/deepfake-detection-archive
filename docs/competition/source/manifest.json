@@ -1,0 +1,24 @@
+{
+  "recorded_on": "2026-10-07",
+  "description": "User-provided official-page excerpts; moved without changing source bytes; current interpretation in ../requirements.md",
+  "official_event": "https://ai.xm.gov.cn/competition/competition-detail.html?id=2026c40dbb2347fba8b3c9a6294efa5b",
+  "official_task": "https://ai.xm.gov.cn/competition/project-detail.html?id=2026c40item0004&competeId=2026c40dbb2347fba8b3c9a6294efa5b",
+  "files": [
+    {
+      "path": "比赛介绍.md",
+      "sha256": "b91d145300c1425d22561a48ec6faed30e7feb2322cac58062cff961d774f7a8"
+    },
+    {
+      "path": "比赛规则.md",
+      "sha256": "cb1a0e2d0d08195629fc63726dffc25aa1c8581694220f3d1feef22651dd40a3"
+    },
+    {
+      "path": "赛程安排.md",
+      "sha256": "7f90e5136767c1ef2f277eaf5d8153bb5c584aa16c2917e5ecf8fdd5eca76a5d"
+    },
+    {
+      "path": "赛题说明.md",
+      "sha256": "068c868350249072a1d441f6efa980e01bbe427aad96d2dfeebff51f97228625"
+    }
+  ]
+}
