@@ -2,6 +2,7 @@
 
 import copy
 import json
+from contextlib import nullcontext
 from dataclasses import asdict
 from pathlib import Path
 
@@ -151,6 +152,9 @@ def test_seed_reproducibility_and_early_stopping(tmp_path: Path) -> None:
         {"min_delta": True},
         {"amp": 1},
         {"amp": True},
+        {"amp_dtype": "float32"},
+        {"amp_dtype": True},
+        {"amp": True, "amp_dtype": "bfloat16", "device": "cpu"},
         {"seed": -1},
         {"device": "mps"},
         {"max_seconds": 0},
@@ -160,6 +164,49 @@ def test_seed_reproducibility_and_early_stopping(tmp_path: Path) -> None:
 def test_invalid_configuration_is_rejected(kwargs: dict[str, object]) -> None:
     with pytest.raises(ValueError, match=r"must|range|supported"):
         TrainConfig(**kwargs)  # type: ignore[arg-type]
+
+
+@pytest.mark.parametrize("dtype", ["float16", "bfloat16"])
+def test_amp_dtype_configuration_and_disabled_cpu_path(
+    dtype: str, tmp_path: Path
+) -> None:
+    config = TrainConfig(max_epochs=1, amp_dtype=dtype)  # type: ignore[arg-type]
+    result = train_model(
+        model(),
+        [batches()],
+        [batches()],
+        config=config,
+        output_dir=tmp_path,
+        provenance=PROVENANCE,
+    )
+    metadata = json.loads(result.run_path.read_text())
+    assert metadata["grad_scaler_enabled"] is False
+    assert metadata["config"]["amp_dtype"] == dtype
+    assert TrainConfig().amp_dtype == "float16"
+    assert TrainConfig(device="cuda", amp=True, amp_dtype=dtype).amp is True  # type: ignore[arg-type]
+
+
+def test_unsupported_native_bfloat16_is_rejected_before_output(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(torch.cuda, "is_available", lambda: True)
+    monkeypatch.setattr(torch.cuda, "device", lambda device: nullcontext())
+
+    def unsupported(*, including_emulation: bool) -> bool:
+        assert including_emulation is False
+        return False
+
+    monkeypatch.setattr(torch.cuda, "is_bf16_supported", unsupported)
+    with pytest.raises(RuntimeError, match="does not support native bfloat16"):
+        train_model(
+            model(),
+            [batches()],
+            [batches()],
+            config=TrainConfig(device="cuda", amp=True, amp_dtype="bfloat16"),
+            output_dir=tmp_path / "unsupported",
+            provenance=PROVENANCE,
+        )
+    assert not (tmp_path / "unsupported").exists()
 
 
 def test_failures_are_recorded_without_checkpoint_or_silent_samples(

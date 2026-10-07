@@ -38,6 +38,7 @@ class TrainConfig:
     min_delta: float = 0.0
     device: str = "cpu"
     amp: bool = False
+    amp_dtype: Literal["float16", "bfloat16"] = "float16"
     seed: int = 42
     max_seconds: float | None = None
     max_grad_norm: float | None = None
@@ -52,6 +53,8 @@ class TrainConfig:
         for name in ("amp", "deterministic"):
             if type(getattr(self, name)) is not bool:
                 raise ValueError(f"{name} must be boolean")
+        if self.amp_dtype not in ("float16", "bfloat16"):
+            raise ValueError("amp_dtype must be float16 or bfloat16")
         for name in (
             "learning_rate",
             "weight_decay",
@@ -235,7 +238,11 @@ def _train_epoch(  # noqa: PLR0913, PLR0917
     loss_sum = 0.0
     for batches, batch in enumerate(loader, start=1):
         inputs, labels, lengths = _prepare_batch(batch, device)
-        with torch.autocast(device_type=device.type, enabled=config.amp):
+        with torch.autocast(
+            device_type=device.type,
+            enabled=config.amp,
+            dtype=torch.float16 if config.amp_dtype == "float16" else torch.bfloat16,
+        ):
             logits = _logits(model, inputs, lengths)
             loss = functional.binary_cross_entropy_with_logits(
                 logits, labels, reduction="sum"
@@ -262,6 +269,17 @@ def _train_epoch(  # noqa: PLR0913, PLR0917
         updates += int(stepped)
         skipped += int(not stepped)
     return loss_sum / samples, samples, updates, skipped
+
+
+def _training_device(config: TrainConfig) -> torch.device:
+    device = torch.device(config.device)
+    if device.type == "cuda" and not torch.cuda.is_available():
+        raise RuntimeError("CUDA requested but unavailable")
+    if config.amp and config.amp_dtype == "bfloat16":
+        with torch.cuda.device(device):
+            if not torch.cuda.is_bf16_supported(including_emulation=False):
+                raise RuntimeError("CUDA device does not support native bfloat16 AMP")
+    return device
 
 
 def train_model(  # noqa: PLR0913, PLR0912, PLR0915
@@ -300,9 +318,7 @@ def train_model(  # noqa: PLR0913, PLR0912, PLR0915
     _digest_json(provenance)
     if train_loader is dev_loader:
         raise ValueError("train and development loaders must be distinct")
-    device = torch.device(config.device)
-    if device.type == "cuda" and not torch.cuda.is_available():
-        raise RuntimeError("CUDA requested but unavailable")
+    device = _training_device(config)
     parameters = [
         parameter for parameter in model.parameters() if parameter.requires_grad
     ]
@@ -319,7 +335,9 @@ def train_model(  # noqa: PLR0913, PLR0912, PLR0915
     optimizer = torch.optim.AdamW(
         parameters, lr=config.learning_rate, weight_decay=config.weight_decay
     )
-    scaler = torch.amp.GradScaler("cuda", enabled=config.amp)
+    scaler = torch.amp.GradScaler(
+        "cuda", enabled=config.amp and config.amp_dtype == "float16"
+    )
     if device.type == "cuda":
         torch.cuda.reset_peak_memory_stats(device)
     started = time.monotonic()
@@ -338,6 +356,7 @@ def train_model(  # noqa: PLR0913, PLR0912, PLR0915
         "score_direction": "higher_is_fake",
         "torch_version": str(torch.__version__),
         "device": str(device),
+        "grad_scaler_enabled": scaler.is_enabled(),
         "seed_scope": "training; initialize model separately",
         "time_limit_scope": "epoch_boundary",
         "resume_supported": False,
