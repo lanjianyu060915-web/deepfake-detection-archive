@@ -51,7 +51,7 @@
   [`docs/research/literature.md`](../../docs/research/literature.md#L5-L56)。
 - AASIST、ASVspoof 2021、Community Forensics 参考仓库已固定到具体提交，仅作为源码参考；登记见
   [`docs/research/reference-projects.json`](../../docs/research/reference-projects.json#L1-L29)。
-- FFmpeg 8.1.2、uv 0.12.13、三项研究辅助 skill 和开发锁已准备；锁中包含 Ruff 0.16.10、pytest 9.1.1、mypy 2.4.0、pypdf 6.19.0，未下载数据、权重或 CUDA 栈。
+- FFmpeg 8.1.2、uv 0.12.13、三项研究辅助 skill 和开发锁已准备；用户补充授权后，另核验已有 ds-skills 并安装音视频/研究依赖及 CPU/CUDA 可选的 ML 环境。具体版本、安装和探针证据以 [`tooling.md`](../research/tooling.md) 为准；没有下载训练数据或预训练权重。
 - 历史材料已移至 `archive/legacy-20261005/`；1,526 个文件、138,273,682 字节由 SHA-256 清单保护，见
   [`archive/README.md`](../../archive/README.md#L1-L17) 和
   [`archive/integrity-manifest.json`](../../archive/integrity-manifest.json)。
@@ -61,10 +61,10 @@
 
 ### 2.2 资源约束
 
-- 本地首选资源：RTX 4060、8GB 显存；当前 Codex App 中 `nvidia-smi` 因 NVML 访问受阻，不能据此判定物理 GPU 不可用。
+- 本地首选资源：RTX 4060 Laptop、8GB 显存，已在沙箱外读取驱动 616.92；普通 Codex App 沙箱中 NVML 访问受阻。依赖环境探针与实际模型的显存/吞吐验收分开记录。
 - 当前主机约 19GiB 内存、716GiB 可用磁盘；数据和缓存预算必须在 P1 重新按真实语料核算。
 - 云算力预算待定。云端是条件分支，不能成为 P1/P2 最低可交付路径的前置条件。
-- 项目基线是 Python 3.12、uv；运行依赖仍为空，开发依赖已锁定，见
+- 项目基线是 Python 3.12、uv；基础运行依赖仍为空，开发/研究/音视频组和 CPU/CUDA 可选后端已锁定，见
   [`pyproject.toml`](../../pyproject.toml#L1-L31)。
 - 旧 fairseq/XLS-R 配方与 Python 3.12 兼容性未知；不得污染主环境。
 

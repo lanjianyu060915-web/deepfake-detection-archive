@@ -45,7 +45,24 @@
     "ruff": "0.16.10",
     "pytest": "9.1.1",
     "mypy": "2.4.0",
-    "pypdf": "6.19.0"
+    "pypdf": "6.19.0",
+    "torch": "2.14.1+cu130",
+    "torchvision": "0.29.1+cu130",
+    "timm": "1.0.30",
+    "transformers": "5.19.0",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "pandas": "3.0.6",
+    "scikit-learn": "1.9.1",
+    "soundfile": "0.14.0",
+    "librosa": "1.0.0",
+    "opencv-python-headless": "5.0.0.93",
+    "pillow": "12.3.0",
+    "imagehash": "4.3.2",
+    "pyyaml": "6.0.3",
+    "tqdm": "4.70.1",
+    "matplotlib": "3.11.2",
+    "ipykernel": "7.4.0"
   },
   "media_tools": "FFmpeg and ffprobe 8.1.2; existing host installation",
   "ci_actions": [
@@ -68,6 +85,25 @@
     "hf_dataset_viewer_asvspoof5_splits": "PASS; no dataset downloaded",
     "pypdf_aasist": "PASS; five pages extracted",
     "ffmpeg_synthetic_audio_video": "PASS",
-    "gpu_runtime_access": "NOT_VERIFIED; nvidia-smi NVML blocked by OS; user has RTX4060 8GB"
+    "gpu_runtime_access": "PASS outside ordinary sandbox: RTX4060 Laptop, torch CUDA13.0 matmul/NMS/AMP/random model forwards",
+    "ds_skills": "PASS; 535 existing installations byte-identical; 6 selected techniques exercised on synthetic inputs",
+    "media_science_ml": "PASS; details in docs/research/environment-check.json",
+    "dependency_consistency": "PASS; uv pip check, uv lock --check --offline, conflicting extras rejected",
+    "cpu_execution": "PASS using the installed cu130 wheels; separate cpu wheel not installed/tested"
+  },
+  "ds_skills_manifest": "docs/research/ds-skills.json",
+  "environment_report": "docs/research/environment-check.json",
+  "dependency_configuration": {
+    "default_group": "dev",
+    "installed_groups": [
+      "dev",
+      "research",
+      "media"
+    ],
+    "installed_extra": "cu130",
+    "alternative_extra": "cpu",
+    "exclusive_extras": true,
+    "lock_packages": 130,
+    "installed_packages_checked": 123
   }
 }

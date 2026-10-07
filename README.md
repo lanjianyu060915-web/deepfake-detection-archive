@@ -18,18 +18,24 @@
 
 ## 本地环境
 
-Python 3.12，使用 uv 管理环境和锁文件。当前先安装开发工具；研究组额外提供 PDF 解析。FFmpeg/ffprobe 使用宿主已有版本。
+Python 3.12，使用 uv 管理环境和锁文件。`media` 组提供数据与音视频处理，`research` 组提供 PDF、绘图和 notebook kernel；`cpu` / `cu130` 是互斥的 PyTorch/视觉/SSL 可选依赖。FFmpeg/ffprobe 使用宿主已有版本。
 
 ```bash
 # 本会话默认缓存不可写；正常环境可省略此行。
 export UV_CACHE_DIR=/tmp/aigc-uv-cache
-uv sync --locked --group research
-uv run --no-sync ruff check src tests
-uv run --no-sync ruff format --check src tests
+# 当前 RTX 4060 开发环境；仅做开发检查可使用 uv sync --locked。
+uv sync --locked --group media --group research --extra cu130
+uv run --no-sync ruff check src tests tools/check_environment.py
+uv run --no-sync ruff format --check src tests tools/check_environment.py
 uv run --no-sync mypy
 uv run --no-sync pytest -q
 uv build --no-sources
+
+# 使用合成媒体和随机小模型验证安装；不下载权重或数据、不更新模型参数。
+uv run --no-sync python tools/check_environment.py --device cuda --output outputs/environment/cuda.json
 ```
+
+无 GPU 的环境将 `--extra cu130` 改为 `--extra cpu`，探针用 `--device cpu`。不要同时选择两个后端；日常命令保留 `--no-sync`，避免默认同步移除可选依赖。当前 App 沙箱会阻止 GPU 访问，CUDA 探针需在可访问设备的终端执行；这与 wheel 是否正确安装是两项检查。
 
 占位 CLI：`uv run --no-sync deepfake-detection-archive`。它只输出问候，不执行检测。
 
@@ -52,7 +58,7 @@ archive/legacy-20261005/       旧源码、实验、文档、清单与原 README
 
 ## 已知约束
 
-- 当前用户可用 RTX 4060 8GB；当前 App 进程的 GPU 访问尚未验证。云算力预算、安全屋配置和报名/平台规范待定。
+- 已读取 RTX 4060 Laptop 8GB、驱动 616.92；App 普通沙箱阻止 GPU 访问。实际环境验证结果见 [工具记录](docs/research/tooling.md)。云算力预算、安全屋配置和报名/平台规范待定。
 - 官方当前以音频、视频分别描述样本与 EER；最终榜单汇总、I/O、时限和资源仍须平台确认。[官方赛题](https://ai.xm.gov.cn/competition/project-detail.html?id=2026c40item0004&competeId=2026c40dbb2347fba8b3c9a6294efa5b)
 - 音频不能默认等同语音，生成视频不能默认等同换脸；是否采用候选方法必须通过数据覆盖和跨域实验验证。
 - 不将旧模型的历史报告或本轮工具测试解释为本届模型性能。
