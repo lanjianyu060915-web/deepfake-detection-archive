@@ -1,0 +1,1 @@
+{"stage": "telemetry launch before training subprocess", "error": "FileNotFoundError /usr/bin/nvidia-smi", "training_started": false, "repair": "Resolve nvidia-smi through shutil.which; WSL path /usr/lib/wsl/lib/nvidia-smi"}

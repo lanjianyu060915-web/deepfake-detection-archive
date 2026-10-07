@@ -1,6 +1,6 @@
 # ViF Panda pilot 恢复审计结果
 
-2026-10-07 用户明确恢复后执行。范围限本地非商业计算研究；未训练检测头，未产生鉴伪成绩，未通过正式 P1/P2，赛用许可仍待核验。
+2026-10-07 用户明确恢复后执行审计，随后完成两种子探索训练。范围限本地非商业计算研究；未通过正式 P1/P2，赛用许可仍待核验。
 
 ## 输入与冻结边界
 
@@ -52,9 +52,9 @@ PYTHONPATH=src .venv/bin/python docs/experiments/vif-pilot-20261007/run_audit.py
 精确脚本、连续开发分数和输入哈希见 `source/metadata_shortcut.py` 及
 `metadata-shortcut.json`。该对照用于风险诊断，不是参赛检测器。
 
-## 后续启动入口（本次未执行）
+## 首轮探索训练（已执行）
 
-主代理协调单 GPU 后按两份已冻结配置启动：
+主代理协调单 GPU，按两份已冻结配置执行：
 
 ```bash
 PYTHONPATH=src .venv/bin/python -m deepfake_detection_archive train --config outputs/experiment-planning/vif-pilot/train-seed42.json
@@ -62,3 +62,18 @@ PYTHONPATH=src .venv/bin/python -m deepfake_detection_archive train --config out
 ```
 
 训练只消费 train/dev，holdout 留待冻结验收。研究产物不得自动转为参赛资源批准。
+
+| seed | best epoch / 完成 epochs | dev EER | 出分 / 失败 |
+| --- | --- | ---: | --- |
+| 42 | 6 / 11 | 32.47% | 154 / 0 |
+| 43 | 7 / 12 | 32.47% | 154 / 0 |
+
+root 独立复核最佳权重哈希及实际参数变化，并由保留的连续分数重算 EER。
+每生成器诊断、逐样本分数、训练历史、精确命令和资源记录见 `training/`；
+总体摘要见 `training/summary.json`。第一次 seed42 未进入训练的 telemetry 路径
+失败保留在 `training/seed42-prelaunch-failure/`，重试没有改训练参数。
+seed42 全进程训练 127.29s（含 870 条首次特征缓存），seed43 复用缓存为 9.62s；
+推理分别 24.16s / 23.34s。训练阶段 GPU 采样峰值 2,103MiB / 910MiB，
+含显示等设备用量；短任务采样可能遗漏瞬时峰值，PyTorch 值另记原始 run。
+两种子分数并非完全相同，仅 EER 相同。不存在独立统计组 CI 或正式晋级结论；
+中心裁剪控制另按 [局部方案](../../plans/vif-shortcut-controls.md) 执行，不能改写本轮基线。
