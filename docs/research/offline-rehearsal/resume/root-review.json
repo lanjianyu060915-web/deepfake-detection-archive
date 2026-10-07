@@ -1,0 +1,13 @@
+{
+  "reviewed_at": "2026-10-07T23:45:03.360754+00:00",
+  "independent_verifier_pass": true,
+  "previous_blocker": "experiment model_config lacked default-normalized binding to actual initial/best/run",
+  "fix": "registered create_model/model_spec defaults must match run; checkpoint contracts already bound",
+  "guard_tests": "59 passed in 6.30s; old mismatch red, fixed green",
+  "ruff_format_mypy": "passed",
+  "script_sha256": "292daa928f18de60a1d5271114308bd2bfab9d1b6050ff54a1162a11c0c7d2f7",
+  "tests_sha256": "2b06cb2b6db1ab7e40e1d1f0608993937b71c505355a8be5738da676550c94ac",
+  "approved_for_real_asset_prepare_execute": true,
+  "actual_rehearsal_completed": false,
+  "official_target_verified": false
+}
