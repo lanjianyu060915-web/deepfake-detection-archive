@@ -1,0 +1,27 @@
+{
+  "command": [
+    "/home/maoxiao/WorkSpace/deepfake-detection-archive/.venv/bin/python",
+    "/home/maoxiao/WorkSpace/deepfake-detection-archive/tools/prepare_asvspoof2019.py",
+    "--root",
+    "data/asvspoof2019-la/LA",
+    "--output-dir",
+    "data/asvspoof2019-la-pilot",
+    "--limit-per-class",
+    "256"
+  ],
+  "cwd": "/home/maoxiao/WorkSpace/deepfake-detection-archive",
+  "finished_at": "2026-10-07T23:29:31.025790+00:00",
+  "git_head": "5e90d71598b6839a4ea0179b3a9b86bdbe8d4c5c",
+  "returncode": 0,
+  "runner_sha256": "69410c088dbd821f2efd805e993402604baa79d72eef3551b81e4a6823ccb45f",
+  "script_sha256": "5f6ea6bd5efff9d103171c9d14fe484111d425b4a3b557f50dc76ed7a9787c21",
+  "seconds": 17.105486788000007,
+  "started_at": "2026-10-07T23:29:15.472730+00:00",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_sha256": "29bfc77710822ebe4a9ae9ede51a7b1b61fec985061ffa19937f3acbf7a709fb",
+  "threads": {
+    "MKL_NUM_THREADS": 2,
+    "OMP_NUM_THREADS": 2,
+    "OPENBLAS_NUM_THREADS": 2
+  }
+}
