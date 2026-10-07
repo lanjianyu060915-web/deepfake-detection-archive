@@ -4,3 +4,4 @@
 /src/deepfake_detection_archive/models/_vendor/** -text -whitespace
 /docs/competition/source/** -text -whitespace
 /docs/research/source/** -text -whitespace
+/tools/restore_backup.py -text -whitespace
