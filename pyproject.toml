@@ -1,0 +1,18 @@
+[project]
+name = "deepfake-detection-archive"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "maochuanjun", email = "10255501521@stu.ecnu.edu.cn" },
+    { name = "lanjianyu060915-web", email = "lanjianyu060915@qq.com" },
+]
+requires-python = ">=3.12"
+dependencies = []
+
+[project.scripts]
+deepfake-detection-archive = "deepfake_detection_archive:main"
+
+[build-system]
+requires = ["uv_build>=0.12.13,<0.13.0"]
+build-backend = "uv_build"
