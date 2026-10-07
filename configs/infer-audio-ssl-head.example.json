@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "manifest": "../data/REPLACE_AUDIO_DEV_ONLY.jsonl",
+  "data_root": "../data/REPLACE_AUDIO_MEDIA",
+  "output_dir": "../outputs/REPLACE_AUDIO_SSL_DEV_SCORES",
+  "modality": "audio",
+  "model_kind": "audio_features",
+  "checkpoint": "../outputs/REPLACE_AUDIO_SSL_RUN/training/best.pt",
+  "checkpoint_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "device": "cuda",
+  "batch_size": 8,
+  "segment_samples": 64600,
+  "segments": 3,
+  "aggregation": "mean",
+  "audio": {"sample_rate": 16000},
+  "encoder": {
+    "kind": "audio",
+    "model_dir": "../models/REPLACE_AUDIO_SSL_BUNDLE",
+    "expected_hashes": {
+      "config.json": "0000000000000000000000000000000000000000000000000000000000000000",
+      "preprocessor_config.json": "0000000000000000000000000000000000000000000000000000000000000000",
+      "model.safetensors": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  },
+  "seed": 42
+}

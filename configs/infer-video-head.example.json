@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "manifest": "../data/REPLACE_VIDEO_DEV_ONLY.jsonl",
+  "data_root": "../data/REPLACE_VIDEO_MEDIA",
+  "output_dir": "../outputs/REPLACE_VIDEO_DEV_SCORES",
+  "modality": "video",
+  "model_kind": "video_features",
+  "checkpoint": "../outputs/REPLACE_VIDEO_HEAD_RUN/training/best.pt",
+  "checkpoint_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "device": "cuda",
+  "batch_size": 8,
+  "aggregation": "mean",
+  "video": {"n_frames": 8, "height": 224, "width": 224, "resize_mode": "pad"},
+  "encoder": {
+    "kind": "vision",
+    "architecture": "resnet18",
+    "checkpoint": "../models/REPLACE_RESNET18_FEATURE_STATE.pt",
+    "expected_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "seed": 42
+}

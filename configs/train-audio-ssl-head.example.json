@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "manifest": "../data/REPLACE_AUDIO_MANIFEST.jsonl",
+  "data_root": "../data/REPLACE_AUDIO_MEDIA",
+  "sources": "../data/REPLACE_SOURCES.jsonl",
+  "output_dir": "../outputs/REPLACE_AUDIO_SSL_RUN",
+  "modality": "audio",
+  "architecture": "media_feature_head_v1",
+  "model_config": {
+    "input_dim": 768,
+    "hidden_dim": 64,
+    "dropout": 0.1,
+    "aggregation": "mean",
+    "trim_fraction": 0.1
+  },
+  "training": {
+    "device": "cuda",
+    "amp": true,
+    "amp_dtype": "bfloat16",
+    "max_epochs": 30,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "accumulation_steps": 1,
+    "patience": 5,
+    "min_delta": 0.0,
+    "max_grad_norm": 1.0,
+    "seed": 42,
+    "deterministic": true
+  },
+  "batch_size": 8,
+  "num_workers": 0,
+  "segment_samples": 64600,
+  "segments": 3,
+  "audio": {"sample_rate": 16000},
+  "encoder": {
+    "kind": "audio",
+    "model_dir": "../models/REPLACE_AUDIO_SSL_BUNDLE",
+    "expected_hashes": {
+      "config.json": "0000000000000000000000000000000000000000000000000000000000000000",
+      "preprocessor_config.json": "0000000000000000000000000000000000000000000000000000000000000000",
+      "model.safetensors": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  },
+  "feature_cache": "../cache/REPLACE_AUDIO_SSL_FEATURES",
+  "cache_max_bytes": 21474836480
+}

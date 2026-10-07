@@ -1,0 +1,15 @@
+{
+  "baseline_commit": "7fe508b0e13a818c581c6aa58f612b2e284b9554",
+  "files": {
+    "tests/test_asvspoof_acquisition.py": {
+      "baseline_sha256": "6e4fcf823f1349bdca22d87d12e14bf3f3a8d5e1f55dad3cc7261c982681d862",
+      "draft_sha256": "57e77e38bed0ca322edc0b13126cfbfd57856ff5b7dfc6380c8f7c182a14b118"
+    },
+    "tools/finalize_asvspoof2019.py": {
+      "baseline_sha256": "dc423c37a791a1021052b859ea6293c8e6efc7b3b3d1f96f4cbb5fb67030c5f6",
+      "draft_sha256": "6fd2c9ac7fd51d4a9b23d4cf0f8fce4e9a29bd04d9c667a31644bc7f61680b5e"
+    }
+  },
+  "patch_sha256": "c3c8f23e95c53fdb61c361fae556e178cc8a523ed923ead8e5d502321acecea2",
+  "status": "unverified_draft_do_not_execute"
+}

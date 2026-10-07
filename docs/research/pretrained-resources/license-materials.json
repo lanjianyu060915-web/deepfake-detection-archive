@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "license": "Apache-2.0",
+  "official_full_text": {
+    "url": "https://www.apache.org/licenses/LICENSE-2.0.txt",
+    "retrieved_at_utc": "2026-10-07T06:55:49.236656+00:00",
+    "path": "docs/research/pretrained-resources/Apache-2.0.txt",
+    "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "bytes": 11358,
+    "transformation": "none; raw response bytes preserved"
+  },
+  "resource_copies": [
+    {
+      "resource": "resnet18-a1",
+      "path": "models/pretrained/resnet18-a1/LICENSE",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "bytes": 11358,
+      "model_card_url": "https://huggingface.co/timm/resnet18.a1_in1k/resolve/491b427b45c94c7fb0e78b5474cc919aff584bbf/README.md",
+      "model_card_snapshot": "docs/research/pretrained-resources/resnet18-a1-model-card.md",
+      "declared_license": "apache-2.0"
+    },
+    {
+      "resource": "hubert-base-ls960",
+      "path": "models/pretrained/hubert-base-ls960/LICENSE",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "bytes": 11358,
+      "model_card_url": "https://huggingface.co/facebook/hubert-base-ls960/resolve/dba3bb02fda4248b6e082697eee756de8fe8aa8a/README.md",
+      "model_card_snapshot": "docs/research/pretrained-resources/hubert-base-ls960-model-card.md",
+      "declared_license": "apache-2.0"
+    }
+  ],
+  "verification": "Both resource LICENSE files are byte-identical to the archived official text.",
+  "boundary": "Attaching the full license text does not establish competition permission for external weights; official resource rules remain to be checked. Existing weight, conversion-hash and GPU-probe records were not modified."
+}

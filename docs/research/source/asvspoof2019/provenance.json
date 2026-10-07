@@ -1,0 +1,27 @@
+{
+  "retrieved_on": "2026-10-07",
+  "record_url": "https://datashare.ed.ac.uk/items/31074a11-b6f6-4e92-a4ad-07093f8c0c45/full",
+  "files": {
+    "README.txt": {
+      "url": "https://datashare.ed.ac.uk/server/api/core/bitstreams/765597d6-633f-418a-96b0-39274a8d56c9/content",
+      "sha256": "aa72c9527424585688697d18d51dfcab1828040e48d2aed5d12f190333935207"
+    },
+    "LICENSE.txt": {
+      "url": "https://datashare.ed.ac.uk/server/api/core/bitstreams/60c7de6d-37d3-45c1-b52e-9f18b0338e47/content",
+      "sha256": "99a4d3e0db6f9a5cd8871f9737b207af01de333f57c6269a11ce755227c1555d"
+    }
+  },
+  "archive": {
+    "name": "LA.zip",
+    "url": "https://datashare.ed.ac.uk/server/api/core/bitstreams/a9f87c35-f055-4015-80e2-2fdff0d46269/content",
+    "official_md5": "30c98f11d8b2bc21f2c257bfd78bb5c5",
+    "http_content_length": 7640952520,
+    "http_content_type": "application/zip",
+    "http_head_verified": true,
+    "checksum_verified": false
+  },
+  "local_research_training": "allowed_under_attribution_terms",
+  "official_competition_external_data_rules": "unconfirmed",
+  "redistribute_original_media": false,
+  "individual_rights_fully_cleared": false
+}

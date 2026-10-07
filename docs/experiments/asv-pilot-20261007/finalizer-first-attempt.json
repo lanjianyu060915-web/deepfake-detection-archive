@@ -1,0 +1,19 @@
+{
+  "command": [
+    "uv",
+    "run",
+    "--no-sync",
+    "python",
+    "tools/finalize_asvspoof2019.py",
+    "--archive",
+    "cache/downloads/asvspoof2019-LA.zip.part",
+    "--output",
+    "data/asvspoof2019-la"
+  ],
+  "exit_code": 2,
+  "error": "ValueError",
+  "message": "unexpected train/dev media name: LA/ASVspoof2019_LA_dev/flac/LA_D_A3079793.flac",
+  "published_output_exists": false,
+  "stage": "ZIP member selection after full checksum verification",
+  "eval_member_contents_read": false
+}

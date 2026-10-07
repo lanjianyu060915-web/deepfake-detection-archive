@@ -1,0 +1,17 @@
+{
+  "request": {
+    "url": "https://zenodo.org/api/records/6906306/files/LA.zip/content",
+    "range": "bytes=5689458656-5689458656"
+  },
+  "response": {
+    "status": 206,
+    "date": "Wed, 07 Oct 2026 06:37:42 GMT",
+    "content_type": "application/octet-stream",
+    "content_length": 1,
+    "content_disposition": "attachment; filename=LA.zip",
+    "content_range": "bytes 5689458656-5689458656/7640952520",
+    "accept_ranges": "bytes",
+    "source": "files-primary"
+  },
+  "note": "Only fields material to resumability and object identity are retained; rate-limit, policy, and browser-security headers are deliberately omitted."
+}

@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "manifest": "../data/REPLACE_AUDIO_DEV_ONLY.jsonl",
+  "data_root": "../data/REPLACE_AUDIO_MEDIA",
+  "output_dir": "../outputs/REPLACE_AUDIO_DEV_SCORES",
+  "modality": "audio",
+  "model_kind": "audio_waveform",
+  "checkpoint": "../outputs/REPLACE_AUDIO_RUN/training/best.pt",
+  "checkpoint_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "device": "cuda",
+  "batch_size": 4,
+  "segment_samples": 64600,
+  "segments": 1,
+  "aggregation": "mean",
+  "audio": {"sample_rate": 16000},
+  "seed": 42
+}

@@ -1,0 +1,543 @@
+{
+  "post_exit_gpu_process_check": {
+    "command": "nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv,noheader",
+    "exit_code": 0,
+    "stdout": "",
+    "interpretation": "Both profile processes exited; no GPU compute process remained in this query. Framework workspace allocations reported inside a running process were released on process exit."
+  },
+  "media_pooling_optimization": {
+    "baseline_reproducibility_limit": "The baseline was measured before the first model commit. Its source hashes and measured outputs were saved, but its exact core.py bytes were not archived; byte-for-byte replay of that baseline is not guaranteed. The vectorized implementation and value/gradient reference tests are committed.",
+    "change": "Vectorize mean and logsumexp pooling; retain explicit masks, finite checks, and input-dtype outputs. Median and trimmed mean unchanged.",
+    "validation": "27 CPU model tests passed including value and gradient equivalence in float32, float64 and bfloat16 with NaN padding.",
+    "baseline_core_sha256": "b5273cfd282e62c1a57e4b55eefd2a0623186af2da2b5499c02aebf831c0a8da",
+    "vectorized_core_sha256": "61d353b4a86edab9c1f09555c7786438135acd4fe3083fb8986e63edffb25432",
+    "vectorized_tool_sha256": "23d06ed191846ed3dc39329544dc287a1bb8d876070720a3fbcc6cc43d904da5",
+    "baseline_report": "outputs/profiles/cuda-models/profile.json",
+    "vectorized_report": "outputs/profiles/media-vectorized/profile.json",
+    "comparisons": [
+      {
+        "baseline": {
+          "batch_size": 64,
+          "input_shape": [
+            64,
+            8,
+            512
+          ],
+          "precision": "torch.bfloat16",
+          "seed": 20261007,
+          "observations_per_second": 4438.153977604726,
+          "measured_steps": 2,
+          "peak_allocated_bytes": 20336640,
+          "peak_reserved_bytes": 69206016,
+          "finite_gradient_tensors": 6,
+          "optimizer_steps_including_warmup": 3
+        },
+        "vectorized": {
+          "batch_size": 64,
+          "input_shape": [
+            64,
+            8,
+            512
+          ],
+          "precision": "torch.bfloat16",
+          "seed": 20261007,
+          "observations_per_second": 19843.296864405995,
+          "measured_steps": 2,
+          "peak_allocated_bytes": 20336640,
+          "peak_reserved_bytes": 25165824,
+          "finite_gradient_tensors": 6,
+          "optimizer_steps_including_warmup": 3
+        },
+        "observed_ratio": 4.471069945868672
+      },
+      {
+        "baseline": {
+          "batch_size": 1024,
+          "input_shape": [
+            1024,
+            8,
+            512
+          ],
+          "precision": "torch.bfloat16",
+          "seed": 20261007,
+          "observations_per_second": 4671.708046426499,
+          "measured_steps": 2,
+          "peak_allocated_bytes": 63595520,
+          "peak_reserved_bytes": 92274688,
+          "finite_gradient_tensors": 6,
+          "optimizer_steps_including_warmup": 3
+        },
+        "vectorized": {
+          "batch_size": 1024,
+          "input_shape": [
+            1024,
+            8,
+            512
+          ],
+          "precision": "torch.bfloat16",
+          "seed": 20261007,
+          "observations_per_second": 326617.9950282722,
+          "measured_steps": 2,
+          "peak_allocated_bytes": 63595520,
+          "peak_reserved_bytes": 81788928,
+          "finite_gradient_tensors": 6,
+          "optimizer_steps_including_warmup": 3
+        },
+        "observed_ratio": 69.91404252628973
+      },
+      {
+        "baseline": {
+          "batch_size": 32768,
+          "input_shape": [
+            32768,
+            8,
+            512
+          ],
+          "precision": "torch.bfloat16",
+          "seed": 20261007,
+          "observations_per_second": 4558.165649557735,
+          "measured_steps": 2,
+          "peak_allocated_bytes": 1494043648,
+          "peak_reserved_bytes": 2367684608,
+          "finite_gradient_tensors": 6,
+          "optimizer_steps_including_warmup": 3
+        },
+        "vectorized": {
+          "batch_size": 32768,
+          "input_shape": [
+            32768,
+            8,
+            512
+          ],
+          "precision": "torch.bfloat16",
+          "seed": 20261007,
+          "observations_per_second": 763812.5083193862,
+          "measured_steps": 2,
+          "peak_allocated_bytes": 1494043648,
+          "peak_reserved_bytes": 2308964352,
+          "finite_gradient_tensors": 6,
+          "optimizer_steps_including_warmup": 3
+        },
+        "observed_ratio": 167.57015146948345
+      }
+    ],
+    "limits": "Two timed synthetic optimization steps after one warmup per case; timings include numerical checks and exclude decoding, I/O and feature extraction. Observed ratios are not production or detection-quality guarantees."
+  },
+  "schema_version": 1,
+  "purpose": "synthetic_cuda_engineering_profile_only",
+  "detection_performance": "not_evaluated",
+  "weights": "random_initialization",
+  "timestamp_utc": "2026-10-07T05:49:52.997815+00:00",
+  "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "gpu_total_bytes": 8585216000,
+  "allocator_limit_bytes": 6903824384,
+  "torch": "2.14.1+cu130",
+  "cuda_runtime": "13.0",
+  "device_before": {
+    "available": true,
+    "csv_name_used_mib_temperature_c_utilization": "NVIDIA GeForce RTX 4060 Laptop GPU, 1187, 55, 10"
+  },
+  "seed": 20261007,
+  "command_args": {
+    "output": "outputs/profiles/cuda-models",
+    "max_seconds": 540,
+    "precision": "bfloat16",
+    "seed": 20261007
+  },
+  "code": {
+    "git_head": "98d68c70155b61e70843546a94af5ea6fd434701",
+    "source_sha256": {
+      "tools/profile_models.py": "4622275d7de22dcc669adfd9f045c9cc19557a9e0a452fffe697d32834486e61",
+      "src/deepfake_detection_archive/models/__init__.py": "d078e26eff1521e5eee286a110a6b2ae5c13e674780644287c3d6aa3f42f8627",
+      "src/deepfake_detection_archive/models/_vendor/__init__.py": "7da5c86416140aff2c04a23d1cebf984f6ed7c47d6b5ca0c8bc0c0da6c6a45c4",
+      "src/deepfake_detection_archive/models/_vendor/aasist.py": "d1e8fb702be2e896f6030a9646533f2d47b8298e4ec53df9b9c670562970ac2d",
+      "src/deepfake_detection_archive/models/aasist.py": "4c4a3f0034916598972200c02fb6f2ac1a9972851de65f0eb7f0c817a59d5dc9",
+      "src/deepfake_detection_archive/models/checkpoint.py": "b95b6ed6a92dbf6c902f568c5222335dd888195e2c1f6e898b3796c316f107b0",
+      "src/deepfake_detection_archive/models/core.py": "b5273cfd282e62c1a57e4b55eefd2a0623186af2da2b5499c02aebf831c0a8da",
+      "src/deepfake_detection_archive/models/encoders.py": "29b18129b4924e222a62b9bd9b3c7e6bc307611114a3451261a97bc8cf233219"
+    }
+  },
+  "model_stops": {
+    "aasist_l_v1": "next_batch_predicted_above_memory_budget",
+    "logmel_cnn_v1": "next_batch_predicted_above_memory_budget",
+    "media_feature_head_v1": "batch_search_bound",
+    "resnet18": "next_batch_predicted_above_memory_budget"
+  },
+  "throughput_scope": "model resident synthetic tensors; includes numerical checks; excludes decoding/I/O",
+  "elapsed_seconds": 58.93751482400012,
+  "device_after": {
+    "available": true,
+    "csv_name_used_mib_temperature_c_utilization": "NVIDIA GeForce RTX 4060 Laptop GPU, 1305, 73, 65"
+  },
+  "final_allocated_bytes": 17039360,
+  "final_reserved_bytes": 65011712,
+  "interpretation": "随机输入/随机权重的 CUDA 工程实测；没有鉴伪 EER 或真实数据泛化证据。",
+  "model_summaries": {
+    "aasist_l_v1": {
+      "tested_batches": [
+        1,
+        2,
+        4,
+        8,
+        16
+      ],
+      "passed_batches": [
+        1,
+        2,
+        4,
+        8,
+        16
+      ],
+      "largest_passed_batch": {
+        "architecture": "aasist_l_v1",
+        "batch_size": 16,
+        "input_shape": [
+          16,
+          64600
+        ],
+        "output_shape": [
+          16
+        ],
+        "parameters": 85306,
+        "training": true,
+        "precision": "torch.bfloat16",
+        "seed": 20261007,
+        "status": "passed",
+        "measured_steps": 2,
+        "warmup_steps": 1,
+        "optimizer_steps_including_warmup": 3,
+        "parameter_update_verified": true,
+        "finite_outputs": true,
+        "finite_gradient_tensors": 165,
+        "measured_seconds_including_finiteness_checks": 0.8068439699995906,
+        "observations_per_second": 39.66070416318069,
+        "peak_allocated_bytes": 3583694848,
+        "peak_reserved_bytes": 5804916736,
+        "case_wall_seconds": 1.3547559240000737,
+        "device_after": {
+          "available": true,
+          "csv_name_used_mib_temperature_c_utilization": "NVIDIA GeForce RTX 4060 Laptop GPU, 6767, 67, 93"
+        }
+      },
+      "fastest_passed_batch": {
+        "architecture": "aasist_l_v1",
+        "batch_size": 16,
+        "input_shape": [
+          16,
+          64600
+        ],
+        "output_shape": [
+          16
+        ],
+        "parameters": 85306,
+        "training": true,
+        "precision": "torch.bfloat16",
+        "seed": 20261007,
+        "status": "passed",
+        "measured_steps": 2,
+        "warmup_steps": 1,
+        "optimizer_steps_including_warmup": 3,
+        "parameter_update_verified": true,
+        "finite_outputs": true,
+        "finite_gradient_tensors": 165,
+        "measured_seconds_including_finiteness_checks": 0.8068439699995906,
+        "observations_per_second": 39.66070416318069,
+        "peak_allocated_bytes": 3583694848,
+        "peak_reserved_bytes": 5804916736,
+        "case_wall_seconds": 1.3547559240000737,
+        "device_after": {
+          "available": true,
+          "csv_name_used_mib_temperature_c_utilization": "NVIDIA GeForce RTX 4060 Laptop GPU, 6767, 67, 93"
+        }
+      },
+      "failures": []
+    },
+    "logmel_cnn_v1": {
+      "tested_batches": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128,
+        256
+      ],
+      "passed_batches": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128,
+        256
+      ],
+      "largest_passed_batch": {
+        "architecture": "logmel_cnn_v1",
+        "batch_size": 256,
+        "input_shape": [
+          256,
+          64600
+        ],
+        "output_shape": [
+          256
+        ],
+        "parameters": 18777,
+        "training": true,
+        "precision": "torch.bfloat16",
+        "seed": 20261007,
+        "status": "passed",
+        "measured_steps": 2,
+        "warmup_steps": 1,
+        "optimizer_steps_including_warmup": 3,
+        "parameter_update_verified": true,
+        "finite_outputs": true,
+        "finite_gradient_tensors": 14,
+        "measured_seconds_including_finiteness_checks": 0.45260638599984304,
+        "observations_per_second": 1131.2257534081225,
+        "peak_allocated_bytes": 3425476608,
+        "peak_reserved_bytes": 5171576832,
+        "case_wall_seconds": 0.7209873219999281,
+        "device_after": {
+          "available": true,
+          "csv_name_used_mib_temperature_c_utilization": "NVIDIA GeForce RTX 4060 Laptop GPU, 6173, 69, 98"
+        }
+      },
+      "fastest_passed_batch": {
+        "architecture": "logmel_cnn_v1",
+        "batch_size": 256,
+        "input_shape": [
+          256,
+          64600
+        ],
+        "output_shape": [
+          256
+        ],
+        "parameters": 18777,
+        "training": true,
+        "precision": "torch.bfloat16",
+        "seed": 20261007,
+        "status": "passed",
+        "measured_steps": 2,
+        "warmup_steps": 1,
+        "optimizer_steps_including_warmup": 3,
+        "parameter_update_verified": true,
+        "finite_outputs": true,
+        "finite_gradient_tensors": 14,
+        "measured_seconds_including_finiteness_checks": 0.45260638599984304,
+        "observations_per_second": 1131.2257534081225,
+        "peak_allocated_bytes": 3425476608,
+        "peak_reserved_bytes": 5171576832,
+        "case_wall_seconds": 0.7209873219999281,
+        "device_after": {
+          "available": true,
+          "csv_name_used_mib_temperature_c_utilization": "NVIDIA GeForce RTX 4060 Laptop GPU, 6173, 69, 98"
+        }
+      },
+      "failures": []
+    },
+    "media_feature_head_v1": {
+      "tested_batches": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128,
+        256,
+        512,
+        1024,
+        2048,
+        4096,
+        8192,
+        16384,
+        32768
+      ],
+      "passed_batches": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128,
+        256,
+        512,
+        1024,
+        2048,
+        4096,
+        8192,
+        16384,
+        32768
+      ],
+      "largest_passed_batch": {
+        "architecture": "media_feature_head_v1",
+        "batch_size": 32768,
+        "input_shape": [
+          32768,
+          8,
+          512
+        ],
+        "output_shape": [
+          32768
+        ],
+        "parameters": 33921,
+        "training": true,
+        "precision": "torch.bfloat16",
+        "seed": 20261007,
+        "status": "passed",
+        "measured_steps": 2,
+        "warmup_steps": 1,
+        "optimizer_steps_including_warmup": 3,
+        "parameter_update_verified": true,
+        "finite_outputs": true,
+        "finite_gradient_tensors": 6,
+        "measured_seconds_including_finiteness_checks": 14.377713545000006,
+        "observations_per_second": 4558.165649557735,
+        "peak_allocated_bytes": 1494043648,
+        "peak_reserved_bytes": 2367684608,
+        "case_wall_seconds": 21.428561789000014,
+        "device_after": {
+          "available": true,
+          "csv_name_used_mib_temperature_c_utilization": "NVIDIA GeForce RTX 4060 Laptop GPU, 3499, 60, 38"
+        }
+      },
+      "fastest_passed_batch": {
+        "architecture": "media_feature_head_v1",
+        "batch_size": 512,
+        "input_shape": [
+          512,
+          8,
+          512
+        ],
+        "output_shape": [
+          512
+        ],
+        "parameters": 33921,
+        "training": true,
+        "precision": "torch.bfloat16",
+        "seed": 20261007,
+        "status": "passed",
+        "measured_steps": 2,
+        "warmup_steps": 1,
+        "optimizer_steps_including_warmup": 3,
+        "parameter_update_verified": true,
+        "finite_outputs": true,
+        "finite_gradient_tensors": 6,
+        "measured_seconds_including_finiteness_checks": 0.1970146499998009,
+        "observations_per_second": 5197.583022384553,
+        "peak_allocated_bytes": 40523776,
+        "peak_reserved_bytes": 69206016,
+        "case_wall_seconds": 0.2958336030001192,
+        "device_after": {
+          "available": true,
+          "csv_name_used_mib_temperature_c_utilization": "NVIDIA GeForce RTX 4060 Laptop GPU, 1307, 61, 25"
+        }
+      },
+      "failures": []
+    },
+    "resnet18": {
+      "tested_batches": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128,
+        256,
+        512,
+        1024
+      ],
+      "passed_batches": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128,
+        256,
+        512,
+        1024
+      ],
+      "largest_passed_batch": {
+        "architecture": "resnet18",
+        "batch_size": 1024,
+        "input_shape": [
+          1024,
+          3,
+          224,
+          224
+        ],
+        "output_shape": [
+          1024,
+          512
+        ],
+        "parameters": 11176512,
+        "training": false,
+        "precision": "torch.bfloat16",
+        "seed": 20261007,
+        "status": "passed",
+        "measured_steps": 2,
+        "warmup_steps": 1,
+        "optimizer_steps_including_warmup": 0,
+        "parameter_update_verified": null,
+        "finite_outputs": true,
+        "finite_gradient_tensors": null,
+        "measured_seconds_including_finiteness_checks": 0.7948946139999862,
+        "observations_per_second": 2576.442164696861,
+        "peak_allocated_bytes": 4378791424,
+        "peak_reserved_bytes": 5930745856,
+        "case_wall_seconds": 1.3217928099998062,
+        "device_after": {
+          "available": true,
+          "csv_name_used_mib_temperature_c_utilization": "NVIDIA GeForce RTX 4060 Laptop GPU, 6899, 73, 100"
+        }
+      },
+      "fastest_passed_batch": {
+        "architecture": "resnet18",
+        "batch_size": 256,
+        "input_shape": [
+          256,
+          3,
+          224,
+          224
+        ],
+        "output_shape": [
+          256,
+          512
+        ],
+        "parameters": 11176512,
+        "training": false,
+        "precision": "torch.bfloat16",
+        "seed": 20261007,
+        "status": "passed",
+        "measured_steps": 2,
+        "warmup_steps": 1,
+        "optimizer_steps_including_warmup": 0,
+        "parameter_update_verified": null,
+        "finite_outputs": true,
+        "finite_gradient_tensors": null,
+        "measured_seconds_including_finiteness_checks": 0.19611402300006375,
+        "observations_per_second": 2610.7261080449794,
+        "peak_allocated_bytes": 1142096384,
+        "peak_reserved_bytes": 1537212416,
+        "case_wall_seconds": 0.37879701799965915,
+        "device_after": {
+          "available": true,
+          "csv_name_used_mib_temperature_c_utilization": "NVIDIA GeForce RTX 4060 Laptop GPU, 2709, 64, 99"
+        }
+      },
+      "failures": []
+    }
+  }
+}

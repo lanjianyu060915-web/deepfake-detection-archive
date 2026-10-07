@@ -1,0 +1,7 @@
+{
+  "format": "csv",
+  "sample_id_column": "sample_id",
+  "score_column": "score",
+  "score_direction": "fake_high",
+  "official_confirmed": false
+}

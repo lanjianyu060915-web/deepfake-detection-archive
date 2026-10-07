@@ -1,0 +1,255 @@
+diff --git a/tests/test_asvspoof_acquisition.py b/tests/test_asvspoof_acquisition.py
+index fa10fcb..f58d950 100644
+--- a/tests/test_asvspoof_acquisition.py
++++ b/tests/test_asvspoof_acquisition.py
+@@ -29,8 +29,13 @@ def make_archive(
+         archive.writestr(
+             prefix + "ASVspoof2019_LA_dev/flac/LA_D_0001.flac", b"dev audio"
+         )
+-        for protocol in STATE["PROTOCOLS"]:
+-            archive.writestr(prefix + protocol, b"protocol fixture\n")
++        for protocol, split in STATE["PROTOCOLS"].items():
++            letter = "T" if split == "train" else "D"
++            speaker = "0001" if split == "train" else "0002"
++            archive.writestr(
++                prefix + protocol,
++                f"LA_{speaker} LA_{letter}_0001 - - bonafide\n".encode(),
++            )
+         archive.writestr(prefix + "README.txt", b"readme")
+         archive.writestr(
+             prefix + "ASVspoof2019_LA_eval/flac/LA_E_0001.flac", b"never read"
+@@ -53,6 +58,12 @@ def trust_fixture(path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+         hashlib.md5(path.read_bytes(), usedforsecurity=False).hexdigest(),
+     )
+     monkeypatch.setitem(STATE, "EXPECTED_MEDIA_COUNTS", {"train": 1, "dev": 1})
++    monkeypatch.setitem(
++        STATE,
++        "EXPECTED_LABEL_COUNTS",
++        {"train": {"bonafide": 1}, "dev": {"bonafide": 1}},
++    )
++    monkeypatch.setitem(STATE, "EXPECTED_UNREFERENCED_DEV_FILES", 0)
+ 
+ 
+ def test_success_publishes_only_selected_entries_without_opening_eval(
+@@ -83,8 +94,9 @@ def test_success_publishes_only_selected_entries_without_opening_eval(
+     assert report["eval_media_extracted"] is False
+     assert report["eval_member_contents_read"] is False
+     assert report["decode_verified"] is False
+-    assert report["protocol_contents_validated"] is False
+-    assert len(opened) == 5
++    assert report["protocol_contents_validated"] is True
++    assert report["excluded_unreferenced_dev_media"] == []
++    assert len(opened) == 7  # Two bounded protocol validation reads plus extraction.
+     assert source.exists()
+     assert not (output / "LA/ASVspoof2019_LA_eval").exists()
+     assert json.loads((output / "acquisition.json").read_text()) == report
+@@ -308,3 +320,78 @@ def test_archive_mutation_during_extraction_aborts_publication(
+         finalize(source, tmp_path / "extracted")
+     assert not (tmp_path / "extracted").exists()
+     assert not list(tmp_path.glob(".extracted.staging-*"))
++
++
++def test_known_unreferenced_dev_file_is_logged_without_reading_body(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    extra = "LA/ASVspoof2019_LA_dev/flac/LA_D_A3079793.flac"
++    source = make_archive(tmp_path / "LA.zip", [(extra, b"must not read")])
++    trust_fixture(source, monkeypatch)
++    monkeypatch.setitem(STATE, "EXPECTED_UNREFERENCED_DEV_FILES", 1)
++    original_open = zipfile.ZipFile.open
++
++    def guarded_open(self: zipfile.ZipFile, name: Any, *args: Any, **kwargs: Any) -> Any:
++        filename = name.filename if isinstance(name, zipfile.ZipInfo) else name
++        assert filename != extra and "eval" not in filename
++        return original_open(self, name, *args, **kwargs)
++
++    monkeypatch.setattr(zipfile.ZipFile, "open", guarded_open)
++    report = finalize(source, tmp_path / "extracted")
++    assert not (tmp_path / "extracted" / extra).exists()
++    assert report["media_counts"] == {"train": 1, "dev": 1}
++    assert report["excluded_unreferenced_dev_media"][0]["name"] == extra
++    assert report["excluded_unreferenced_dev_media"][0]["body_read"] is False
++
++
++@pytest.mark.parametrize(
++    ("replacement", "reason"),
++    [
++        ("LA_0001 LA_T_9999 - - bonafide\n", "membership mismatch"),
++        ("LA_0001 LA_T_0001 - - bonafide\n" * 2, "duplicate"),
++        ("LA_0001 LA_T_0001 - A07 spoof\n", "ID/label/attack"),
++        ("LA_0001 LA_T_0001 - A01 bonafide\n", "ID/label/attack"),
++        ("LA_0001 LA_T_0001 - - spoof\n", "ID/label/attack"),
++        ("LA_0001 LA_E_0001 - - bonafide\n", "ID/label/attack"),
++        ("LA_0001 LA_T_0001 - A01 spoof\n", "counts/labels"),
++        ("invalid\n", "columns"),
++    ],
++)
++def test_invalid_or_missing_protocol_members_abort_before_media_read(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++    replacement: str,
++    reason: str,
++) -> None:
++    original = make_archive(tmp_path / "original.zip")
++    source = tmp_path / "LA.zip"
++    with zipfile.ZipFile(original) as src, zipfile.ZipFile(source, "w") as dst:
++        for info in src.infolist():
++            content = src.read(info)
++            if info.filename.endswith("cm.train.trn.txt"):
++                content = replacement.encode()
++            dst.writestr(info, content)
++    trust_fixture(source, monkeypatch)
++    original_open = zipfile.ZipFile.open
++
++    def protocols_only(self: zipfile.ZipFile, name: Any, *args: Any, **kwargs: Any) -> Any:
++        filename = name.filename if isinstance(name, zipfile.ZipInfo) else name
++        assert ".flac" not in filename and "eval" not in filename
++        return original_open(self, name, *args, **kwargs)
++
++    monkeypatch.setattr(zipfile.ZipFile, "open", protocols_only)
++    with pytest.raises(ValueError, match=reason):
++        finalize(source, tmp_path / "extracted")
++    assert not (tmp_path / "extracted").exists()
++
++
++@pytest.mark.parametrize("name", ["LA_D_B3079793.flac", "LA_D_A307979.flac"])
++def test_arbitrary_unreferenced_names_remain_rejected(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, name: str
++) -> None:
++    source = make_archive(
++        tmp_path / "LA.zip", [(f"LA/ASVspoof2019_LA_dev/flac/{name}", b"unknown")]
++    )
++    trust_fixture(source, monkeypatch)
++    with pytest.raises(ValueError, match="unexpected train/dev media name"):
++        finalize(source, tmp_path / "extracted")
+diff --git a/tools/finalize_asvspoof2019.py b/tools/finalize_asvspoof2019.py
+index 98521d7..d3767bc 100644
+--- a/tools/finalize_asvspoof2019.py
++++ b/tools/finalize_asvspoof2019.py
+@@ -28,6 +28,11 @@ from typing import BinaryIO
+ OFFICIAL_SIZE = 7_640_952_520
+ OFFICIAL_MD5 = "30c98f11d8b2bc21f2c257bfd78bb5c5"
+ EXPECTED_MEDIA_COUNTS = {"train": 25380, "dev": 24844}
++EXPECTED_LABEL_COUNTS = {
++    "train": {"bonafide": 2580, "spoof": 22800},
++    "dev": {"bonafide": 2548, "spoof": 22296},
++}
++EXPECTED_UNREFERENCED_DEV_FILES = 142
+ MAX_MEMBER_BYTES = 100 * 1024**2
+ MAX_EXTRACTED_BYTES = 8 * 1024**3
+ MAX_ZIP_ENTRIES = 200_000
+@@ -91,6 +96,8 @@ def _selection(info: zipfile.ZipInfo, parts: tuple[str, ...]) -> SelectedMember
+         corpus, folder, filename = parts[-3:]
+         for split, letter in (("train", "T"), ("dev", "D")):
+             if corpus == f"ASVspoof2019_LA_{split}" and folder == "flac":
++                if split == "dev" and re.fullmatch(r"LA_D_A\d{7}\.flac", filename):
++                    return SelectedMember(info, "unreferenced", split, "/".join(parts[:-3]))
+                 if re.fullmatch(rf"LA_{letter}_\d+\.flac", filename) is None:
+                     raise ValueError(
+                         f"unexpected train/dev media name: {info.filename}"
+@@ -103,7 +110,48 @@ def _selection(info: zipfile.ZipInfo, parts: tuple[str, ...]) -> SelectedMember
+     return None
+ 
+ 
+-def _selected_members(archive: zipfile.ZipFile) -> tuple[list[SelectedMember], str]:
++def _protocol_ids(archive: zipfile.ZipFile, item: SelectedMember) -> set[str]:
++    """Read only a bounded, already path-checked train/dev CM protocol."""
++    split = item.split
++    if split not in EXPECTED_MEDIA_COUNTS:
++        raise ValueError("unexpected protocol split")
++    with archive.open(item.info) as stream:
++        content = stream.read(MAX_MEMBER_BYTES + 1)
++    if len(content) > MAX_MEMBER_BYTES or len(content) != item.info.file_size:
++        raise ValueError("protocol exceeds verified single-file budget")
++    try:
++        lines = content.decode("utf-8").splitlines()
++    except UnicodeDecodeError as exc:
++        raise ValueError("invalid protocol UTF-8") from exc
++    ids: set[str] = set()
++    labels: Counter[str] = Counter()
++    letter = "T" if split == "train" else "D"
++    for line in lines:
++        fields = line.split()
++        if len(fields) != 5:
++            raise ValueError("invalid CM protocol columns")
++        speaker, sample_id, placeholder, attack, label = fields
++        if (
++            re.fullmatch(r"LA_\d+", speaker) is None
++            or re.fullmatch(rf"LA_{letter}_\d+", sample_id) is None
++            or placeholder != "-"
++            or label not in ("bonafide", "spoof")
++            or (label == "bonafide" and attack != "-")
++            or (label == "spoof" and attack not in {f"A{i:02d}" for i in range(1, 7)})
++        ):
++            raise ValueError("invalid CM protocol ID/label/attack")
++        if sample_id in ids:
++            raise ValueError("duplicate CM protocol sample ID")
++        ids.add(sample_id)
++        labels[label] += 1
++    if len(ids) != EXPECTED_MEDIA_COUNTS[split] or labels != EXPECTED_LABEL_COUNTS[split]:
++        raise ValueError(f"unexpected protocol media counts/labels: {split}")
++    return ids
++
++
++def _selected_members(
++    archive: zipfile.ZipFile,
++) -> tuple[list[SelectedMember], str, list[dict[str, object]]]:
+     entries = archive.infolist()
+     if len(entries) > MAX_ZIP_ENTRIES:
+         raise ValueError("ZIP directory exceeds entry budget")
+@@ -153,7 +201,35 @@ def _selected_members(archive: zipfile.ZipFile) -> tuple[list[SelectedMember], s
+         raise ValueError("selected member exceeds single-file extraction budget")
+     if sum(item.info.file_size for item in selected) > MAX_EXTRACTED_BYTES:
+         raise ValueError("selected members exceed total extraction budget")
+-    return sorted(selected, key=lambda item: item.info.filename), prefix
++    required = {
++        item.split: _protocol_ids(archive, item)
++        for item in selected
++        if item.kind == "protocol"
++    }
++    for split, ids in required.items():
++        present = {
++            PurePosixPath(item.info.filename).stem
++            for item in selected
++            if item.kind == "media" and item.split == split
++        }
++        if present != ids:
++            raise ValueError(f"protocol media membership mismatch: {split}")
++    excluded = [
++        {
++            "name": item.info.filename,
++            "crc32": f"{item.info.CRC:08x}",
++            "uncompressed_bytes": item.info.file_size,
++            "compressed_bytes": item.info.compress_size,
++            "reason": "known_official_dev_file_not_referenced_by_CM_protocol",
++            "body_read": False,
++        }
++        for item in selected
++        if item.kind == "unreferenced"
++    ]
++    if len(excluded) != EXPECTED_UNREFERENCED_DEV_FILES:
++        raise ValueError("unexpected unreferenced dev media count")
++    selected = [item for item in selected if item.kind != "unreferenced"]
++    return sorted(selected, key=lambda item: item.info.filename), prefix, excluded
+ 
+ 
+ def _extract_member(
+@@ -206,7 +282,7 @@ def finalize_archive(archive_path: Path, output_dir: Path) -> dict[str, object]:
+         before = os.fstat(stream.fileno())
+         md5, sha256 = _archive_hashes(stream)
+         with zipfile.ZipFile(stream) as archive:
+-            selected, prefix = _selected_members(archive)
++            selected, prefix, excluded = _selected_members(archive)
+             output_dir.parent.mkdir(parents=True, exist_ok=True)
+             with tempfile.TemporaryDirectory(
+                 prefix=f".{output_dir.name}.staging-", dir=output_dir.parent
+@@ -240,7 +316,8 @@ def finalize_archive(archive_path: Path, output_dir: Path) -> dict[str, object]:
+                     "eval_media_extracted": False,
+                     "eval_member_contents_read": False,
+                     "decode_verified": False,
+-                    "protocol_contents_validated": False,
++                    "protocol_contents_validated": True,
++                    "excluded_unreferenced_dev_media": excluded,
+                     "official_competition_usage": "unconfirmed",
+                 }
+                 report = stage / "acquisition.json"

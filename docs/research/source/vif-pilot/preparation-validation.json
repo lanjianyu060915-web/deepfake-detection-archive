@@ -1,0 +1,26 @@
+{
+  "recorded_at": "2026-10-07T07:24:32.106303+00:00",
+  "scope": "preparation script engineering checks; no dataset/media/model-performance claim",
+  "checks": [
+    {
+      "command": ".venv/bin/ruff check outputs/experiment-planning/vif-pilot/*.py",
+      "result": "All checks passed!"
+    },
+    {
+      "command": ".venv/bin/ruff format outputs/experiment-planning/vif-pilot/*.py",
+      "result": "formatted; independent reviewer format --check passed"
+    },
+    {
+      "command": "MYPYPATH=src .venv/bin/mypy --strict outputs/experiment-planning/vif-pilot/*.py",
+      "result": "Success: no issues found in 2 source files"
+    },
+    {
+      "command": "PYTHONPATH=src .venv/bin/pytest -q outputs/experiment-planning/vif-pilot/test_prepare_pilot.py",
+      "result": "7 passed in 1.50s"
+    }
+  ],
+  "script_sha256": "c0e0b91dac5e87ae19c07928235295d57e7a5017591c8d24e45244abeda55bdb",
+  "tests_sha256": "791fe173a38271d4ffeb6d610939f219397655f0927003ca2c4ae0581f731599",
+  "training_config_parser": "Both seed42 and seed43 accepted by existing strict ExperimentConfig",
+  "independent_review": "vif_import_review reviewed implementation, tests, frozen checksums and byte-identical source archives"
+}

@@ -1,0 +1,73 @@
+{
+  "actual_md5": "30c98f11d8b2bc21f2c257bfd78bb5c5",
+  "archive_sha256": "208a7e4e3913f8c75ae1afd19bf32a5b29ae68435e9e30e23e5e98b6a155e4ec",
+  "completed": true,
+  "expected_bytes": 7640952520,
+  "expected_md5": "30c98f11d8b2bc21f2c257bfd78bb5c5",
+  "finished_at_utc": "2026-10-07T07:22:43.235315+00:00",
+  "maximum_connections": 3,
+  "prefix_bytes": 5757300704,
+  "prefix_sha256": "41fa6ef861f13d29c5db5c5ff40cdce996739feca7d4130797aa6e16be3e4107",
+  "ranges": [
+    {
+      "begin": 5757300704,
+      "end": 6385184642,
+      "path": "/home/maoxiao/WorkSpace/deepfake-detection-archive/cache/downloads/asvspoof2019-tail/tail-0.part",
+      "sha256": "0ac020186ea8de301bc27a1aa80cc719eb39aa394d0a3b2913a8252c10626c15"
+    },
+    {
+      "begin": 6385184643,
+      "end": 7013068581,
+      "path": "/home/maoxiao/WorkSpace/deepfake-detection-archive/cache/downloads/asvspoof2019-tail/tail-1.part",
+      "sha256": "a5f383de61c0765f84bcfaf5fa016bed2f65796896c064e1d3a4264f27cc44da"
+    },
+    {
+      "begin": 7013068582,
+      "end": 7640952519,
+      "path": "/home/maoxiao/WorkSpace/deepfake-detection-archive/cache/downloads/asvspoof2019-tail/tail-2.part",
+      "sha256": "6e5a105c82cf51196a71c9b1783a32d18523d179d41676ee1b43bb3fc31648c1"
+    }
+  ],
+  "requests": [
+    {
+      "content_range": "bytes 5757300704-6385184642/7640952520",
+      "finished_at_utc": "2026-10-07T07:20:35.789621+00:00",
+      "range_index": 0,
+      "received_bytes": 627883939,
+      "requested_range": [
+        5757300704,
+        6385184642
+      ],
+      "started_at_utc": "2026-10-07T07:14:16.364647+00:00",
+      "status": 206
+    },
+    {
+      "content_range": "bytes 7013068582-7640952519/7640952520",
+      "finished_at_utc": "2026-10-07T07:21:59.077781+00:00",
+      "range_index": 2,
+      "received_bytes": 627883938,
+      "requested_range": [
+        7013068582,
+        7640952519
+      ],
+      "started_at_utc": "2026-10-07T07:14:16.366151+00:00",
+      "status": 206
+    },
+    {
+      "content_range": "bytes 6385184643-7013068581/7640952520",
+      "finished_at_utc": "2026-10-07T07:22:18.475930+00:00",
+      "range_index": 1,
+      "received_bytes": 627883939,
+      "requested_range": [
+        6385184643,
+        7013068581
+      ],
+      "started_at_utc": "2026-10-07T07:14:16.365688+00:00",
+      "status": 206
+    }
+  ],
+  "scope": "fixed ASVspoof LA compressed archive tail; no media extraction",
+  "script_sha256": "bf69dc724eecc74e59edfdc3eaeed9c71b972e10940b133b33ec0c79677c9186",
+  "source_url": "https://zenodo.org/api/records/6906306/files/LA.zip/content",
+  "started_at_utc": "2026-10-07T07:14:16.363380+00:00"
+}

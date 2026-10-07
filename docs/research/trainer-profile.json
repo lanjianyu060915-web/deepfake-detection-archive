@@ -1,0 +1,134 @@
+{
+  "code": {
+    "code_sha256": "19aaa60d08f1a134540ae81e57fe6aacb877afac9b1b9b9d160c5b77a06de225",
+    "commit": "7aff5882663352b28d7a7fd67cbff88a4a602fc7",
+    "dirty": true
+  },
+  "command": "UV_CACHE_DIR=/tmp/aigc-uv-cache uv run --no-sync python outputs/profiles/trainer-bf16/run_probe.py",
+  "created_at": "2026-10-07T06:04:23.317749+00:00",
+  "cuda_version": "13.0",
+  "dataset_kind": "synthetic_random_tensors",
+  "hardware": "NVIDIA GeForce RTX 4060 Laptop GPU, 616.92, 8188 MiB",
+  "native_cuda_bfloat16_supported": true,
+  "probe_script_sha256": "fdd421be701d79db1d60cd1b012748194da71607ea6080598903d3af33cbd5b6",
+  "purpose": "Actual train_model CUDA BF16 synthetic integration, not real detection quality",
+  "results": [
+    {
+      "architecture": "logmel_cnn_v1",
+      "changed_parameter_tensors": 14,
+      "checkpoint_finite": true,
+      "checkpoint_path": "outputs/profiles/trainer-bf16/logmel_cnn_v1/best.pt",
+      "checkpoint_sha256": "ef313bb72ceb0d3dd5ac2a9b6e6d8902a2e8874caa3f8ed4f7df8af59b072103",
+      "dev_samples": 4,
+      "fixture_path": "outputs/profiles/trainer-bf16/fixtures/logmel_cnn_v1.pt",
+      "fixture_sha256": "0108da171d01d9d42308378cf7ab46a9eb1d39f9ceac7a38f8c98a7822e3f9d3",
+      "grad_scaler_enabled": false,
+      "history_path": "outputs/profiles/trainer-bf16/logmel_cnn_v1/history.json",
+      "history_sha256": "201d4c72f7ca0f4081d5180ed6e133d00a65e733ea2eec5f1b1ccebef9e4645e",
+      "observed_training_output_dtypes": [
+        "torch.bfloat16",
+        "torch.bfloat16",
+        "torch.bfloat16"
+      ],
+      "optimizer_updates": 2,
+      "peak_cuda_allocated_bytes": 67792384,
+      "peak_cuda_reserved_bytes": 69206016,
+      "performance_claim": "none; synthetic EER tests control flow only",
+      "restored_cpu_predictions_match": true,
+      "restored_state_matches_trained_model": true,
+      "seconds": 1.0821593850000681,
+      "skipped_updates": 0,
+      "synthetic_dev_eer": 1,
+      "train_samples": 4,
+      "training_config": {
+        "accumulation_steps": 2,
+        "amp": true,
+        "amp_dtype": "bfloat16",
+        "deterministic": true,
+        "device": "cuda",
+        "learning_rate": 0.001,
+        "max_epochs": 1,
+        "max_grad_norm": 1,
+        "max_seconds": null,
+        "min_delta": 0,
+        "patience": 5,
+        "seed": 20261007,
+        "weight_decay": 0.0001
+      }
+    },
+    {
+      "architecture": "media_feature_head_v1",
+      "changed_parameter_tensors": 6,
+      "checkpoint_finite": true,
+      "checkpoint_path": "outputs/profiles/trainer-bf16/media_feature_head_v1/best.pt",
+      "checkpoint_sha256": "36d51e113feb3b856277885156d2e7bbf95fac4ce6bf233449a77b5dbf2c83ed",
+      "dev_samples": 4,
+      "fixture_path": "outputs/profiles/trainer-bf16/fixtures/media_feature_head_v1.pt",
+      "fixture_sha256": "469dc5eb6bee5c76925d0b8296400fc25105ec633cf4eb6dfa4fb52e4b446c3f",
+      "grad_scaler_enabled": false,
+      "history_path": "outputs/profiles/trainer-bf16/media_feature_head_v1/history.json",
+      "history_sha256": "c748ecf9818ed2f268f63cfd1719c3b0d2551adf3f666abf231ab4cb633fc419",
+      "observed_training_output_dtypes": [
+        "torch.bfloat16",
+        "torch.bfloat16",
+        "torch.bfloat16"
+      ],
+      "optimizer_updates": 2,
+      "peak_cuda_allocated_bytes": 67134976,
+      "peak_cuda_reserved_bytes": 69206016,
+      "performance_claim": "none; synthetic EER tests control flow only",
+      "restored_cpu_predictions_match": true,
+      "restored_state_matches_trained_model": true,
+      "seconds": 0.019030003999887413,
+      "skipped_updates": 0,
+      "synthetic_dev_eer": 0.5,
+      "train_samples": 4,
+      "training_config": {
+        "accumulation_steps": 2,
+        "amp": true,
+        "amp_dtype": "bfloat16",
+        "deterministic": true,
+        "device": "cuda",
+        "learning_rate": 0.001,
+        "max_epochs": 1,
+        "max_grad_norm": 1,
+        "max_seconds": null,
+        "min_delta": 0,
+        "patience": 5,
+        "seed": 20261007,
+        "weight_decay": 0.0001
+      }
+    }
+  ],
+  "schema_version": 1,
+  "scope_limit": "Two small synthetic CPU-generated datasets; no real data, weights, holdout, or competition evaluation",
+  "seed": 20261007,
+  "torch_version": "2.14.1+cu130",
+  "training_source_sha256": "d7c334dc73e7a9e06d751d42c5377e9139762b97814fe278c7509bc05c34ee0a",
+  "post_exit_gpu_process_check": {
+    "command": "nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv,noheader",
+    "exit_code": 0,
+    "stdout": "",
+    "interpretation": "Queried after the CUDA probe process exited; no active GPU compute process was listed."
+  },
+  "cpu_validation": {
+    "command": "UV_CACHE_DIR=/tmp/aigc-uv-cache uv run --no-sync pytest tests/test_training.py -q",
+    "passed": 27,
+    "seconds": 1.65,
+    "ruff": "passed",
+    "mypy": "passed",
+    "template_schemas": "four training templates parsed with explicit bfloat16",
+    "artifact_hashes": "training source, both checkpoints and both history files verified"
+  },
+  "archived_probe_script": {
+    "path": "docs/research/source/trainer-bf16-probe.py",
+    "sha256": "fdd421be701d79db1d60cd1b012748194da71607ea6080598903d3af33cbd5b6",
+    "byte_preserved": true
+  },
+  "replay": {
+    "environment": "先在隔离工作树按锁文件安装：UV_CACHE_DIR=/tmp/aigc-uv-cache uv sync --locked --group media --group research --extra cu130。使用支持原生 CUDA BF16 的 GPU；确认 package 源码/权重构造与记录的版本。新的耗时与文件哈希可能不同，应另记为新运行。",
+    "output_guard": "下方 Python 仅供人工明确重放时执行；OUTPUT 必须是不存在的新目录，mkdir(exist_ok=False) 拒绝复用。原脚本硬编码历史报告路径，包装 atomic_json 将该写入重定向至新目录，避免覆盖原始测量证据。不要直接在有既存实验的工作区执行原脚本 main。",
+    "archive_note": "归档文件保持原始字节，未改格式或逻辑；供复现取证，不属于默认包或默认测试入口。",
+    "python": "from pathlib import Path\nimport runpy\n\nroot = Path.cwd().resolve()\ndestination = root / 'outputs/profiles/trainer-bf16-replay-REPLACE_UNIQUE_ID'\ndestination.mkdir(parents=True, exist_ok=False)\nscript = root / 'docs/research/source/trainer-bf16-probe.py'\nnamespace = runpy.run_path(str(script), run_name='trainer_bf16_replay')\nmain = namespace['main']\nscope = main.__globals__\nassert scope['ROOT'] == root\nscope['OUTPUT'] = destination\noriginal_write = scope['atomic_json']\nhistorical_report = root / 'docs/research/trainer-profile.json'\n\ndef protected_write(path, value):\n    target = Path(path)\n    if target.resolve() == historical_report.resolve():\n        target = destination / 'trainer-profile.json'\n    if not target.resolve().is_relative_to(destination):\n        raise RuntimeError(f'Replay report escaped destination: {target}')\n    original_write(target, value)\n\nscope['atomic_json'] = protected_write\nmain()"
+  }
+}

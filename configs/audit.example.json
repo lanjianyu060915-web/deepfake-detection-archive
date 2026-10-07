@@ -1,0 +1,7 @@
+{
+  "manifest": "../data/REPLACE_CURATED_MANIFEST.jsonl",
+  "data_root": "../data/REPLACE_MEDIA",
+  "sources": "../data/REPLACE_SOURCES.jsonl",
+  "output": "../outputs/REPLACE_AUDIT/audit.json",
+  "decoded_manifest": "../data/REPLACE_DECODED_MANIFEST.jsonl"
+}

@@ -1,0 +1,29 @@
+{
+  "paused_at": "2026-10-07T07:26:25.735958+00:00",
+  "reason": "user explicitly paused; no further feature extraction or training authorized until resume",
+  "selection_complete": true,
+  "selected_media": 1024,
+  "decode_complete": true,
+  "decoded_samples": 1024,
+  "decode_failure_count": 0,
+  "phash_incomplete_samples": 6,
+  "decode_elapsed_seconds": 39.77479101799963,
+  "decode_audit_sha256": "4e7688dfd925fead16c365626777ab9705fa490923ecfcbef8a6e189af0cd9a0",
+  "frame_cache_files": 1024,
+  "frame_cache_bytes": 616693760,
+  "cuda_features_started": false,
+  "split_locked": false,
+  "training_started": false,
+  "active_owned_processes": [],
+  "completed_session_id": 30961,
+  "resume_commands": [
+    "PYTHONPATH=src .venv/bin/python docs/research/source/vif-pilot/prepare_pilot.py features",
+    "PYTHONPATH=src .venv/bin/python docs/research/source/vif-pilot/prepare_pilot.py lock"
+  ],
+  "resume_conditions": [
+    "explicit user resume",
+    "coordinate single GPU with parent",
+    "inspect any decode/pHash failure evidence; do not change registered thresholds for convenience"
+  ],
+  "notes": "decode reached 1024/1024 and exited 0 before stop check; no process required termination; no GPU was started"
+}

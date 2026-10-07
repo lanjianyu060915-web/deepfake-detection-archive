@@ -1,0 +1,16 @@
+{
+  "output": "../outputs/REPLACE_BUNDLE.zip",
+  "files": {
+    "application/deepfake_detection_archive-0.1.0-py3-none-any.whl": "../dist/deepfake_detection_archive-0.1.0-py3-none-any.whl",
+    "configuration/infer.json": "../outputs/REPLACE_STAGING/infer.json",
+    "weights/best.pt": "../outputs/REPLACE_RUN/training/best.pt",
+    "weights/best.pt.json": "../outputs/REPLACE_RUN/training/best.pt.json",
+    "environment/uv.lock": "../uv.lock",
+    "licenses/REPLACE_WEIGHT_LICENSE.txt": "../outputs/REPLACE_STAGING/WEIGHT_LICENSE.txt"
+  },
+  "metadata": {
+    "official_adapter_status": "unconfirmed",
+    "offline_rehearsal_status": "not_run",
+    "purpose": "REPLACE: local engineering bundle; not an official submission"
+  }
+}

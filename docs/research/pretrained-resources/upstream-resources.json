@@ -1,0 +1,46 @@
+{
+  "resnet18-a1": {
+    "repository": "timm/resnet18.a1_in1k",
+    "revision": "491b427b45c94c7fb0e78b5474cc919aff584bbf",
+    "files": {
+      "model.safetensors": {
+        "url": "https://huggingface.co/timm/resnet18.a1_in1k/resolve/491b427b45c94c7fb0e78b5474cc919aff584bbf/model.safetensors",
+        "sha256": "80c49dee3da4822c009c5a7fe591e9223c5a2cfcf95a4067ca4dfb5a7b89c612",
+        "bytes": 46807446
+      }
+    },
+    "license": "Apache-2.0",
+    "model_card": {
+      "url": "https://huggingface.co/timm/resnet18.a1_in1k/resolve/491b427b45c94c7fb0e78b5474cc919aff584bbf/README.md",
+      "sha256": "e96d7547dfaff6f0a0d74209819c461ec2d66556a9d6b059f1c2a50d413da5bb",
+      "bytes": 38416
+    }
+  },
+  "hubert-base-ls960": {
+    "repository": "facebook/hubert-base-ls960",
+    "revision": "dba3bb02fda4248b6e082697eee756de8fe8aa8a",
+    "files": {
+      "pytorch_model.bin": {
+        "url": "https://huggingface.co/facebook/hubert-base-ls960/resolve/dba3bb02fda4248b6e082697eee756de8fe8aa8a/pytorch_model.bin",
+        "sha256": "062249fffb353eab67547a2fbc129f7c31a2f459faf641b19e8fb007cc5c48ad",
+        "bytes": 377569754
+      },
+      "config.json": {
+        "url": "https://huggingface.co/facebook/hubert-base-ls960/resolve/dba3bb02fda4248b6e082697eee756de8fe8aa8a/config.json",
+        "sha256": "56be398848bbd9cbc720172b0d45b2f01cac7652f2968f0f31f5faf9f2986acc",
+        "bytes": 1385
+      },
+      "preprocessor_config.json": {
+        "url": "https://huggingface.co/facebook/hubert-base-ls960/resolve/dba3bb02fda4248b6e082697eee756de8fe8aa8a/preprocessor_config.json",
+        "sha256": "4a93853b74278b7c769d07f5a861e5d12ceb5db2bced5620d335f87238cb9e86",
+        "bytes": 213
+      }
+    },
+    "license": "Apache-2.0",
+    "model_card": {
+      "url": "https://huggingface.co/facebook/hubert-base-ls960/resolve/dba3bb02fda4248b6e082697eee756de8fe8aa8a/README.md",
+      "sha256": "c59fb00d253ab5ae5d288f130c64dddf3b7af3d5ce35c96395ac7a3db5db88f5",
+      "bytes": 2596
+    }
+  }
+}

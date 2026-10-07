@@ -1,53 +1,87 @@
-# 深度伪造检测系统：源码与备份
+# AIGC 音视频伪造识别
 
-本私有仓库存档本机已整理的深度伪造检测系统、开发代码、文档和完整备份。整理日期：2026-10-05（Asia/Shanghai）。原始目录保持只读；此仓库是独立副本。
+第七届中国人工智能大赛 AIGC 音视频伪造识别项目。音频和视频两项均参加；以 EER、离线可执行性、可复现实验和跨域泛化为目标。
 
-## 源码位置
+**当前阶段：按已确认方案实施。** 已建立 EER、数据治理、音视频解码、候选模型、训练、可恢复推理和离线打包代码，正在完成集成验证与真实数据准备。合成测试和随机模型 profile 仅证明工程行为；尚无真实鉴伪基线或本届成绩。
 
-| 仓库路径 | 原始位置 | 内容 |
-| --- | --- | --- |
-| `systems/original-deepfake` | `C:\Users\lanji\Desktop\dist\DeepfakeDetectionSystem` | 原版 Streamlit 界面、26 个 Python 模块、配置和模型元数据。含训练函数，但缺少完整训练工程配套。 |
-| `systems/v0.4-baseline` | `D:\刑侦查竞赛\face_source_trace_three_module_v0.4.0_visualization_dev` | v0.4.0 集成源码、前端、测试、文档、构建脚本和鉴伪运行代码。 |
-| `systems/upgrade-20260921` | `D:\刑科技项目升级2.0\workspace\fsts` | 二代 ViT 检测、旧模型回退、视频入口及集成代码。 |
-| `systems/installed-v0.3.1` | `D:\刑侦查竞赛\4` | v0.3.1 安装态的可读代码及配置快照。 |
-| `systems/installed-v0.3.0` | `D:\刑侦查竞赛\换脸寻源3.0` | 实际版本 v0.3.0 的安装态代码与配置。 |
-| `validation/deepfake_acceptance_v2` | `D:\刑侦查竞赛\deepfake_acceptance_v2` | 独立验收工具、规范、报告及冻结清单。现有报告尚未完成独立盲测。 |
-| `documentation/original` | `D:\刑侦查竞赛\AIGC检测` | 原版使用手册与技术报告。 |
-| `upgrade-research` | `D:\刑科技项目升级2.0` | 升级设计、实验脚本与文档。 |
+## 从这里开始
 
-自有源码与文档提交到 Git；完整运行环境、模型、数据、安装器和原始归档保存在本仓库的 Release 附件。源对象、附件和 SHA-256 的对应关系见 `inventory/release-assets.json`。
+| 文档 | 内容 |
+| --- | --- |
+| [整体实施方案](docs/plans/implementation-plan.md) | 阶段、算法候选、验收、预算与停止规则 |
+| [开发使用指南](docs/development.md) | 清单登记、配置模板、训练、评测、恢复和打包 |
+| [比赛要求](docs/competition/requirements.md) | 官网事实、来源、待确认的安全屋契约 |
+| [文献与参考项目](docs/research/literature.md) | 方法、局限、数据候选、旧项目取舍 |
+| [工具与 skills](docs/research/tooling.md) | 已安装工具、固定版本、验证证据及延后依赖 |
+| [项目状态](docs/status.md) | 本轮完成项、当前限制和下一步 |
+| [开发约定](AGENTS.md) | 代理与开发者的目录、验证、数据和执行边界 |
+| [历史归档](archive/README.md) | 朋友旧项目及备份恢复入口，默认只读 |
 
-## 完整备份与恢复
+## 本地环境
 
-Release `backup-2026-10-05` 保存以下内容：
+Python 3.12，使用 uv 管理环境和锁文件。`media` 组提供数据与音视频处理，`research` 组提供 PDF、绘图和 notebook kernel；`cpu` / `cu130` 是互斥的 PyTorch/视觉/SSL 可选依赖。FFmpeg/ffprobe 使用宿主已有版本。
 
-- v0.4.0 完整冻结 ZIP 的 22 个二进制分卷，每卷最多 256 MiB。分卷不能单独解压，需先拼接并校验。
-- 升级工作区的增量归档：以 v0.4.0 完整冻结包为基线，保存所有新增或变更文件，并记录删除清单。包含二代模型及其完整 Python 运行时。
-- 桌面原版 portable 与两份历史构建的完整归档。
-- 原版交付备份、v0.3.0 安装目录归档、v0.3.1 正式安装器、9 月 21 日升级交付 ZIP。
+```bash
+# 本会话默认缓存不可写；正常环境可省略此行。
+export UV_CACHE_DIR=/tmp/aigc-uv-cache
+# 当前 RTX 4060 开发环境；仅做开发检查可使用 uv sync --locked。
+uv sync --locked --group media --group research --extra cu130
+uv run --no-sync ruff check src tests tools/check_environment.py tools/profile_models.py tools/prepare_asvspoof2019.py tools/finalize_asvspoof2019.py tools/prepare_vif_panda.py
+uv run --no-sync ruff format --check src tests tools/check_environment.py tools/profile_models.py tools/prepare_asvspoof2019.py tools/finalize_asvspoof2019.py tools/prepare_vif_panda.py
+uv run --no-sync mypy
+uv run --no-sync mypy tools/profile_models.py tools/prepare_asvspoof2019.py tools/finalize_asvspoof2019.py tools/prepare_vif_panda.py
+uv run --no-sync pytest -q
+uv build --no-sources
 
-恢复冻结包：下载全部 `baseline-v0.4.0-full.zip.256m.partNNN` 与 `baseline-split-manifest.json`，运行：
-
-```powershell
-python tools/restore_backup.py join --manifest baseline-split-manifest.json --parts-dir 下载目录 --output baseline-v0.4.0-full.zip
+# 使用合成媒体和随机小模型验证安装；不下载权重或数据、不更新模型参数。
+uv run --no-sync python tools/check_environment.py --device cuda --output outputs/environment/cuda.json
 ```
 
-原版运行目录、v0.3.0 运行目录和 v0.3.1 安装器也采用分卷。分别下载对应分卷与 `original-dist-split-manifest.json`、`installed-v0.3.0-split-manifest.json`、`installer-v0.3.1-split-manifest.json`，以相同 `join` 命令拼接，`--output` 使用该清单的 `original_name`。
+无 GPU 的环境将 `--extra cu130` 改为 `--extra cpu`，探针用 `--device cpu`。不要同时选择两个后端；日常命令保留 `--no-sync`，避免默认同步移除可选依赖。当前 App 沙箱会阻止 GPU 访问，CUDA 探针需在可访问设备的终端执行；这与 wheel 是否正确安装是两项检查。
 
-恢复升级工作区：先将完整冻结 ZIP 解压，得到 `face_source_trace_three_module_v0.4.0_visualization_dev` 目录，再将增量叠加到该目录：
+CLI：`uv run --no-sync deepfake-detection-archive --help`。提供 `index`、`audit`、
+`split`、`train`、`infer`、`evaluate`、`duplicates`、`export`、`package` 和
+`verify-package`。实际使用步骤与配置模板见 [开发指南](docs/development.md)。
 
-```powershell
-python tools/restore_backup.py overlay --root 解压后的目录 --delta upgrade-workspace-delta-20261005.zip
+已有 GitHub Actions 配置执行相同的开发检查和旧评测器回归。本轮完成本地验证，尚未触发远端 CI。
+
+## 项目 skills 与协作
+
+项目筛选的 11 项第三方 skills 已复制到 `.agents/skills/` 并纳入 Git，
+`skills-lock.json` 记录 `npx skills` 来源。协作者克隆仓库后即可使用，不依赖用户级
+skills 目录。
+
+```bash
+npx --yes skills@1.7.1 list --json
+# 更新会改动项目副本；运行后审阅 Git 差异、来源和许可。
+npx --yes skills@1.7.1 update --project --yes
 ```
 
-恢复工具会校验分卷、完整 ZIP 及增量文件 SHA-256，并检查路径不越出指定目录。叠加增量时会替换明确列出的变更文件；若存在删除清单，需要显式传入 `--apply-deletions`。
+清单、更新流程和第三方许可见
+[`.agents/README.md`](.agents/README.md)。Git 提交执行
+[LoRA 准则](AGENTS.md)：Logical、Observable、Reversible、Atomic。
 
-## 版本与运行情况
+## 工作区
 
-原版核心为 MobileNetV3-Small 空间分支和 87 维频域统计融合。v0.4.0 保留该模型并加入身份检索、底图溯源及真实可视化；二代升级工程增加 CommunityForensics ViT ONNX、按输入尺寸路由及视频处理。
+```text
+src/deepfake_detection_archive/  新比赛包
+tests/                        主动行为、集成与归档完整性回归
+configs/                      配置与来源/清单模板；占位值须替换
+docs/competition/             比赛约束与原始资料快照
+docs/research/                文献、工具和参考版本
+docs/plans/                   实施方案与整理计划
+docs/worklog/                 工作归档
+.agents/skills/               Git 跟踪的项目级 agent skills
+skills-lock.json              npx skills 来源锁
+tools/restore_backup.py       保留的历史恢复工具
+archive/legacy-20261005/       旧源码、实验、文档、清单与原 README
+```
 
-升级配置仍标识 `product_version=0.4.0`，实际内核切换记录在 `upgrade` 字段；“刑科技项目升级2.0”是工作区名称。已有功能验收记录不等于完整的跨域准确率验证，视频跨语料阈值仍有已记录的失效情况。
+`external/` 是已克隆的本地源码参考，`data/`、`models/`、`outputs/`、`cache/` 为按需生成的本地产物目录，均被忽略，不作为 Git 中的算法依赖。历史树不参与新包默认检查与构建；归档清单中的旧路径保留历史含义。
 
-9 月 21 日的便携 ZIP 与升级输出 ZIP 逐字节相同，但原包存在资源路径与运行时不完整问题，不能认定解压即用。完整基线与增量备份可以恢复开发工作区的文件，运行依赖仍应按原项目说明检查；本次归档未修改算法或启动系统复测。
+## 已知约束
 
-原项目与第三方库的版权、许可证归属保留。未替上游完整训练仓库、训练数据和可复现训练流程作完整性承诺。
+- 已读取 RTX 4060 Laptop 8GB、驱动 616.92；App 普通沙箱阻止 GPU 访问。实际环境与模型 profile 见 [项目状态](docs/status.md)。本地 GPU 已获授权自动用于适合的实验且不设固定卡时上限；付费云算力预算、安全屋配置和报名/平台规范待定。
+- 官方当前以音频、视频分别描述样本与 EER；最终榜单汇总、I/O、时限和资源仍须平台确认。[官方赛题](https://ai.xm.gov.cn/competition/project-detail.html?id=2026c40item0004&competeId=2026c40dbb2347fba8b3c9a6294efa5b)
+- 音频不能默认等同语音，生成视频不能默认等同换脸；是否采用候选方法必须通过数据覆盖和跨域实验验证。
+- 不将旧模型的历史报告或本轮工具测试解释为本届模型性能。
