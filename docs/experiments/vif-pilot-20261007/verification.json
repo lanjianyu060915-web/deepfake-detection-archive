@@ -1,0 +1,29 @@
+{
+  "wrapper_validation": "Ruff, format, strict mypy passed after diagnostic-only wrapper cleanup; exact executed wrapper retained separately",
+  "executed_wrapper_sha256": "7351451a2516539a955fc34e0ca2f1667a1030fa2f6ebdf0c5e7963756d7ee65",
+  "current_wrapper_sha256": "955c0796ba96df73047505bcb3993c79d0c5009d012b13560792230281c0c8ad",
+  "wrapper_change": "replace assert with RuntimeError guard, import spacing, module.__dict__ DOC assignment; no algorithm changes and no data rerun",
+  "frozen_script_tests": "7 passed in 1.43s",
+  "manifest_sha256": "f3b004bb94174d02899b9a8763c3619da121f90f53f919e5884e171c716d6638",
+  "split_class_counts": {
+    "train:label1": 358,
+    "dev:label1": 77,
+    "holdout:label1": 77,
+    "train:label0": 358,
+    "dev:label0": 77,
+    "holdout:label0": 77
+  },
+  "split_validation_errors": [],
+  "all_identity_group_original_unknown": true,
+  "candidate_count": 0,
+  "new_component_edges": 0,
+  "phash_incomplete_sample_count": 6,
+  "conservative_components": 249,
+  "largest_component": 6,
+  "gpu_telemetry_samples": 10,
+  "max_device_memory_mib": 2419.0,
+  "max_gpu_temperature_c": 76.0,
+  "max_gpu_utilization_percent": 66.0,
+  "trained": false,
+  "formal_P1_P2_pass": false
+}
