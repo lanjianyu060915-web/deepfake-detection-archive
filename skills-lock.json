@@ -25,6 +25,12 @@
       "skillPath": "skills/cv/phash-duplicate-grouping/SKILL.md",
       "computedHash": "66c20a536f96b381b98a529ae7062a03a4d2180d08d97259c7353a373d0d4d86"
     },
+    "cv-separable-temporal-spectral-cnn": {
+      "source": "wenmin-wu/ds-skills",
+      "sourceType": "github",
+      "skillPath": "skills/cv/separable-temporal-spectral-cnn/SKILL.md",
+      "computedHash": "66a62704c496b98cd3637071ee29c0060691362cb01726b91ff628cac26d174f"
+    },
     "cv-video-frame-sampling-pipeline": {
       "source": "wenmin-wu/ds-skills",
       "sourceType": "github",

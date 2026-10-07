@@ -9,11 +9,11 @@
 
 | 来源 | 固定上游 commit | Skills |
 | --- | --- | --- |
-| `wenmin-wu/ds-skills` | `718b09722905726c428fcc4eab4d470df4842545` | `tabular-group-kfold-leak-prevention`、`cv-phash-duplicate-grouping`、`cv-video-frame-sampling-pipeline`、`cv-frame-prediction-averaging`、`cv-mixed-precision-training`、`cv-gradient-accumulation` |
+| `wenmin-wu/ds-skills` | `718b09722905726c428fcc4eab4d470df4842545` | `tabular-group-kfold-leak-prevention`、`cv-phash-duplicate-grouping`、`cv-video-frame-sampling-pipeline`、`cv-frame-prediction-averaging`、`cv-separable-temporal-spectral-cnn`、`cv-mixed-precision-training`、`cv-gradient-accumulation` |
 | `openai/skills` | `49f948faa9258a0c61caceaf225e179651397431` | `jupyter-notebook`、`pdf` |
 | `huggingface/skills` | `ca0325bb20b2d0a1b2efa893670c4c72f79e707b` | `huggingface-datasets`、`huggingface-papers` |
 
-这些是经过筛选的 10 项项目依赖；不把 ds-skills 的 535 项完整目录复制进仓库。
+这些是经过筛选的 11 项项目依赖；不把 ds-skills 的 535 项完整目录复制进仓库。
 项目用途、适配限制和文件哈希记录在
 [`docs/research/tooling.md`](../docs/research/tooling.md)、
 [`docs/research/ds-skills.json`](../docs/research/ds-skills.json) 与
