@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "manifest": "../data/REPLACE_AUDIO_MANIFEST.jsonl",
+  "data_root": "../data/REPLACE_AUDIO_MEDIA",
+  "sources": "../data/REPLACE_SOURCES.jsonl",
+  "output_dir": "../outputs/REPLACE_AASIST_RUN",
+  "modality": "audio",
+  "architecture": "aasist_l_v1",
+  "model_config": {},
+  "training": {
+    "device": "cuda",
+    "amp": true,
+    "amp_dtype": "bfloat16",
+    "max_epochs": 30,
+    "learning_rate": 0.0001,
+    "weight_decay": 0.0001,
+    "accumulation_steps": 4,
+    "patience": 5,
+    "min_delta": 0.0,
+    "max_grad_norm": 1.0,
+    "seed": 42,
+    "deterministic": true
+  },
+  "batch_size": 4,
+  "num_workers": 0,
+  "segment_samples": 64600,
+  "segments": 1,
+  "audio": {"sample_rate": 16000},
+  "feature_cache": "../cache/REPLACE_AASIST_WAVEFORMS",
+  "cache_max_bytes": 21474836480
+}

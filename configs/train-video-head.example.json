@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "manifest": "../data/REPLACE_VIDEO_MANIFEST.jsonl",
+  "data_root": "../data/REPLACE_VIDEO_MEDIA",
+  "sources": "../data/REPLACE_SOURCES.jsonl",
+  "output_dir": "../outputs/REPLACE_VIDEO_HEAD_RUN",
+  "modality": "video",
+  "architecture": "media_feature_head_v1",
+  "model_config": {
+    "input_dim": 512,
+    "hidden_dim": 64,
+    "dropout": 0.1,
+    "aggregation": "mean",
+    "trim_fraction": 0.1
+  },
+  "training": {
+    "device": "cuda",
+    "amp": true,
+    "amp_dtype": "bfloat16",
+    "max_epochs": 30,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "accumulation_steps": 1,
+    "patience": 5,
+    "min_delta": 0.0,
+    "max_grad_norm": 1.0,
+    "seed": 42,
+    "deterministic": true
+  },
+  "batch_size": 8,
+  "num_workers": 0,
+  "segments": 1,
+  "video": {"n_frames": 8, "height": 224, "width": 224, "resize_mode": "pad"},
+  "encoder": {
+    "kind": "vision",
+    "architecture": "resnet18",
+    "checkpoint": "../models/REPLACE_RESNET18_FEATURE_STATE.pt",
+    "expected_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "feature_cache": "../cache/REPLACE_VIDEO_FEATURES",
+  "cache_max_bytes": 21474836480
+}
