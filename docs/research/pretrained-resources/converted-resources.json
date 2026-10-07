@@ -1,0 +1,49 @@
+{
+  "_provenance": {
+    "script_sha256": "6c08883928112a617b328e86a9c4b2a2fcfd34a6cf729bf0bebce628fa615993",
+    "timestamp_utc": "2026-10-07T06:48:51.669814+00:00",
+    "versions": {
+      "torch": "2.14.1+cu130",
+      "timm": "1.0.30",
+      "transformers": "5.19.0",
+      "safetensors": "0.8.0"
+    }
+  },
+  "resnet18-a1": {
+    "conversion": "Remove exactly fc.weight and fc.bias, save bare feature-only state_dict.",
+    "removed_keys": {
+      "fc.weight": [
+        1000,
+        512
+      ],
+      "fc.bias": [
+        1000
+      ]
+    },
+    "num_classes": 0,
+    "files": {
+      "encoder.pt": {
+        "sha256": "db6fd0c5cfb2b712d1904bb8b7edcf41a850491bdf42729e4ab485e89f1b6889",
+        "bytes": 44780495
+      }
+    }
+  },
+  "hubert-base-ls960": {
+    "conversion": "torch.load(weights_only=True), tensor.contiguous(), safetensors format=pt; configs byte-preserved.",
+    "raw_state_keys": 211,
+    "files": {
+      "config.json": {
+        "sha256": "56be398848bbd9cbc720172b0d45b2f01cac7652f2968f0f31f5faf9f2986acc",
+        "bytes": 1385
+      },
+      "model.safetensors": {
+        "sha256": "411e8e7f967ba2a68bc6fba072e6374effc390225c7fdb75b8731edd95717e15",
+        "bytes": 377510584
+      },
+      "preprocessor_config.json": {
+        "sha256": "4a93853b74278b7c769d07f5a861e5d12ceb5db2bced5620d335f87238cb9e86",
+        "bytes": 213
+      }
+    }
+  }
+}

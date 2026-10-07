@@ -1,0 +1,59 @@
+{
+  "timestamp_utc": "2026-10-07T06:50:18.867638+00:00",
+  "purpose": "Pretrained resource compatibility on synthetic inputs only; detection quality not evaluated.",
+  "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "torch": "2.14.1+cu130",
+  "cuda_runtime": "13.0",
+  "seed": 20261007,
+  "script_sha256": "f98a0acfefc7bf6da653f727f3f2958a43394508eb58c0459de5bd14487dd64c",
+  "resources": {
+    "resnet18-a1": {
+      "loading_info": {
+        "missing_keys": [],
+        "unexpected_keys": [],
+        "mismatched_keys": [],
+        "strict": true
+      },
+      "input_shape": [
+        1,
+        3,
+        224,
+        224
+      ],
+      "output_shape": [
+        1,
+        512
+      ],
+      "dtype": "torch.bfloat16",
+      "forward_seconds": 0.16808397299973876,
+      "parameters": 11176512,
+      "all_parameters_frozen": true,
+      "finite_outputs": true,
+      "peak_allocated_bytes": 55282176,
+      "peak_reserved_bytes": 71303168
+    },
+    "hubert-base-ls960": {
+      "loading_info": {
+        "missing_keys": [],
+        "unexpected_keys": [],
+        "mismatched_keys": [],
+        "error_msgs": []
+      },
+      "input_shape": [
+        1,
+        16000
+      ],
+      "output_shape": [
+        1,
+        768
+      ],
+      "dtype": "torch.float32",
+      "forward_seconds": 0.5318024159996639,
+      "parameters": 94371712,
+      "all_parameters_frozen": true,
+      "finite_outputs": true,
+      "peak_allocated_bytes": 419782656,
+      "peak_reserved_bytes": 482344960
+    }
+  }
+}

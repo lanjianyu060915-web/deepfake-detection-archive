@@ -4,4 +4,9 @@
 /src/deepfake_detection_archive/models/_vendor/** -text -whitespace
 /docs/competition/source/** -text -whitespace
 /docs/research/source/** -text -whitespace
+/docs/research/pretrained-resources/source/** -text -whitespace
+/docs/research/pretrained-resources/prepare_resources.py -text -whitespace
+/docs/research/pretrained-resources/*-model-card.md -text -whitespace
+/docs/research/pretrained-resources/Apache-2.0.txt -text -whitespace
+/docs/research/offline-rehearsal/source/** -text -whitespace
 /tools/restore_backup.py -text -whitespace
