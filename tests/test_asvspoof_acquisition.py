@@ -24,16 +24,21 @@ def make_archive(
 ) -> Path:
     with zipfile.ZipFile(path, "w", compression=zipfile.ZIP_STORED) as archive:
         archive.writestr(
-            prefix + "ASVspoof2019_LA_train/flac/LA_T_0001.flac", b"train audio"
+            prefix + "ASVspoof2019_LA_train/flac/LA_T_0000001.flac", b"train audio"
         )
         archive.writestr(
-            prefix + "ASVspoof2019_LA_dev/flac/LA_D_0001.flac", b"dev audio"
+            prefix + "ASVspoof2019_LA_dev/flac/LA_D_0000001.flac", b"dev audio"
         )
-        for protocol in STATE["PROTOCOLS"]:
-            archive.writestr(prefix + protocol, b"protocol fixture\n")
+        for protocol, split in STATE["PROTOCOLS"].items():
+            letter = "T" if split == "train" else "D"
+            speaker = "0001" if split == "train" else "0002"
+            archive.writestr(
+                prefix + protocol,
+                f"LA_{speaker} LA_{letter}_0000001 - - bonafide\n".encode(),
+            )
         archive.writestr(prefix + "README.txt", b"readme")
         archive.writestr(
-            prefix + "ASVspoof2019_LA_eval/flac/LA_E_0001.flac", b"never read"
+            prefix + "ASVspoof2019_LA_eval/flac/LA_E_0000001.flac", b"never read"
         )
         archive.writestr(
             prefix + "ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt",
@@ -53,6 +58,12 @@ def trust_fixture(path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         hashlib.md5(path.read_bytes(), usedforsecurity=False).hexdigest(),
     )
     monkeypatch.setitem(STATE, "EXPECTED_MEDIA_COUNTS", {"train": 1, "dev": 1})
+    monkeypatch.setitem(
+        STATE,
+        "EXPECTED_LABEL_COUNTS",
+        {"train": {"bonafide": 1}, "dev": {"bonafide": 1}},
+    )
+    monkeypatch.setitem(STATE, "EXPECTED_UNREFERENCED_DEV_FILES", 0)
 
 
 def test_success_publishes_only_selected_entries_without_opening_eval(
@@ -83,8 +94,9 @@ def test_success_publishes_only_selected_entries_without_opening_eval(
     assert report["eval_media_extracted"] is False
     assert report["eval_member_contents_read"] is False
     assert report["decode_verified"] is False
-    assert report["protocol_contents_validated"] is False
-    assert len(opened) == 5
+    assert report["protocol_contents_validated"] is True
+    assert report["excluded_unreferenced_dev_media"] == []
+    assert len(opened) == 7  # Two bounded protocol validation reads plus extraction.
     assert source.exists()
     assert not (output / "LA/ASVspoof2019_LA_eval").exists()
     assert json.loads((output / "acquisition.json").read_text()) == report
@@ -261,7 +273,7 @@ def test_original_prefix_is_preserved(
     report = finalize(source, tmp_path / "extracted")
     assert report["dataset_root"] == "bundle/LA"
     assert (
-        tmp_path / "extracted/bundle/LA/ASVspoof2019_LA_train/flac/LA_T_0001.flac"
+        tmp_path / "extracted/bundle/LA/ASVspoof2019_LA_train/flac/LA_T_0000001.flac"
     ).is_file()
 
 
@@ -308,3 +320,163 @@ def test_archive_mutation_during_extraction_aborts_publication(
         finalize(source, tmp_path / "extracted")
     assert not (tmp_path / "extracted").exists()
     assert not list(tmp_path.glob(".extracted.staging-*"))
+
+
+def test_known_unreferenced_dev_file_is_logged_without_reading_body(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    extra = "LA/ASVspoof2019_LA_dev/flac/LA_D_A3079793.flac"
+    source = make_archive(tmp_path / "LA.zip", [(extra, b"must not read")])
+    trust_fixture(source, monkeypatch)
+    monkeypatch.setitem(STATE, "EXPECTED_UNREFERENCED_DEV_FILES", 1)
+    original_open = zipfile.ZipFile.open
+
+    def guarded_open(
+        self: zipfile.ZipFile, name: Any, *args: Any, **kwargs: Any
+    ) -> Any:
+        filename = name.filename if isinstance(name, zipfile.ZipInfo) else name
+        assert filename != extra
+        assert "eval" not in filename
+        return original_open(self, name, *args, **kwargs)
+
+    monkeypatch.setattr(zipfile.ZipFile, "open", guarded_open)
+    report = finalize(source, tmp_path / "extracted")
+    assert not (tmp_path / "extracted" / extra).exists()
+    assert report["media_counts"] == {"train": 1, "dev": 1}
+    assert report["excluded_unreferenced_dev_media"][0]["name"] == extra
+    assert report["excluded_unreferenced_dev_media"][0]["body_read"] is False
+
+
+@pytest.mark.parametrize(
+    ("replacement", "reason"),
+    [
+        ("LA_0001 LA_T_9999999 - - bonafide\n", "membership mismatch"),
+        ("LA_0001 LA_T_0000001 - - bonafide\n" * 2, "duplicate"),
+        ("LA_0001 LA_T_0000001 - A07 spoof\n", "ID/label/attack"),
+        ("LA_0001 LA_T_0000001 - A01 bonafide\n", "ID/label/attack"),
+        ("LA_0001 LA_T_0000001 - - spoof\n", "ID/label/attack"),
+        ("LA_0001 LA_E_0000001 - - bonafide\n", "ID/label/attack"),
+        ("LA_0001 LA_T_0000001 - A01 spoof\n", "counts/labels"),
+        ("invalid\n", "columns"),
+        ("", "counts/labels"),
+        (b"\xff", "UTF-8"),
+        ("LA_0001 LA_T_0000001 x - bonafide\n", "ID/label/attack"),
+        ("LA_0001 LA_T_0000001 - - unknown\n", "ID/label/attack"),
+        ("LA_001 LA_T_0000001 - - bonafide\n", "ID/label/attack"),
+        ("LA_0001 LA_T_000001 - - bonafide\n", "ID/label/attack"),
+        ("LA_0001 LA_T_٠٠٠٠٠٠١ - - bonafide\n", "ID/label/attack"),
+    ],
+)
+def test_invalid_or_missing_protocol_members_abort_before_media_read(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    replacement: str | bytes,
+    reason: str,
+) -> None:
+    original = make_archive(tmp_path / "original.zip")
+    source = tmp_path / "LA.zip"
+    with zipfile.ZipFile(original) as src, zipfile.ZipFile(source, "w") as dst:
+        for info in src.infolist():
+            content = src.read(info)
+            if info.filename.endswith("cm.train.trn.txt"):
+                content = (
+                    replacement.encode()
+                    if isinstance(replacement, str)
+                    else replacement
+                )
+            dst.writestr(info, content)
+    trust_fixture(source, monkeypatch)
+    original_open = zipfile.ZipFile.open
+
+    def protocols_only(
+        self: zipfile.ZipFile, name: Any, *args: Any, **kwargs: Any
+    ) -> Any:
+        filename = name.filename if isinstance(name, zipfile.ZipInfo) else name
+        assert ".flac" not in filename
+        assert "eval" not in filename
+        return original_open(self, name, *args, **kwargs)
+
+    monkeypatch.setattr(zipfile.ZipFile, "open", protocols_only)
+    with pytest.raises(ValueError, match=reason):
+        finalize(source, tmp_path / "extracted")
+    assert not (tmp_path / "extracted").exists()
+
+
+@pytest.mark.parametrize("name", ["LA_D_B3079793.flac", "LA_D_A307979.flac"])
+def test_arbitrary_unreferenced_names_remain_rejected(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, name: str
+) -> None:
+    source = make_archive(
+        tmp_path / "LA.zip", [(f"LA/ASVspoof2019_LA_dev/flac/{name}", b"unknown")]
+    )
+    trust_fixture(source, monkeypatch)
+    with pytest.raises(ValueError, match="unexpected train/dev media name"):
+        finalize(source, tmp_path / "extracted")
+
+
+@pytest.mark.parametrize("expected_count", [0, 2])
+def test_unreferenced_dev_count_is_exact(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, expected_count: int
+) -> None:
+    source = make_archive(
+        tmp_path / "LA.zip",
+        [("LA/ASVspoof2019_LA_dev/flac/LA_D_A3079793.flac", b"not opened")],
+    )
+    trust_fixture(source, monkeypatch)
+    monkeypatch.setitem(STATE, "EXPECTED_UNREFERENCED_DEV_FILES", expected_count)
+    actual_open = zipfile.ZipFile.open
+
+    def protocols_only(
+        self: zipfile.ZipFile, name: Any, *args: Any, **kwargs: Any
+    ) -> Any:
+        filename = name.filename if isinstance(name, zipfile.ZipInfo) else name
+        assert filename.endswith(("cm.train.trn.txt", "cm.dev.trl.txt"))
+        return actual_open(self, name, *args, **kwargs)
+
+    monkeypatch.setattr(zipfile.ZipFile, "open", protocols_only)
+    with pytest.raises(ValueError, match="unreferenced dev media count"):
+        finalize(source, tmp_path / "out")
+    assert not (tmp_path / "out").exists()
+
+
+@pytest.mark.parametrize("split", ["train", "dev"])
+def test_missing_cm_protocol_is_rejected_before_any_body_read(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, split: str
+) -> None:
+    original = make_archive(tmp_path / "original.zip")
+    source = tmp_path / "LA.zip"
+    missing = next(name for name, value in STATE["PROTOCOLS"].items() if value == split)
+    with zipfile.ZipFile(original) as src, zipfile.ZipFile(source, "w") as dst:
+        for info in src.infolist():
+            if not info.filename.endswith(missing):
+                dst.writestr(info, src.read(info))
+    trust_fixture(source, monkeypatch)
+
+    def forbidden(*args: Any, **kwargs: Any) -> None:
+        pytest.fail("missing protocol must be rejected before reading bodies")
+
+    monkeypatch.setattr(zipfile.ZipFile, "open", forbidden)
+    with pytest.raises(ValueError, match="exactly two"):
+        finalize(source, tmp_path / "out")
+    assert not (tmp_path / "out").exists()
+
+
+@pytest.mark.parametrize("attack", [f"A{i:02d}" for i in range(1, 7)])
+def test_valid_spoof_attacks_are_accepted(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, attack: str
+) -> None:
+    original = make_archive(tmp_path / "original.zip")
+    source = tmp_path / "LA.zip"
+    with zipfile.ZipFile(original) as src, zipfile.ZipFile(source, "w") as dst:
+        for info in src.infolist():
+            content = src.read(info)
+            if info.filename.endswith("cm.train.trn.txt"):
+                content = f"LA_0001 LA_T_0000001 - {attack} spoof\n".encode()
+            dst.writestr(info, content)
+    trust_fixture(source, monkeypatch)
+    monkeypatch.setitem(
+        STATE, "EXPECTED_LABEL_COUNTS", {"train": {"spoof": 1}, "dev": {"bonafide": 1}}
+    )
+    report = finalize(source, tmp_path / "out")
+    assert report["protocol_contents_validated"] is True
+    assert report["media_counts"] == {"train": 1, "dev": 1}

@@ -28,6 +28,11 @@ from typing import BinaryIO
 OFFICIAL_SIZE = 7_640_952_520
 OFFICIAL_MD5 = "30c98f11d8b2bc21f2c257bfd78bb5c5"
 EXPECTED_MEDIA_COUNTS = {"train": 25380, "dev": 24844}
+EXPECTED_LABEL_COUNTS = {
+    "train": {"bonafide": 2580, "spoof": 22800},
+    "dev": {"bonafide": 2548, "spoof": 22296},
+}
+EXPECTED_UNREFERENCED_DEV_FILES = 142
 MAX_MEMBER_BYTES = 100 * 1024**2
 MAX_EXTRACTED_BYTES = 8 * 1024**3
 MAX_ZIP_ENTRIES = 200_000
@@ -91,7 +96,11 @@ def _selection(info: zipfile.ZipInfo, parts: tuple[str, ...]) -> SelectedMember 
         corpus, folder, filename = parts[-3:]
         for split, letter in (("train", "T"), ("dev", "D")):
             if corpus == f"ASVspoof2019_LA_{split}" and folder == "flac":
-                if re.fullmatch(rf"LA_{letter}_\d+\.flac", filename) is None:
+                if split == "dev" and re.fullmatch(r"LA_D_A[0-9]{7}\.flac", filename):
+                    return SelectedMember(
+                        info, "unreferenced", split, "/".join(parts[:-3])
+                    )
+                if re.fullmatch(rf"LA_{letter}_[0-9]{{7}}\.flac", filename) is None:
                     raise ValueError(
                         f"unexpected train/dev media name: {info.filename}"
                     )
@@ -103,7 +112,51 @@ def _selection(info: zipfile.ZipInfo, parts: tuple[str, ...]) -> SelectedMember 
     return None
 
 
-def _selected_members(archive: zipfile.ZipFile) -> tuple[list[SelectedMember], str]:
+def _protocol_ids(archive: zipfile.ZipFile, item: SelectedMember) -> set[str]:
+    """Read only a bounded, already path-checked train/dev CM protocol."""
+    split = item.split
+    if split not in EXPECTED_MEDIA_COUNTS:
+        raise ValueError("unexpected protocol split")
+    with archive.open(item.info) as stream:
+        content = stream.read(MAX_MEMBER_BYTES + 1)
+    if len(content) > MAX_MEMBER_BYTES or len(content) != item.info.file_size:
+        raise ValueError("protocol exceeds verified single-file budget")
+    try:
+        lines = content.decode("utf-8").splitlines()
+    except UnicodeDecodeError as exc:
+        raise ValueError("invalid protocol UTF-8") from exc
+    ids: set[str] = set()
+    labels: Counter[str] = Counter()
+    letter = "T" if split == "train" else "D"
+    for line in lines:
+        fields = line.split()
+        if len(fields) != 5:
+            raise ValueError("invalid CM protocol columns")
+        speaker, sample_id, placeholder, attack, label = fields
+        if (
+            re.fullmatch(r"LA_[0-9]{4}", speaker) is None
+            or re.fullmatch(rf"LA_{letter}_[0-9]{{7}}", sample_id) is None
+            or placeholder != "-"
+            or label not in ("bonafide", "spoof")
+            or (label == "bonafide" and attack != "-")
+            or (label == "spoof" and attack not in {f"A{i:02d}" for i in range(1, 7)})
+        ):
+            raise ValueError("invalid CM protocol ID/label/attack")
+        if sample_id in ids:
+            raise ValueError("duplicate CM protocol sample ID")
+        ids.add(sample_id)
+        labels[label] += 1
+    if (
+        len(ids) != EXPECTED_MEDIA_COUNTS[split]
+        or labels != EXPECTED_LABEL_COUNTS[split]
+    ):
+        raise ValueError(f"unexpected protocol media counts/labels: {split}")
+    return ids
+
+
+def _selected_members(
+    archive: zipfile.ZipFile,
+) -> tuple[list[SelectedMember], str, list[dict[str, object]]]:
     entries = archive.infolist()
     if len(entries) > MAX_ZIP_ENTRIES:
         raise ValueError("ZIP directory exceeds entry budget")
@@ -153,7 +206,48 @@ def _selected_members(archive: zipfile.ZipFile) -> tuple[list[SelectedMember], s
         raise ValueError("selected member exceeds single-file extraction budget")
     if sum(item.info.file_size for item in selected) > MAX_EXTRACTED_BYTES:
         raise ValueError("selected members exceed total extraction budget")
-    return sorted(selected, key=lambda item: item.info.filename), prefix
+    _validate_protocol_membership(archive, selected)
+    excluded = _excluded_dev_members(selected)
+    selected = [item for item in selected if item.kind != "unreferenced"]
+    return sorted(selected, key=lambda item: item.info.filename), prefix, excluded
+
+
+def _validate_protocol_membership(
+    archive: zipfile.ZipFile, selected: list[SelectedMember]
+) -> None:
+    """Require each selected audio member to occur in its validated CM protocol."""
+    required = {
+        item.split: _protocol_ids(archive, item)
+        for item in selected
+        if item.kind == "protocol"
+    }
+    for split, ids in required.items():
+        present = {
+            PurePosixPath(item.info.filename).stem
+            for item in selected
+            if item.kind == "media" and item.split == split
+        }
+        if present != ids:
+            raise ValueError(f"protocol media membership mismatch: {split}")
+
+
+def _excluded_dev_members(selected: list[SelectedMember]) -> list[dict[str, object]]:
+    """Record the known official extras from directory metadata without body reads."""
+    excluded = [
+        {
+            "name": item.info.filename,
+            "crc32": f"{item.info.CRC:08x}",
+            "uncompressed_bytes": item.info.file_size,
+            "compressed_bytes": item.info.compress_size,
+            "reason": "known_official_dev_file_not_referenced_by_CM_protocol",
+            "body_read": False,
+        }
+        for item in selected
+        if item.kind == "unreferenced"
+    ]
+    if len(excluded) != EXPECTED_UNREFERENCED_DEV_FILES:
+        raise ValueError("unexpected unreferenced dev media count")
+    return excluded
 
 
 def _extract_member(
@@ -206,7 +300,7 @@ def finalize_archive(archive_path: Path, output_dir: Path) -> dict[str, object]:
         before = os.fstat(stream.fileno())
         md5, sha256 = _archive_hashes(stream)
         with zipfile.ZipFile(stream) as archive:
-            selected, prefix = _selected_members(archive)
+            selected, prefix, excluded = _selected_members(archive)
             output_dir.parent.mkdir(parents=True, exist_ok=True)
             with tempfile.TemporaryDirectory(
                 prefix=f".{output_dir.name}.staging-", dir=output_dir.parent
@@ -240,7 +334,8 @@ def finalize_archive(archive_path: Path, output_dir: Path) -> dict[str, object]:
                     "eval_media_extracted": False,
                     "eval_member_contents_read": False,
                     "decode_verified": False,
-                    "protocol_contents_validated": False,
+                    "protocol_contents_validated": True,
+                    "excluded_unreferenced_dev_media": excluded,
                     "official_competition_usage": "unconfirmed",
                 }
                 report = stage / "acquisition.json"
