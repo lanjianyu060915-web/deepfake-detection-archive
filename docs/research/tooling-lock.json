@@ -6,7 +6,8 @@
       "repository": "https://github.com/openai/skills",
       "commit": "49f948faa9258a0c61caceaf225e179651397431",
       "source_path": "skills/.curated/jupyter-notebook",
-      "installed_path": "/home/maoxiao/.codex/skills/jupyter-notebook",
+      "installed_path": ".agents/skills/jupyter-notebook",
+      "machine_level_copy_observed": "/home/maoxiao/.codex/skills/jupyter-notebook",
       "skill_sha256": "62f102e8554b25716dccef0ffab4572d4e3eaf05ccc76562d33a065bc9c521fb",
       "license": "Apache-2.0",
       "license_files": [
@@ -18,7 +19,8 @@
       "repository": "https://github.com/huggingface/skills",
       "commit": "ca0325bb20b2d0a1b2efa893670c4c72f79e707b",
       "source_path": "skills/huggingface-datasets",
-      "installed_path": "/home/maoxiao/.codex/skills/huggingface-datasets",
+      "installed_path": ".agents/skills/huggingface-datasets",
+      "machine_level_copy_observed": "/home/maoxiao/.codex/skills/huggingface-datasets",
       "skill_sha256": "eeca50adf211ea64a288b852938f85a5183b045c720dc696b62db9aa2ea8deb2",
       "license": "Apache-2.0",
       "license_files": [
@@ -30,15 +32,41 @@
       "repository": "https://github.com/huggingface/skills",
       "commit": "ca0325bb20b2d0a1b2efa893670c4c72f79e707b",
       "source_path": "skills/huggingface-papers",
-      "installed_path": "/home/maoxiao/.codex/skills/huggingface-papers",
+      "installed_path": ".agents/skills/huggingface-papers",
+      "machine_level_copy_observed": "/home/maoxiao/.codex/skills/huggingface-papers",
       "skill_sha256": "985c2d5c7261aba2b157811cde0c2b30134663694a4ab701280de28f941eb3b2",
       "license": "Apache-2.0",
       "license_files": [
-        "LICENSE"
+        ".agents/huggingface-skills-Apache-2.0.txt"
+      ]
+    },
+    {
+      "name": "pdf",
+      "repository": "https://github.com/openai/skills",
+      "commit": "49f948faa9258a0c61caceaf225e179651397431",
+      "source_path": "skills/.curated/pdf",
+      "installed_path": ".agents/skills/pdf",
+      "machine_level_copy_observed": "/home/maoxiao/.codex/skills/pdf",
+      "skill_sha256": "d108cf54de94cbe4b919485da41eb39717d5404a13d84fd76dfd21731981e64d",
+      "license": "Apache-2.0",
+      "license_files": [
+        "LICENSE.txt"
       ]
     }
   ],
-  "existing_skill_reused": "pdf",
+  "project_skill_management": {
+    "cli": "skills 1.7.1 via npx",
+    "install_mode": "--agent codex --copy --yes",
+    "project_directory": ".agents/skills",
+    "lock_file": "skills-lock.json",
+    "tracked_skills": 10,
+    "third_party_notice": ".agents/THIRD_PARTY_NOTICES.md",
+    "source_commits": {
+      "wenmin-wu/ds-skills": "718b09722905726c428fcc4eab4d470df4842545",
+      "openai/skills": "49f948faa9258a0c61caceaf225e179651397431",
+      "huggingface/skills": "ca0325bb20b2d0a1b2efa893670c4c72f79e707b"
+    }
+  },
   "python": "Python 3.12.13",
   "uv": "uv 0.12.13 (x86_64-unknown-linux-gnu)",
   "python_tool_versions": {
@@ -86,7 +114,8 @@
     "pypdf_aasist": "PASS; five pages extracted",
     "ffmpeg_synthetic_audio_video": "PASS",
     "gpu_runtime_access": "PASS outside ordinary sandbox: RTX4060 Laptop, torch CUDA13.0 matmul/NMS/AMP/random model forwards",
-    "ds_skills": "PASS; 535 existing installations byte-identical; 6 selected techniques exercised on synthetic inputs",
+    "project_skills": "PASS; npx skills lists 10 project copies under .agents/skills with skills-lock.json",
+    "ds_skills": "PASS; 535 machine-level installations byte-identical; 6 selected project copies exercised on synthetic inputs",
     "media_science_ml": "PASS; details in docs/research/environment-check.json",
     "dependency_consistency": "PASS; uv pip check, uv lock --check --offline, conflicting extras rejected",
     "cpu_execution": "PASS using the installed cu130 wheels; separate cpu wheel not installed/tested"

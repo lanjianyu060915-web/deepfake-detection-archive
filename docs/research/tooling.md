@@ -2,23 +2,31 @@
 
 准备日期：2026-10-07。用户补充授权安装项目相关依赖、后续按需自行安装。已配置研究/音视频工具和可选 PyTorch 后端；模型开发、训练、权重和数据获取仍按待确认的整体方案推进。
 
-## 已安装和实际使用的 skills
+## 已安装和实际使用的项目 skills
 
 | Skill | 来源与固定版本 | 用途与本轮验证 |
 | --- | --- | --- |
 | `jupyter-notebook` | [openai/skills](https://github.com/openai/skills/tree/49f948faa9258a0c61caceaf225e179651397431/skills/.curated/jupyter-notebook)，Apache-2.0 | 用官方脚手架生成临时实验 notebook，验证 nbformat 与 7 个单元；未执行 notebook 单元。 |
 | `huggingface-datasets` | [huggingface/skills](https://github.com/huggingface/skills/tree/ca0325bb20b2d0a1b2efa893670c4c72f79e707b/skills/huggingface-datasets)，Apache-2.0 | 实际只读查询 `jungjee/asvspoof5` 的 Dataset Viewer splits，返回 `default/train`；未下载音频或将其认定为已授权训练集。 |
 | `huggingface-papers` | [huggingface/skills](https://github.com/huggingface/skills/tree/ca0325bb20b2d0a1b2efa893670c4c72f79e707b/skills/huggingface-papers)，Apache-2.0 | 实际通过公开 Papers API 获取 AASIST 元数据，验证题名和 arXiv ID；只启用公开 GET 查询。 |
-| `pdf`，已有 | `/home/maoxiao/.codex/skills/pdf/SKILL.md` | 配合 pypdf 读取 AASIST 的 5 页原始 PDF，并核验提取文本；不重复安装已有 skill。 |
+| `pdf` | [openai/skills](https://github.com/openai/skills/tree/49f948faa9258a0c61caceaf225e179651397431/skills/.curated/pdf)，Apache-2.0 | 配合 pypdf 读取 AASIST 的 5 页原始 PDF，并核验提取文本。 |
 | `plan`、`skill-installer`，已有 | 安装于用户 Codex skills 目录 | 分别用于可审查规划和固定提交的安装；未启动 Team、自动比赛提交或持久训练循环。 |
 
-新 skills 安装在 `/home/maoxiao/.codex/skills/`，下轮会话可通过正常技能发现使用；本轮已按绝对路径阅读和验证。Hugging Face 仓库根许可证补存到两个已安装 skill 目录；来源 SHA 及本机记录见 [tooling-lock.json](tooling-lock.json)。技能若含上传、发布或云任务示例，本项目只读研究并不授权这些额外动作。
+项目实际使用的 10 项第三方 skills 已由 `npx skills@1.7.1 --copy` 安装在
+`.agents/skills/`，并与 `skills-lock.json` 一同纳入 Git。协作者克隆后可直接发现；
+不再依赖某台机器的用户级安装。OpenAI skill 自带许可证，Hugging Face 仓库根
+Apache-2.0 许可证副本和全部第三方来源说明保存在
+[`.agents/THIRD_PARTY_NOTICES.md`](../../.agents/THIRD_PARTY_NOTICES.md)。
+来源 SHA、安装路径及本机历史副本见 [tooling-lock.json](tooling-lock.json)。技能若含
+上传、发布或云任务示例，本项目只读研究并不授权这些额外动作。
 
-未选择的项：已有 `agentic-data-science-competition` 主要面向 Kaggle，其提交命令、榜单时序和自动占位结果不适用于安全屋赛制。没有批量安装同名或宽泛的“全部 ML skills”，也没有新增 MCP 服务。
+项目仅收录 10 项经过筛选的 skills，没有把全部 535 项 ds-skills 复制进仓库。未选择
+`agentic-data-science-competition`：它主要面向 Kaggle，其提交命令、榜单时序和
+自动占位结果不适用于安全屋赛制。没有新增 MCP 服务。
 
 ## 用户指定的 ds-skills
 
-已读取 [wenmin-wu/ds-skills](https://github.com/wenmin-wu/ds-skills/tree/718b09722905726c428fcc4eab4d470df4842545)，固定 commit `718b09722905726c428fcc4eab4d470df4842545`。逐项比对发现上游 535 项技能都已在 `/home/maoxiao/.agents/skills/` 安装，内容完全相同；本轮复用既有安装，不覆盖或制造第二份技能。项目选择、逐文件 SHA-256、用途和适配要求见 [ds-skills.json](ds-skills.json)。README 和 CLI 元数据声明 MIT，仓库根未发现独立 LICENSE 文件。
+已读取 [wenmin-wu/ds-skills](https://github.com/wenmin-wu/ds-skills/tree/718b09722905726c428fcc4eab4d470df4842545)，固定 commit `718b09722905726c428fcc4eab4d470df4842545`。逐项比对发现上游 535 项技能都已在机器级 `/home/maoxiao/.agents/skills/` 安装且内容完全相同；该比对只作为历史审计。当前从 GitHub 来源用 `npx skills@1.7.1` 将其中 6 项复制到项目 `.agents/skills/`，由 Git 和 `skills-lock.json` 管理。项目选择、逐文件 SHA-256、用途和适配要求见 [ds-skills.json](ds-skills.json)。README 和 CLI 元数据声明 MIT，仓库根未发现独立 LICENSE 文件。
 
 本轮选用 6 项，实际使用范围由合成环境探针限定：
 
@@ -31,7 +39,7 @@
 | `cv-mixed-precision-training` | 使用现代 `torch.amp` 做 CUDA autocast、GradScaler 与梯度有限值检查；不把技能中的显存/速度比例当作承诺。 |
 | `cv-gradient-accumulation` | toy 梯度与整批参考一致，涵盖不足累积窗口的末尾；无参数更新，实际训练配方仍待实施。 |
 
-这些技能主要是 Kaggle 通用技巧，没有本赛题专用 EER 或通用音频鉴伪实现。EMA/时序网络留作后续候选；不因 TensorFlow 示例额外安装第二套训练框架。使用固定本地目录即可读取技能；不需要 CLI 的访客上报、反馈或覆盖安装功能。
+这些技能主要是 Kaggle 通用技巧，没有本赛题专用 EER 或通用音频鉴伪实现。EMA/时序网络留作后续候选；不因 TensorFlow 示例额外安装第二套训练框架。第三方 skill 保持上游原样，赛题适配写在本仓库代码或文档中。
 
 ## 本地上游源码参考
 

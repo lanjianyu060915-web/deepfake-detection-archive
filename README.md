@@ -41,6 +41,22 @@ uv run --no-sync python tools/check_environment.py --device cuda --output output
 
 已有 GitHub Actions 配置执行相同的开发检查和旧评测器回归。本轮完成本地验证，尚未触发远端 CI。
 
+## 项目 skills 与协作
+
+项目筛选的 10 项第三方 skills 已复制到 `.agents/skills/` 并纳入 Git，
+`skills-lock.json` 记录 `npx skills` 来源。协作者克隆仓库后即可使用，不依赖用户级
+skills 目录。
+
+```bash
+npx --yes skills@1.7.1 list --json
+# 更新会改动项目副本；运行后审阅 Git 差异、来源和许可。
+npx --yes skills@1.7.1 update --project --yes
+```
+
+清单、更新流程和第三方许可见
+[`.agents/README.md`](.agents/README.md)。Git 提交执行
+[LoRA 准则](AGENTS.md)：Logical、Observable、Reversible、Atomic。
+
 ## 工作区
 
 ```text
@@ -50,6 +66,8 @@ docs/competition/             比赛约束与原始资料快照
 docs/research/                文献、工具和参考版本
 docs/plans/                   待确认方案与本轮整理计划
 docs/worklog/                 工作归档
+.agents/skills/               Git 跟踪的项目级 agent skills
+skills-lock.json              npx skills 来源锁
 tools/restore_backup.py       保留的历史恢复工具
 archive/legacy-20261005/       旧源码、实验、文档、清单与原 README
 ```
@@ -58,7 +76,7 @@ archive/legacy-20261005/       旧源码、实验、文档、清单与原 README
 
 ## 已知约束
 
-- 已读取 RTX 4060 Laptop 8GB、驱动 616.92；App 普通沙箱阻止 GPU 访问。实际环境验证结果见 [工具记录](docs/research/tooling.md)。云算力预算、安全屋配置和报名/平台规范待定。
+- 已读取 RTX 4060 Laptop 8GB、驱动 616.92；App 普通沙箱阻止 GPU 访问。实际环境验证结果见 [工具记录](docs/research/tooling.md)。方案确认后，本地 GPU 已获授权自动用于适合的实验且不设固定卡时上限；付费云算力预算、安全屋配置和报名/平台规范待定。
 - 官方当前以音频、视频分别描述样本与 EER；最终榜单汇总、I/O、时限和资源仍须平台确认。[官方赛题](https://ai.xm.gov.cn/competition/project-detail.html?id=2026c40item0004&competeId=2026c40dbb2347fba8b3c9a6294efa5b)
 - 音频不能默认等同语音，生成视频不能默认等同换脸；是否采用候选方法必须通过数据覆盖和跨域实验验证。
 - 不将旧模型的历史报告或本轮工具测试解释为本届模型性能。
