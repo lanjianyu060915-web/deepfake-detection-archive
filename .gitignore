@@ -43,3 +43,8 @@ htmlcov/
 /cache/
 /tmp/
 .ipynb_checkpoints/
+
+# Portable project skills are source-controlled for every collaborator.
+!/.agents/
+!/.agents/**
+!/skills-lock.json
