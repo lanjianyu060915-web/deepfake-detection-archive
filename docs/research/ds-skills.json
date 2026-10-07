@@ -8,7 +8,7 @@
     "installed_identical": 535,
     "different": 0,
     "missing": 0,
-    "project_selected": 6
+    "project_selected": 7
   },
   "skills": [
     {
@@ -46,6 +46,15 @@
       "installation_action": "installed_project_copy_via_npx_skills_1.7.1",
       "purpose": "逐帧连续分数的媒体级聚合候选",
       "project_adaptation": "不默认只抽人脸、不裁剪分数、不静默排除失败帧；聚合方式只在开发集比较"
+    },
+    {
+      "name": "cv-separable-temporal-spectral-cnn",
+      "source_path": "skills/cv/separable-temporal-spectral-cnn",
+      "installed_path": ".agents/skills/cv-separable-temporal-spectral-cnn",
+      "skill_sha256": "fa6171022c4d7fe6bbfe8985a1a7804da4f0edf60249cf6aa7cf27b585ff7ed7",
+      "installation_action": "installed_project_copy_via_npx_skills_1.7.1",
+      "purpose": "音频时频图分支的时间轴与频率轴分离卷积结构参考",
+      "project_adaptation": "只借鉴轴向卷积和非对称池化；用 PyTorch 重写并实测，不引入示例的 TensorFlow 依赖"
     },
     {
       "name": "cv-mixed-precision-training",

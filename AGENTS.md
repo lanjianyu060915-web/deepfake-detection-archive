@@ -76,7 +76,7 @@ uv build --no-sources
 
 - 2 项主动测试保护归档/恢复工具；7 项旧评测器测试使用 stub。新功能需要自己的行为测试，不能用上述结果替代 EER/模型测试。
 - 构建后检查 wheel/sdist 不含归档、外部参考、数据、模型和缓存。CI 配置在 `.github/workflows/checks.yml`；本地通过不意味着远端已运行。
-- 项目实际使用的 10 项 skills 由 `npx skills@1.7.1 --copy` 安装在 `.agents/skills/`，以 `skills-lock.json` 固定来源并纳入 Git；它们优先于机器级安装，协作者克隆后可直接调用。更新时使用固定 CLI、审阅上游差异和许可，再提交复制结果；不直接手改第三方 skill，项目适配写入本仓库代码或文档。全部 535 项 ds-skills 的机器级比对只保留为历史审计。来源与适配边界见 `docs/research/tooling-lock.json`、`docs/research/ds-skills.json`。技能示例中的上传、发布、遥测和云任务不因此获授权。
+- 项目实际使用的 11 项 skills 由 `npx skills@1.7.1 --copy` 安装在 `.agents/skills/`，以 `skills-lock.json` 固定来源并纳入 Git；它们优先于机器级安装，协作者克隆后可直接调用。更新时使用固定 CLI、审阅上游差异和许可，再提交复制结果；不直接手改第三方 skill，项目适配写入本仓库代码或文档。全部 535 项 ds-skills 的机器级比对只保留为历史审计。来源与适配边界见 `docs/research/tooling-lock.json`、`docs/research/ds-skills.json`。技能示例中的上传、发布、遥测和云任务不因此获授权。
 
 ## 执行与交付
 

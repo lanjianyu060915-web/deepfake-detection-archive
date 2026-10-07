@@ -6,10 +6,10 @@
 
 - 用户确认音频和视频均参加；本地有 RTX 4060 8GB，云算力后续考虑；报名、安全屋权限与执行规范待定。
 - 已核对官网赛题/规则、调研相关论文和项目，形成 [整体方案](plans/implementation-plan.md)。算法路线是待验证候选，不是已复现结果。
-- 通过 `npx skills@1.7.1 --copy` 将 10 项相关 skills 安装到项目
+- 通过 `npx skills@1.7.1 --copy` 将 11 项相关 skills 安装到项目
   `.agents/skills/`，由 Git 和 `skills-lock.json` 管理，协作者克隆即用。其中
-  ds-skills 选择 6 项并完成合成验证；机器级 535 项一致性比对保留为审计记录。已准备
-  3 份模型源码参考及 ds-skills 固定源码，记录见
+  ds-skills 选择 7 项，其中 6 项完成合成验证、1 项作为音频时频图结构参考；机器级
+  535 项一致性比对保留为审计记录。已准备 3 份模型源码参考及 ds-skills 固定源码，记录见
   [工具说明](research/tooling.md)。
 - 用户授权后续相关依赖按需自行安装；现已锁定并安装 `dev` / `research` / `media` 和 `cu130` 后端。torch 2.14.1+cu130、torchvision 0.29.1+cu130、timm、Transformers、音视频处理与研究工具已就绪；`cpu` 后端可选但本轮未安装该 wheel。
 - 旧项目已整体迁至 `archive/legacy-20261005/`，1,526 个文件、138,273,682 字节与冻结清单一致；比赛原始资料改放 `docs/competition/source/`。

@@ -59,7 +59,7 @@
     "install_mode": "--agent codex --copy --yes",
     "project_directory": ".agents/skills",
     "lock_file": "skills-lock.json",
-    "tracked_skills": 10,
+    "tracked_skills": 11,
     "third_party_notice": ".agents/THIRD_PARTY_NOTICES.md",
     "source_commits": {
       "wenmin-wu/ds-skills": "718b09722905726c428fcc4eab4d470df4842545",
@@ -114,8 +114,8 @@
     "pypdf_aasist": "PASS; five pages extracted",
     "ffmpeg_synthetic_audio_video": "PASS",
     "gpu_runtime_access": "PASS outside ordinary sandbox: RTX4060 Laptop, torch CUDA13.0 matmul/NMS/AMP/random model forwards",
-    "project_skills": "PASS; npx skills lists 10 project copies under .agents/skills with skills-lock.json",
-    "ds_skills": "PASS; 535 machine-level installations byte-identical; 6 selected project copies exercised on synthetic inputs",
+    "project_skills": "PASS; npx skills lists 11 project copies under .agents/skills with skills-lock.json",
+    "ds_skills": "PASS; 535 machine-level installations byte-identical; 7 selected project copies; 6 techniques exercised on synthetic inputs and 1 architecture reference audited",
     "media_science_ml": "PASS; details in docs/research/environment-check.json",
     "dependency_consistency": "PASS; uv pip check, uv lock --check --offline, conflicting extras rejected",
     "cpu_execution": "PASS using the installed cu130 wheels; separate cpu wheel not installed/tested"

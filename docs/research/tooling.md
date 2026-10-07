@@ -12,7 +12,7 @@
 | `pdf` | [openai/skills](https://github.com/openai/skills/tree/49f948faa9258a0c61caceaf225e179651397431/skills/.curated/pdf)，Apache-2.0 | 配合 pypdf 读取 AASIST 的 5 页原始 PDF，并核验提取文本。 |
 | `plan`、`skill-installer`，已有 | 安装于用户 Codex skills 目录 | 分别用于可审查规划和固定提交的安装；未启动 Team、自动比赛提交或持久训练循环。 |
 
-项目实际使用的 10 项第三方 skills 已由 `npx skills@1.7.1 --copy` 安装在
+项目实际使用的 11 项第三方 skills 已由 `npx skills@1.7.1 --copy` 安装在
 `.agents/skills/`，并与 `skills-lock.json` 一同纳入 Git。协作者克隆后可直接发现；
 不再依赖某台机器的用户级安装。OpenAI skill 自带许可证，Hugging Face 仓库根
 Apache-2.0 许可证副本和全部第三方来源说明保存在
@@ -20,15 +20,15 @@ Apache-2.0 许可证副本和全部第三方来源说明保存在
 来源 SHA、安装路径及本机历史副本见 [tooling-lock.json](tooling-lock.json)。技能若含
 上传、发布或云任务示例，本项目只读研究并不授权这些额外动作。
 
-项目仅收录 10 项经过筛选的 skills，没有把全部 535 项 ds-skills 复制进仓库。未选择
+项目仅收录 11 项经过筛选的 skills，没有把全部 535 项 ds-skills 复制进仓库。未选择
 `agentic-data-science-competition`：它主要面向 Kaggle，其提交命令、榜单时序和
 自动占位结果不适用于安全屋赛制。没有新增 MCP 服务。
 
 ## 用户指定的 ds-skills
 
-已读取 [wenmin-wu/ds-skills](https://github.com/wenmin-wu/ds-skills/tree/718b09722905726c428fcc4eab4d470df4842545)，固定 commit `718b09722905726c428fcc4eab4d470df4842545`。逐项比对发现上游 535 项技能都已在机器级 `/home/maoxiao/.agents/skills/` 安装且内容完全相同；该比对只作为历史审计。当前从 GitHub 来源用 `npx skills@1.7.1` 将其中 6 项复制到项目 `.agents/skills/`，由 Git 和 `skills-lock.json` 管理。项目选择、逐文件 SHA-256、用途和适配要求见 [ds-skills.json](ds-skills.json)。README 和 CLI 元数据声明 MIT，仓库根未发现独立 LICENSE 文件。
+已读取 [wenmin-wu/ds-skills](https://github.com/wenmin-wu/ds-skills/tree/718b09722905726c428fcc4eab4d470df4842545)，固定 commit `718b09722905726c428fcc4eab4d470df4842545`。逐项比对发现上游 535 项技能都已在机器级 `/home/maoxiao/.agents/skills/` 安装且内容完全相同；该比对只作为历史审计。当前从 GitHub 来源用 `npx skills@1.7.1` 将其中 7 项复制到项目 `.agents/skills/`，由 Git 和 `skills-lock.json` 管理。项目选择、逐文件 SHA-256、用途和适配要求见 [ds-skills.json](ds-skills.json)。README 和 CLI 元数据声明 MIT，仓库根未发现独立 LICENSE 文件。
 
-本轮选用 6 项，实际使用范围由合成环境探针限定：
+本轮选用 7 项，其中 6 项的实际使用范围由合成环境探针限定，1 项作为后续架构参考：
 
 | Skill | 本项目用途与使用边界 |
 | --- | --- |
@@ -36,10 +36,14 @@ Apache-2.0 许可证副本和全部第三方来源说明保存在
 | `cv-phash-duplicate-grouping` | 合成图片的 pHash 回环；作为近重复候选工具，不保证旋转不变，也不覆盖音频或全部泄漏。 |
 | `cv-video-frame-sampling-pipeline` | 合成视频均匀抽 4 帧，重复运行结果一致；真实变帧率、损坏视频等契约后续建立，性能需实测。 |
 | `cv-frame-prediction-averaging` | 合成逐帧连续分数聚合；不继承只处理人脸、裁剪概率或静默跳过无脸帧等示例行为。 |
+| `cv-separable-temporal-spectral-cnn` | 音频时频图的时间轴/频率轴分离卷积参考；只借鉴结构思想，后续用 PyTorch 重写和验证，不引入 TensorFlow。 |
 | `cv-mixed-precision-training` | 使用现代 `torch.amp` 做 CUDA autocast、GradScaler 与梯度有限值检查；不把技能中的显存/速度比例当作承诺。 |
 | `cv-gradient-accumulation` | toy 梯度与整批参考一致，涵盖不足累积窗口的末尾；无参数更新，实际训练配方仍待实施。 |
 
-这些技能主要是 Kaggle 通用技巧，没有本赛题专用 EER 或通用音频鉴伪实现。EMA/时序网络留作后续候选；不因 TensorFlow 示例额外安装第二套训练框架。第三方 skill 保持上游原样，赛题适配写在本仓库代码或文档中。
+这些技能主要是 Kaggle 通用技巧，没有本赛题专用 EER 或通用音频鉴伪实现。通用小波
+去噪未纳入：它可能移除恰好用于鉴伪的高频痕迹，且当前方案没有证据支持该预处理。
+EMA/更重时序网络留作后续候选；不因 TensorFlow 示例额外安装第二套训练框架。第三方
+skill 保持上游原样，赛题适配写在本仓库代码或文档中。
 
 ## 本地上游源码参考
 

@@ -43,7 +43,7 @@ uv run --no-sync python tools/check_environment.py --device cuda --output output
 
 ## 项目 skills 与协作
 
-项目筛选的 10 项第三方 skills 已复制到 `.agents/skills/` 并纳入 Git，
+项目筛选的 11 项第三方 skills 已复制到 `.agents/skills/` 并纳入 Git，
 `skills-lock.json` 记录 `npx skills` 来源。协作者克隆仓库后即可使用，不依赖用户级
 skills 目录。
 
