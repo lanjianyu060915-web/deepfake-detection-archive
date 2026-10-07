@@ -1,0 +1,460 @@
+"""Audited train/dev experiments backed by content-bound local tensor caches."""
+
+import json
+import os
+import random
+import tempfile
+import time
+from dataclasses import asdict, dataclass, field, replace
+from pathlib import Path
+from typing import Any, cast
+
+import numpy as np
+import torch
+from torch import Tensor
+from torch.utils.data import DataLoader, Dataset
+
+from .data.audit import audit_manifest
+from .data.manifest import (
+    SampleRecord,
+    file_sha256,
+    load_manifest,
+    load_sources,
+    manifest_hash,
+)
+from .data.split import connected_groups, validate_splits
+from .features import Encoder, extract_features, load_encoder, media_path
+from .media import AudioConfig, VideoConfig, decode_audio, sample_audio_segments
+from .models.checkpoint import create_model, save_checkpoint, verify_sha256
+from .tracking import atomic_json, canonical_json, code_identity, object_hash, utc_now
+from .training import TrainConfig, TrainResult, train_model
+
+
+@dataclass(frozen=True)
+class ExperimentConfig:
+    manifest: str
+    data_root: str
+    sources: str
+    output_dir: str
+    modality: str
+    architecture: str
+    model_config: dict[str, Any]
+    training: dict[str, Any]
+    batch_size: int = 8
+    num_workers: int = 0
+    segment_samples: int = 64600
+    segments: int = 1
+    audio: dict[str, Any] = field(default_factory=dict)
+    video: dict[str, Any] = field(default_factory=dict)
+    encoder: dict[str, Any] = field(default_factory=dict)
+    feature_cache: str | None = None
+    cache_max_bytes: int = 20 * 1024**3
+    schema_version: int = 1
+
+    def __post_init__(self) -> None:  # noqa: C901, PLR0912 -- strict configuration schema
+        if type(self.schema_version) is not int or self.schema_version != 1:
+            raise ValueError("experiment schema_version must be 1")
+        for name in ("manifest", "data_root", "sources", "output_dir"):
+            if (
+                not isinstance(getattr(self, name), str)
+                or not getattr(self, name).strip()
+            ):
+                raise ValueError(f"{name} must be a nonempty path")
+        for name in ("batch_size", "segment_samples", "segments", "cache_max_bytes"):
+            if type(getattr(self, name)) is not int or getattr(self, name) <= 0:
+                raise ValueError(f"{name} must be a positive integer")
+        if self.cache_max_bytes > 20 * 1024**3:
+            raise ValueError("cache_max_bytes cannot exceed 20 GiB")
+        if type(self.num_workers) is not int or not 0 <= self.num_workers <= 32:
+            raise ValueError("num_workers must be an integer in [0, 32]")
+        if self.modality not in ("audio", "video"):
+            raise ValueError("modality must be audio or video")
+        for name in ("model_config", "training", "audio", "video", "encoder"):
+            if not isinstance(getattr(self, name), dict):
+                raise TypeError(f"{name} must be an object")
+        if any(
+            type(value) is bool
+            for options in (self.model_config, self.audio, self.video)
+            for value in options.values()
+        ):
+            raise ValueError("model and media parameters cannot be boolean")
+        if self.feature_cache is not None and (
+            not isinstance(self.feature_cache, str) or not self.feature_cache.strip()
+        ):
+            raise ValueError("feature_cache must be null or a nonempty path")
+        if self.architecture not in (
+            "logmel_cnn_v1",
+            "aasist_l_v1",
+            "media_feature_head_v1",
+        ):
+            raise ValueError("unsupported experiment architecture")
+        if self.architecture != "media_feature_head_v1":
+            if self.modality != "audio" or self.segments != 1 or self.encoder:
+                raise ValueError(
+                    "waveform training requires audio, segments=1 and no encoder"
+                )
+        elif self.encoder.get("kind") != (
+            "audio" if self.modality == "audio" else "vision"
+        ):
+            raise ValueError("encoder kind must match experiment modality")
+        TrainConfig(**self.training)
+        audio = AudioConfig(**self.audio)
+        VideoConfig(**self.video)
+        if self.architecture == "aasist_l_v1" and (
+            audio.sample_rate != 16000 or self.segment_samples != 64600
+        ):
+            raise ValueError("AASIST-L requires 16000 Hz and segment_samples=64600")
+        if (
+            self.architecture == "logmel_cnn_v1"
+            and audio.sample_rate != self.model_config.get("sample_rate", 16000)
+        ):
+            raise ValueError("audio and log-mel sample rates must agree")
+
+
+def _json_pairs(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    result: dict[str, Any] = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError(f"duplicate JSON key: {key}")
+        result[key] = value
+    return result
+
+
+def _reject_constant(value: str) -> None:
+    raise ValueError(f"nonfinite JSON value: {value}")
+
+
+def load_experiment_config(path: Path) -> ExperimentConfig:
+    value = json.loads(
+        path.read_text(encoding="utf-8"),
+        object_pairs_hook=_json_pairs,
+        parse_constant=_reject_constant,
+    )
+    if not isinstance(value, dict):
+        raise ValueError("experiment configuration must be an object")  # noqa: TRY004
+    try:
+        return ExperimentConfig(**value)
+    except TypeError as exc:
+        raise ValueError(f"invalid experiment configuration: {exc}") from exc
+
+
+def _cache_pair_bytes(path: Path) -> int:
+    return sum(
+        entry.stat().st_size
+        for entry in (path, path.with_suffix(".json"))
+        if entry.is_file()
+    )
+
+
+def _save_tensor(
+    path: Path,
+    tensor: Tensor,
+    identity: dict[str, Any],
+    maximum: int,
+    *,
+    cache_bytes: int | None = None,
+) -> str:
+    """Publish a tensor/sidecar pair only if the final cache fits its byte cap.
+
+    The runner may supply its tracked committed byte count to avoid rescanning
+    the cache for every sample. Staging bytes are temporary disk overhead, while
+    `maximum` bounds committed cache contents, including UTF-8 sidecar bytes.
+    """
+    if cache_bytes is None:
+        cache_bytes = sum(
+            entry.stat().st_size for entry in path.parent.iterdir() if entry.is_file()
+        )
+    replaced_bytes = _cache_pair_bytes(path)
+    temporary: Path | None = None
+    temporary_metadata: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(dir=path.parent, delete=False) as stream:
+            temporary = Path(stream.name)
+            torch.save(tensor.detach().cpu().contiguous(), stream)
+        digest = file_sha256(temporary)
+        metadata = {"identity": identity, "sha256": digest}
+        with tempfile.NamedTemporaryFile(dir=path.parent, delete=False) as stream:
+            temporary_metadata = Path(stream.name)
+            stream.write((canonical_json(metadata) + "\n").encode("utf-8"))
+        new_bytes = temporary.stat().st_size + temporary_metadata.stat().st_size
+        if cache_bytes - replaced_bytes + new_bytes > maximum:
+            raise ValueError("tensor cache exceeds cache_max_bytes")
+        temporary.replace(path)
+        temporary_metadata.replace(path.with_suffix(".json"))
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
+        if temporary_metadata is not None:
+            temporary_metadata.unlink(missing_ok=True)
+    return digest
+
+
+def _load_tensor(path: Path, digest: str) -> Tensor:
+    verify_sha256(path, digest)
+    value = torch.load(path, map_location="cpu", weights_only=True)
+    if (
+        not isinstance(value, Tensor)
+        or value.dtype != torch.float32
+        or not bool(torch.isfinite(value).all())
+    ):
+        raise ValueError("invalid cached tensor")
+    return value
+
+
+class _CachedDataset(Dataset[tuple[Tensor, Tensor]]):
+    def __init__(self, entries: list[tuple[Path, str, int]]) -> None:
+        self.entries = entries
+
+    def __len__(self) -> int:
+        return len(self.entries)
+
+    def __getitem__(self, index: int) -> tuple[Tensor, Tensor]:
+        path, digest, label = self.entries[index]
+        return _load_tensor(path, digest), torch.tensor(label, dtype=torch.float32)
+
+
+def _worker_seed(_worker_id: int) -> None:
+    seed = torch.initial_seed() % 2**32
+    random.seed(seed)
+    np.random.seed(seed)  # noqa: NPY002 -- initialize worker-local legacy RNG users
+
+
+def _audit_training_records(
+    records: list[SampleRecord],
+    config: ExperimentConfig,
+    root: Path,
+    source_path: Path,
+    output: Path,
+) -> list[SampleRecord]:
+    # Inspect split metadata globally without reading or decoding holdout bytes.
+    errors = validate_splits(records, require_class_coverage=False)
+    connected_groups(records)
+    selected = [
+        record
+        for record in records
+        if record.modality == config.modality and record.split in ("train", "dev")
+    ]
+    for split in ("train", "dev"):
+        if {record.label for record in selected if record.split == split} != {0, 1}:
+            errors.append(f"{split} requires both classes with known labels")
+    audit = audit_manifest(
+        [replace(record, split="unassigned") for record in selected],
+        root,
+        load_sources(source_path),
+    )
+    atomic_json(
+        output / "audit.json",
+        {
+            "audit": audit.to_dict(),
+            "split_errors": errors,
+            "scope": "train/dev bytes only; original full manifest split metadata checked",
+        },
+    )
+    if errors or not audit.passed:
+        raise ValueError("experiment data audit failed; inspect audit.json")
+    return selected
+
+
+def _prepare_cache(  # noqa: PLR0913, PLR0917
+    records: list[SampleRecord],
+    config: ExperimentConfig,
+    root: Path,
+    cache: Path,
+    encoder: Encoder | None,
+    code: dict[str, object],
+    output: Path,
+) -> dict[str, list[tuple[Path, str, int]]]:
+    audio_config, video_config = (
+        AudioConfig(**config.audio),
+        VideoConfig(**config.video),
+    )
+    cache.mkdir(parents=True, exist_ok=True)
+    cache_bytes = sum(path.stat().st_size for path in cache.iterdir() if path.is_file())
+    if cache_bytes > config.cache_max_bytes:
+        raise ValueError("existing tensor cache exceeds cache_max_bytes")
+    entries: dict[str, list[tuple[Path, str, int]]] = {"train": [], "dev": []}
+    failures: list[dict[str, str]] = []
+    expected_shape: tuple[int, ...] | None = None
+    for record in records:
+        identity = {
+            "sample_id": record.sample_id,
+            "media_sha256": record.sha256,
+            "encoder": config.encoder,
+            "architecture": config.architecture,
+            "audio": asdict(audio_config),
+            "video": asdict(video_config),
+            "segment_samples": config.segment_samples,
+            "segments": config.segments,
+            "code_sha256": code["code_sha256"],
+        }
+        path = cache / f"{object_hash(identity)}.pt"
+        try:
+            if path.exists():
+                sidecar = json.loads(path.with_suffix(".json").read_text())
+                if sidecar["identity"] != identity:
+                    raise ValueError("tensor cache identity mismatch")  # noqa: TRY301 -- per-sample failure record
+                digest = sidecar["sha256"]
+                tensor = _load_tensor(path, digest)
+            else:
+                if encoder is None:
+                    decoded = decode_audio(media_path(record, root), audio_config)
+                    tensor = torch.from_numpy(
+                        sample_audio_segments(
+                            decoded.waveform, config.segment_samples, 1
+                        )[0]
+                    )
+                else:
+                    tensor = extract_features(
+                        record,
+                        root,
+                        encoder,
+                        audio_config,
+                        video_config,
+                        config.segment_samples,
+                        config.segments,
+                        TrainConfig(**config.training).device,
+                        config.batch_size,
+                    )
+                previous_pair_bytes = _cache_pair_bytes(path)
+                digest = _save_tensor(
+                    path,
+                    tensor,
+                    identity,
+                    config.cache_max_bytes,
+                    cache_bytes=cache_bytes,
+                )
+                cache_bytes += _cache_pair_bytes(path) - previous_pair_bytes
+            shape = tuple(tensor.shape)
+            if (
+                not shape
+                or any(size <= 0 for size in shape)
+                or (expected_shape is not None and shape != expected_shape)
+            ):
+                raise ValueError("prepared tensors must have one fixed nonempty shape")  # noqa: TRY301
+            expected_shape = shape
+            entries[record.split].append((path, digest, cast(int, record.label)))
+        except (
+            Exception
+        ) as exc:  # sample-boundary accounting; every failure is fatal below
+            failures.append(
+                {
+                    "sample_id": record.sample_id,
+                    "error_type": type(exc).__name__,
+                    "error": str(exc),
+                }
+            )
+    atomic_json(output / "decode_failures.json", failures)
+    if failures:
+        raise ValueError("sample preparation failed; inspect decode_failures.json")
+    return entries
+
+
+def run_experiment(config_path: Path) -> TrainResult:
+    """Audit bytes and splits, prepare train/dev only, train and record provenance."""
+    config = load_experiment_config(config_path)
+    os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
+    base = config_path.resolve().parent
+    output, root = (
+        (base / config.output_dir).resolve(),
+        (base / config.data_root).resolve(),
+    )
+    output.mkdir(parents=True, exist_ok=True)
+    if any(output.iterdir()):
+        raise ValueError("experiment output_dir must be empty")
+    started = time.monotonic()
+    code = code_identity()
+    report: dict[str, Any] = {
+        "schema_version": 1,
+        "status": "preparing",
+        "started_at": utc_now(),
+        "config": asdict(config),
+        "config_sha256": object_hash(asdict(config)),
+        "code": code,
+        "holdout_accessed": False,
+    }
+    atomic_json(output / "experiment.json", report)
+    try:
+        records = load_manifest(base / config.manifest)
+        source_path = base / config.sources
+        selected = _audit_training_records(records, config, root, source_path, output)
+        report["sources"] = {
+            key: asdict(value)
+            for key, value in load_sources(source_path).items()
+            if key in {record.source for record in selected}
+        }
+        train_config = TrainConfig(**config.training)
+        torch.manual_seed(train_config.seed)
+        model = create_model(config.architecture, config.model_config)
+        initial = save_checkpoint(output / "initial.pt", model)
+        report["initial_checkpoint"] = initial
+        encoder = (
+            load_encoder(config.encoder, base, train_config.device)
+            if config.encoder
+            else None
+        )
+        cache = (
+            (base / config.feature_cache).resolve()
+            if config.feature_cache is not None
+            else output / "prepared"
+        )
+        entries = _prepare_cache(selected, config, root, cache, encoder, code, output)
+        # Release the frozen backbone before allocating optimizer state.
+        del encoder
+        generator = torch.Generator().manual_seed(train_config.seed)
+        loader_options: dict[str, Any] = {
+            "batch_size": config.batch_size,
+            "num_workers": config.num_workers,
+            "pin_memory": train_config.device.startswith("cuda"),
+            "worker_init_fn": _worker_seed,
+        }
+        if config.num_workers:
+            loader_options["multiprocessing_context"] = "spawn"
+            loader_options["timeout"] = 30
+        train_loader = DataLoader(
+            _CachedDataset(entries["train"]),
+            shuffle=True,
+            generator=generator,
+            **loader_options,
+        )
+        dev_loader = DataLoader(
+            _CachedDataset(entries["dev"]), shuffle=False, **loader_options
+        )
+        provenance = {
+            "data_sha256": manifest_hash(selected),
+            "code_sha256": code["code_sha256"],
+            "weights_sha256": initial["sha256"],
+            "manifest_sha256": manifest_hash(records),
+            "sources_sha256": file_sha256(source_path),
+            "encoder_sha256": object_hash(config.encoder),
+        }
+        report.update(
+            status="training",
+            provenance=provenance,
+            train_count=len(entries["train"]),
+            dev_count=len(entries["dev"]),
+        )
+        atomic_json(output / "experiment.json", report)
+        result = train_model(
+            model,
+            cast(Any, train_loader),
+            cast(Any, dev_loader),
+            config=train_config,
+            output_dir=output / "training",
+            provenance=provenance,
+            architecture=config.architecture,
+            model_config=initial["config"],
+        )
+        report.update(
+            status="complete",
+            best_epoch=result.best_epoch,
+            best_dev_eer=result.best_dev_eer,
+            checkpoint_sha256=result.checkpoint_sha256,
+            checkpoint=str(result.best_checkpoint.relative_to(output)),
+        )
+    except BaseException as exc:
+        report.update(status="failed", error_type=type(exc).__name__, error=str(exc))
+        raise
+    finally:
+        report.update(finished_at=utc_now(), seconds=time.monotonic() - started)
+        atomic_json(output / "experiment.json", report)
+    return result
