@@ -122,3 +122,36 @@ CUDA 演练另需 cu130 wheel、可用 GPU/驱动和对应验证。官方系统�
 [uv CLI](https://docs.astral.sh/uv/reference/cli/)、
 [pip download](https://pip.pypa.io/en/stable/cli/pip_download/)、
 [FFmpeg 许可说明](https://ffmpeg.org/legal.html)。
+
+## 已准备、待真实 checkpoint：24 条开发样本模型演练
+
+[草稿脚本](source/model_rehearsal.py) 已归档，曾通过 Ruff 和格式检查；独立审阅仍有
+四项未解决问题，**不得执行，尚未完成模型演练**。见 [待修复记录](model-rehearsal-pending.md)。
+训练分支将先提供完成训练且 SHA-256 已核对的 LogMel42 `best.pt`、dev-only 清单、
+来源登记、对应推理预处理配置及训练证明。准备模板位于忽略目录
+`outputs/experiment-planning/offline/model-job.pending.json`，`training_completed=false`
+且路径为显式占位值，不能直接作为实验配置。
+
+脚本固定对 dev-only 清单分别按 `sample_id` 排序，各取 12 真/12 假，再将并集按 ID
+排序；不会读取模型分数来选样，也不会读取 holdout 媒体。复制实际 checkpoint、24 条
+媒体、来源、许可及训练证明，逐文件验证 SHA-256。每种模型使用独立新 stage，不覆盖
+旧安装记录或其他候选结果。
+
+执行在网络命名空间内先完成两次独立完整推理（参考本身也禁网），保留完整结果并逐分数
+严格比较，再对新输出目录的实际推理子进程进行 `SIGSTOP`，确认该**精确自有子进程**
+状态为 `T/t` 且已有 1–23 条完整记录后，发送 `SIGINT`、`SIGCONT`。等待非零退出后，
+使用相同配置 `--resume`，核对已写前缀字节不变、24 条无重复遗漏、分数严格一致；
+再次 resume 检查最终分数文件哈希不变。若任一步失败，保留证据并明确失败，不扩大容差
+或换随机模型掩盖问题。
+
+已用一个仅写单行后等待的独立合成进程验证 OS 信号控制机制：确认停止状态 `T`，
+SIGINT 后退出码 `-2`，文件前缀保持不变。记录位于忽略目录
+`outputs/experiment-planning/offline/signal-probe/report.json`。**它只验证进程控制，
+不证明实际 detector 的中断恢复通过。**
+
+已安装包的 `code_identity` 从包路径向上读取 Git 信息；当前环境位于仓库内，因此真实
+演练前由主代理协调暂缓提交和受跟踪文件写入，完成恢复验证后恢复。脚本和输入先冻结，
+运行时仅写忽略目录，保留实际代码/Git 身份，不手工改写身份字段。
+
+模型演练全部通过后才能追加独立真实推理报告；当前完成范围仍仅为依赖获取、干净断网
+安装和基础 CLI。24 条样本属于本机工程演练，不满足代表性 500 条验收或官方安全屋验收。
