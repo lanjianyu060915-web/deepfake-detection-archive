@@ -61,6 +61,14 @@ torchvision = [
     { index = "pytorch-cu130", extra = "cu130" },
 ]
 
+# Pinned so uv.lock resolves to one registry everywhere. Without this, the lock
+# inherits whatever index the regenerating machine happens to use and CI's
+# `uv sync --locked` fails because it cannot reproduce those sources.
+[[tool.uv.index]]
+name = "tuna"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+default = true
+
 [[tool.uv.index]]
 name = "pytorch-cpu"
 url = "https://download.pytorch.org/whl/cpu"
