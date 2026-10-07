@@ -1,4 +1,6 @@
-# Historical evidence and user-provided source snapshots retain exact bytes.
-archive/legacy-20261005/** -text
-docs/competition/source/** -text
-tools/restore_backup.py -text
+# Preserve frozen evidence and upstream skill/model bytes on every collaborator OS.
+/archive/** -text -whitespace
+/.agents/** -text -whitespace
+/src/deepfake_detection_archive/models/_vendor/** -text -whitespace
+/docs/competition/source/** -text -whitespace
+/docs/research/source/** -text -whitespace
