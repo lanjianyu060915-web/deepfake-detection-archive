@@ -82,6 +82,16 @@ uv run --no-sync deepfake-detection-archive split \
 人物、说话人或独立来源组的登记依据。显式运行全清单 `audit --decode` 会读取
 其中所有媒体；应在数据治理阶段完成，冻结后的 holdout 不用于探索性建模。
 
+已实现两个固定来源导入工具：ASVspoof 使用 `finalize_asvspoof2019.py` 核对官方完整
+大小/MD5 后选择性发布 train/dev，再以 `prepare_asvspoof2019.py` 验证完整 CM 协议并
+选择 pilot。ViF 使用 `prepare_vif_panda.py` 核对固定 ZIP/LFS 哈希，只解出 Panda 配对，
+不打开 Kinetics 媒体。`--audit-only` 只验归档；研究导入还需已审查的命名/许可文件，
+并选择 `--source-mapping` 的明确 URL/timestamp 映射，或显式 `--exploratory`。
+
+探索模式仅将疑似文件名组件用于保守的划分约束，原录制和统计身份保留 unknown；
+旁表记录成员与依据，不报告独立组置信区间或正式晋级。工具拒绝覆盖目标，解码、
+近重复和编码捷径审计须另行执行。来源条款见各自研究记录，正式参赛批准仍待核实。
+
 ## 3. 训练和冻结候选
 
 四个训练模板分别覆盖 AASIST-L、log-mel CNN、冻结音频 SSL 编码器加媒体级头、

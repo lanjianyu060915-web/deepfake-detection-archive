@@ -352,10 +352,10 @@ T10k_safe = 1.25 * T10k_raw
 ```bash
 export UV_CACHE_DIR=/tmp/aigc-uv-cache
 uv sync --locked --group media --group research --extra cu130
-uv run --no-sync ruff check src tests tools/check_environment.py tools/profile_models.py tools/prepare_asvspoof2019.py tools/finalize_asvspoof2019.py
-uv run --no-sync ruff format --check src tests tools/check_environment.py tools/profile_models.py tools/prepare_asvspoof2019.py tools/finalize_asvspoof2019.py
+uv run --no-sync ruff check src tests tools/check_environment.py tools/profile_models.py tools/prepare_asvspoof2019.py tools/finalize_asvspoof2019.py tools/prepare_vif_panda.py
+uv run --no-sync ruff format --check src tests tools/check_environment.py tools/profile_models.py tools/prepare_asvspoof2019.py tools/finalize_asvspoof2019.py tools/prepare_vif_panda.py
 uv run --no-sync mypy
-uv run --no-sync mypy tools/profile_models.py tools/prepare_asvspoof2019.py tools/finalize_asvspoof2019.py
+uv run --no-sync mypy tools/profile_models.py tools/prepare_asvspoof2019.py tools/finalize_asvspoof2019.py tools/prepare_vif_panda.py
 uv run --no-sync pytest -q
 uv build --no-sources
 ```

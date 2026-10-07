@@ -9,4 +9,7 @@
 /docs/research/pretrained-resources/*-model-card.md -text -whitespace
 /docs/research/pretrained-resources/Apache-2.0.txt -text -whitespace
 /docs/research/offline-rehearsal/source/** -text -whitespace
+/docs/experiments/**/source/** -text -whitespace
+/docs/experiments/**/configs/** -text -whitespace
+/docs/experiments/**/launch.sh -text -whitespace
 /tools/restore_backup.py -text -whitespace
