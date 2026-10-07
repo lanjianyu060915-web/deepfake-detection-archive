@@ -1,6 +1,6 @@
 # 开发与研究工具
 
-准备日期：2026-10-07。用户补充授权安装项目相关依赖、后续按需自行安装。已配置研究/音视频工具和可选 PyTorch 后端；模型开发、训练、权重和数据获取仍按待确认的整体方案推进。
+准备日期：2026-10-07。用户授权安装项目相关依赖、后续按需自行安装。已配置研究/音视频工具和可选 PyTorch 后端；实际开发进展以 [项目状态](../status.md) 为准，下文早期探针记录保留其当时的验证范围。
 
 ## 已安装和实际使用的项目 skills
 
@@ -17,7 +17,10 @@
 不再依赖某台机器的用户级安装。OpenAI skill 自带许可证，Hugging Face 仓库根
 Apache-2.0 许可证副本和全部第三方来源说明保存在
 [`.agents/THIRD_PARTY_NOTICES.md`](../../.agents/THIRD_PARTY_NOTICES.md)。
-来源 SHA、安装路径及本机历史副本见 [tooling-lock.json](tooling-lock.json)。技能若含
+来源 SHA、安装路径及本机历史副本见 [tooling-lock.json](tooling-lock.json)。其中
+`skill_sha256` 仅校验 `SKILL.md`；完整目录按 `skills-lock.json` 的 `computedHash`
+校验，2026-10-07 独立复算 11/11 一致。两种哈希不可混用，字段含义见
+[skills CLI 源码](https://github.com/vercel-labs/skills/blob/main/src/local-lock.ts)。技能若含
 上传、发布或云任务示例，本项目只读研究并不授权这些额外动作。
 
 项目仅收录 11 项经过筛选的 skills，没有把全部 535 项 ds-skills 复制进仓库。未选择
@@ -61,7 +64,7 @@ skill 保持上游原样，赛题适配写在本仓库代码或文档中。
 
 | 配置 | 内容 |
 | --- | --- |
-| 默认 `dev` | Ruff、pytest、mypy；轻量 CI 默认只安装此组 |
+| 默认 `dev` | Ruff、pytest、mypy；完整 CI 另装 media 与 CPU 后端 |
 | `research` | pypdf、Matplotlib、ipykernel；不启动 notebook 服务或注册全局 kernel |
 | `media` | NumPy、SciPy、pandas、scikit-learn、SoundFile、librosa、OpenCV headless、Pillow、ImageHash、PyYAML、tqdm |
 | `--extra cu130` | torch 2.14.1 + torchvision 0.29.1 官方 CUDA 13.0 wheels、timm、Transformers；当前开发机后端 |
@@ -85,7 +88,7 @@ uv run --no-sync python tools/check_environment.py --device cuda --output output
 
 本轮安装后：123 个已安装包的依赖一致性通过，130 项锁记录离线校验通过，互斥后端同时请求按预期被拒绝。完整 CUDA 合成探针已通过，快照见 [environment-check.json](environment-check.json)，含实际版本和脚本哈希；同一 CUDA wheel 的 CPU 执行路径也通过，原始报告在被忽略的 `outputs/environment/`。这不证明独立 CPU wheel、实际鉴伪效果或具体模型的 8GB 可运行性。
 
-GitHub Actions 配置位于 [.github/workflows/checks.yml](../../.github/workflows/checks.yml)，官方 actions 使用固定 commit；标准 CI 只同步默认开发组，静态检查包含环境探针，GPU 实验另行执行。远端 CI 尚未触发。
+GitHub Actions 配置位于 [.github/workflows/checks.yml](../../.github/workflows/checks.yml)，官方 actions 使用固定 commit；CI 安装 media、CPU 后端和 FFmpeg，以执行新模型、训练与 CLI 回归。GPU 实验另行执行；远端 CI 尚未触发。
 
 ## 媒体工具和资源现状
 

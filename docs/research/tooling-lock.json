@@ -47,7 +47,7 @@
       "source_path": "skills/.curated/pdf",
       "installed_path": ".agents/skills/pdf",
       "machine_level_copy_observed": "/home/maoxiao/.codex/skills/pdf",
-      "skill_sha256": "d108cf54de94cbe4b919485da41eb39717d5404a13d84fd76dfd21731981e64d",
+      "skill_sha256": "d108cf2b36355ab37eb5962933f4d09785ec002f3105c506129320209306b9d2",
       "license": "Apache-2.0",
       "license_files": [
         "LICENSE.txt"
@@ -59,6 +59,9 @@
     "install_mode": "--agent codex --copy --yes",
     "project_directory": ".agents/skills",
     "lock_file": "skills-lock.json",
+    "hash_semantics": "skill_sha256 hashes SKILL.md only; skills-lock.json computedHash covers the complete project skill directory and is the integrity authority",
+    "verified_on": "2026-10-07",
+    "verified_directory_hashes": 11,
     "tracked_skills": 11,
     "third_party_notice": ".agents/THIRD_PARTY_NOTICES.md",
     "source_commits": {
