@@ -180,6 +180,45 @@ def metadata_fixture(
     return {"job": job, "experiment": experiment, "run": run, "manifests": manifests}
 
 
+def test_training_accepts_json_roundtrip_sources_before_history(
+    probe: ModuleType,
+    metadata_fixture: dict[str, Any],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    experiment = metadata_fixture["experiment"]
+    experiment["sources"] = json.loads(json.dumps(experiment["sources"]))
+    assert isinstance(experiment["sources"]["fixture"]["allowed_uses"], list)
+
+    def stop_at_history(*_args: Any) -> None:
+        raise RuntimeError("source validation reached history")
+
+    monkeypatch.setattr(probe, "verify_history", stop_at_history)
+    with pytest.raises(RuntimeError, match="source validation reached history"):
+        probe.verify_training(metadata_fixture["job"])
+
+
+@pytest.mark.parametrize(
+    ("key", "value"),
+    [
+        ("license_id", "different-license"),
+        ("version", "different-version"),
+        ("downloaded_at", "2026-10-08"),
+        ("allowed_uses", ["competition"]),
+    ],
+)
+def test_training_rejects_changed_json_source_fields(
+    probe: ModuleType,
+    metadata_fixture: dict[str, Any],
+    key: str,
+    value: Any,
+) -> None:
+    experiment = metadata_fixture["experiment"]
+    experiment["sources"] = json.loads(json.dumps(experiment["sources"]))
+    experiment["sources"]["fixture"][key] = value
+    with pytest.raises(ValueError, match="Source registry"):
+        probe.verify_training(metadata_fixture["job"])
+
+
 @pytest.mark.parametrize(
     ("section", "key", "value"),
     [
