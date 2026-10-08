@@ -200,3 +200,49 @@ def test_incomplete_official_protocol_rejected_before_pilot(
     with pytest.raises(ValueError, match="official train/dev counts mismatch"):
         prepare(dataset, destination, limit_per_class=2)
     assert not destination.exists()
+
+
+def test_dev_union_counts_include_real_only_speakers(
+    dataset: Path, tmp_path: Path
+) -> None:
+    # Official dev has 20 bonafide speakers but only 10 spoof speakers.
+    # A miniature equivalent keeps two bonafide speakers and one spoof speaker.
+    protocol = dataset / PROTOCOLS["dev"]
+    rows = [line.split() for line in protocol.read_text().splitlines()]
+    for row in rows:
+        if row[4] == "spoof":
+            row[0] = "LA_0003"
+    protocol.write_text("\n".join(" ".join(row) for row in rows) + "\n")
+    destination = tmp_path / "asymmetric"
+    summary = prepare(dataset, destination, limit_per_class=2)
+    records = load_manifest(destination / "manifest.jsonl")
+    dev = [record for record in records if record.split == "dev"]
+    assert summary["full_protocol_counts"]["dev"] == {
+        "speakers": 2,
+        "real": 4,
+        "fake": 4,
+    }
+    assert len({record.identity_id for record in dev if record.label == 0}) == 2
+    assert len({record.identity_id for record in dev if record.label == 1}) == 1
+    assert len({record.identity_id for record in dev}) == 2
+
+
+def test_missing_dev_speaker_rejected_even_with_correct_label_counts(
+    dataset: Path, tmp_path: Path
+) -> None:
+    protocol = dataset / PROTOCOLS["dev"]
+    protocol.write_text(protocol.read_text().replace("LA_0004", "LA_0003"))
+    destination = tmp_path / "missing_dev_speaker"
+    with pytest.raises(ValueError, match="official train/dev counts mismatch"):
+        prepare(dataset, destination, limit_per_class=2)
+    assert not destination.exists()
+
+
+def test_official_dev_expectation_uses_all_protocol_speakers() -> None:
+    # Fixed by the official, checksum-verified CM dev protocol, not the spoof-only
+    # speaker subset. Full evidence: resume/protocol-speaker-audit.json.
+    assert OFFICIAL_EXPECTED_COUNTS["dev"] == {
+        "speakers": 20,
+        "real": 2548,
+        "fake": 22296,
+    }

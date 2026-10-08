@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/home/maoxiao/WorkSpace/deepfake-detection-archive/docs/experiments/asv-pilot-20261007/resume/source/prepare_pilot.py", line 111, in <module>
+    main()
+  File "/home/maoxiao/WorkSpace/deepfake-detection-archive/docs/experiments/asv-pilot-20261007/resume/source/prepare_pilot.py", line 69, in main
+    raise ValueError("decode/provenance/split audit failed; inspect audit.json")
+ValueError: decode/provenance/split audit failed; inspect audit.json

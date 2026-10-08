@@ -48,3 +48,5 @@ htmlcov/
 !/.agents/
 !/.agents/**
 !/skills-lock.json
+
+.vscode/

@@ -1,0 +1,29 @@
+{
+  "executed": false,
+  "materialized_at": "2026-10-07T23:29:47.578209+00:00",
+  "design_recorded_before_root_viewed_detector_scores": true,
+  "baseline_seed42_score_seen_before_config_materialization": true,
+  "formal_preregistered_candidate": false,
+  "runs": [
+    {
+      "seed": 42,
+      "original_config_sha256": "cd43a4aa806d31c914fa035e73c8970c2002411c5a4d5cfa36d78fe3032bec56",
+      "control_config_sha256": "64e1be8e832749d9b705f1127c79eebfe12fda63ad29eb6d1c72f21825fa7102",
+      "changed_fields": [
+        "video.resize_mode",
+        "feature_cache",
+        "output_dir"
+      ]
+    },
+    {
+      "seed": 43,
+      "original_config_sha256": "7793bb16798053b8f733dd618443ecd542dbe73afa2b91c207bd43f87bdbfa80",
+      "control_config_sha256": "ce351c3dcd54ad45c8eaf14df3796d42607576c268b4a4f93122aba683b26143",
+      "changed_fields": [
+        "video.resize_mode",
+        "feature_cache",
+        "output_dir"
+      ]
+    }
+  ]
+}

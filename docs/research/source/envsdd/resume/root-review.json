@@ -1,0 +1,16 @@
+{
+  "reviewed_at": "2026-10-07T23:39:27.092077+00:00",
+  "reviewer": "root-independent-full-byte-and-WAV-check",
+  "report_sha256": "33537e11802d0fa0fe49c183363d158d466db503ef6381c8b9feb7bfcc32d6b7",
+  "verified": 64,
+  "labels": {
+    "real": 32,
+    "fake": 32
+  },
+  "bytes": 8194816,
+  "fsid_count": 32,
+  "full_fsid_families": false,
+  "training_started": false,
+  "competition_approved": false,
+  "failure_evidence_retained": true
+}

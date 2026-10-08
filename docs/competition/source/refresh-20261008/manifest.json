@@ -1,0 +1,76 @@
+{
+  "recorded_at": "2026-10-08T07:39:12+08:00",
+  "scope": "Anonymous, read-only retrieval of public first-party pages and public REST endpoints. No login, credentials, enrolment, upload, message, or download request was used.",
+  "competition_id": "2026c40dbb2347fba8b3c9a6294efa5b",
+  "project_id": "2026c40item0004",
+  "files": [
+    {
+      "path": "competition-detail.html",
+      "url": "https://ai.xm.gov.cn/competition/competition-detail.html?id=2026c40dbb2347fba8b3c9a6294efa5b",
+      "content_type": "text/html",
+      "bytes": 61422,
+      "sha256": "eb3b09033a338cb38905ad9251f79460a7420dff66dd571623443056b5a23e75"
+    },
+    {
+      "path": "project-detail.html",
+      "url": "https://ai.xm.gov.cn/competition/project-detail.html?id=2026c40item0004&competeId=2026c40dbb2347fba8b3c9a6294efa5b",
+      "content_type": "text/html",
+      "bytes": 14258,
+      "sha256": "bc642741caf95b8f4424517b525875dd04d61e2bdd1d9a29f7609ecfa97a8aa5"
+    },
+    {
+      "path": "competition-detail.api.json",
+      "url": "https://ai.xm.gov.cn/rest/citizencloud/compete/detail",
+      "method": "POST",
+      "anonymous_request_json": {"id": "2026c40dbb2347fba8b3c9a6294efa5b"},
+      "content_type": "application/json",
+      "bytes": 883,
+      "sha256": "02ef22e58d5a33229f3bfd1c237b284a4bd4dc8931f292c45363403a8d3152a9"
+    },
+    {
+      "path": "list-sign-compete-item.api.json",
+      "url": "https://ai.xm.gov.cn/rest/citizencloud/compete/list-sign-compete-item",
+      "method": "POST",
+      "anonymous_request_json": {"id": "2026c40dbb2347fba8b3c9a6294efa5b"},
+      "content_type": "application/json",
+      "bytes": 7129,
+      "sha256": "ab4bf57926e066b91dddaa883b4fc820b20fcd59766d49107d708a0d290909d4"
+    },
+    {
+      "path": "competition-detail.js",
+      "url": "https://ai.xm.gov.cn/static/ai/js/pages/competition/competition-detail.js?v=5.1",
+      "content_type": "application/javascript",
+      "bytes": 15107,
+      "sha256": "dca9a780e79ed7483af120678b1d573cd01853b129d732b546ebe71d04f6b5bd"
+    },
+    {
+      "path": "project-detail.js",
+      "url": "https://ai.xm.gov.cn/static/ai/js/pages/detail/project-detail.js?v=5.1",
+      "content_type": "application/javascript",
+      "bytes": 2950,
+      "sha256": "855c01814da056e5ec4df088fd54c170815ecac448df8cd23988bda808351fca"
+    },
+    {
+      "path": "app-ajax.js",
+      "url": "https://ai.xm.gov.cn/static/ai/js/utils/app-ajax.js?v=5.1",
+      "content_type": "application/javascript",
+      "bytes": 5483,
+      "sha256": "d6137f20422650dfacab3425e2ccbae0f032ed4ac2d31e7d1548e75724e81cfc"
+    },
+    {
+      "path": "services-config.js",
+      "url": "https://ai.xm.gov.cn/static/ai/js/config/services-config.js?v=5.1",
+      "content_type": "application/javascript",
+      "bytes": 8748,
+      "sha256": "d0ef50cca52fa0c19d2942cc965e5423add31bd83dcf1b2c6150ca78374656cd"
+    },
+    {
+      "path": "constants.js",
+      "url": "https://ai.xm.gov.cn/static/ai/js/config/constants.js?v=5.1",
+      "content_type": "application/javascript",
+      "bytes": 273,
+      "sha256": "a380ad28822876854d09a8bca55dac94db89e21eff264aec8ac5290f50ac0110"
+    }
+  ],
+  "retrieval_note": "A mistaken request to /static/ai/js/pages/competition/project-detail.js returned HTTP 404 and was not retained as evidence. The project page actually loads /static/ai/js/pages/detail/project-detail.js."
+}

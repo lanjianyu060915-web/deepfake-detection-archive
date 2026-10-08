@@ -1,0 +1,72 @@
+{
+  "root_independent_verification": true,
+  "input_manifest_sha256": "f3b004bb94174d02899b9a8763c3619da121f90f53f919e5884e171c716d6638",
+  "runs": [
+    {
+      "seed": 42,
+      "dev_eer": 0.3246753246753247,
+      "dev_count": 154,
+      "failures": 0,
+      "best_epoch": 6,
+      "epochs_completed": 11,
+      "checkpoint_sha256": "ca2c0ec890e5f49cea2baeeea569b79d6ce4df818410fb27cdb7871cd2695635",
+      "scores_sha256": "6bb3f7238d4e45f142ea9e53ab7942b231f414ca2492700cc93b484ac388703e",
+      "resources": {
+        "train": {
+          "seconds": 127.29293721700014,
+          "samples": 121,
+          "device_peaks": {
+            "utilization.gpu [%]": 64.0,
+            "memory.used [MiB]": 2103.0,
+            "temperature.gpu": 58.0
+          }
+        },
+        "infer": {
+          "seconds": 24.158708845003275,
+          "samples": 23,
+          "device_peaks": {
+            "utilization.gpu [%]": 58.0,
+            "memory.used [MiB]": 2038.0,
+            "temperature.gpu": 58.0
+          }
+        }
+      }
+    },
+    {
+      "seed": 43,
+      "dev_eer": 0.3246753246753247,
+      "dev_count": 154,
+      "failures": 0,
+      "best_epoch": 7,
+      "epochs_completed": 12,
+      "checkpoint_sha256": "af7dda21d63ae41e703f9a94178b480206731e700d2f8f38fcd6cc169de219e1",
+      "scores_sha256": "adabca8df071d479d49331ba21edaafe9c9bb803e2a136680e1eb9bb0d6e6ace",
+      "resources": {
+        "train": {
+          "seconds": 9.62270645000001,
+          "samples": 9,
+          "device_peaks": {
+            "utilization.gpu [%]": 11.0,
+            "memory.used [MiB]": 910.0,
+            "temperature.gpu": 53.0
+          }
+        },
+        "infer": {
+          "seconds": 23.339572309999994,
+          "samples": 22,
+          "device_peaks": {
+            "utilization.gpu [%]": 37.0,
+            "memory.used [MiB]": 872.0,
+            "temperature.gpu": 55.0
+          }
+        }
+      }
+    }
+  ],
+  "known_independent_groups": 0,
+  "holdout_scored": false,
+  "formal_promotion": false,
+  "aspect_ratio_shortcut_present": true,
+  "metadata_only_width_dev_eer": 0.24752628324056894,
+  "performance_interpretation": "Exploratory ResNet18 pad baseline does not establish reliable forgery-content detection."
+}

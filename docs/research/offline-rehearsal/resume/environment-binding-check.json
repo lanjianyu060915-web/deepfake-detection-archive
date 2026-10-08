@@ -1,0 +1,321 @@
+{
+  "scope": "Read-only CPU environment binding; no model inference",
+  "script_sha256": "752ef6a540c0de2f50e01ea13c361b3c2cd8745a197e5b634d7d90f776b3d3f0",
+  "result": {
+    "snapshot": {
+      "prefix": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env",
+      "executable": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/bin/python",
+      "package": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages/deepfake_detection_archive/__init__.py",
+      "torch": "2.14.1+cpu",
+      "cuda": null,
+      "cuda_available": false,
+      "distributions": {
+        "markdown-it-py": {
+          "version": "4.2.0",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "jinja2": {
+          "version": "3.1.6",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "anyio": {
+          "version": "4.15.1",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "regex": {
+          "version": "2026.9.29",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "setuptools": {
+          "version": "84.0.0",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "click": {
+          "version": "8.5.0",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "networkx": {
+          "version": "3.7",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "numpy": {
+          "version": "2.5.3",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "pywavelets": {
+          "version": "1.10.0",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "certifi": {
+          "version": "2026.7.22",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "torchvision": {
+          "version": "0.29.1+cpu",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "shellingham": {
+          "version": "1.5.4",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "lazy-loader": {
+          "version": "0.6",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "safetensors": {
+          "version": "0.8.0",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "pycparser": {
+          "version": "3.0",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "requests": {
+          "version": "2.34.2",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "scikit-learn": {
+          "version": "1.9.1",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "filelock": {
+          "version": "4.0.12",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "platformdirs": {
+          "version": "4.12.3",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "packaging": {
+          "version": "26.3",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "pillow": {
+          "version": "12.3.0",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "cloudpickle": {
+          "version": "3.1.2",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "idna": {
+          "version": "3.20",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "typer": {
+          "version": "0.27.3",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "six": {
+          "version": "1.17.0",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "httpcore": {
+          "version": "1.0.9",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "h11": {
+          "version": "0.16.0",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "numba": {
+          "version": "0.68.0",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "python-dateutil": {
+          "version": "2.9.0.post0",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "msgpack": {
+          "version": "1.2.3",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "typing-extensions": {
+          "version": "4.16.0",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "urllib3": {
+          "version": "2.8.0",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "mpmath": {
+          "version": "1.3.0",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "deepfake-detection-archive": {
+          "version": "0.1.0",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "mdurl": {
+          "version": "0.1.2",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "pandas": {
+          "version": "3.0.6",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "cffi": {
+          "version": "2.1.1",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "pyyaml": {
+          "version": "6.0.3",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "sympy": {
+          "version": "1.14.0",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "joblib": {
+          "version": "1.6.0",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "tokenizers": {
+          "version": "0.23.2",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "threadpoolctl": {
+          "version": "3.7.0",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "hf-xet": {
+          "version": "1.7.0",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "rich": {
+          "version": "15.0.0",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "annotated-doc": {
+          "version": "0.0.5",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "pooch": {
+          "version": "1.9.0",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "librosa": {
+          "version": "1.0.0",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "torch": {
+          "version": "2.14.1+cpu",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "llvmlite": {
+          "version": "0.50.0",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "imagehash": {
+          "version": "4.3.2",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "httpx": {
+          "version": "0.28.1",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "transformers": {
+          "version": "5.19.0",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "scipy": {
+          "version": "1.18.1",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "decorator": {
+          "version": "5.3.1",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "soundfile": {
+          "version": "0.14.0",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "narwhals": {
+          "version": "2.26.0",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "huggingface-hub": {
+          "version": "1.33.0",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "fsspec": {
+          "version": "2026.9.0",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "soxr": {
+          "version": "1.1.0",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "markupsafe": {
+          "version": "3.0.4",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "pygments": {
+          "version": "2.21.0",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "timm": {
+          "version": "1.0.30",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "opencv-python-headless": {
+          "version": "5.0.0.93",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "tqdm": {
+          "version": "4.70.1",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        },
+        "charset-normalizer": {
+          "version": "3.5.2",
+          "root": "/home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/offline-rehearsal-cpu/env/lib/python3.12/site-packages"
+        }
+      },
+      "code": {
+        "code_sha256": "19aaa60d08f1a134540ae81e57fe6aacb877afac9b1b9b9d160c5b77a06de225",
+        "commit": "edb20e4d6038214b0e4d0a948bb3ee0f124db55c",
+        "dirty": true
+      }
+    },
+    "project_members": {
+      "deepfake_detection_archive/__init__.py": "86399a1625409dc132e225f09f6bab26ff2fcc4ffb7a3a5c6a9261fa39e92ecd",
+      "deepfake_detection_archive/__main__.py": "528f1e4488a5ea48b9ae26e7511a96fb083a581f11751fe8bf8e4c3c03f9ee78",
+      "deepfake_detection_archive/cli.py": "f0c2fa3886228411883a8b02e87eb3dfbbcf64e0c7fb9744fb9a29b8ebc4ebaf",
+      "deepfake_detection_archive/config.py": "57e0e3f0acdbf750d0be7b5991945807a09b876160875c7eaae2f8a5f39cc77a",
+      "deepfake_detection_archive/contracts.py": "a16acc8f4471f992b0203c6e07e93c04c71bbd1f1460bb0e20e64e81c1b5a7a3",
+      "deepfake_detection_archive/data/__init__.py": "27cf411fdc4f2a919ce54a749858bcaeb819b14ad1cb7712db906484f1a29e91",
+      "deepfake_detection_archive/data/audit.py": "a703ef6f2e0d1954f530f9a76508d3375a30379a8d7556f25e114ca4bf7ce136",
+      "deepfake_detection_archive/data/duplicates.py": "4083fb603bb2a0e1bff3b393ec559ffc2e3d1fd46db7f2e7862ad60030b63cc8",
+      "deepfake_detection_archive/data/manifest.py": "1f984be8e61850910e42c9cbfa9b8d16ac7dbbfd3a2ae3a3034b62551ad5b5fd",
+      "deepfake_detection_archive/data/split.py": "c51f766ea0da9be646af4b947d7518822db83d14e5b69442cb02803f8f036baf",
+      "deepfake_detection_archive/evaluation/__init__.py": "da4b61ac5d1b4182e747a52fd0da8a035da5c5dd1940030c40c3c2e6938da044",
+      "deepfake_detection_archive/evaluation/bootstrap.py": "c5541cb1031cb67822dcc1f7769a8fd6eed7dc928c8af0828dac40110ea36303",
+      "deepfake_detection_archive/evaluation/metrics.py": "e42224ccf5b83caaf3c266764b33ab3a9bfcbc681790d4869d77b3db00832468",
+      "deepfake_detection_archive/evaluation/report.py": "ab81ae2b1d37340f9cc3e77716f491b473ca7bf98ee1f509c7b1267bda04e74b",
+      "deepfake_detection_archive/experiments.py": "c1553f7e695398a0716891032163cc09de8262a87cb4f86bf53fcee491b89edc",
+      "deepfake_detection_archive/features.py": "d65e84bcfc194526aad7510e8c9b122d888f308558df47bf1753ad3036fe78e5",
+      "deepfake_detection_archive/media/__init__.py": "0364bf02b304bc5023e5949a994684f109ed0fbb18ae939c4793c25e14b300d6",
+      "deepfake_detection_archive/models/__init__.py": "d078e26eff1521e5eee286a110a6b2ae5c13e674780644287c3d6aa3f42f8627",
+      "deepfake_detection_archive/models/_vendor/AASIST-LICENSE.txt": "da2e79b8592d166ef505224300968b80ebe1e4c217c43b94a5ec627d81cd4142",
+      "deepfake_detection_archive/models/_vendor/AASIST-NOTICE.txt": "70edb07f04ddc88e7155d6e826495e5ef99c3b1f0bd4e1b7fa35897b3854dbd0",
+      "deepfake_detection_archive/models/_vendor/README.md": "88331736f28fd578b24e1e91757776b48bb788df69fedd6a7544b8ff9f54950f",
+      "deepfake_detection_archive/models/_vendor/__init__.py": "7da5c86416140aff2c04a23d1cebf984f6ed7c47d6b5ca0c8bc0c0da6c6a45c4",
+      "deepfake_detection_archive/models/_vendor/aasist.py": "d1e8fb702be2e896f6030a9646533f2d47b8298e4ec53df9b9c670562970ac2d",
+      "deepfake_detection_archive/models/aasist.py": "4c4a3f0034916598972200c02fb6f2ac1a9972851de65f0eb7f0c817a59d5dc9",
+      "deepfake_detection_archive/models/checkpoint.py": "b95b6ed6a92dbf6c902f568c5222335dd888195e2c1f6e898b3796c316f107b0",
+      "deepfake_detection_archive/models/core.py": "61d353b4a86edab9c1f09555c7786438135acd4fe3083fb8986e63edffb25432",
+      "deepfake_detection_archive/models/encoders.py": "29b18129b4924e222a62b9bd9b3c7e6bc307611114a3451261a97bc8cf233219",
+      "deepfake_detection_archive/preparation.py": "db091b1dd52b6366fe16e4f1bb8a718974419d0d2563aa4822789d41ff3a9cce",
+      "deepfake_detection_archive/scoring.py": "6d058190f3605970e522cf8021ef8da363f66fd3bee29a2c9b798a92494ceab6",
+      "deepfake_detection_archive/submission/__init__.py": "2bf243d6c811d6fdbe3bcfa477d4bf7e89ac37d307c02453cda6eca94e6b071c",
+      "deepfake_detection_archive/submission/adapter.py": "949f6b2034078c5059440746dfdac84aa8989e0936e9103a5d856b866377c5f7",
+      "deepfake_detection_archive/submission/package.py": "477c58fc63a482fe1966a433919ac99c49ae6fc981a947af0fe4f93f78908b65",
+      "deepfake_detection_archive/submission/runner.py": "7054c66974e1ed86f3beb80c5639d81a098e7c003d1154e8ba5cf0efffa58e8d",
+      "deepfake_detection_archive/tracking.py": "48b38500eefe5c66ff13bdbc743cc78c6a47b3de7cfdd222960cd8ad2029dde9",
+      "deepfake_detection_archive/training.py": "d7c334dc73e7a9e06d751d42c5377e9139762b97814fe278c7509bc05c34ee0a"
+    },
+    "installation_summary_sha256": "b11e625159ae88f0e11192c2b4d87a3ff7ad90aa2133ba5ef2016923fd51eecc",
+    "wheelhouse_sha256": "14a2d2cf31cef687258e7527f3050b630d83e27220449c646465eb2632a3f69a",
+    "wheel_count": 65
+  }
+}

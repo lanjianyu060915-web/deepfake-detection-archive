@@ -34,7 +34,7 @@ PROTOCOLS = {
 }
 EXPECTED_COUNTS = {
     "train": {"speakers": 20, "real": 2580, "fake": 22800},
-    "dev": {"speakers": 10, "real": 2548, "fake": 22296},
+    "dev": {"speakers": 20, "real": 2548, "fake": 22296},
 }
 
 

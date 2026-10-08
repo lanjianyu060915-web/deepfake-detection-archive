@@ -1,0 +1,302 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>大赛详情</title>
+		<meta charset="utf-8" />
+<!-- 强制360浏览器使用极速内核 -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<meta name="keywords" content="中国人工智能大赛 " />
+<meta name="description" content="中国人工智能大赛 " />
+<meta name="format-detection" content="telephone=no" />
+
+<meta property="og:title" content="中国人工智能大赛" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ai.xm.gov.cn" />
+<meta property="og:image" content="https://ai.xm.gov.cn/static/ai/images/AIlogo200.png" />
+<meta property="og:description" content="跨界  融合  创新  发展" />
+<meta property="og:site_name" content="中国人工智能大赛" />
+
+<meta name="baidu-site-verification" content="codeva-y8fUgMuUS8" />
+
+<link rel="shortcut icon" href="https://ai.xm.gov.cn/static/ai/images/favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" type="text/css" href="https://ai.xm.gov.cn/static/ai/css/common/icon-font.css"/>
+<!--<link rel="stylesheet" type="text/css" href="https://ai.xm.gov.cn/static/ai/css/common/main.css"/>-->
+<link rel="stylesheet" type="text/css" href="https://ai.xm.gov.cn/static/ai/css/common/main-3.css"/>
+<script src="https://ai.xm.gov.cn/static/common/js/utils/html5.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://ai.xm.gov.cn/static/common/js/jquery/jquery-1.11.0.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://ai.xm.gov.cn/static/common/js/seajs/sea.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	var INNO_CHINA_CONSTANTS = {
+		BASE_URL: "https://ai.xm.gov.cn",
+		UPLOAD_URL: "http://sliskillshare.oss-cn-beijing.aliyuncs.com",
+		RESOURCE_URL: "https://ai.xm.gov.cn/static",
+		APP_ID : "400000000000000001",
+		SITE_ID : "a3dffa447660434680b982e54f270d88",
+		SITE_AREA_CODE : "350200",
+		COMPETEID : "0c8ce75d26e840b1b9ffd10633d6a9bf",
+	};
+</script>
+
+<!--sea.js 配置-->
+<script type="text/javascript">
+	var version = "5.1";
+	seajs.config({
+		base: "https://ai.xm.gov.cn/static",
+		// 别名seajs配置
+		alias: {
+
+			// 自定义工具类
+			'ajax-utils-rest': 'common/js/utils/ajax-utils-rest',
+			'md5': 'common/js/utils/md5',
+			'notify': 'ai/js/utils/notify'
+
+			// 配置文件
+			,'constants': 'ai/js/config/constants'
+			,'services-config': 'ai/js/config/services-config'
+
+			// App核心库
+			,'app-ajax': 'ai/js/utils/app-ajax'
+
+			//第三方插件库
+			,'artTemplate': 'common/js/art-template/art-template'
+			,'mui': 'ai/js/utils/mui.min'
+		},
+		map: [
+			[/^(.*\.(?:css|js))(?:.*)$/i, '$1?v=' + version]
+		]
+	});
+</script>
+
+<script>
+	window.onload = function() {
+
+		var _hmt = _hmt || [];
+		(function() {
+			var hm = document.createElement("script");
+			hm.src = "https://hm.baidu.com/hm.js?fe22fb114c60cec82cd5d81fd8d9d3aa";
+			var s = document.getElementsByTagName("script")[0];
+			s.parentNode.insertBefore(hm, s);
+
+			$("title").text("中国人工智能大赛 - " + $("title").text());
+		})();
+	};
+</script>
+
+		<link rel="stylesheet" type="text/css" href="https://ai.xm.gov.cn/static/ai/css/page/project-detail.css"/>
+		<link rel="stylesheet" type="text/css" href="https://ai.xm.gov.cn/static/ai/css/common/empty.css"/>
+		<style>
+			h1.media-title-sp {
+			    position: relative;
+			    padding: 0 16px;
+			    margin-left: 12px;
+			    margin-bottom:12px !important;
+			    line-height:32px !important;
+			    background: linear-gradient(to right,#d0e8ff,rgba(208,232,255,0));
+			}
+			h1.media-title-sp b,
+			h1.media-title-sp span{
+			    font-weight: normal;
+			    vertical-align: top;
+			    font-size: 18px !important;
+			}
+			h1.media-title-sp:before{
+			    content:"";
+			    position:absolute;
+			    left:-44px;
+			    top: -7px;
+			    width: 48px;
+			    height: 48px;
+			    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAABklBMVEUAAAD///////////////////////////////////////////////////////////////////////////////////////////////////////8gQsgkNsIIkPEfRMkLiOwfR8oOe+YlNMAmML4iPcUHk/IKiu4hP8YGlvMGmPQeSswPeOQJju8cTs4jOMMJjO4LhusEnPcOf+cZV9McUM8dTM0Mg+nx+v8cUtARc+ENgegYW9WvxO8bVNEHlPIlMb8eScsQdeMiO8QiPMSlrOWtyPITbt+mquQjOsMGmfUDn/gUat0ScOCosOew4f0MhOqezfYWYdgXXtbm8v3p9//w9PymtOldcdUDovolOMJak+aoreagx/MGpfsFmvVZf9yd0vnd3/Wkuezx8/vf5/n2/P8Knvdws/FZleZZl+fy9v2k2vwssvs9rPYuoPLG2vYvlewyjunW8P5yru8trfgvp/WHs+2c1ftDieO+1fWVvvCxzfMkXdSvtuiepOOovu1NX8/Cxu0umvB0q+00iOV5vPQtlclEAAAAGnRSTlMA5iG0UtmVZhBpLRk0KPdeC/FJ/b++xPtWiOLh9MMAAALWSURBVEjHlZT5X1JBFMWfLE8TEdHKGldQFHMFQoEKocVkSUOsINGIsg2XVrV9/797c+9s8MD0/HSZz/m+4czcO9p/ZHG1a6eQ7iaE9Fgdmlltivhah50w2ercF3Q7UWTXbeBvIaQh4TxPTDprEX4zIb+u7sL8C9W39YROGgr9+b34xEod4YafTwzdQ71CA/oH4v5ULWEB+48b432Dw5emI6HQWu6II/lfswM+f+pZDeGi5deZ66MAXL4WupLLfWb+10OzUz7/xFYNcYZWNw1gvG84EabAWu4W868yICAIARSXTUD+TWx1aGxqIG4A6QISnQ4O9FNgMBGejgAAfk9sfg6AVCCd3kTCKoAZmRqA/J9JT9AAIPVWOl1AolcBRhGgqQ3gKArAEAXgPxU24QadAsBjMkIAsJ2NJj3BGKTmQJU6XRwoqsdk7HAQTU561NSFnQXqtHBAHFMEAfIbgDkB7KxTo1tk6F+mqRM0NQLkHaaeoqkDafQTnQNePCZMbQBAKKnfo9+uSUBtDgTI8+A8S838LXS+u2n1EwCRep8wAlL74h8Uv9YF9bcHqEdUFUI4AamFv/nAScIA9oQf1UGO09+x3XU+tRYEHJ3HEtuytCJgJSdWNwBQPr5Ddd9QpfL9KQHtl0p3DZXL5cPDFdhIh1cJ/EVvvxyJL0B8yiYn+Uj4U7v83rRWWm0ser3KSFylay+zUXUkYIsuftO3RxbVu0ZgCQHW4dCrbY2AsABwJJoCssMReLGkjERTAFMzIKuMRMoMiJEQgJraBIzAMWFqBB5msupDYALU1AyQqZsCkFoAMrUvbgJEahWQqc0AS43HJICofAgQEK0xgqmxOTggUyOArdEOzedVU0eg+Q4yGWwOSC2bT+sBYsMQ6/AKa++PJSrs8CpsoJ92gGw4oif2n9NQtl5iknnO8RFAOaz1dqvjYv3r49Y1Vc5WRU5Y6upWllzi6/8AiW9AYVqp/4MAAAAASUVORK5CYII=);
+			}
+			@media (max-width:768px){
+				h1.media-title-sp {
+				    margin-left: 2rem;
+				    padding: 0 1rem;
+				    line-height: 2rem !important;
+				    margin-bottom: 0.75rem !important;
+				}
+				
+				h1.media-title-sp b,
+				h1.media-title-sp span{
+				    font-size: 1rem !important;
+				}
+				h1.media-title-sp:before{
+				    top:50%;
+				    left: -2.75rem;
+				    margin-top: -1.5rem;
+				    width:3rem;
+				    height:3rem;
+				    backgruond-size:contain;
+				}
+			}
+		</style>
+	</head>
+	<body>
+	<div class="header">
+	<!--H2为空的时候 样式控制显示logo-->
+	<div class="layout">
+		<h2 class="title"></h2>
+		<a class="logo" href="https://ai.xm.gov.cn/">
+			<img src="https://ai.xm.gov.cn/static/ai/images/versions-3.0/logo.png" />
+		</a>
+		<!--active打开导航-->
+		<a class="nav-btn ">
+			<span></span>
+			<span></span>
+			<span></span>
+		</a>
+		<div class="pa">
+			
+			<div class="nav 2">
+				<a href="https://ai.xm.gov.cn/#card0">首页</a>
+				<a href="https://ai.xm.gov.cn/#card1">动态</a>
+				<a href="https://ai.xm.gov.cn/#card2">简介</a>
+				<a href="https://ai.xm.gov.cn/#card3">比赛</a>
+				<a href="https://ai.xm.gov.cn/#card4">往届回顾</a>
+<!--				<a href="http://capital.people.com.cn/GB/407469/433540/index.html">专题</a>-->
+				<a href="https://ai.xm.gov.cn/competition/common-question.html?id=af3b50af6bee488f8bae91003ea01586">常见问题</a>
+			</div>
+			
+			<div class="user hide" id="headLoginDiv">
+				<div class="header-box">
+					<img id="headPhoto" src="https://ai.xm.gov.cn/static/ai/images/user-default.png" />
+				</div>
+				<div class="name" id="headNickName">用户名</div>
+				<ul>
+					<!--<li class="zhxx active">
+						<a>账号信息</a>
+					</li>-->
+					<li class="xgmm">
+						<a href="https://ai.xm.gov.cn/my/change-password.html">修改密码</a>
+					</li>
+					<li class="wdcs">
+						<a href="https://ai.xm.gov.cn/competition/my-competition-list.html">我的参赛</a>
+					</li>
+<!--					<li class="wdcj">-->
+<!--						<a href="https://ai.xm.gov.cn/my/my-grades.html">我的成绩</a>-->
+<!--					</li>-->
+					<li class="xx">
+						<a href="https://ai.xm.gov.cn/my/my-message.html">消息</a>
+					</li>
+					<!--<li class="xlsj">
+						<a>训练数据</a>
+					</li>-->
+					<li class="exit" id="loginout">
+						<a>退出</a>
+					</li>
+				</ul>
+			</div>
+			<div class="btns hide" id="headNoLoginDiv">
+				<a class="btn primary" id="loginIn">报名</a>
+				<a class="btn" href="https://passport.ixiamen.org.cn/#/register/Citizen">注册</a>
+			</div>
+		</div>
+	</div>
+	<!--移动端-->
+</div>
+
+<script type="text/javascript">
+	seajs.use("ai/js/utils/top-bar-2020");
+</script>
+
+		<div class="main-content">
+			<div class="banner">
+<!--				<div class="layout">-->
+<!--					<h2>大赛项目</h2>-->
+<!--					<h3>COMPETITION ITEM</h3>-->
+<!--				</div>-->
+			</div>
+			<div class="tabs">
+				<div class="layout">
+					<ul>
+						<li class="active">
+							<a style="font-size: 24px;">比赛项目</a>
+						</li>
+						<!--<li class="">
+							<a>样例数据</a>
+						</li>
+						<li class="">
+							<a>报名</a>
+						</li>-->
+					</ul>
+				</div>
+			</div>
+			<div class="layout">
+				<div class="protocol-detail">
+					<div class="content">
+						<!--<div class="project-tit">
+							AIGC音视频伪造识别赛
+						</div>-->
+						<p><h2>AIGC音视频伪造识别赛</h2><p><strong>赛题方向：</strong>大模型　　<strong>赛制：</strong>技术赛</p><p>AIGC音视频伪造识别赛题聚焦AI生成合成内容鉴别挑战，应对生成合成等技术滥用引发的信任危机。当前音视频伪造技术日趋隐蔽，严重威胁社会公信力与信息安全，亟需技术突破。赛事主办方发布包含基于最新生成合成技术制作的高质量样本集，参赛队伍需基于开源或自建数据集构建算法模型，比赛过程中，参赛队伍的算法模型需在限定时间内完成音频和视频的真伪判定，确保高效性与准确性。</p><h3>比赛数据</h3><p>AIGC音频检测赛：本赛题将提供约10000段音频数据，其中5000段为真实音频数据，5000段为AIGC生成音频数据，综合判断参赛者提交模型算法的识别检验能力。</p><p>AIGC视频检测赛：本赛题将提供约10000段视频数据，其中5000段为真实视频数据，5000段为AIGC生成视频数据，综合判断参赛者提交模型算法的识别检验能力。</p><h3>考核指标</h3><p>音视频均采用等错误率指标。</p><div style="max-width:100%;overflow-x:auto"><table border="1" cellpadding="8" cellspacing="0" style="border-collapse:collapse;width:100%;"><thead><tr><th>考核指标</th><th>计算公式定义</th></tr></thead><tbody><tr><td>等错误率</td><td>等错误率（Equal Error Rate, EER）为效果评价指标，是错误接受率（FAR）和错误拒绝率（FRR）相等时的取值，即取 EER = E<sub>FAR</sub> = E<sub>FRR</sub> 时的指标来衡量系统性能。FAR 是指将非目标判别为目标造成的错误，FRR 是指将目标误识成非目标造成的错误。通过调节阈值可以使得 FAR 与 FRR 值相等，此时的 FAR 与 FRR 的值称为等错误率。EER 值越小系统性能越好。<br>FAR = 应被拒绝却被错误接收的伪造样本数 / 伪造样本总数 × 100%<br>FRR = 应被接收却被错误拒绝的真实样本数 / 真实样本总数 × 100%</td></tr><tr><td>综合排名分数</td><td>等错误率排名分数 S1 = 比赛最优等错误率 / 实际各参赛单位等错误率 × 100%，取值范围（0,1]。</td></tr></tbody></table></div></p>
+					</div>
+					<!--<div class="opera-box">
+						<a class="btn">立即报名</a>
+					</div>-->
+				</div>
+				
+				<div class="project-list hide">
+					<div class="empty">
+						<div class="empty-top">
+							<img src="https://ai.xm.gov.cn/static/ai/images/empty-bg.png" alt="" />
+							<div class="tip-txt">
+								<p>目前无数据下载项</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+		<div class="footer">
+	<div class="layout">
+		<div class="sub">
+			<div class="tit">联系我们</div>
+<!--			<b>0592-5051180</b>-->
+			<span>咨询电话：<div class="phone"><b>0592-5051516（i厦门账号问题）</b><b>15859515797（技术问题）</b></div></span>
+			<span>电子邮箱：<div class="phone"><b>China_ai_support@xm.gov.cn</b><b>chinaaicompetition@caict.ac.cn</b></div></span>
+			<span>地址：厦门市思明区湖滨北路61号</span>
+		</div>
+		<div class="sub">
+			<div class="tit">协议</div>
+			<span><a href="https://ai.xm.gov.cn/detail/protocol-detail.html?id=0d6a110f5d644f548d09307e74d1c340">参赛协议</a></span>
+			<!--<span><a href="https://ai.xm.gov.cn/detail/protocol-detail.html?id=cd27642c24514ca2bad9c7d11022e944">法律声明</a></span>-->
+			<!--<span><a href="https://ai.xm.gov.cn/detail/protocol-detail.html?id=c1811858ee4641e5bfe45ce7ee576dee">报名协议</a></span>
+			<span><a href="https://ai.xm.gov.cn/detail/protocol-detail.html?id=497a41c2ca7d46fba40845513f9b2ab8">数据协议</a></span>
+			<span><a href="https://ai.xm.gov.cn/detail/protocol-detail.html?id=1d7f85d192204179a612a7d7348b2abb">用户协议</a></span>-->
+		</div>
+		<!--<div class="sub">
+			<div class="tit">其他</div>
+			<span><a href="https://ai.xm.gov.cn/detail/protocol-detail.html?id=ea223b58a4d046378cee93fe3aeb36aa">隐私政策</a></span>
+			<span><a href="https://ai.xm.gov.cn/detail/protocol-detail.html?id=cd27642c24514ca2bad9c7d11022e944">版权声明</a></span>
+		</div>-->
+		<div class="qr-code">
+			<div class="sub" style="width: 180px;">
+				<img style="width: 143px; margin: 0 auto;" src="https://ai.xm.gov.cn/static/ai/images/sgj-qr-code.jpg?v=20260923" />
+				<span style="white-space: nowrap;">厦门市工业和信息化局</span>
+			</div>
+			<div class="sub">
+				<img style="width: 143px;" src="https://ai.xm.gov.cn/static/ai/images/xty-qr-code.jpg" />
+				<span>CAICT鲸智</span>
+			</div>
+<!--			<div class="sub">-->
+<!--				<img src="https://ai.xm.gov.cn/static/ai/images/app-qr-code.jpg" />-->
+<!--				<span>i厦门APP</span>-->
+<!--			</div>-->
+			<div class="sub">
+				<img src="https://ai.xm.gov.cn/static/ai/images/gzh-qr-code.jpg" />
+				<span>i厦门公众号</span>
+			</div>
+		</div>
+	</div>
+	<div class="cory-right">
+		<a style="cursor: pointer;" href="https://beian.miit.gov.cn/" target="_blank">闽ICP备14010412号-9</a>
+	</div>
+</div>
+		<script type="text/javascript">
+        	seajs.use("ai/js/pages/detail/project-detail");
+        </script>
+	</body>
+</html>
