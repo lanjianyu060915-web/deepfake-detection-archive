@@ -1,0 +1,22 @@
+{
+  "observed_at": "2026-10-08T12:57:03.263879+00:00",
+  "archive_path": "cache/downloads/UrbanSound8K.tar.gz.part",
+  "observed_bytes": 2024613108,
+  "expected_bytes": 6023741708,
+  "official_md5": "9aa69802bbf37fb986f71ec1483a196e",
+  "archive_hash_verified": false,
+  "no_audio_extracted": true,
+  "complete_credits_acquired": false,
+  "primary_recording_uploader_urls_verified": 40,
+  "uploader_usernames": 27,
+  "attribution_record_file": "recording-attributions-20261008T124943817045Z.jsonl",
+  "attribution_record_sha256": "82ed6a0b6353f7a91605fcf4bcc4a7e429908238920e19b448e9785f80428e39",
+  "incomplete_archive_finalize_rejected_without_asset_creation": true,
+  "canonical_redirect_tests": "1 positive and 4 untrusted/mismatched URL negatives pass",
+  "ruff_format_strict_mypy": "2 scripts pass",
+  "script_hashes": {
+    "finalize_attribution.py": "7753da7ead0ddbc6e95d4067426d8e83fd0c5360add37e83610b2e08c87db283",
+    "fetch_recording_attributions.py": "4e5a021881d816606be3f27f725d208da0a45ca75010649e77ba5a49b17a2a53"
+  },
+  "competition_approved": false
+}
