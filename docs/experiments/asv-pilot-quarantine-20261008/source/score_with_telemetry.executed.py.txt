@@ -1,0 +1,94 @@
+"""One owned GPU scoring process with immutable command and resource evidence."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+from deepfake_detection_archive.data.manifest import file_sha256
+from deepfake_detection_archive.tracking import atomic_json, code_identity, utc_now
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--run",
+        choices=("aasist-l-seed42", "logmel-seed43", "aasist-l-seed43-retry1"),
+        required=True,
+    )
+    run = parser.parse_args().run
+    root = Path(__file__).resolve().parents[4]
+    directory = root / "outputs/experiments/asv-pilot-quarantine" / run
+    if (directory / "dev-inference").exists():
+        raise ValueError("Scores already exist; preserve original evidence")
+    script = Path(__file__).with_name(
+        "score_retry1.py" if run.endswith("retry1") else "score_pilot.py"
+    )
+    command = [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        str(directory / "dev-score-process-time.txt"),
+        sys.executable,
+        str(script),
+        "--project-root",
+        str(root),
+        "--run",
+        run,
+    ]
+    monitor_command = [
+        "/usr/lib/wsl/lib/nvidia-smi",
+        "--query-gpu=timestamp,memory.used,utilization.gpu,temperature.gpu,power.draw",
+        "--format=csv",
+        "--loop-ms=1000",
+    ]
+    start = utc_now()
+    before = time.monotonic()
+    with (
+        (directory / "dev-score-gpu.csv").open("x") as gpu,
+        (directory / "dev-score-gpu.stderr").open("x") as gpu_errors,
+        (directory / "dev-score-worker.stdout").open("x") as stdout,
+        (directory / "dev-score-worker.stderr").open("x") as stderr,
+    ):
+        monitor = subprocess.Popen(monitor_command, stdout=gpu, stderr=gpu_errors)  # noqa: S603 -- owned fixed monitor
+        try:
+            result = subprocess.run(
+                command,
+                stdout=stdout,
+                stderr=stderr,
+                cwd=root,
+                env=dict(os.environ, PYTHONPATH=str(root / "src")),
+                check=False,
+            )  # noqa: S603 -- fixed local scorer
+        finally:
+            monitor.terminate()
+            try:
+                monitor.wait(timeout=10)
+            except subprocess.TimeoutExpired:
+                monitor.kill()
+                monitor.wait(timeout=10)
+    record = {
+        "run": run,
+        "command": command,
+        "monitor_command": monitor_command,
+        "started_at": start,
+        "finished_at": utc_now(),
+        "elapsed_seconds": time.monotonic() - before,
+        "exit_code": result.returncode,
+        "code": code_identity(),
+        "scorer_sha256": file_sha256(script),
+        "wrapper_sha256": file_sha256(Path(__file__)),
+    }
+    atomic_json(directory / "dev-score-execution.json", record)
+    if result.returncode:
+        raise RuntimeError(f"Scoring failed with {result.returncode}; keep logs")
+    print(json.dumps({"run": run, "exit_code": 0}), flush=True)
+
+
+if __name__ == "__main__":
+    main()

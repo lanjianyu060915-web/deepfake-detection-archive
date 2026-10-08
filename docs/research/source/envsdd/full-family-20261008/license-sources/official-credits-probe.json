@@ -1,0 +1,65 @@
+{
+  "at": "2026-10-08T04:39:41.484346+00:00",
+  "url": "https://zenodo.org/records/1203745/files/UrbanSound8K.tar.gz?download=1",
+  "range": "bytes=0-1048575",
+  "limit": 1048576,
+  "complete_archive_hash_verified": false,
+  "members": [
+    {
+      "name": "UrbanSound8K",
+      "bytes": 0
+    },
+    {
+      "name": "UrbanSound8K/.DS_Store",
+      "bytes": 15364
+    },
+    {
+      "name": "UrbanSound8K/audio",
+      "bytes": 0
+    },
+    {
+      "name": "UrbanSound8K/audio/.DS_Store",
+      "bytes": 24580
+    },
+    {
+      "name": "UrbanSound8K/audio/fold1",
+      "bytes": 0
+    },
+    {
+      "name": "UrbanSound8K/audio/fold1/.DS_Store",
+      "bytes": 67588
+    },
+    {
+      "name": "UrbanSound8K/audio/fold1/101415-3-0-2.wav",
+      "bytes": 384044
+    },
+    {
+      "name": "UrbanSound8K/audio/fold1/101415-3-0-3.wav",
+      "bytes": 384044
+    },
+    {
+      "name": "UrbanSound8K/audio/fold1/101415-3-0-8.wav",
+      "bytes": 384044
+    },
+    {
+      "name": "UrbanSound8K/audio/fold1/102106-3-0-0.wav",
+      "bytes": 289340
+    },
+    {
+      "name": "UrbanSound8K/audio/fold1/102305-6-0-0.wav",
+      "bytes": 460448
+    }
+  ],
+  "headers": {
+    "date": "Thu, 08 Oct 2026 04:39:43 GMT",
+    "content-type": "application/octet-stream",
+    "content-length": "1048576",
+    "content-range": "bytes 0-1048575/6023741708"
+  },
+  "status": 206,
+  "bytes": 1048576,
+  "sha256": "d6a14218b48334d54c530c3222b6bb834c90f95cb99a0538ecc22f258f0b52e9",
+  "local_path": "data/envsdd-urban-full-family/source-excerpts/official-archive-prefix.gz",
+  "error": "ReadError: unexpected end of data",
+  "header_capture_policy": "retain provenance headers only; omit HTTP session cookies and unrelated transport headers"
+}

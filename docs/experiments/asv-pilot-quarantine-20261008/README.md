@@ -2,8 +2,9 @@
 
 本目录在任何 ASV 模型分数之前建立。预登记见 [PLAN.md](PLAN.md)，
 实际准备逻辑见 [source/prepare_quarantine.py](source/prepare_quarantine.py)，
-完整验证命令与输出见 [verification.json](verification.json)。当前未启动训练；
-需 root 独立复审之后安排 GPU。公开研究许可不等于比赛外部资源许可。
+完整准备验证见 [verification.json](verification.json)。两模型、两种子训练及全 dev
+评分已完成，实际证据见 [training/summary.json](training/summary.json)。
+公开研究许可不等于比赛外部资源许可。
 
 ## 实际审计结果
 
@@ -69,3 +70,34 @@ dev 仅 19 保守组、假类 9 组，且仍参与早停；只报告开发探索
 - script_sha256: `197a0b2d5f33a797c1d7d34bf2249e858c7758b7d84b8227aa0c38d4ffaff71c`
 - sources_sha256: `6ecc3a94e6b11d60cf4da4b1b5790aa251d95ee75c03df0ce63a4f5f62187039`
 - 隔离媒体总字节：1725360；原 1,024 条字节复核全部通过。
+
+## 2026-10-08：真实两模型两种子结果
+
+| 模型 / seed | dev EER | best epoch / 完成 epochs | 全dev评分 / 失败 |
+| --- | ---: | --- | --- |
+| LogMel / 42 | 21.4844% | 11 / 12 | 512 / 0 |
+| LogMel / 43 | 24.2188% | 11 / 12 | 512 / 0 |
+| AASIST-L / 42 | 25.7813% | 5 / 9 | 512 / 0 |
+| AASIST-L / 43 retry1 | 29.6875% | 12 / 12 | 512 / 0 |
+
+AASIST43 原运行中断在10epoch、没有完成/退出记录，恢复时原进程不存在。
+训练器不支持优化器恢复；[retry1](retry1/README.md)从相同种子/方法重做，
+配置只改output_dir，原部分结果保留但不纳入完成模型比较。
+
+[source/verify_completed.py](source/verify_completed.py)复用已独立审阅的训练绑定与
+独立阈值扫描，严格核对真实initial/best参数变化、最佳epoch/更新、来源/清单/代码/配置、
+精确512个dev ID及逐条元数据；EER与训练选择、独立全dev评分一致。
+训练、评分退出0，训练解码失败为空。全部原始配置、history、scores、遥测归档。
+LogMel42的旧评分仅有GNU time；其余三次补齐设备级GPU采样，不为旧运行补造采样。
+
+新评分wrapper的noqa位置与retry scorer格式在执行后规范化，AST完全相同；
+实际已执行字节保留在source/score_with_telemetry.executed.py.txt与
+source/score_retry1.executed.py.txt，运行hash按这些快照绑定，不冒称执行了后来的格式版本。
+
+LogMel两种子在该开发集点估计更低，只作为后续语音实验的优先候选，不作正式晋级。
+AASIST-L实际torch峰值allocated为3,633,876,992、reserved为7,897,874,432字节
+（reserved约7.36GiB），超过最初7GiB资源目标；设备采样峰值42/43为7917/7878MiB，
+温度峰值84/88°C，0OOM。显示/其它设备负载与allocator reserved须分开理解；
+后续AASIST扩大训练前需重新profile资源，不假定8GB已留足1GB余量。
+
+尚无通用非语音泛化、来源/生成器留出、最终holdout、正式CI、官方EER对齐或比赛许可结论。

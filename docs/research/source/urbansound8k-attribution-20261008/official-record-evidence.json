@@ -1,0 +1,19 @@
+{
+  "url": "https://zenodo.org/api/records/1203745",
+  "headers": {
+    "date": "Thu, 08 Oct 2026 12:23:49 GMT",
+    "content-type": "application/json",
+    "content-length": "4735",
+    "etag": "\"6\""
+  },
+  "sha256": "669851d830e4825af5d0692c773c080aa2b6ceccbfbe1bdb5ea361a8af5b3f6b",
+  "archive": {
+    "id": "527924fa-11f8-44c4-ac4e-729f4039ba39",
+    "key": "UrbanSound8K.tar.gz",
+    "size": 6023741708,
+    "checksum": "md5:9aa69802bbf37fb986f71ec1483a196e",
+    "links": {
+      "self": "https://zenodo.org/api/records/1203745/files/UrbanSound8K.tar.gz/content"
+    }
+  }
+}

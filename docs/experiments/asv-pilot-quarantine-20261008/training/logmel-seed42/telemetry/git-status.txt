@@ -1,0 +1,5 @@
+?? docs/competition/refresh-20261008.md
+?? docs/competition/source/refresh-20261008/
+?? docs/experiments/vif-crop-control-20261007/training/
+?? docs/research/offline-rehearsal/resume/
+?? docs/research/source/envsdd/resume/

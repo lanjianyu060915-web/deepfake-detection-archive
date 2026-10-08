@@ -1,0 +1,23 @@
+	Command being timed: "uv run --no-sync deepfake-detection-archive train --config /home/maoxiao/WorkSpace/deepfake-detection-archive/outputs/experiment-planning/asv-pilot-quarantine/aasist-l-seed42.json"
+	User time (seconds): 372.87
+	System time (seconds): 12.90
+	Percent of CPU this job got: 132%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 4:50.09
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 2645824
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 129
+	Minor (reclaiming a frame) page faults: 2826744
+	Voluntary context switches: 154570
+	Involuntary context switches: 2780
+	Swaps: 0
+	File system inputs: 841913
+	File system outputs: 966128
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
