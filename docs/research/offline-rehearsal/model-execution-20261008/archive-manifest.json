@@ -1,0 +1,186 @@
+{
+  "execute-v2.stderr": {
+    "size": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "execute-v2.stdout": {
+    "size": 108,
+    "sha256": "5c7c3ef003f015408fcdeb868b4c8f890e3576ee3f5cf0f9a014403d292c9555"
+  },
+  "failed-job.json": {
+    "size": 2437,
+    "sha256": "7d36f167969fa3e2fcac7b5ea636d36692607b6c0f84e56cb4c487e1b5b8ffa4"
+  },
+  "failed-prepare.stderr": {
+    "size": 844,
+    "sha256": "3373808c3c8a7956030c9f382c2e729d42d0a72073c79a063197256132320935"
+  },
+  "failed-prepare.stdout": {
+    "size": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "inputs/infer-offline.json": {
+    "size": 523,
+    "sha256": "71410038e0bb48615b366dd7748e0990e425377e3d8ed1ef13f26607ff29996b"
+  },
+  "inputs/infer-reference.json": {
+    "size": 525,
+    "sha256": "b6f75105e920171dc1d8fb8464b46f410c1c916d3270896bb8e529500819a263"
+  },
+  "inputs/infer-resume.json": {
+    "size": 522,
+    "sha256": "5c0c4b6d0bc32d5b340e18927a3c8e6d10939f8c59431c71bd32e2d53ed85bc0"
+  },
+  "inputs/manifest.jsonl": {
+    "size": 18448,
+    "sha256": "2df8c8af162c50324ed09d2cd4e31070d03d2f2c1537b7815eaef0a436f4a677"
+  },
+  "inputs/sources.jsonl": {
+    "size": 475,
+    "sha256": "6ecc3a94e6b11d60cf4da4b1b5790aa251d95ee75c03df0ce63a4f5f62187039"
+  },
+  "job-v2.json": {
+    "size": 2440,
+    "sha256": "c8ee1d8d45daa6899221528b0ea4c058ad3e2aae8e8c246cd8756ae03da05a4f"
+  },
+  "prepare-v2.stderr": {
+    "size": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "prepare-v2.stdout": {
+    "size": 26428,
+    "sha256": "a05897f51e8b318e2d3f42279b0ef4c582fc9a6b8925311ff2a64051cc08b74e"
+  },
+  "results/command-00.json": {
+    "size": 859,
+    "sha256": "3955c05bf944057ba98088eb61b4b46bcedc65a86565fb05a6ad8829759d1ba7"
+  },
+  "results/command-01.json": {
+    "size": 1183,
+    "sha256": "46fa19dd88c1022d58f9a908f8dd2943271fda000f2fa938b701d615e9f6df5d"
+  },
+  "results/command-02.json": {
+    "size": 855,
+    "sha256": "5adc7165ffc25ffc23c4b64160e7b496e71eb6f9f12db89de9b752a2bc4b3a0a"
+  },
+  "results/command-03.json": {
+    "size": 1178,
+    "sha256": "f6039d9f7f14be1f5e1493a682ea7ac2c2085b763e8403623109b1fbc4d091f1"
+  },
+  "results/command-04.json": {
+    "size": 867,
+    "sha256": "7309c117f5eb809ceee52aeb29d8eb58ec1dd11a3e5f311eaba5befb03fdb531"
+  },
+  "results/command-05.json": {
+    "size": 1174,
+    "sha256": "0cb92f099f722fc284159351081d3ced94c4a679cffd5f14be7526a279c81986"
+  },
+  "results/command-06.json": {
+    "size": 867,
+    "sha256": "4da0634693aa72afdde26c6062e56e84719a7cc28a80daa169e354913e5d5d5b"
+  },
+  "results/environment-check.json": {
+    "size": 12313,
+    "sha256": "49f40e85a83c8e2fd266bc628cb9a708c0ca6f8ff5ca753adbcb62c6e1d05af7"
+  },
+  "results/interrupted-after-exit.bin": {
+    "size": 303,
+    "sha256": "15fd28b0aae49a697ba4d8f1766fcb3a8879ea5a125c548fd8d2daeea85aed0a"
+  },
+  "results/interrupted-before-sigint.bin": {
+    "size": 303,
+    "sha256": "15fd28b0aae49a697ba4d8f1766fcb3a8879ea5a125c548fd8d2daeea85aed0a"
+  },
+  "results/interruption-cleanup.json": {
+    "size": 69,
+    "sha256": "e823ec52d2567b71cba409f28cef5f179d69c52b85c65e2fa3df48d3b5c799ce"
+  },
+  "results/model-probe.json": {
+    "size": 16152,
+    "sha256": "670f09f5b61084ef661fd401034ef43916c5d4e904f8b1a2c271c1ef0d4b0fa5"
+  },
+  "results/namespace-launch.json": {
+    "size": 899,
+    "sha256": "9b7a5b1ece48893230284eabf8aa5598e67ebc4200fbe5db7e0d3db1cb6a9c4c"
+  },
+  "results/offline/.runner.lock": {
+    "size": 27,
+    "sha256": "f6c18d63b116b4c730702006c800a511779fb6aea398cfad09a29b0e12a84d26"
+  },
+  "results/offline/evaluation.json": {
+    "size": 14328,
+    "sha256": "e193e010aeb719653998ca649582eeb78052c99dd074023777ab2b0bd88d977e"
+  },
+  "results/offline/metadata.json": {
+    "size": 23417,
+    "sha256": "5e8002f4d4fa05f9618e60fc74a29f1129affc2550bd738abfa2eb6de62e2809"
+  },
+  "results/offline/report.json": {
+    "size": 14894,
+    "sha256": "9249e1a23ab5754500fd2ec660c0b9425412651033ada53399a0952a07ab76cc"
+  },
+  "results/offline/scores.jsonl": {
+    "size": 7314,
+    "sha256": "5fca14160c350b05983d4974c28c503a5debba5826056dfdd81bfb7251c12468"
+  },
+  "results/owned-stopped-state.json": {
+    "size": 1721,
+    "sha256": "d03aaea8fb57a35a687b989c13d044b362fdb21b5f19f93ac5e3e7c3455c73c9"
+  },
+  "results/owned-stopped-status.txt": {
+    "size": 1471,
+    "sha256": "04eeb859d860287809e9c4aac2d26fe281d02ced2fba2281b0a33f4136738fe5"
+  },
+  "results/preparation.json": {
+    "size": 26428,
+    "sha256": "bab43d00dff7511ea92ca80677cea54ce979877e98fb8e799b1df942ddd22cbd"
+  },
+  "results/reference/.runner.lock": {
+    "size": 27,
+    "sha256": "66533ca098b694186e306c954ebbae54d2b3df62932f7fe9713f093019fce94d"
+  },
+  "results/reference/evaluation.json": {
+    "size": 14328,
+    "sha256": "e193e010aeb719653998ca649582eeb78052c99dd074023777ab2b0bd88d977e"
+  },
+  "results/reference/metadata.json": {
+    "size": 23419,
+    "sha256": "1f473013dad5af97bb17e6a1bd93f370662fabe264cf7ec3069280fb5398da82"
+  },
+  "results/reference/report.json": {
+    "size": 14892,
+    "sha256": "29efec9e4a9f8d5c942f4424cb8ce4291c52ebd917a2b2942916bb12997b0a6e"
+  },
+  "results/reference/scores.jsonl": {
+    "size": 7317,
+    "sha256": "6bff2e2d5fc8c6e82bf56290b9177a1186ed80cf2c57b9844e05c61ae25cf3eb"
+  },
+  "results/resume/.runner.lock": {
+    "size": 28,
+    "sha256": "7453f582e2f0ff929ee91ec04452db01dee2edd663c77d87d97c9a063664cb76"
+  },
+  "results/resume/evaluation.json": {
+    "size": 14328,
+    "sha256": "e193e010aeb719653998ca649582eeb78052c99dd074023777ab2b0bd88d977e"
+  },
+  "results/resume/metadata.json": {
+    "size": 23416,
+    "sha256": "b8b10b24ade6a4134ad182e4bb46602d460a651a7c47aa6a8745a4ba802aece1"
+  },
+  "results/resume/report.json": {
+    "size": 14893,
+    "sha256": "ce281b9688fd16c72a543bad3518823773262c35b4badf14857a6b33a9c61ea4"
+  },
+  "results/resume/scores.jsonl": {
+    "size": 7303,
+    "sha256": "2a6d8f49679fc4ffc2d8d219a1504abc84fcf2ee56e993d5b46a1be5cf299177"
+  },
+  "scripts/model_rehearsal.py": {
+    "size": 40008,
+    "sha256": "1bb20ac1fb4210c25a006e9155143d1d2e926a7c85097605f06b88431faf9b3c"
+  },
+  "source-binding-fix-review.json": {
+    "size": 776,
+    "sha256": "f9db4883fca55d26d2a2c8bbf0619a47571882a7bba2cf92b4e07ab9455f36c9"
+  }
+}

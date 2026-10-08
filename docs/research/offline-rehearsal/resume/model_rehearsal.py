@@ -700,11 +700,12 @@ def verify_training(job: dict[str, Any]) -> dict[str, Any]:  # noqa: C901, PLR09
         )
     sources_path = Path(job["sources"])
     sources = load_sources(sources_path)
-    if experiment["sources"] != {
+    expected_sources = {
         key: asdict(value)
         for key, value in sources.items()
         if key in {r.source for r in selected}
-    }:
+    }
+    if object_hash(experiment["sources"]) != object_hash(expected_sources):
         raise ValueError("Source registry does not match actual experiment")
     checks = {
         "manifest_sha256": manifest_hash(records),
