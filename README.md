@@ -1,88 +1,99 @@
 # AIGC 音视频伪造识别
 
-第七届中国人工智能大赛 AIGC 音视频伪造识别项目。音频和视频两项均参加；以 EER、离线可执行性、可复现实验和跨域泛化为目标。
+第七届中国人工智能大赛 AIGC 音视频伪造识别项目，同时参加音频和视频两项。项目输出
+逐样本连续伪造分数，以 EER 选择模型，并面向安全屋离线交付。
 
-**当前阶段：双分支已跑通，算法处于小规模探索。** 语音 LogMel/AASIST-L、视频冻结特征 pad/crop 均已完成两种子实验；24 条真实语音的 CPU 断网与推理恢复通过。下一步优先扩大训练、补齐通用音频、处理视频来源捷径，并简化重复校验和实验入口。结果见 [项目状态](docs/status.md)，目前没有本届比赛数据上的成绩。
+**当前阶段：双分支研究流水线已经跑通，算法仍处于早期。** 语音 LogMel/AASIST-L、
+视频冻结 ResNet18 特征头均完成真实小样本实验；24 条真实语音完成 CPU 断网推理和恢复。
+尚无本届比赛数据成绩。下一步扩大音频训练、补通用音频、控制视频来源与尺寸捷径，并验证
+视觉主干微调和轻量时序方法。
 
-## 从这里开始
+项目只保留影响实验真实性和离线运行的必要检查。配置在入口解析，内部直接传递；每轮实验
+保存一份配置、结果和必要日志，不再用重复校验、历史绑定或多份证明代替算法进展。
+
+## 入口
 
 | 文档 | 内容 |
 | --- | --- |
-| [整体实施方案](docs/plans/implementation-plan.md) | 阶段、算法候选、验收、预算与停止规则 |
-| [开发使用指南](docs/development.md) | 清单登记、配置模板、训练、评测、恢复和打包 |
-| [比赛要求](docs/competition/requirements.md) | 官网事实、来源、待确认的安全屋契约 |
-| [文献与参考项目](docs/research/literature.md) | 方法、局限、数据候选、旧项目取舍 |
-| [工具与 skills](docs/research/tooling.md) | 已安装工具、固定版本、验证证据及延后依赖 |
-| [项目状态](docs/status.md) | 本轮完成项、当前限制和下一步 |
-| [开发约定](AGENTS.md) | 代理与开发者的目录、验证、数据和执行边界 |
-| [历史归档](archive/README.md) | 朋友旧项目及备份恢复入口，默认只读 |
+| [项目状态](docs/status.md) | 当前数据、模型结果、验证和缺口 |
+| [实施方案](docs/plans/implementation-plan.md) | 音频/视频路线、阶段和下一步 |
+| [开发指南](docs/development.md) | data → train → infer → evaluate → package |
+| [比赛要求](docs/competition/requirements.md) | 已知官方事实和集中登记的未知项 |
+| [文献与参考](docs/research/literature.md) | 候选方法、数据和适用边界 |
+| [工具与 skills](docs/research/tooling.md) | 环境、固定参考和项目 skills |
+| [历史归档](archive/README.md) | 朋友旧照片项目，默认只读 |
 
-## 本地环境
+用户已报名，官方没有提供额外资料。项目按公开赛题和本地约定继续开发，不再把未公布的
+I/O、硬件或外部资产细则作为本地训练的阻塞项；平台提供样例后只更新适配层。
 
-Python 3.12，使用 uv 管理环境和锁文件。`media` 组提供数据与音视频处理，`research` 组提供 PDF、绘图和 notebook kernel；`cpu` / `cu130` 是互斥的 PyTorch/视觉/SSL 可选依赖。FFmpeg/ffprobe 使用宿主已有版本。
+## 快速开始
+
+Python 3.12，依赖由 `uv.lock` 固定。本机 RTX 4060 使用 cu130 后端：
 
 ```bash
-# 本会话默认缓存不可写；正常环境可省略此行。
 export UV_CACHE_DIR=/tmp/aigc-uv-cache
-# 当前 RTX 4060 开发环境；仅做开发检查可使用 uv sync --locked。
 uv sync --locked --group media --group research --extra cu130
-uv run --no-sync ruff check src tests tools/check_environment.py tools/profile_models.py tools/prepare_asvspoof2019.py tools/finalize_asvspoof2019.py tools/prepare_vif_panda.py
-uv run --no-sync ruff format --check src tests tools/check_environment.py tools/profile_models.py tools/prepare_asvspoof2019.py tools/finalize_asvspoof2019.py tools/prepare_vif_panda.py
-uv run --no-sync mypy
-uv run --no-sync mypy tools/profile_models.py tools/prepare_asvspoof2019.py tools/finalize_asvspoof2019.py tools/prepare_vif_panda.py
-uv run --no-sync pytest -q
-uv build --no-sources
-
-# 使用合成媒体和随机小模型验证安装；不下载权重或数据、不更新模型参数。
-uv run --no-sync python tools/check_environment.py --device cuda --output outputs/environment/cuda.json
+uv run --no-sync deepfake-detection-archive --help
 ```
 
-无 GPU 的环境将 `--extra cu130` 改为 `--extra cpu`，探针用 `--device cpu`。不要同时选择两个后端；日常命令保留 `--no-sync`，避免默认同步移除可选依赖。当前 App 沙箱会阻止 GPU 访问，CUDA 探针需在可访问设备的终端执行；这与 wheel 是否正确安装是两项检查。
+无 GPU 环境改用 `--extra cpu`。CPU 与 cu130 后端不能同时选择。FFmpeg 和 ffprobe 使用
+宿主可执行文件。
 
-CLI：`uv run --no-sync deepfake-detection-archive --help`。提供 `index`、`audit`、
-`split`、`train`、`infer`、`evaluate`、`duplicates`、`export`、`package` 和
-`verify-package`。实际使用步骤与配置模板见 [开发指南](docs/development.md)。
-
-已有 GitHub Actions 配置执行相同的开发检查和旧评测器回归。本轮完成本地验证，尚未触发远端 CI。
-
-## 项目 skills 与协作
-
-项目筛选的 11 项第三方 skills 已复制到 `.agents/skills/` 并纳入 Git，
-`skills-lock.json` 记录 `npx skills` 来源。协作者克隆仓库后即可使用，不依赖用户级
-skills 目录。
+当前主线命令：
 
 ```bash
-npx --yes skills@1.7.1 list --json
-# 更新会改动项目副本；运行后审阅 Git 差异、来源和许可。
-npx --yes skills@1.7.1 update --project --yes
+# 建立媒体清单
+uv run --no-sync deepfake-detection-archive index \
+  --root data/audio --modality audio --source YOUR_SOURCE \
+  --output data/audio-index.jsonl
+
+# 训练、推理与评测：先从 configs/*.example.json 复制并填写实值配置
+uv run --no-sync deepfake-detection-archive train \
+  --config configs/train-logmel.local.json
+uv run --no-sync deepfake-detection-archive infer \
+  --config configs/infer-audio-waveform.local.json
+uv run --no-sync deepfake-detection-archive evaluate \
+  --scores outputs/audio-dev-scores/scores.jsonl \
+  --manifest data/audio-dev-only.jsonl \
+  --output outputs/audio-dev-scores/evaluation.json
 ```
 
-清单、更新流程和第三方许可见
-[`.agents/README.md`](.agents/README.md)。Git 提交执行
-[LoRA 准则](AGENTS.md)：Logical、Observable、Reversible、Atomic。
+这些命令的完整前置条件、数据字段、推理恢复和打包步骤见[开发指南](docs/development.md)。
+配置模板不是可直接运行的实验；必须替换占位路径、哈希、清单和输出目录。
+
+## 当前方法
+
+- 音频：优先扩大 LogMel 基线并比较冻结 HuBERT 表征；AASIST-L 保留为对照，再补环境声、
+  音乐和音效等通用音频。
+- 视频：先控制宽度、来源和编码捷径，再比较主干微调和轻量时间特征；当前冻结帧特征结果
+  不能证明已学到可靠生成伪迹。
+- 数据：同一原媒体、派生样本和已知身份组不能跨 split；dev 用于模型选择，holdout 在候选
+  冻结后验收。
+- 评测：内部 `real=0`、`fake=1`，高分更倾向伪造；失败样本保留记录并计入覆盖率。
 
 ## 工作区
 
 ```text
-src/deepfake_detection_archive/  新比赛包
-tests/                        主动行为、集成与归档完整性回归
-configs/                      配置与来源/清单模板；占位值须替换
-docs/competition/             比赛约束与原始资料快照
-docs/research/                文献、工具和参考版本
-docs/plans/                   实施方案与整理计划
-docs/worklog/                 工作归档
-.agents/skills/               Git 跟踪的项目级 agent skills
-skills-lock.json              npx skills 来源锁
-tools/restore_backup.py       保留的历史恢复工具
-archive/legacy-20261005/       旧源码、实验、文档、清单与原 README
+src/deepfake_detection_archive/  当前比赛代码
+tests/                            主动行为与回归测试
+configs/                          数据、训练、推理和打包模板
+docs/                             当前说明、研究和实验记录
+.agents/skills/                   Git 跟踪的 11 项项目 skills
+archive/legacy-20261005/          冻结的旧照片项目
+data/ models/ outputs/ cache/     Git 忽略的本地数据与产物
+external/                         Git 忽略的固定上游参考
 ```
 
-`external/` 是已克隆的本地源码参考，`data/`、`models/`、`outputs/`、`cache/` 为按需生成的本地产物目录，均被忽略，不作为 Git 中的算法依赖。历史树不参与新包默认检查与构建；归档清单中的旧路径保留历史含义。
+旧项目的 UI、身份检索、底图溯源、Windows 打包和历史阈值不属于当前主线。归档中的 1,526 个
+文件及恢复工具保持原字节，不参与当前包的 lint、类型检查和构建。
 
-## 已知约束
+## 检查与协作
 
-- 用户已报名，官方暂无额外信息；按公开赛题和明确的本地约定继续，不再向用户请求比赛资料。
-- 已读取 RTX 4060 Laptop 8GB、驱动 616.92；App 普通沙箱阻止 GPU 访问。实际环境与模型 profile 见 [项目状态](docs/status.md)。本地 GPU 已获授权自动用于适合的实验且不设固定卡时上限；付费云算力预算待定。
-- 官方当前以音频、视频分别描述样本与 EER；最终榜单汇总、I/O、时限和资源未给出完整规范，适配层保留替换能力。[官方赛题](https://ai.xm.gov.cn/competition/project-detail.html?id=2026c40item0004&competeId=2026c40dbb2347fba8b3c9a6294efa5b)
-- 音频不能默认等同语音，生成视频不能默认等同换脸；是否采用候选方法必须通过数据覆盖和跨域实验验证。
-- 不将旧模型的历史报告或本轮工具测试解释为本届模型性能。
+```bash
+export UV_CACHE_DIR=/tmp/aigc-uv-cache
+bash tools/check_project.sh
+```
+
+11 项项目 skills 位于 `.agents/skills/`，来源由 `skills-lock.json` 固定，协作者克隆后可直接
+使用。Git 提交遵循 LoRA：Logical、Observable、Reversible、Atomic。仓库不会自动推送、
+发布或正式参赛提交。
