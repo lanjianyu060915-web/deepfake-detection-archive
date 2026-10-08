@@ -1,66 +1,74 @@
 # 当前项目状态
 
-更新日期：2026-10-07。阶段：**用户已明确恢复，继续真实数据审计与 GPU pilot**。
-
-历史入口：[暂停检查点与恢复顺序](checkpoints/2026-10-07-pause/README.md)。
-用户新指令“好，现在继续”恢复整体实施；旧暂停证据保留，暂无真实鉴伪训练结果。
+更新日期：2026-10-08。阶段：**真实音视频 pilot、来源组治理与真实模型离线演练**。
+用户已恢复整体实施；历史[暂停检查点](checkpoints/2026-10-07-pause/README.md)只作证据。
 
 ## 当前事实
 
-- 用户确认音频和视频均参加；本地有 RTX 4060 8GB，云算力后续考虑；报名、安全屋权限与执行规范待定。
-- 已核对官网赛题/规则、调研相关论文和项目，按 [整体方案](plans/implementation-plan.md) 实施。算法路线是待验证候选，没有真实数据成绩。
-- 通过 `npx skills@1.7.1 --copy` 将 11 项相关 skills 安装到项目
-  `.agents/skills/`，由 Git 和 `skills-lock.json` 管理，协作者克隆即用。其中
-  ds-skills 选择 7 项，其中 6 项完成合成验证、1 项作为音频时频图结构参考；机器级
-  535 项一致性比对保留为审计记录。已准备 3 份模型源码参考及 ds-skills 固定源码，记录见
-  [工具说明](research/tooling.md)。
-- 用户授权后续相关依赖按需自行安装；项目环境已锁定并安装 `dev` / `research` / `media` 和 `cu130` 后端。torch 2.14.1+cu130、torchvision 0.29.1+cu130、timm、Transformers、音视频处理与研究工具已就绪；独立临时环境另安装 CPU wheel 并完成全套测试，未替换项目 CUDA 环境。
-- 旧项目已整体迁至 `archive/legacy-20261005/`，1,526 个文件、138,273,682 字节与冻结清单一致；比赛原始资料改放 `docs/competition/source/`。
-- 新增严格数据/来源登记、哈希与许可审计、关系连通组划分、近重复候选、实际音视频解码和失败记账。连通组与统计组分开，未知组不冒充独立样本。
-- 新增 EER、DET、AUC、固定阈值诊断、分桶报告及配对组 bootstrap；完整分母保留失败样本，完整集 EER 无法计算时为空，成功子集指标另列。
-- 新增 AASIST-L、log-mel CNN、冻结本地 SSL/视觉表征及媒体级头、AMP 训练、按实际样本数归一化的梯度累积、dev EER 早停与最佳模型恢复。
-- 固定版本 ResNet18 与 HuBERT 基础权重已下载、验 SHA-256 并离线转换；两个现有加载器真实严格加载、冻结参数和随机输入 CUDA 前向通过。许可快照、转换脚本及原/新哈希见 [预训练资源记录](research/pretrained-resources/README.md)；它们还不是训练完成的鉴伪分类器。
-- CLI 支持数据治理、训练、推理、评测、导出、打包及校验。恢复绑定清单顺序、配置、模型、代码和实际媒体快照；本地加载资源，无隐式下载。见 [开发指南](development.md) 和 [配置模板](../configs/README.md)。
-- 根 README、AGENTS、检查与 CI 已更新。历史、参考仓库和产物不混入默认构建；CI 安装 media、CPU 后端和 FFmpeg，尚未远端运行。
+- 音频、视频两项均参加；RTX 4060 Laptop 8GB 已获持续使用授权，主环境为
+  Python 3.12、uv、torch 2.14.1+cu130；付费云预算待定。
+- 用户最新确认暂未报名或仍待定。2026-10-08 官方公开信息复核见
+  [刷新记录](competition/refresh-20261008.md)：大赛总赛程为 10-16 至 11-10，
+  不是本赛道的精确六日窗口；报名截止 10-18。官方 I/O、评分方向、平台配置、
+  时限和外部资源规则仍缺，不能用本地接口代替。
+- 已按[方案](plans/implementation-plan.md)实现来源/清单治理、关系划分、EER、
+  解码、AASIST-L、LogMel、冻结编码器、AMP 训练、连续评分、恢复与离线包。
+  11 项项目 skills 与来源锁纳入 Git；归档 1,526 个历史文件及恢复工具保持冻结。
+- 模型、数据、缓存和大权重留在忽略目录；Git 保存配置、脚本、哈希、逐样本评分、
+  实验与工作记录。提交遵循 LoRA，不自动推送、发布或正式提交。
 
-## 验证与限制
+## 真实数据与实验
 
-- 主动测试覆盖指标、泄漏、解码、模型/缓存完整性、训练、恢复、导出与安全打包；其中 2 项保护归档/恢复工具。旧评测器另有 7 项模拟测试。完整检查记录见 [实施工作记录](worklog/2026-10-07-implementation.md)。
-- 新 skills 已做 notebook 脚手架、公开论文 API、Dataset Viewer split 和 PDF 提取验证；FFmpeg/ffprobe 已做合成音视频生成与探测。
-- 普通沙箱阻止 NVML/GPU 访问及部分 multiprocessing IPC；沙箱外已验证 RTX 4060、CUDA、AMP、DataLoader worker。随机模型实际前向/反向/AdamW profile 见 [model-profile.json](research/model-profile.json)；AASIST-L batch 16 的保留显存 5.41GiB。合成工程结果不证明鉴伪效果或安全屋可运行性。
-- 用户已持续授权充分使用本地 GPU；适合的训练、推理、特征提取和 profile
-  默认自动使用 CUDA，不设固定卡时上限，以实验价值、资源故障和收益递减为停止条件。
-  付费云资源仍须确认预算与数据合规。
-- `uv pip check` 核验 123 个已安装包兼容；离线锁校验通过；CPU/CUDA 同时请求按预期被拒绝。早期 `check_environment.py` 不更新参数，模型/训练器 profile 则验证了实际更新；CUDA wheel 的 CPU 执行路径亦通过。
-- 独立 `torch 2.14.1+cpu` 环境首轮完成 311 项测试，加入归档校验工具后完成 335 项，加入视频导入器后完整检查为 **358 passed（14.71s，无跳过）**；74 个依赖兼容，项目环境仍为 CUDA 13.0。见 [后端原始验证记录](research/cpu-wheel-verification.json)、[归档工具集成结果](research/cpu-wheel-finalizer-verification.json) 和 [实施记录](worklog/2026-10-07-implementation.md)。该检查验证工程兼容性，不是模型效果或完整离线演练。
-- 实际训练器的 bf16 合成运行见 [trainer-profile.json](research/trainer-profile.json)：LogMel 和媒体级头各有 2 次有效更新、0 次跳步，checkpoint 重载一致。新 wheel 在无 torch/numpy 的干净环境通过无网安装及基础评测；这只验收基础 CLI，完整模型环境仍待验证。
-- CPU wheelhouse 已核验 64 个第三方 wheel 的原锁哈希；在断网命名空间内新环境安装含项目在内的 65 个包，兼容性、CPU 后端及基础 CLI 检查通过，主 CUDA 环境保持原样。见 [离线安装报告](research/offline-rehearsal/README.md)；真实 detector 的断网推理、恢复和安全屋目标环境仍未验收。
-- 真实数据已有完整/部分获取与局部解码证据，但尚未通过完整覆盖及划分阶段门；尚无真实鉴伪基线、比赛成绩或远端 CI 结果。模板占位值不是实验资产，预训练编码器不能代替检测头训练和覆盖验收。
-- 上游代码、数据和权重的许可分别核对；文献表中的候选不能当作已批准使用的数据或提交代码。
+| 分支 | 已有证据 | 当前结论与缺口 |
+| --- | --- | --- |
+| ASVspoof 2019 LA | 完整 ZIP 的官方 MD5 与 SHA 通过；仅 train/dev 50,224 条实际发布；protocol-extra 142 条只做 ZIP 元数据审计 | dev 有 20 位真实、10 位伪造说话人，不能套用旧 10 人断言；未读取 eval 媒体 |
+| ASV 语音 pilot | 原 1,024 条全解码、字节复核；两个未确认指纹候选保守连接，隔离一个完整 train 说话人组件 26 条；active 998（train486/dev512） | dev 保守统计组19、伪造类9组，低于正式 bootstrap 门；只作开发探索，不声称重复已确认 |
+| 语音模型 | LogMel42/43 EER21.48%/24.22%；AASIST-L42/43 EER25.78%/29.69%，四个完成模型全dev512评分0失败 | 四运行原始证据与独立EER/真实参数更新核验已归档；43原中断10epoch保留、新目录同方法重试12epoch完成；无正式CI/晋级或通用音频结论 |
+| ViF Panda-only | 4,612 条完整导入；pilot1,024条全部解码；冻结特征重复审计0阈值候选；锁定 train716/dev154/holdout154 | 已知组件充分登记，独立统计组未知；发现分辨率/宽度捷径，holdout媒体与分数未用于开发 |
+| 视频模型 | pad两种子实际train/infer完成，dev EER均32.47%，154条0失败；center_crop两种子分别33.77%/31.17%，方向不一致 | crop已独立复核并归档，不晋级；不凭两次点估计声称鲁棒性；元数据width基线24.75%，需继续处理捷径 |
+| EnvSDD UrbanSound8K | 原固定64条已全部字节/全PCM复验（32真32假），旧19条哈希不变 | 新40fsID/106文件/530条全量复验通过，106真424假，450 PCM16/80 PCM24；原字节保留，归属仍待核验，不训练 |
+
+来源及边界见 [ASV隔离系列](experiments/asv-pilot-quarantine-20261008/README.md)、
+[视频实验](experiments/vif-pilot-20261007/README.md)、
+[EnvSDD恢复](research/source/envsdd/resume/README.md)。公开研究许可不自动批准比赛使用。
+EnvSDD Urban 数据涉及 CC-BY-NC-3.0、Freesound 归属，只限已登记的本地非商业研究。
+
+## 工程与离线验证
+
+- 主动测试最近完整检查为 **389 passed（13.54s，无跳过）**，使用主 CUDA wheel 的
+  CPU 路径；Ruff/format、32个源码及4个工具的严格 mypy 通过。独立 CPU wheel 的
+  386项检查为之前阶段记录。两项归档保护和七项旧评测器 stub 不代替模型效果。
+- GPU 实际前向、反向、更新、BF16和本轮真实训练通过；普通沙箱 GPU/NVML 或 IPC
+  受限与 CUDA 安装失败须区分。训练保留 GNU time、温度/显存/利用率和退出证据，
+  不设人为卡时上限；有价值且资源正常的实验按队列继续。
+- 65个固定 CPU wheel 在断网命名空间内新建环境安装、兼容与基础CLI通过；
+  主 cu130 环境未替换。见[离线安装](research/offline-rehearsal/README.md)。
+- 真实 LogMel42 模型 prepare 暴露 JSON list / SourceRecord tuple 比较错误；
+  原失败日志和脚本保留，新增 round-trip 正例修改前失败，修复后 **64守卫测试通过**，
+  Ruff/format/严格mypy通过。新v2 stage实际断网推理/重复/中断恢复及独立只读复核通过。
+  24条真实音频三套连续分数完全相同，0失败/重复/缺样；实际停止原文与前缀保留，
+  SIGINT退出-2属预期。见[真实演练](research/offline-rehearsal/model-execution-20261008/README.md)，
+  不等于安全屋、视频、完整集或代表500条验收。
+- 远端CI、官方目标系统、500条代表性离线验收尚未完成。
 
 ## 尚未通过的阶段门
 
 | 阶段 | 当前缺口 |
 | --- | --- |
-| P0 契约 | 本地契约已有；官方 I/O、分数方向、外部资源规则及平台配置待获取 |
-| P1 数据与评测 | 代码已有；真实数据来源许可、媒体登记、覆盖与划分审计待完成 |
-| P2 双分支基线 | 模型和训练链已有；真实音频/视频 pilot、两种子可比较结果待完成 |
-| P3 鲁棒性 | 跨域、压缩、生成器留出与融合晋级证据待完成 |
-| P4 较重方法 | 尚未触发采用门，不因算力空闲扩大模型 |
-| P5 离线交付 | 本机 CPU 断网干净安装通过；真实模型无网推理、目标系统及代表性 500 条验收待完成 |
-| P6 正式验收 | 最终冻结、留出和官方适配待完成；未推送、发布或正式提交 |
+| P0 契约 | 报名后官方 I/O、EER实现、平台与资源许可 |
+| P1 数据与评测 | 通用音频/视频覆盖、来源许可、独立统计组及跨域划分 |
+| P2 双分支基线 | 语音双模型双种子与视频两种子已有完整探索结果，代表性和独立统计组仍不足 |
+| P3 鲁棒性 | 编码/尺寸捷径控制、生成器/来源留出、跨域诊断和晋级证据 |
+| P4 较重方法 | 尚未达到采用门，不因GPU空闲扩大模型 |
+| P5 离线交付 | 24条真实语音断网与恢复通过；视频、官方目标系统及500条代表集仍缺 |
+| P6 正式验收 | 最终冻结、未参与调参的留出、官方适配与正式提交授权 |
 
-当前继续真实数据与覆盖审计，之后使用本地权重开展 GPU pilot。
-候选资源和边界见 [数据获取研究](research/data-acquisition.md)。Git 提交遵循 LoRA：
-Logical、Observable、Reversible、Atomic。工程测试通过不能解释为完整比赛项目已完成。
+下一步补齐非语音原作者归属，完成研究来源准入及分组/近重复审计，
+再据覆盖设计语音→环境声跨域诊断和视频捷径控制。原始UrbanSound8K归属压缩包
+在忽略cache中断点获取，官方MD5为9aa69802bbf37fb986f71ec1483a196e，未完整校验前
+不解包媒体或宣称归属许可通过；[计划与来源](research/source/urbansound8k-attribution-20261008/PLAN.md)。旧来源快照、失败记录、计划与历史结果保留，
+新的执行事实优先于旧“未启动/暂停”文字。完整比赛项目尚未完成。
 
-ASVspoof 2019 LA 已完整恢复，7,640,952,520 字节及官方 MD5 均通过，完整 SHA-256 与
-精确获取过程见 [恢复证据](research/source/asvspoof2019/recovery/README.md)。官方源中断及
-curl 回滚记录保留；成功校验与后续真实提取、协议、解码、训练分别验收。
-实际提取因 142 个官方协议外 dev 文件安全失败，未发布 train/dev。未验证修复已保存为
-检查点补丁，默认工具/测试恢复至已提交版本；恢复后先完成修复与回归，再导入语音 pilot。
+AASIST实际reserved峰值约7.36GiB，超过初始7GiB目标；训练0OOM但不宣称保留1GiB余量。后续扩大该模型前先重新profile，温度峰值84/88°C及设备级显存另见原始遥测。本轮8项PCM边界测试、64项离线守卫、相关研究脚本Ruff/format/严格mypy及新构建均通过；远端CI仍未运行。
 
-ViF Panda-only 的 4,612 条媒体已完整导入并复验 SHA；1,024 条 pilot 取样与实际解码
-完成，0 解码失败、6 条 pHash 低信息已记账。未启动 GPU 特征提取、锁 split 或训练。
-EnvSDD UrbanSound8K 仅完成 19/64 条 WAV（10 real、9 fake），剩余 45 条及不完整
-来源组明确记录，不进入训练/评测。媒体、权重和缓存留在本机忽略目录，不随 Git 上传。
+原站40/40录音规范上传者URL已补录，覆盖27个用户名；这不是逐录音许可原文或完整官方credits文件。原包未完整hash校验，断点进度只按观察时间记录，见[归属恢复入口](research/source/urbansound8k-attribution-20261008/README.md)。

@@ -81,6 +81,14 @@ uv build --no-sources
 - 构建后检查 wheel/sdist 不含归档、外部参考、数据、模型和缓存。CI 配置在 `.github/workflows/checks.yml`；本地通过不意味着远端已运行。
 - 项目实际使用的 11 项 skills 由 `npx skills@1.7.1 --copy` 安装在 `.agents/skills/`，以 `skills-lock.json` 固定来源并纳入 Git；它们优先于机器级安装，协作者克隆后可直接调用。更新时使用固定 CLI、审阅上游差异和许可，再提交复制结果；不直接手改第三方 skill，项目适配写入本仓库代码或文档。全部 535 项 ds-skills 的机器级比对只保留为历史审计。来源与适配边界见 `docs/research/tooling-lock.json`、`docs/research/ds-skills.json`。技能示例中的上传、发布、遥测和云任务不因此获授权。
 
+## 最新实测边界（2026-10-08）
+
+- 音频隔离pilot两模型两种子已完成实际训练及512条dev评分；原AASIST43中断10epoch保留，retry1仅改变output_dir。真实EER、配置、更新、遥测及不晋级结论见 `docs/experiments/asv-pilot-quarantine-20261008/`。视频pad/crop两种子及不晋级见各实验目录。
+- AASIST-L实测reserved峰值7,897,874,432字节，约7.36GiB，超过初始7GiB目标；0OOM不代表留足显存余量。下一次扩大训练前按真实tail batch与dev阶段重新profile，设备采样、allocator allocated/reserved分开。
+- 24条真实LogMel42 CPU断网、重复、中断恢复实际通过，连续分数相同；只能说明该本机语音子集机制，不等于安全屋/视频/代表500条验收。证据在 `docs/research/offline-rehearsal/model-execution-20261008/`，原始 `/proc`、退出-2及脚本字节由 `.gitattributes` 保护。
+- EnvSDD固定CSV范围40fsID/106文件/530条原始WAV全部独立复验；450为PCM16、80为PCM24，不转码源字节。旧PCM16限定失败与新恢复分开保存；研究归属未完成时不进入训练/提交。原作者文件、原音归属和官方资源规则逐项按证据准入，不以原始下载完毕代替许可完成。
+- 继续时先核对真实进程、终态文件和源码/输入哈希；进程handle失效不证明任务停止。若确认实际停止且训练不支持优化器恢复，新运行目录重试，保留原历史，不能把非终态 `running` 记录补写成完成。
+
 ## 执行与交付
 
 - 清晰授权的可逆本地步骤直接完成；保持小而可审查的提交。用户已授权自行管理 Git/依赖，可创建本地提交；不改写既有历史，不夹带无关用户改动，不自动发布、推送或参赛提交。
