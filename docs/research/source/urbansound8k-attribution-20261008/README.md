@@ -19,3 +19,20 @@ curl --fail --location --continue-at - --retry 3 --retry-delay 2 --connect-timeo
 ```
 
 下载stdout/stderr为 `outputs/experiment-planning/urban-attribution-download.*`。归属获取两个脚本Ruff/format/strict mypy通过；HTTP重定向1正例4负例通过。尚未对完整档案提取做实际验收，不以脚本准备或完整源码清单替代这一证据。
+
+## 连接中断后的分段恢复
+
+首个大连接已明确退出18，保留2,024,613,108字节，原前缀不改写。
+新 `resume_archive.py` 每请求最多256MiB，核对HTTP206和精确Content-Range及完整body长度后追加；每段最多3次尝试，失败片段独立保留，不影响原前缀。2项局部测试及4个错误状态/总量/截断/超量subcase通过，4源码Ruff/format/严格mypy通过。
+
+当前正在执行分段恢复；[检查点](range-recovery-checkpoint.json)给出实际journal路径。
+为保持Git干净，root将自有打开journal移到忽略outputs，inode与FD保留，执行完才归档。
+先查实际进程和.range-tmp，禁止同时启动第二个写同一.partial的任务；临时文件残留需明确核验，不自动覆盖。
+
+确认没有活动下载或未核验临时段后可继续：
+
+```bash
+.venv/bin/python -B docs/research/source/urbansound8k-attribution-20261008/resume_archive.py
+```
+
+分段仅验证传输范围，不能替代官方MD5/完整SHA，仍须运行finalize_attribution.py。
