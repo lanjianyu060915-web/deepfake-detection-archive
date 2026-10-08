@@ -1,0 +1,9 @@
+{
+  "ruff_format_mypy_bash_syntax": "passed",
+  "changed_batch_rejected_before_training": true,
+  "script_hashes": {
+    "docs/experiments/asv-pilot-quarantine-20261008/source/launch_retry1.sh": "a4648e2428b1eb8d3c379e04c10264409a0a50d444cf8d8e4b1e19c2ba9f8dbc",
+    "docs/experiments/asv-pilot-quarantine-20261008/source/check_retry1.py": "15ea214a7e5666ca4947f8fa588d1d5537669c2fd612e75e0affe7a9f142f510",
+    "docs/experiments/asv-pilot-quarantine-20261008/source/score_retry1.py": "32c0a4a6591f0cc926fbe31df313d5d3c8a32646c405ed80bde04b32ad4d668a"
+  }
+}

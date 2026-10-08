@@ -1,0 +1,2 @@
+?? docs/experiments/asv-pilot-quarantine-20261008/source/score_pilot.py
+?? docs/experiments/vif-crop-control-20261007/training/
