@@ -182,9 +182,19 @@ def test_tiny_local_encoder_experiment_reuses_verified_cache(
     monkeypatch.setattr(
         "deepfake_detection_archive.experiments.extract_features", unexpected_extract
     )
+    # A CLI/reporting change alters whole-package provenance, not the features.
+    monkeypatch.setattr(
+        "deepfake_detection_archive.experiments.code_identity",
+        lambda: {"code_sha256": "b" * 64},
+    )
     _change(feature_experiment, output_dir="repeat")
     second = run_experiment(feature_experiment)
     assert first.best_dev_eer == second.best_dev_eer
+    assert sorted((feature_experiment.parent / "cache").glob("*.pt")) == cached
+    report = json.loads(
+        (feature_experiment.parent / "repeat" / "experiment.json").read_text()
+    )
+    assert report["code"]["code_sha256"] == "b" * 64
     # A changed preprocessing choice has a different content cache identity.
     _change(feature_experiment, output_dir="changed", segments=3)
     with pytest.raises(ValueError, match="sample preparation failed"):
@@ -194,6 +204,30 @@ def test_tiny_local_encoder_experiment_reuses_verified_cache(
     )
     assert len(failures) == 4
     assert config["encoder"]["expected_hashes"]
+
+
+def test_changed_feature_implementation_invalidates_cache(
+    feature_experiment: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    run_experiment(feature_experiment)
+
+    def changed_hash(path: Path) -> str:
+        if path.name == "features.py":
+            return "c" * 64
+        return file_sha256(path)
+
+    def unexpected_extract(*args: Any, **kwargs: Any) -> torch.Tensor:
+        raise AssertionError("changed feature implementation requires extraction")
+
+    monkeypatch.setattr(
+        "deepfake_detection_archive.experiments.file_sha256", changed_hash
+    )
+    monkeypatch.setattr(
+        "deepfake_detection_archive.experiments.extract_features", unexpected_extract
+    )
+    _change(feature_experiment, output_dir="changed-implementation")
+    with pytest.raises(ValueError, match="sample preparation failed"):
+        run_experiment(feature_experiment)
 
 
 def test_corrupt_cache_is_reported_and_training_does_not_start(
@@ -312,7 +346,6 @@ def test_orphan_sidecar_is_subtracted_from_cache_budget(tmp_path: Path) -> None:
         {"batch_size": True},
         {"num_workers": -1},
         {"unexpected": 1},
-        {"cache_max_bytes": 21 * 1024**3},
         {"audio": {"sample_rate": 8000}},
         {"training": {"max_epochs": 0}},
     ],

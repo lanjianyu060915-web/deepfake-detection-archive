@@ -6,6 +6,7 @@ import random
 import tempfile
 import time
 from dataclasses import asdict, dataclass, field, replace
+from functools import cached_property
 from pathlib import Path
 from typing import Any, cast
 
@@ -14,15 +15,17 @@ import torch
 from torch import Tensor
 from torch.utils.data import DataLoader, Dataset
 
+from .config import load_object
 from .data.audit import audit_manifest
 from .data.manifest import (
     SampleRecord,
+    SourceRecord,
     file_sha256,
     load_manifest,
     load_sources,
     manifest_hash,
 )
-from .data.split import connected_groups, validate_splits
+from .data.split import validate_splits
 from .features import Encoder, extract_features, load_encoder, media_path
 from .media import AudioConfig, VideoConfig, decode_audio, sample_audio_segments
 from .models.checkpoint import create_model, save_checkpoint, verify_sha256
@@ -63,10 +66,8 @@ class ExperimentConfig:
         for name in ("batch_size", "segment_samples", "segments", "cache_max_bytes"):
             if type(getattr(self, name)) is not int or getattr(self, name) <= 0:
                 raise ValueError(f"{name} must be a positive integer")
-        if self.cache_max_bytes > 20 * 1024**3:
-            raise ValueError("cache_max_bytes cannot exceed 20 GiB")
-        if type(self.num_workers) is not int or not 0 <= self.num_workers <= 32:
-            raise ValueError("num_workers must be an integer in [0, 32]")
+        if type(self.num_workers) is not int or self.num_workers < 0:
+            raise ValueError("num_workers must be a nonnegative integer")
         if self.modality not in ("audio", "video"):
             raise ValueError("modality must be audio or video")
         for name in ("model_config", "training", "audio", "video", "encoder"):
@@ -97,9 +98,8 @@ class ExperimentConfig:
             "audio" if self.modality == "audio" else "vision"
         ):
             raise ValueError("encoder kind must match experiment modality")
-        TrainConfig(**self.training)
-        audio = AudioConfig(**self.audio)
-        VideoConfig(**self.video)
+        _ = self.train_config
+        audio, _ = self.media_configs
         if self.architecture == "aasist_l_v1" and (
             audio.sample_rate != 16000 or self.segment_samples != 64600
         ):
@@ -110,30 +110,18 @@ class ExperimentConfig:
         ):
             raise ValueError("audio and log-mel sample rates must agree")
 
+    @cached_property
+    def train_config(self) -> TrainConfig:
+        return TrainConfig(**self.training)
 
-def _json_pairs(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
-    result: dict[str, Any] = {}
-    for key, value in pairs:
-        if key in result:
-            raise ValueError(f"duplicate JSON key: {key}")
-        result[key] = value
-    return result
-
-
-def _reject_constant(value: str) -> None:
-    raise ValueError(f"nonfinite JSON value: {value}")
+    @cached_property
+    def media_configs(self) -> tuple[AudioConfig, VideoConfig]:
+        return AudioConfig(**self.audio), VideoConfig(**self.video)
 
 
 def load_experiment_config(path: Path) -> ExperimentConfig:
-    value = json.loads(
-        path.read_text(encoding="utf-8"),
-        object_pairs_hook=_json_pairs,
-        parse_constant=_reject_constant,
-    )
-    if not isinstance(value, dict):
-        raise ValueError("experiment configuration must be an object")  # noqa: TRY004
     try:
-        return ExperimentConfig(**value)
+        return ExperimentConfig(**load_object(path))  # type: ignore[arg-type]
     except TypeError as exc:
         raise ValueError(f"invalid experiment configuration: {exc}") from exc
 
@@ -223,12 +211,11 @@ def _audit_training_records(
     records: list[SampleRecord],
     config: ExperimentConfig,
     root: Path,
-    source_path: Path,
+    sources: dict[str, SourceRecord],
     output: Path,
 ) -> list[SampleRecord]:
     # Inspect split metadata globally without reading or decoding holdout bytes.
     errors = validate_splits(records, require_class_coverage=False)
-    connected_groups(records)
     selected = [
         record
         for record in records
@@ -240,7 +227,7 @@ def _audit_training_records(
     audit = audit_manifest(
         [replace(record, split="unassigned") for record in selected],
         root,
-        load_sources(source_path),
+        sources,
     )
     atomic_json(
         output / "audit.json",
@@ -261,12 +248,23 @@ def _prepare_cache(  # noqa: PLR0913, PLR0917
     root: Path,
     cache: Path,
     encoder: Encoder | None,
-    code: dict[str, object],
     output: Path,
 ) -> dict[str, list[tuple[Path, str, int]]]:
-    audio_config, video_config = (
-        AudioConfig(**config.audio),
-        VideoConfig(**config.video),
+    audio_config, video_config = config.media_configs
+    pipeline_files = ["media/__init__.py"]
+    if encoder is not None:
+        pipeline_files.extend(("features.py", "models/encoders.py"))
+    pipeline_hash = object_hash(
+        {name: file_sha256(Path(__file__).parent / name) for name in pipeline_files}
+    )
+    preprocessing: dict[str, Any] = (
+        {
+            "audio": asdict(audio_config),
+            "segment_samples": config.segment_samples,
+            "segments": config.segments,
+        }
+        if config.modality == "audio"
+        else {"video": asdict(video_config)}
     )
     cache.mkdir(parents=True, exist_ok=True)
     cache_bytes = sum(path.stat().st_size for path in cache.iterdir() if path.is_file())
@@ -277,15 +275,11 @@ def _prepare_cache(  # noqa: PLR0913, PLR0917
     expected_shape: tuple[int, ...] | None = None
     for record in records:
         identity = {
-            "sample_id": record.sample_id,
+            "cache_version": 2,
             "media_sha256": record.sha256,
             "encoder": config.encoder,
-            "architecture": config.architecture,
-            "audio": asdict(audio_config),
-            "video": asdict(video_config),
-            "segment_samples": config.segment_samples,
-            "segments": config.segments,
-            "code_sha256": code["code_sha256"],
+            "preprocessing": preprocessing,
+            "pipeline_sha256": pipeline_hash,
         }
         path = cache / f"{object_hash(identity)}.pt"
         try:
@@ -312,7 +306,7 @@ def _prepare_cache(  # noqa: PLR0913, PLR0917
                         video_config,
                         config.segment_samples,
                         config.segments,
-                        TrainConfig(**config.training).device,
+                        config.train_config.device,
                         config.batch_size,
                     )
                 previous_pair_bytes = _cache_pair_bytes(path)
@@ -376,13 +370,15 @@ def run_experiment(config_path: Path) -> TrainResult:
     try:
         records = load_manifest(base / config.manifest)
         source_path = base / config.sources
-        selected = _audit_training_records(records, config, root, source_path, output)
+        sources = load_sources(source_path)
+        selected = _audit_training_records(records, config, root, sources, output)
+        selected_sources = {record.source for record in selected}
         report["sources"] = {
             key: asdict(value)
-            for key, value in load_sources(source_path).items()
-            if key in {record.source for record in selected}
+            for key, value in sources.items()
+            if key in selected_sources
         }
-        train_config = TrainConfig(**config.training)
+        train_config = config.train_config
         torch.manual_seed(train_config.seed)
         model = create_model(config.architecture, config.model_config)
         initial = save_checkpoint(output / "initial.pt", model)
@@ -397,7 +393,7 @@ def run_experiment(config_path: Path) -> TrainResult:
             if config.feature_cache is not None
             else output / "prepared"
         )
-        entries = _prepare_cache(selected, config, root, cache, encoder, code, output)
+        entries = _prepare_cache(selected, config, root, cache, encoder, output)
         # Release the frozen backbone before allocating optimizer state.
         del encoder
         generator = torch.Generator().manual_seed(train_config.seed)

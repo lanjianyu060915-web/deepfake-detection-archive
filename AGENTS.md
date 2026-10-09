@@ -8,92 +8,73 @@ USE CODEX NATIVE SUBAGENTS FOR INDEPENDENT PARALLEL SUBTASKS WHEN THAT IMPROVES 
 
 # 项目约定
 
-本文件适用于整个仓库，补充继承的 OMX 工作流。说明、实验结论和文档默认中文，代码标识、命令与上游名称保留原文。
+本文件补充继承的 OMX 工作流。文档与实验结论默认中文，代码、命令和上游名称保留原文。
 
-## 目标与当前授权
+## 目标与授权
 
-- 参加第七届中国人工智能大赛 **AIGC 音视频伪造识别赛**，用户已确认音频和视频都参加。主指标 EER 越低越好，最终交付须在安全屋离线运行并可复现。
-- 用户已于 2026-10-07 明确授权“开始执行，完成整个比赛项目”，整体实施方案已确认；可按阶段自主进行契约、数据治理、算法开发、训练、验证和离线交付准备，按需安装相关依赖并管理本地 Git。
-- 用户于暂停收尾后明确表示“好，现在继续”，已恢复整体实施授权。历史检查点 `docs/checkpoints/2026-10-07-pause/README.md` 保留只读，不以其中暂停文字覆盖更新的恢复指令。
-- 方案主文件为 `docs/plans/implementation-plan.md`，当前状态为执行中；每次开始工作先读 `docs/status.md` 和对应阶段。官方适配、真实数据覆盖及提交验收按实际证据判断，不把本地模拟验证等同正式完成。
-- 用户允许复用或推翻旧照片鉴伪方案，不要求继承其模型、UI、身份检索、底图溯源或 Windows 打包接口。
-- 已在沙箱外读取 RTX 4060 Laptop 8GB、驱动 616.92；普通沙箱 NVML 访问受阻。GPU 探针的实际结果查阅工具记录，不能混淆沙箱限制和 CUDA 安装结果。用户已持续授权自由使用本地 GPU；适合 GPU 的训练、推理、特征提取和 profile 默认自动使用 CUDA，不设人为卡时上限。付费云算力预算仍待定，不包含在该授权中。
+- 同时参加第七届中国人工智能大赛 AIGC 音视频伪造识别的音频、视频两项，主指标 EER 越低越好，最终离线交付。
+- 用户已确认整体方案并授权完成项目，自主管理本地 Git、依赖、公开数据获取及本地 GPU；暂停后已恢复执行。历史暂停检查点不覆盖后来的恢复指令。
+- 用户于2026-10-08确认已报名，官方没有额外信息，不再向其请求比赛资料。未知规范集中记在 `docs/competition/requirements.md`，继续本地开发，实际平台样例到来后适配。
+- 本地 RTX 4060 Laptop 8GB 默认用于训练、特征提取和推理，不设人为卡时上限。付费云预算、远端推送、发布和正式参赛提交须有对应授权。
+- 当前事实看 `docs/status.md`，算法路线看 `docs/plans/implementation-plan.md`；历史研究和工程测试不代替本届比赛成绩。
 
-## 事实与依据
+## 主线优先
 
-- 官方赛题、规则、来源日期及待确认项集中在 `docs/competition/requirements.md`，原始资料在 `docs/competition/source/`；新的官方通知优先于快照。
-- 当前公开任务描述音频和视频各约一万条、真实与生成各约一半、两者均用 EER；安全屋离线执行，每项目 6 天（2-1-2-1），至多 3 份结果并关联代码和参数。不要把数据量估计或总赛程当作精确执行契约。
-- 官方 I/O、分数方向、时限、平台硬件、榜单汇总、外部数据/权重细则与报名后资源仍待确认；本地接口和选择是项目约定，不能写成赛方要求。
-- 算法实现进度以 `docs/status.md`、源码和新鲜验证为准；开发、研究、音视频组和 CPU/CUDA 可选后端由 `uv.lock` 固定。工具及模拟测试不证明模型性能。
-- 文献与候选边界见 `docs/research/literature.md`。语音反欺骗不等于通用音频检测，图像帧检测不等于已验证的时序视频检测。
+这是用户明确要求的执行修正，适用于后续所有开发：
 
-## 目录与历史边界
+1. 优先数据可用、有效训练、EER与泛化、双分支离线交付。工程改动解决眼前实验或交付问题，不用反复证明和扩建基础设施代替算法进展。
+2. 配置和外部输入在入口校验，已解析对象直接传递。内部不重复解析、重复计算、无故全量重验，也不为假想异常堆叠分支。
+3. 每轮实验保存一份配置、必要资产标识、逐样本分数、简洁摘要和必要日志。复用已有工具，不复制整套实现或为同一事实建立多份证明。
+4. 历史快照只用于追溯，不作为当前工具或推进门。无关源码、文档或历史安装报告的变化不应阻塞模型实验或导致特征缓存重建。
+5. 小样本实验用于选择下一步，说明局限即可继续。置信区间与严格比较用于充分证据下的结论，不以机械组数或预注册流程阻止探索训练。
+6. 先运行与改动对应的行为检查，再在提交前完成一轮标准检查；无新改动或失败时不重复验证。测试验证行为，不堆叠实现细节守卫。
+7. 清理先写范围和需保留行为，修改后独立评审。本轮范围在 `docs/plans/workspace-preparation.md`，不新增平行框架和无关依赖。
 
-| 路径 | 约定 |
+## 数据、模型和评测
+
+- 内部 `real=0`、`fake=1`，高分更伪造，保留连续分数；官方转换集中在适配层。EER处理并列、插值、缺类和非有限值，官方程序出现后核对差异。
+- 登记数据/权重来源、许可、版本和必要哈希。已知原媒体、派生、人物/说话人和确认的近重复组不跨划分；候选关系不直接当作重复事实。
+- train训练，dev早停与选择，holdout在候选冻结后验收。真实/生成采用对称处理，检查来源、尺寸、编解码捷径。
+- 音频覆盖语音及非语音，视频覆盖通用生成内容；语音或图像帧实验不能证明整个音视频任务有效。没有赛题依据时不跨两项目融合音轨。
+- 解码失败、无有效帧、超时和模型异常逐样本记账，不静默丢弃或编造分数。EER无法计算时报告原因，失败计入覆盖率分母。
+- 推理只加载本地资源，禁用隐式下载。代码、数据和权重许可分别核对；未解决的资产不进入正式交付。
+- 先小规模profile确定batch/精度/workers，再开展有价值的实验；优先AMP、梯度累积与可复用缓存。记录耗时、吞吐、显存和错误，不将单次满载解释为实验充分。
+- 长任务恢复先检查实际进程和产物，不依据失效工具handle推断终态。当前训练不支持optimizer/RNG恢复，中断结果保留并在新目录重启；推理resume与训练续跑分开。
+
+## 文件与历史
+
+| 路径 | 用途 |
 | --- | --- |
-| `src/deepfake_detection_archive/` | 新比赛算法代码；保留现包名，除非任务要求更名 |
-| `tests/` | 主动工程回归测试，默认 pytest 入口 |
-| `docs/competition/` | 赛题要求与不改写的来源快照 |
-| `docs/research/` | 文献、许可证边界、工具与参考版本 |
-| `docs/plans/`、`docs/status.md`、`docs/worklog/` | 方案、当前状态与可追溯工作记录 |
-| `.agents/skills/`、`skills-lock.json` | 由固定版 `npx skills` 管理并纳入 Git 的项目 skills；协作者克隆即用 |
-| `archive/` | 历史归档；遵守子目录 AGENTS，原内容默认只读 |
-| `tools/restore_backup.py` | 原字节保留的备份恢复工具，不是比赛入口 |
-| `external/` | Git 忽略的固定版本上游参考，不进入包或默认检查 |
-| `data/`、`models/`、`outputs/`、`cache/` | 本地数据/产物，先核对忽略规则再生成 |
+| `src/deepfake_detection_archive/`、`tests/` | 当前代码与行为回归；保持现包名 |
+| `configs/`、`tools/` | 当前配置模板、导入/探针和统一检查入口 |
+| `docs/status.md`、`docs/plans/`、`docs/development.md` | 当前状态、主线方案、使用指南 |
+| `docs/competition/`、`docs/research/`、`docs/experiments/`、`docs/worklog/` | 赛题来源、研究、实验和必要工作记录 |
+| `.agents/skills/`、`skills-lock.json` | Git跟踪的项目skills及来源锁 |
+| `archive/`、`tools/restore_backup.py` | 旧项目与原字节恢复工具，默认只读 |
+| `data/`、`models/`、`outputs/`、`cache/`、`external/` | Git忽略的本地资产和固定上游参考 |
 
-- `archive/legacy-20261005/` 内的旧 README、计划、Windows 路径和“唯一产出区”只属于历史项目，不能影响本届工程布局与授权。
-- 迁移冻结清单 `archive/integrity-manifest.json` 保护 1,526 个旧文件和恢复工具。不要为使测试通过而改写历史哈希；需要改动历史资产时先明确范围并保留原始证据。
-- 复用旧实现须最小迁移、保留来源/许可并重新验证；不批量格式化、重排或自动修复归档。旧跨语料阈值失效记录应作为验证设计依据。
-
-## 数据、算法与实验
-
-- 按已确认方案分阶段推进：契约与数据治理、EER、双分支基线、跨域鲁棒性、可选较重方法、离线交付。先有可比较实验，再采用更大模型。
-- 内部定义 `fake=1` 和分数方向，保留逐样本连续分数；官方转换独立实现。不把风险分带当概率，不只输出二值标签。
-- EER 明确阈值、并列分数、插值、缺类与非有限值处理；无并列样例可与 ASVspoof 参考交叉核对，不能要求不同并列策略结果完全相同。官方程序可用后以其对齐验证。
-- 数据登记来源、许可、哈希、原媒体/派生链、人物/说话人、生成器和处理条件。同源切片、视频帧、增强派生样本不跨划分。
-- 开发集负责早停/融合选择，最终留出只用于冻结后的验收；不得把最终留出或比赛测试集反复用于调参。真实与生成样本使用对称处理，检查来源、编解码与分辨率捷径。
-- 解码失败、无有效帧、音轨缺失、超时和模型异常须逐样本显式记账，不静默丢样本。提交失败策略依官方规范；EER 不可计算时报告原因，不能伪造数字。
-- 记录代码版本、数据/权重/配置哈希、种子、环境、命令、耗时、吞吐、峰值显存和错误计数。历史结果、真实运行、模拟测试与假设分开表述。
-- 充分使用本地 GPU：先用 profile 确定 batch、精度、workers、缓存和累积步数，再以 AMP、梯度累积、异步传输等实测有效手段提高利用率。训练可显式选择 float16/bfloat16 AMP，设备不支持时明确失败；长任务记录温度、显存、吞吐和失败，以实验价值、资源故障和收益递减作为停止条件，不以预设卡时截断有效实验。
-- 推理从本地加载资源，禁用隐式下载；代码、权重、数据许可分别核对。没有官方依据时不融合视频音轨和独立音频任务。
+- 旧照片项目不要求复用UI、身份检索、底图溯源、Windows接口或历史阈值。归档内旧路径与约定仅适用于历史项目。
+- `archive/integrity-manifest.json`保护1,526个旧文件与恢复工具，不为通过检查改写哈希。复用实现时最小迁移、保留来源并重新验证，不批量格式化归档。
+- `.gitattributes`保留归档、恢复工具、来源快照、vendor及第三方skills字节；构建排除历史、外部参考、数据、模型和缓存。
 
 ## 环境与验证
 
-- Python 3.12、uv、`uv.lock`。dev 组为 Ruff/pytest/mypy，research 组为 pypdf/绘图/kernel，media 组为数据/音视频工具；`cpu` / `cu130` extras 包含配对的 torch/torchvision、timm、Transformers。两个后端互斥，当前开发环境用 cu130。新增依赖按任务实际需要引入并同步锁文件，不灌入上游整份 requirements。
-- PyTorch 使用官方显式索引，wheel 的 CUDA 依赖不等于另行修改系统驱动。随机模型和合成媒体探针在 `tools/check_environment.py`；无权重下载或参数更新。具体模型的兼容性、权重许可和 8GB 显存适配仍需后续实测。重型训练和完整数据下载遵守方案确认边界；本地 GPU 已获持续授权，云资源启用仍须确认预算与数据合规。
-- 主动代码使用 88 字符行宽、Ruff 和严格 mypy。默认检查范围是 `src` 和 `tests`；历史恢复脚本未修改，不因新规则而重写。
+- Python3.12、uv和`uv.lock`；dev/research/media按需同步，CPU与cu130 extras互斥，当前主环境用cu130。新增依赖同步锁文件，不安装整份上游requirements或擅改系统驱动。
+- 普通沙箱GPU/NVML或IPC受限与安装失败分开判断；实际运行证据看状态与实验记录。
+- 主动代码使用88字符行宽、Ruff和严格mypy。本地和CI共享以下入口，具体检查范围只在脚本维护：
 
 ```bash
 export UV_CACHE_DIR=/tmp/aigc-uv-cache
 uv sync --locked --group media --group research --extra cu130
-uv run --no-sync ruff check src tests tools/check_environment.py tools/profile_models.py tools/prepare_asvspoof2019.py tools/finalize_asvspoof2019.py tools/prepare_vif_panda.py
-uv run --no-sync ruff format --check src tests tools/check_environment.py tools/profile_models.py tools/prepare_asvspoof2019.py tools/finalize_asvspoof2019.py tools/prepare_vif_panda.py
-uv run --no-sync mypy
-uv run --no-sync mypy tools/profile_models.py tools/prepare_asvspoof2019.py tools/finalize_asvspoof2019.py tools/prepare_vif_panda.py
-uv run --no-sync pytest -q
-uv run --no-sync python -B -m unittest discover -s archive/legacy-20261005/validation/deepfake_acceptance_v2/evaluator/tests -p 'test_*.py' -v
-uv build --no-sources
+bash tools/check_project.sh
 ```
 
-- 2 项主动测试保护归档/恢复工具；7 项旧评测器测试使用 stub。新功能需要自己的行为测试，不能用上述结果替代 EER/模型测试。
-- 模型/GPU profile 工具及官方语音导入器同时纳入 Ruff、格式和严格 mypy；完整命令见 CI。`.gitattributes` 保留归档、恢复工具、项目 skills 和来源/vendor 的原字节，不格式化这些资产。
-- 构建后检查 wheel/sdist 不含归档、外部参考、数据、模型和缓存。CI 配置在 `.github/workflows/checks.yml`；本地通过不意味着远端已运行。
-- 项目实际使用的 11 项 skills 由 `npx skills@1.7.1 --copy` 安装在 `.agents/skills/`，以 `skills-lock.json` 固定来源并纳入 Git；它们优先于机器级安装，协作者克隆后可直接调用。更新时使用固定 CLI、审阅上游差异和许可，再提交复制结果；不直接手改第三方 skill，项目适配写入本仓库代码或文档。全部 535 项 ds-skills 的机器级比对只保留为历史审计。来源与适配边界见 `docs/research/tooling-lock.json`、`docs/research/ds-skills.json`。技能示例中的上传、发布、遥测和云任务不因此获授权。
+- 默认测试保护主动行为及归档；旧评测器7项stub不代替模型效果。远端CI状态按实际运行报告。
+- 11项项目skills由固定`npx skills@1.7.1 --copy`管理并纳入Git，协作者克隆即用。更新审阅上游差异及许可，适配写在本仓库，不手改第三方skill。上传、发布、遥测和云示例不代表授权。
 
-## 最新实测边界（2026-10-08）
+## Git与协作
 
-- 音频隔离pilot两模型两种子已完成实际训练及512条dev评分；原AASIST43中断10epoch保留，retry1仅改变output_dir。真实EER、配置、更新、遥测及不晋级结论见 `docs/experiments/asv-pilot-quarantine-20261008/`。视频pad/crop两种子及不晋级见各实验目录。
-- AASIST-L实测reserved峰值7,897,874,432字节，约7.36GiB，超过初始7GiB目标；0OOM不代表留足显存余量。下一次扩大训练前按真实tail batch与dev阶段重新profile，设备采样、allocator allocated/reserved分开。
-- 24条真实LogMel42 CPU断网、重复、中断恢复实际通过，连续分数相同；只能说明该本机语音子集机制，不等于安全屋/视频/代表500条验收。证据在 `docs/research/offline-rehearsal/model-execution-20261008/`，原始 `/proc`、退出-2及脚本字节由 `.gitattributes` 保护。
-- EnvSDD固定CSV范围40fsID/106文件/530条原始WAV全部独立复验；450为PCM16、80为PCM24，不转码源字节。旧PCM16限定失败与新恢复分开保存；研究归属未完成时不进入训练/提交。原作者文件、原音归属和官方资源规则逐项按证据准入，不以原始下载完毕代替许可完成。
-- 继续时先核对真实进程、终态文件和源码/输入哈希；进程handle失效不证明任务停止。若确认实际停止且训练不支持优化器恢复，新运行目录重试，保留原历史，不能把非终态 `running` 记录补写成完成。
-
-## 执行与交付
-
-- 清晰授权的可逆本地步骤直接完成；保持小而可审查的提交。用户已授权自行管理 Git/依赖，可创建本地提交；不改写既有历史，不夹带无关用户改动，不自动发布、推送或参赛提交。
-- Git 提交遵循本项目 LoRA 准则：**Logical**（一个明确目标）、**Observable**（提交说明或工作记录给出验证证据）、**Reversible**（能独立回退且不破坏无关工作）、**Atomic**（只含完成该目标所需的最小完整改动）。依赖变更、源码、生成记录和文档按依赖顺序拆分；每个提交执行与范围匹配的检查，提交信息准确描述结果。若用户后续给出不同的 LoRA 定义，以最新明确说明为准。
-- 清理/重构先写计划并锁定现有行为，作者与评审分离。本轮整理计划是 `docs/plans/workspace-preparation.md`；后续方案调整要记录依据及影响。
-- 有实质收益的独立任务可用原生子代理，显式选择 `explore`、`researcher`、`dependency-expert`、`executor`、`verifier`、`critic` 等角色；主代理整合并验证，普通任务不使用 `worker` 或暗中启动 Team。
-- 显式 `$name` 工作流先读对应 SKILL；在 tmux 外不假定 Team/question 运行时界面可用，不伪造状态或权限。
-- 结束时报告完成文件、验证证据、限制和剩余工作；用户已授权整体实施，不重复等待方案确认。官方凭据、付费云预算或正式提交仍依据实际授权处理。
+- 本地提交遵循LoRA：Logical（一目标）、Observable（必要验证证据）、Reversible（独立回退）、Atomic（最小完整改动）。不改写历史、不夹带无关用户改动。
+- 有实质收益时可用原生子代理并显式指定角色；主代理整合、独立评审、统一最终验证，避免各代理重复运行同一套检查。普通工作不暗启Team或使用worker角色。
+- 显式`$name`先读对应SKILL；不伪造OMX状态、运行界面或权限。没有运行时支持时使用普通工作流。
+- 结束报告实际改动、验证和剩余主线任务；已授权步骤自主完成，不重复等待方案确认。
