@@ -87,9 +87,9 @@ class FrozenVisionEncoder(_FrozenEncoder):
 class FrozenAudioEncoder(_FrozenEncoder):
     """Mean-pooled SSL speech embeddings from a fully verified local bundle.
 
-    This does not imply coverage of music/environmental sounds. Each actual
-    waveform is encoded separately: padding never changes transformer attention
-    or group-normalized feature extraction. Cache embeddings to amortize cost.
+    This does not imply coverage of music/environmental sounds. Unpadded inputs
+    are batched; variable-length waveforms are encoded separately so padding
+    cannot change attention or group normalization. Cache embeddings to reuse.
     """
 
     def __init__(self, model_dir: Path, *, expected_hashes: dict[str, str]) -> None:
@@ -162,6 +162,14 @@ class FrozenAudioEncoder(_FrozenEncoder):
                 f"expected sample rate {self.sample_rate}, got {sample_rate}"
             )
         lengths = validate_waveforms(waveforms, lengths)
+        if bool((lengths == waveforms.shape[1]).all()):
+            values = waveforms.float()
+            if self.do_normalize:
+                values = (values - values.mean(dim=1, keepdim=True)) / (
+                    values.var(dim=1, unbiased=False, keepdim=True) + 1e-7
+                ).sqrt()
+            hidden = self.backbone(input_values=values).last_hidden_state
+            return cast(Tensor, hidden.mean(dim=1))
         embeddings: list[Tensor] = []
         for waveform, length in zip(waveforms, lengths, strict=True):
             values = waveform[: int(length)].float()
