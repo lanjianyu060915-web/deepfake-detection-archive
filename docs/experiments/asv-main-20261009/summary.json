@@ -1,0 +1,72 @@
+{
+  "experiment": "asv-main-20261009/logmel-seed42",
+  "status": "complete",
+  "train_count": 25379,
+  "dev_count": 24844,
+  "best_epoch": 30,
+  "epochs_completed": 30,
+  "dev_eer": 0.00510204081632653,
+  "dev_failure_count": 0,
+  "dev_coverage": 1.0,
+  "experiment_seconds": 1614.6174670759938,
+  "training_seconds": 1519.1295831760071,
+  "median_train_samples_per_second": 863.8503844528714,
+  "peak_cuda_allocated_bytes": 3475545600,
+  "peak_cuda_reserved_bytes": 5760876544,
+  "stop_reason": "max_epochs",
+  "skipped_updates": 0,
+  "code_at_run": {
+    "code_sha256": "c6b5d181f3f2e1751379698a8557ccc5ed459fe804afe5e450bfb38b8abe47e7",
+    "commit": "9eb78ee402ea40a06e1ef33a27ea5f71e24320aa",
+    "dirty": true
+  },
+  "provenance": {
+    "code_sha256": "c6b5d181f3f2e1751379698a8557ccc5ed459fe804afe5e450bfb38b8abe47e7",
+    "data_sha256": "8b204f61a679a2789280a731aae1cefb63a29bd6fe009e66b0b34347aa148257",
+    "encoder_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "manifest_sha256": "8b204f61a679a2789280a731aae1cefb63a29bd6fe009e66b0b34347aa148257",
+    "sources_sha256": "6ecc3a94e6b11d60cf4da4b1b5790aa251d95ee75c03df0ce63a4f5f62187039",
+    "weights_sha256": "87767357759a7a21f6bdad519e643fa699be8cde3666e7204eb6e35290b891d1"
+  },
+  "checkpoint_sha256": "bb1a70097a9b0159c9febb56bb8c757ac5ccb9b2ae43e571f01b90cc70b37d8c",
+  "per_attack_dev_eer_with_all_real": {
+    "A01": {
+      "real": 2548,
+      "fake": 3716,
+      "eer": 0.0024219590958019376
+    },
+    "A02": {
+      "real": 2548,
+      "fake": 3716,
+      "eer": 0.0005382131324004305
+    },
+    "A03": {
+      "real": 2548,
+      "fake": 3716,
+      "eer": 0.00026910656620021526
+    },
+    "A04": {
+      "real": 2548,
+      "fake": 3716,
+      "eer": 0.01020408163265306
+    },
+    "A05": {
+      "real": 2548,
+      "fake": 3716,
+      "eer": 0.007265877287405812
+    },
+    "A06": {
+      "real": 2548,
+      "fake": 3716,
+      "eer": 0.00510204081632653
+    }
+  },
+  "scope": "Best checkpoint selected on dev; prepared tensor FP32 evaluation; known A01-A06 generators; no ASV eval or competition data.",
+  "pending": [
+    "logmel seed43",
+    "HuBERT full training",
+    "controlled video visual training",
+    "unknown-generator/general-audio evaluation",
+    "end-to-end offline evaluation of this checkpoint"
+  ]
+}
