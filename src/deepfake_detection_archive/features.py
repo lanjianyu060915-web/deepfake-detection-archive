@@ -67,6 +67,54 @@ def media_path(record: SampleRecord, root: Path) -> Path:
     return path
 
 
+def extract_audio_feature_batch(  # noqa: PLR0913, PLR0917
+    records: list[SampleRecord],
+    root: Path,
+    encoder: FrozenAudioEncoder,
+    audio_config: AudioConfig,
+    segment_samples: int,
+    segments: int,
+    device: str,
+    batch_size: int,
+) -> list[Tensor]:
+    """Encode a caller-bounded media chunk, batching segments across recordings.
+
+    Return one CPU float32 [segments, dimensions] tensor per input record in
+    order. Decode errors propagate so the caller can record individual failures.
+    """
+    if type(batch_size) is not int or batch_size <= 0:
+        raise ValueError("feature batch_size must be a positive integer")
+    if not records:
+        return []
+    inputs = []
+    for record in records:
+        if record.modality != "audio":
+            raise ValueError("audio feature batch requires audio media")
+        audio = decode_audio(media_path(record, root), audio_config)
+        inputs.append(
+            torch.from_numpy(
+                sample_audio_segments(audio.waveform, segment_samples, segments)
+            )
+        )
+    encoder.eval()
+    result = []
+    with torch.inference_mode():
+        for batch in torch.cat(inputs).split(batch_size):  # type: ignore[no-untyped-call]
+            features = encoder(batch.to(device), sample_rate=audio_config.sample_rate)
+            if (
+                features.ndim != 2
+                or features.shape[0] != batch.shape[0]
+                or not bool(torch.isfinite(features).all())
+            ):
+                raise ValueError("encoder returned invalid feature shape or values")
+            result.append(features.cpu().float())
+    # Each cache file must own just its media, rather than serialize the batch storage.
+    return [
+        features.clone()
+        for features in torch.cat(result).reshape(len(records), segments, -1).unbind()
+    ]
+
+
 def extract_features(  # noqa: PLR0913, PLR0917
     record: SampleRecord,
     root: Path,

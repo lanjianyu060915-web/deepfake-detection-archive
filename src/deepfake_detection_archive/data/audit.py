@@ -41,7 +41,10 @@ class AuditReport:
 
 
 def _audit_record(
-    record: SampleRecord, root: Path, sources: dict[str, SourceRecord]
+    record: SampleRecord,
+    root: Path,
+    sources: dict[str, SourceRecord],
+    require_decoded: bool,
 ) -> tuple[list[AuditIssue], str | None, int]:
     issues: list[AuditIssue] = []
 
@@ -70,7 +73,7 @@ def _audit_record(
     except OSError as exc:
         issue("file_read_error", str(exc))
     issues.extend(_audit_source(record, sources.get(record.source)))
-    if record.decode_status != "ok":
+    if require_decoded and record.decode_status != "ok":
         issue("decode_unverified", f"decode_status={record.decode_status}")
     for field in ("content_type", "identity_id", "generator", "original_id"):
         if getattr(record, field) == UNKNOWN:
@@ -170,11 +173,15 @@ def audit_manifest(
     root: Path,
     sources: dict[str, SourceRecord],
     duplicate_pairs: tuple[tuple[str, str], ...] = (),
+    *,
+    require_decoded: bool = True,
 ) -> AuditReport:
     """Verify bytes and registry. Full eligibility also needs decode_status='ok'.
 
     Missing/failed entries remain in all denominators. The caller must obtain
     decode_status from an actual decoding pass; this function cannot certify it.
+    A caller that decodes during preparation may request a pre-decode audit;
+    such a passing report establishes registry/byte eligibility, not decodability.
     Coverage counts alone do not certify generalization or statistical sufficiency.
     """
     groups = connected_groups(records, duplicate_pairs)
@@ -183,7 +190,9 @@ def audit_manifest(
     total_bytes = 0
     actual_hashes: dict[str, list[SampleRecord]] = defaultdict(list)
     for record in records:
-        record_issues, actual, size = _audit_record(record, root, sources)
+        record_issues, actual, size = _audit_record(
+            record, root, sources, require_decoded
+        )
         issues.extend(record_issues)
         total_bytes += size
         if actual is not None:

@@ -277,7 +277,8 @@ def test_local_vision_encoder_is_frozen(tmp_path, monkeypatch):
         )
 
 
-def test_local_ssl_encoder_and_bundle_integrity(tmp_path, monkeypatch):
+@pytest.mark.parametrize("feature_norm", ["layer", "group"])
+def test_local_ssl_encoder_and_bundle_integrity(tmp_path, monkeypatch, feature_norm):
     transformers = pytest.importorskip("transformers")
     config = transformers.Wav2Vec2Config(
         hidden_size=16,
@@ -289,7 +290,7 @@ def test_local_ssl_encoder_and_bundle_integrity(tmp_path, monkeypatch):
         conv_kernel=(10, 3),
         num_conv_pos_embeddings=8,
         num_conv_pos_embedding_groups=2,
-        feat_extract_norm="layer",
+        feat_extract_norm=feature_norm,
         mask_time_prob=0.0,
     )
     model = transformers.Wav2Vec2Model(config).eval()
@@ -317,6 +318,28 @@ def test_local_ssl_encoder_and_bundle_integrity(tmp_path, monkeypatch):
     assert features.shape == (1, 16)
     assert not features.requires_grad
     torch.testing.assert_close(encoder(padded, torch.tensor([1000])), features)
+    batch = torch.cat((waveform, torch.randn_like(waveform) * 7 + 3))
+    expected = torch.cat([encoder(row[None, :]) for row in batch])
+    batch_sizes = []
+    forward = encoder.backbone.forward
+
+    def record_batch(*args, **kwargs):
+        batch_sizes.append(kwargs["input_values"].shape[0])
+        return forward(*args, **kwargs)
+
+    monkeypatch.setattr(encoder.backbone, "forward", record_batch)
+    torch.testing.assert_close(encoder(batch), expected, rtol=1e-4, atol=1e-5)
+    assert batch_sizes == [2]
+    shorter = encoder(batch[1:2, :768])
+    batch[1, 768:] = float("nan")
+    batch_sizes.clear()
+    torch.testing.assert_close(
+        encoder(batch, torch.tensor([1000, 768])),
+        torch.cat((features, shorter)),
+        rtol=1e-4,
+        atol=1e-5,
+    )
+    assert batch_sizes == [1, 1]
     with pytest.raises(ValueError, match="sample rate"):
         encoder(waveform, sample_rate=22050)
     with pytest.raises(ValueError, match="hashes must cover"):

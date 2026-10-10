@@ -86,6 +86,61 @@ def test_audio_limits(audio_file: Path) -> None:
         decode_audio(audio_file, AudioConfig(max_samples=100))
 
 
+@pytest.mark.parametrize("suffix", ["wav", "flac"])
+def test_soundfile_matches_ffmpeg(
+    tmp_path: Path, ffmpeg_available: None, suffix: str, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    sf = pytest.importorskip("soundfile")
+    path = tmp_path / f"native.{suffix}"
+    samples = np.array([-32768, -16384, -1, 0, 1, 16384, 32767] * 100, dtype=np.int16)
+    sf.write(path, samples, 16000, subtype="PCM_16")
+    reference = decode_audio(path)
+
+    def no_subprocess(*args: object) -> bytes:
+        pytest.fail("native-rate soundfile decoding must not start subprocesses")
+
+    monkeypatch.setattr("deepfake_detection_archive.media._run", no_subprocess)
+    result = decode_audio(path, AudioConfig(backend="soundfile"))
+    np.testing.assert_array_equal(result.waveform, reference.waveform)
+    assert result.sample_rate == result.original_sample_rate == 16000
+    assert result.original_duration_seconds == pytest.approx(samples.size / 16000)
+    with pytest.raises(MediaError, match="duration_limit"):
+        decode_audio(path, AudioConfig(backend="soundfile", max_duration_seconds=0.01))
+    with pytest.raises(MediaError, match="output_limit"):
+        decode_audio(path, AudioConfig(backend="soundfile", max_samples=100))
+
+
+@pytest.mark.parametrize(("rate", "channels"), [(8000, 1), (16000, 2)])
+def test_soundfile_requires_native_mono(
+    tmp_path: Path, rate: int, channels: int
+) -> None:
+    sf = pytest.importorskip("soundfile")
+    path = tmp_path / "unsupported.wav"
+    sf.write(path, np.zeros((400, channels), dtype=np.int16), rate)
+    with pytest.raises(MediaError, match="unsupported_audio_format"):
+        decode_audio(path, AudioConfig(backend="soundfile"))
+
+
+def test_soundfile_rejects_nonfinite_and_corrupt_audio(tmp_path: Path) -> None:
+    sf = pytest.importorskip("soundfile")
+    path = tmp_path / "nonfinite.wav"
+    sf.write(
+        path, np.array([0, np.nan, np.inf], dtype=np.float32), 16000, subtype="FLOAT"
+    )
+    with pytest.raises(MediaError, match="nonfinite_audio"):
+        decode_audio(path, AudioConfig(backend="soundfile"))
+    path.write_bytes(b"not an audio stream")
+    with pytest.raises(MediaError, match="decode_error"):
+        decode_audio(path, AudioConfig(backend="soundfile"))
+    flac = tmp_path / "truncated.flac"
+    samples = np.random.default_rng(42).integers(-32768, 32768, 10000, dtype=np.int16)
+    sf.write(flac, samples, 16000, subtype="PCM_16")
+    encoded = flac.read_bytes()
+    flac.write_bytes(encoded[: len(encoded) // 2])
+    with pytest.raises(MediaError, match="decode_error"):
+        decode_audio(flac, AudioConfig(backend="soundfile"))
+
+
 def test_video_rgb_padding_and_vfr_timestamps(video_file: Path) -> None:
     decoded = decode_video(video_file, VideoConfig(n_frames=5, height=40, width=40))
     assert decoded.frames.shape == (5, 40, 40, 3)

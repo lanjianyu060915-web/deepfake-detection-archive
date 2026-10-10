@@ -12,6 +12,7 @@ import numpy as np
 import pytest
 import torch
 
+from deepfake_detection_archive.contracts import load_scores
 from deepfake_detection_archive.data.manifest import (
     SampleRecord,
     file_sha256,
@@ -19,10 +20,21 @@ from deepfake_detection_archive.data.manifest import (
     write_manifest,
 )
 from deepfake_detection_archive.experiments import (
+    _balanced_sampler,
     _save_tensor,
     load_experiment_config,
     run_experiment,
 )
+
+
+def test_balanced_sampling_corrects_class_imbalance_and_repeats_by_seed() -> None:
+    entries = [(Path(str(index)), "unused", int(index >= 100)) for index in range(1000)]
+    first = list(_balanced_sampler(entries, torch.Generator().manual_seed(42)))
+    second = list(_balanced_sampler(entries, torch.Generator().manual_seed(42)))
+    assert first == second
+    assert len(first) == len(entries)
+    fake_count = sum(entries[index][2] for index in first)
+    assert 450 < fake_count < 550
 
 
 @pytest.fixture
@@ -116,6 +128,13 @@ def test_waveform_experiment_caches_only_train_dev_and_records_provenance(
     assert report["status"] == "complete"
     assert report["train_count"] == report["dev_count"] == 2
     assert report["holdout_accessed"] is False
+    scores = load_scores(experiment.parent / "run" / "dev-scores.jsonl")
+    assert [score.sample_id for score in scores] == ["2", "3"]
+    evaluation = json.loads(
+        (experiment.parent / "run" / "dev-evaluation.json").read_text()
+    )["evaluation"]
+    assert evaluation["fullset_eer"] == result.best_dev_eer
+    assert evaluation["failure_count"] == 0
     assert len(list((experiment.parent / "cache").glob("*.pt"))) == 4
     assert len(report["provenance"]["weights_sha256"]) == 64
     assert (
@@ -133,6 +152,19 @@ def test_spawned_loader_worker_can_read_prepared_tensors(experiment: Path) -> No
     _change(experiment, num_workers=1)
     result = run_experiment(experiment)
     assert result.epochs_completed == 1
+
+
+def test_training_prepares_media_without_a_redundant_decode_pass(
+    experiment: Path,
+) -> None:
+    manifest = experiment.parent / "manifest.jsonl"
+    records = [
+        replace(record, decode_status="unknown") for record in load_manifest(manifest)
+    ]
+    write_manifest(records, manifest)
+    result = run_experiment(experiment)
+    assert result.epochs_completed == 1
+    assert len(load_scores(experiment.parent / "run" / "dev-scores.jsonl")) == 2
 
 
 @pytest.fixture
@@ -182,6 +214,10 @@ def test_tiny_local_encoder_experiment_reuses_verified_cache(
     monkeypatch.setattr(
         "deepfake_detection_archive.experiments.extract_features", unexpected_extract
     )
+    monkeypatch.setattr(
+        "deepfake_detection_archive.experiments.extract_audio_feature_batch",
+        unexpected_extract,
+    )
     # A CLI/reporting change alters whole-package provenance, not the features.
     monkeypatch.setattr(
         "deepfake_detection_archive.experiments.code_identity",
@@ -202,7 +238,8 @@ def test_tiny_local_encoder_experiment_reuses_verified_cache(
     failures = json.loads(
         (feature_experiment.parent / "changed" / "decode_failures.json").read_text()
     )
-    assert len(failures) == 4
+    assert failures
+    assert all(row["stage"] == "audio_feature_batch" for row in failures)
     assert config["encoder"]["expected_hashes"]
 
 
@@ -224,6 +261,10 @@ def test_changed_feature_implementation_invalidates_cache(
     )
     monkeypatch.setattr(
         "deepfake_detection_archive.experiments.extract_features", unexpected_extract
+    )
+    monkeypatch.setattr(
+        "deepfake_detection_archive.experiments.extract_audio_feature_batch",
+        unexpected_extract,
     )
     _change(feature_experiment, output_dir="changed-implementation")
     with pytest.raises(ValueError, match="sample preparation failed"):

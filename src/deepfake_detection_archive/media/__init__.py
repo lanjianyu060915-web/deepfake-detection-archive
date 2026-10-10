@@ -40,6 +40,7 @@ class AudioConfig:
     max_duration_seconds: float = 600.0
     timeout_seconds: float = 30.0
     max_samples: int = 9_600_000
+    backend: Literal["ffmpeg", "soundfile"] = "ffmpeg"
 
     def __post_init__(self) -> None:
         for name in ("sample_rate", "max_samples"):
@@ -48,6 +49,8 @@ class AudioConfig:
                 raise ValueError(f"{name} must be a positive integer")
         _positive(self.max_duration_seconds, "max_duration_seconds")
         _positive(self.timeout_seconds, "timeout_seconds")
+        if self.backend not in ("ffmpeg", "soundfile"):
+            raise ValueError("audio backend must be ffmpeg or soundfile")
 
 
 @dataclass(frozen=True)
@@ -193,9 +196,49 @@ def _duration(probe: dict[str, Any], maximum: float) -> float:
     return duration
 
 
+def _decode_audio_soundfile(source: str, config: AudioConfig) -> AudioData:
+    """Read native-rate mono audio in-process; no subprocess timeout applies."""
+    import soundfile as sf  # type: ignore[import-untyped]  # noqa: PLC0415
+
+    try:
+        with sf.SoundFile(source) as stream:
+            rate = int(stream.samplerate)
+            if rate != config.sample_rate or stream.channels != 1:
+                raise MediaError(
+                    "unsupported_audio_format",
+                    "soundfile backend requires mono audio at the target sample rate",
+                )
+            frames = int(stream.frames)
+            if frames <= 0:
+                raise MediaError("no_samples", "audio contains no complete samples")
+            duration = frames / rate
+            if duration > config.max_duration_seconds:
+                raise MediaError(
+                    "duration_limit", "media duration exceeds configured limit"
+                )
+            limit = min(
+                config.max_samples,
+                math.ceil(config.max_duration_seconds * config.sample_rate),
+            )
+            if frames > limit:
+                raise MediaError("output_limit", "decoded output exceeds limit")
+            waveform: NDArray[np.float32] = stream.read(limit + 1, dtype="float32")
+    except (RuntimeError, OSError) as exc:
+        raise MediaError("decode_error", str(exc)) from exc
+    if waveform.size > limit:
+        raise MediaError("output_limit", "decoded output exceeds limit")
+    if waveform.size != frames:
+        raise MediaError("decode_error", "audio ended before all samples were decoded")
+    if not np.isfinite(waveform).all():
+        raise MediaError("nonfinite_audio", "decoded audio contains nonfinite samples")
+    return AudioData(waveform, rate, rate, duration)
+
+
 def decode_audio(path: str | Path, config: AudioConfig | None = None) -> AudioData:
     config = config or AudioConfig()
     source = _local_file(path)
+    if config.backend == "soundfile":
+        return _decode_audio_soundfile(source, config)
     metadata = _probe(source, "a:0", config.timeout_seconds)
     duration = _duration(metadata, config.max_duration_seconds)
     try:

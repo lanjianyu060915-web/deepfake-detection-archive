@@ -13,9 +13,10 @@ from typing import Any, cast
 import numpy as np
 import torch
 from torch import Tensor
-from torch.utils.data import DataLoader, Dataset
+from torch.utils.data import DataLoader, Dataset, WeightedRandomSampler
 
 from .config import load_object
+from .contracts import ScoreRecord
 from .data.audit import audit_manifest
 from .data.manifest import (
     SampleRecord,
@@ -26,9 +27,17 @@ from .data.manifest import (
     manifest_hash,
 )
 from .data.split import validate_splits
-from .features import Encoder, extract_features, load_encoder, media_path
+from .evaluation.report import evaluate_records
+from .features import (
+    Encoder,
+    extract_audio_feature_batch,
+    extract_features,
+    load_encoder,
+    media_path,
+)
 from .media import AudioConfig, VideoConfig, decode_audio, sample_audio_segments
 from .models.checkpoint import create_model, save_checkpoint, verify_sha256
+from .models.encoders import FrozenAudioEncoder
 from .tracking import atomic_json, canonical_json, code_identity, object_hash, utc_now
 from .training import TrainConfig, TrainResult, train_model
 
@@ -44,7 +53,9 @@ class ExperimentConfig:
     model_config: dict[str, Any]
     training: dict[str, Any]
     batch_size: int = 8
+    feature_batch_size: int = 8
     num_workers: int = 0
+    balanced_sampling: bool = False
     segment_samples: int = 64600
     segments: int = 1
     audio: dict[str, Any] = field(default_factory=dict)
@@ -63,11 +74,19 @@ class ExperimentConfig:
                 or not getattr(self, name).strip()
             ):
                 raise ValueError(f"{name} must be a nonempty path")
-        for name in ("batch_size", "segment_samples", "segments", "cache_max_bytes"):
+        for name in (
+            "batch_size",
+            "feature_batch_size",
+            "segment_samples",
+            "segments",
+            "cache_max_bytes",
+        ):
             if type(getattr(self, name)) is not int or getattr(self, name) <= 0:
                 raise ValueError(f"{name} must be a positive integer")
         if type(self.num_workers) is not int or self.num_workers < 0:
             raise ValueError("num_workers must be a nonnegative integer")
+        if type(self.balanced_sampling) is not bool:
+            raise ValueError("balanced_sampling must be boolean")
         if self.modality not in ("audio", "video"):
             raise ValueError("modality must be audio or video")
         for name in ("model_config", "training", "audio", "video", "encoder"):
@@ -207,6 +226,62 @@ def _worker_seed(_worker_id: int) -> None:
     np.random.seed(seed)  # noqa: NPY002 -- initialize worker-local legacy RNG users
 
 
+def _balanced_sampler(
+    entries: list[tuple[Path, str, int]], generator: torch.Generator
+) -> WeightedRandomSampler:
+    labels = torch.tensor([label for _, _, label in entries], dtype=torch.long)
+    counts = torch.bincount(labels, minlength=2)
+    weights = counts.double().reciprocal()[labels]
+    return WeightedRandomSampler(
+        weights.tolist(), len(entries), replacement=True, generator=generator
+    )
+
+
+def _write_dev_scores(
+    model: torch.nn.Module,
+    loader: DataLoader[tuple[Tensor, Tensor]],
+    records: list[SampleRecord],
+    device: str,
+    output: Path,
+) -> None:
+    """Score the selected checkpoint from the prepared dev tensors once."""
+    values: list[float] = []
+    started = time.monotonic()
+    model.eval()
+    with torch.inference_mode():
+        for inputs, _ in loader:
+            logits = cast(Tensor, model(inputs.to(device, non_blocking=True)))
+            values.extend(logits.float().cpu().tolist())
+    seconds = time.monotonic() - started
+    scores = [
+        ScoreRecord(
+            sample_id=record.sample_id,
+            modality=record.modality,
+            score=value,
+            status="ok",
+            elapsed_seconds=seconds / len(records),
+            label=record.label,
+            group_id=record.group_id,
+            source=record.source,
+            content_type=record.content_type,
+            generator=record.generator,
+        )
+        for record, value in zip(records, values, strict=True)
+    ]
+    (output / "dev-scores.jsonl").write_text(
+        "".join(canonical_json(score.to_dict()) + "\n" for score in scores),
+        encoding="utf-8",
+    )
+    atomic_json(
+        output / "dev-evaluation.json",
+        {
+            "scope": "selected checkpoint on prepared dev tensors; decoding excluded",
+            "seconds": seconds,
+            "evaluation": asdict(evaluate_records(scores)),
+        },
+    )
+
+
 def _audit_training_records(
     records: list[SampleRecord],
     config: ExperimentConfig,
@@ -228,13 +303,17 @@ def _audit_training_records(
         [replace(record, split="unassigned") for record in selected],
         root,
         sources,
+        require_decoded=False,
     )
     atomic_json(
         output / "audit.json",
         {
             "audit": audit.to_dict(),
             "split_errors": errors,
-            "scope": "train/dev bytes only; original full manifest split metadata checked",
+            "scope": (
+                "train/dev registry and bytes; full split metadata checked; "
+                "actual decoding or verified feature cache required by preparation"
+            ),
         },
     )
     if errors or not audit.passed:
@@ -242,7 +321,7 @@ def _audit_training_records(
     return selected
 
 
-def _prepare_cache(  # noqa: PLR0913, PLR0917
+def _prepare_cache(  # noqa: C901, PLR0912, PLR0913, PLR0915, PLR0917 -- cache and media batching
     records: list[SampleRecord],
     config: ExperimentConfig,
     root: Path,
@@ -273,70 +352,135 @@ def _prepare_cache(  # noqa: PLR0913, PLR0917
     entries: dict[str, list[tuple[Path, str, int]]] = {"train": [], "dev": []}
     failures: list[dict[str, str]] = []
     expected_shape: tuple[int, ...] | None = None
-    for record in records:
-        identity = {
+
+    def cache_identity(record: SampleRecord) -> dict[str, Any]:
+        return {
             "cache_version": 2,
             "media_sha256": record.sha256,
             "encoder": config.encoder,
+            "feature_precision": (
+                config.train_config.amp_dtype
+                if isinstance(encoder, FrozenAudioEncoder) and config.train_config.amp
+                else "float32"
+            ),
             "preprocessing": preprocessing,
             "pipeline_sha256": pipeline_hash,
         }
-        path = cache / f"{object_hash(identity)}.pt"
-        try:
-            if path.exists():
-                sidecar = json.loads(path.with_suffix(".json").read_text())
-                if sidecar["identity"] != identity:
-                    raise ValueError("tensor cache identity mismatch")  # noqa: TRY301 -- per-sample failure record
-                digest = sidecar["sha256"]
-                tensor = _load_tensor(path, digest)
-            else:
-                if encoder is None:
-                    decoded = decode_audio(media_path(record, root), audio_config)
-                    tensor = torch.from_numpy(
-                        sample_audio_segments(
-                            decoded.waveform, config.segment_samples, 1
-                        )[0]
+
+    chunk_size = (
+        max(1, config.feature_batch_size // config.segments)
+        if isinstance(encoder, FrozenAudioEncoder)
+        else 1
+    )
+    for offset in range(0, len(records), chunk_size):
+        chunk = records[offset : offset + chunk_size]
+        prepared: dict[str, Tensor] = {}
+        if isinstance(encoder, FrozenAudioEncoder):
+            missing = [
+                record
+                for record in chunk
+                if not (cache / f"{object_hash(cache_identity(record))}.pt").exists()
+            ]
+            if missing:
+                try:
+                    # Training AMP also applies to the frozen audio feature pass.
+                    with torch.autocast(
+                        device_type=torch.device(config.train_config.device).type,
+                        dtype=getattr(torch, config.train_config.amp_dtype),
+                        enabled=config.train_config.amp,
+                    ):
+                        tensors = extract_audio_feature_batch(
+                            missing,
+                            root,
+                            encoder,
+                            audio_config,
+                            config.segment_samples,
+                            config.segments,
+                            config.train_config.device,
+                            config.feature_batch_size,
+                        )
+                    prepared = {
+                        record.sample_id: tensor
+                        for record, tensor in zip(missing, tensors, strict=True)
+                    }
+                except Exception as exc:
+                    atomic_json(
+                        output / "decode_failures.json",
+                        [
+                            {
+                                "sample_id": record.sample_id,
+                                "stage": "audio_feature_batch",
+                                "error_type": type(exc).__name__,
+                                "error": str(exc),
+                            }
+                            for record in missing
+                        ],
                     )
+                    raise ValueError(
+                        "sample preparation failed; inspect decode_failures.json"
+                    ) from exc
+        for record in chunk:
+            identity = cache_identity(record)
+            path = cache / f"{object_hash(identity)}.pt"
+            try:
+                if path.exists():
+                    sidecar = json.loads(path.with_suffix(".json").read_text())
+                    if sidecar["identity"] != identity:
+                        raise ValueError("tensor cache identity mismatch")  # noqa: TRY301 -- per-sample failure record
+                    digest = sidecar["sha256"]
+                    tensor = _load_tensor(path, digest)
                 else:
-                    tensor = extract_features(
-                        record,
-                        root,
-                        encoder,
-                        audio_config,
-                        video_config,
-                        config.segment_samples,
-                        config.segments,
-                        config.train_config.device,
-                        config.batch_size,
+                    if record.sample_id in prepared:
+                        tensor = prepared.pop(record.sample_id)
+                    elif encoder is None:
+                        decoded = decode_audio(media_path(record, root), audio_config)
+                        tensor = torch.from_numpy(
+                            sample_audio_segments(
+                                decoded.waveform, config.segment_samples, 1
+                            )[0]
+                        )
+                    else:
+                        tensor = extract_features(
+                            record,
+                            root,
+                            encoder,
+                            audio_config,
+                            video_config,
+                            config.segment_samples,
+                            config.segments,
+                            config.train_config.device,
+                            config.feature_batch_size,
+                        )
+                    previous_pair_bytes = _cache_pair_bytes(path)
+                    digest = _save_tensor(
+                        path,
+                        tensor,
+                        identity,
+                        config.cache_max_bytes,
+                        cache_bytes=cache_bytes,
                     )
-                previous_pair_bytes = _cache_pair_bytes(path)
-                digest = _save_tensor(
-                    path,
-                    tensor,
-                    identity,
-                    config.cache_max_bytes,
-                    cache_bytes=cache_bytes,
+                    cache_bytes += _cache_pair_bytes(path) - previous_pair_bytes
+                shape = tuple(tensor.shape)
+                if (
+                    not shape
+                    or any(size <= 0 for size in shape)
+                    or (expected_shape is not None and shape != expected_shape)
+                ):
+                    raise ValueError(  # noqa: TRY301 -- per-media failure accounting
+                        "prepared tensors must have one fixed nonempty shape"
+                    )
+                expected_shape = shape
+                entries[record.split].append((path, digest, cast(int, record.label)))
+            except (
+                Exception
+            ) as exc:  # sample-boundary accounting; every failure is fatal below
+                failures.append(
+                    {
+                        "sample_id": record.sample_id,
+                        "error_type": type(exc).__name__,
+                        "error": str(exc),
+                    }
                 )
-                cache_bytes += _cache_pair_bytes(path) - previous_pair_bytes
-            shape = tuple(tensor.shape)
-            if (
-                not shape
-                or any(size <= 0 for size in shape)
-                or (expected_shape is not None and shape != expected_shape)
-            ):
-                raise ValueError("prepared tensors must have one fixed nonempty shape")  # noqa: TRY301
-            expected_shape = shape
-            entries[record.split].append((path, digest, cast(int, record.label)))
-        except (
-            Exception
-        ) as exc:  # sample-boundary accounting; every failure is fatal below
-            failures.append(
-                {
-                    "sample_id": record.sample_id,
-                    "error_type": type(exc).__name__,
-                    "error": str(exc),
-                }
-            )
     atomic_json(output / "decode_failures.json", failures)
     if failures:
         raise ValueError("sample preparation failed; inspect decode_failures.json")
@@ -406,9 +550,16 @@ def run_experiment(config_path: Path) -> TrainResult:
         if config.num_workers:
             loader_options["multiprocessing_context"] = "spawn"
             loader_options["timeout"] = 30
+            loader_options["persistent_workers"] = True
+        sampler = (
+            _balanced_sampler(entries["train"], generator)
+            if config.balanced_sampling
+            else None
+        )
         train_loader = DataLoader(
             _CachedDataset(entries["train"]),
-            shuffle=True,
+            shuffle=sampler is None,
+            sampler=sampler,
             generator=generator,
             **loader_options,
         )
@@ -439,6 +590,13 @@ def run_experiment(config_path: Path) -> TrainResult:
             provenance=provenance,
             architecture=config.architecture,
             model_config=initial["config"],
+        )
+        _write_dev_scores(
+            model,
+            dev_loader,
+            [record for record in selected if record.split == "dev"],
+            train_config.device,
+            output,
         )
         report.update(
             status="complete",
