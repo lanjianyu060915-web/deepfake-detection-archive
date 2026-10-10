@@ -98,3 +98,72 @@ bash tools/check_project.sh
 11 项项目 skills 位于 `.agents/skills/`，来源由 `skills-lock.json` 固定，协作者克隆后可直接
 使用。Git 提交遵循 LoRA：Logical、Observable、Reversible、Atomic。仓库不会自动推送、
 发布或正式参赛提交。
+
+<!-- BEGIN DEEPFAKE ENV KIT: managed section -->
+## CUDA 13.2 / PyTorch 开发环境（uv + direnv）
+
+本项目要求 **Python ≥3.12**，GPU 环境使用 `cu132` extra（PyTorch 2.14.1+cu132 / TorchVision 0.29.1+cu132）。**`cpu` 与 `cu132` 互斥，不要使用 `uv sync --all-extras`。** Docker 云服务器的 NVIDIA 内核驱动由宿主机提供，不要在容器内主动替换驱动。
+
+### 服务器环境与自动激活
+
+服务器统一使用下面的共享路径：
+
+| 组件 | 共享路径 |
+|---|---|
+| CUDA Toolkit 13.2 | `/usr/local/cuda-13.2` |
+| uv | `/usr/local/bin/uv` |
+| uv 管理的 Python 3.12 | `/opt/uv/python` |
+| 本项目专用共享环境 | `/opt/venvs/deepfake-cu132` |
+
+管理员一次性安装 `direnv`，并启用所有**交互式 Bash** 用户的 hook：
+
+```bash
+sudo apt-get install -y direnv ffmpeg
+sudo bash scripts/install-global-direnv-hook.sh
+```
+
+重开 Bash 终端，进入项目根目录：
+
+```bash
+cd /path/to/deepfake-detection-archive
+direnv allow .        # 每位用户首次使用需审核 .envrc 并授权一次
+command -v python
+python --version
+python -c 'import torch; print(torch.__version__, torch.cuda.is_available())'
+```
+
+之后 `cd` 进入项目（或其子目录）时，`direnv` 自动加载 `PATH`、`CUDA_HOME`、`UV_PROJECT_ENVIRONMENT`、`VIRTUAL_ENV`；离开项目时自动恢复。`.envrc` 更新后需要重新 `direnv allow .`。非交互式脚本或不支持的 shell 不保证加载 hook，请用绝对路径 `/opt/venvs/deepfake-cu132/bin/python` 运行。
+
+> **安全与多人共享：** `.envrc` 是可执行配置，必须由各用户本人信任后授权。共享环境只由管理员/指定维护者执行同步；其他用户应当只读使用。若其他用户要进入位于某位用户 home 下的项目目录，还须获得相应的父目录访问权限；切勿直接对家目录执行 `chmod 777`。Docker 容器重建后，这些配置是否保存取决于云平台的持久化策略。
+
+### 日常开发命令
+
+从项目根目录运行：
+
+```bash
+scripts/devctl doctor       # CUDA 13.2 / PyTorch / GPU / FFmpeg 基本检查
+scripts/devctl test         # pytest -q
+scripts/devctl lint         # Ruff 检查 src/ 和 tests/
+scripts/devctl lint-all     # Ruff 检查整个仓库（包括归档资料）
+scripts/devctl typecheck    # mypy
+scripts/devctl lock-check  # 验证 uv.lock 与 pyproject.toml 一致
+scripts/devctl run python -m pytest -q tests
+```
+
+进入目录不会自动联网、更新锁文件或修改依赖。**只有环境维护者**明确运行以下命令时，才将 `cu132` + `dev` + `research` + `media` 依赖同步到公共环境：
+
+```bash
+scripts/devctl sync
+```
+
+`sync` 使用 `uv sync --locked`，会依照 `uv.lock` 精确同步并可能移除未列入锁文件的包。不要用其他项目的 `uv sync` 管理 `/opt/venvs/deepfake-cu132`；也不要让多个用户同时修改它。修改依赖版本或升级软件包之前请先审查 `git diff -- uv.lock`，并由维护者统一提交锁文件。`uv run` 默认可能执行自动同步；共享环境更推荐使用 `scripts/devctl run ...` 或直接运行虚拟环境内的命令。
+
+### 当前验证情况和已知检查项（2026-10-10）
+
+- 已验证 Python **3.12.15**，PyTorch **2.14.1+cu132**，TorchVision **0.29.1+cu132**，`torch.cuda.is_available()` 为 **True**，GPU **RTX 4090**，GPU 矩阵乘法成功。
+- `pytest -q` 结果为 **372 passed, 28 skipped**。其中大部分跳过因为缺少 **FFmpeg/ffprobe**；另一项因为固定版本的 ASVspoof 参考数据尚未放入工作区。安装 `ffmpeg` 后应重新跑测试，不能假设所有跳过项都会自动通过。
+- `mypy`：**Success: no issues found in 32 source files**。
+- `ruff check .`：**38 errors**，主要来自 `.agents/`、`docs/` 的历史研究/存档资料以及 `tools/restore_backup.py`。这不是 CUDA 或 PyTorch 安装失败。可用 `scripts/devctl lint` 只检查当前代码；不要对整个归档执行自动修复而不审查差异。
+- 当前 `uv.lock` 曾通过 `uv lock` 和 `uv lock --upgrade` 更新；应使用 `git status --short` 与 `git diff -- uv.lock` 审核，再决定是否提交这些版本更新。
+
+<!-- END DEEPFAKE ENV KIT: managed section -->
