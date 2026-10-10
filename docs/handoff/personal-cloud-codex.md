@@ -11,17 +11,17 @@
 2. [云端协作说明](cloud-collaboration.md)：配置环境、取得资产、创建分支并交付 PR；
 3. [当前状态](../status.md)：查看已经完成的实验和最近验证；
 4. [实施方案](../plans/implementation-plan.md)：理解音频、视频两条算法路线；
-5. [任务草稿](issues/README.md)：选择一个可直接发布的 Issue；
-6. [本地资产清单](local-assets.json)：核对 Git 之外还需要哪些数据、权重和产物。
+5. [任务入口](issues/README.md)：领取已发布的音频、视频或数据 Issue；
+6. [资产清单](local-assets.json)：查看旧机资产快照和服务器核对记录，再确认任务所需路径。
 
 旧照片项目、暂停检查点和历史实验快照只用于追溯。它们不能覆盖本文和当前状态，也不能作为
 新任务的默认入口。
 
 ## 2. 我的协作方式
 
-后续开发转到云算力平台，不再以本地电脑作为新训练环境。一次性接入时先让本轮本地提交
-通过团队仓库或`project-code.bundle`带到云端，并安排Git外资产传输。bundle恢复后需配置
-真实团队origin，交接分支先由我审查合并；这些步骤尚未向远端执行。之后标准流程是：
+代码已迁入云算力服务器，共享 cu132 开发环境已配置。接手时从现有工作副本和
+[当前状态](../status.md) 开始，不再要求从旧电脑重新传代码。训练资产仍需按任务接入，
+历史 Git bundle 和状态包仅作为可选恢复来源。标准协作流程是：
 
 1. 我从 `docs/handoff/issues/` 选择或整理任务，在远端仓库发布 Issue；
 2. 队友或云端 Codex 在独立分支完成实现、实验和必要文档，并提交 PR；
@@ -29,7 +29,7 @@
 4. 修改完成后，由我决定并执行合并。
 
 云端执行者不要替我合并，不要把本地分支直接推到受保护分支。远端写权限、云账号、付费预算
-和具体算力规格以我当次提供的信息为准；仓库中没有这些事实时，不要猜测。
+以当次授权为准；当前已核实算力为 RTX 4090 24 GiB，其他未确认资源不要猜测。
 
 ## 3. 已确认的目标和工作偏好
 
@@ -56,16 +56,16 @@
 
 对应实验说明和配置在
 [ASVspoof 全量开发对照](../experiments/asv-main-20261009/README.md)。HuBERT 本地权重、配置和
-profile 已准备，但交接时尚未完成真实训练；不能把 profile 写成模型效果。
+profile 曾在旧机准备，当前服务器权重仍待接入，尚未完成真实训练；不能把 profile 写成模型效果。
 
 视频已完成 ViF Panda 的尺寸/时长受控划分和元数据基线，配置在
 [视频受控实验](../experiments/vif-control-20261009/README.md)。受控视觉模型尚未训练；旧 pilot 的
 154 条 holdout 媒体和分数仍未触碰。受控数据大多由 HunyuanVideo 支撑，不能据此声称七种
 生成器或跨来源泛化。
 
-2026-10-10收尾统一检查：400项pytest通过，另有3项视频工具测试、7项旧评测器stub，
-Ruff、严格mypy和构建通过。
-接手者应以仓库最新提交和 CI/PR 实际结果为准，不把这句话当作未来提交的永久证明。
+当前服务器已具备 Python 3.12、cu132、开发/研究/媒体依赖和项目 skills，合成 CUDA/AMP
+探针通过。最新标准检查、跳过项与剩余环境问题统一见[当前状态](../status.md)。旧机检查和
+实验结果用于追溯，不能作为当前提交或远端 CI 的通过证明。
 
 ## 5. Git 里有什么，缺什么
 
@@ -78,8 +78,11 @@ Git 跟踪代码、配置、文档、11项项目 skills 和小型实验摘要。
 - `outputs/`：checkpoint、逐样本分数、缓存和训练日志；
 - `cache/`、`external/`：可重建缓存和固定上游参考。
 
-因此，代码克隆成功不代表可以立即复现实验。先按 `local-assets.json` 核对资产，再按
-`cloud-collaboration.md` 放置和校验；不要把大数据、权重或训练输出直接提交进 Git。
+当前工作副本尚未接入训练所需数据、清单和权重；服务器 `/srv/shared-data` 已有 ASVspoof
+parquet、ViF Panda/FakeSound ZIP 等产物，仍需核对协议并解码或导入，详情见协作说明。
+先检查真实完成状态并复用。`local-assets.json` 包含旧机快照和2026-10-10服务器核对记录，
+不是实时清单。按 `cloud-collaboration.md` 接入必要资产并核对来源和哈希；不要重复下载，
+也不要把大数据、权重或训练输出直接提交进 Git。
 
 ## 6. 给云端 Codex 的首次交接 Prompt
 
@@ -91,8 +94,10 @@ docs/handoff/personal-cloud-codex.md、docs/handoff/cloud-collaboration.md、
 docs/status.md、docs/plans/implementation-plan.md，以及我指定的 Issue。
 
 只执行该 Issue 的范围。先核对当前分支、仓库状态、云端 GPU/环境和
-docs/handoff/local-assets.json 中该任务需要的资产；不要假设 data/models/outputs 已随 Git 克隆。
-按现有 uv.lock 和项目入口工作，优先获得可比较的训练、EER 与泛化结果，避免重复校验、
+该任务需要的资产；local-assets.json 含旧机快照和有日期的服务器核对，不是实时清单。检查 /srv/shared-data
+既有下载与产物，避免重复任务；不要假设 data/models/outputs 已随 Git 克隆。
+使用 scripts/devctl run python -m deepfake_detection_archive 和 scripts/devctl check；
+共享环境不安装具体 checkout 的项目。按现有 uv.lock 和项目入口工作，优先获得可比较的训练、EER 与泛化结果，避免重复校验、
 过度防御性编程和新建平行框架。音频和视频都在项目范围内；用户已报名且官方没有额外资料，
 不要再次索要赛题信息。
 

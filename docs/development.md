@@ -7,18 +7,61 @@
 
 ## 1. 环境
 
-项目使用 Python 3.12 和 uv。CUDA后端固定为cu130，以下命令要求宿主驱动兼容：
+当前服务器使用 Python 3.12.15、uv 0.13.0、PyTorch 2.14.1+cu132 和
+TorchVision 0.29.1+cu132，共享环境位于 `/opt/venvs/deepfake-cu132`。
+`dev`、`research`、`media` 依赖已齐全；锁文件和当前验证结果见[项目状态](status.md)。
+
+在仓库根目录使用以下入口，无需先激活 direnv：
 
 ```bash
-export UV_CACHE_DIR=/tmp/aigc-uv-cache
-uv sync --locked --group media --group research --extra cu130
-ffmpeg -version
-ffprobe -version
-uv run --no-sync deepfake-detection-archive --help
+scripts/devctl doctor
+scripts/devctl run python -m deepfake_detection_archive --help
 ```
 
-无 GPU 环境将 `--extra cu130` 改为 `--extra cpu`。两个 PyTorch 后端互斥。日常命令使用
-`--no-sync`，避免 uv 按默认组移除已经安装的可选依赖。
+`run`、`test` 和 `check` 优先加载各自工作副本的 `src/`。共享环境不安装任何 checkout 的
+项目，因此日常使用模块命令，不依赖 `deepfake-detection-archive` 控制台脚本。
+FFmpeg/ffprobe 已全局安装到 `/opt/ffmpeg/btbn-628033703`，入口为
+`/usr/local/bin/ffmpeg` 和 `/usr/local/bin/ffprobe`，由 root 管理，所有账号可读取和执行。
+当前版本为 `N-127271-gba987fe24d-20261010`；媒体处理要求支持 `-fps_mode`，
+仅有旧版二进制不代表媒体测试可运行。共享数据位置和使用方式见[云端协作](handoff/cloud-collaboration.md#3-git-外资产)。
+
+### 共享环境维护和可选激活
+
+进入目录不安装依赖或改锁。仅环境维护者在确需同步时运行：
+
+```bash
+scripts/devctl sync
+```
+
+该入口使用 `uv sync --locked --no-install-project`，同步 `cu132` 与开发、研究、媒体组，
+并用文件锁避免并发写入。精确同步可能移除锁文件以外的包；不要用其他项目管理此共享环境。
+依赖已匹配时直接复用，不为接手而升级锁文件。
+
+交互式 Bash 可使用已配置的全局 direnv hook。每位用户首次使用或 `.envrc` 改动后，
+先审阅该可执行配置，再运行：
+
+```bash
+direnv allow .
+```
+
+它设置共享环境、CUDA 路径和当前源码路径，离开目录后恢复。非交互式任务继续使用
+`scripts/devctl run ...`。新服务器的管理员可通过 `scripts/install-global-direnv-hook.sh`
+配置 Bash hook；当前服务器无需重复安装。容器重建后的保留范围取决于平台持久化配置。
+
+### 独立 CPU 环境
+
+`cpu` 与 `cu132` 互斥，不能使用 `--all-extras`，也不能在共享 GPU 环境同步 CPU 后端。
+需要 CPU 验证时，显式建立独立环境并交给同一开发入口：
+
+```bash
+UV_PROJECT_ENVIRONMENT="$PWD/.venv-cpu" uv sync --locked --no-install-project \
+  --group media --group research --extra cpu
+UV_PROJECT_ENVIRONMENT="$PWD/.venv-cpu" scripts/devctl run \
+  python -m deepfake_detection_archive --help
+```
+
+此 CPU 安装示例未在本轮执行；本轮复用并验证共享 GPU 环境。`doctor` 针对当前 cu132/GPU
+部署，不用于 CPU 环境验收。
 
 配置模板位于 [configs/](../configs/README.md)。复制需要的模板为 `.local.json`，替换
 `REPLACE_*`、零哈希和示例路径。配置内的相对路径以配置文件目录为基准。
@@ -28,7 +71,7 @@ uv run --no-sync deepfake-detection-archive --help
 先为合法持有的媒体建立索引：
 
 ```bash
-uv run --no-sync deepfake-detection-archive index \
+scripts/devctl run python -m deepfake_detection_archive index \
   --root data/audio --modality audio --source YOUR_SOURCE \
   --output data/audio-index.jsonl
 ```
@@ -40,9 +83,9 @@ uv run --no-sync deepfake-detection-archive index \
 准备 `sources.jsonl` 和实值审计配置后，可执行独立解码审计和组级划分：
 
 ```bash
-uv run --no-sync deepfake-detection-archive audit \
+scripts/devctl run python -m deepfake_detection_archive audit \
   --config configs/audit.local.json --decode
-uv run --no-sync deepfake-detection-archive split \
+scripts/devctl run python -m deepfake_detection_archive split \
   --manifest data/audio-decoded.jsonl \
   --output data/audio-split.jsonl --seed 42
 ```
@@ -57,11 +100,11 @@ holdout 只在候选冻结后使用。
 ASVspoof 2019 LA 和 ViF Panda 已有固定导入工具：
 
 ```bash
-uv run --no-sync python tools/finalize_asvspoof2019.py --help
-uv run --no-sync python tools/prepare_asvspoof2019.py --help
-uv run --no-sync python tools/prepare_vif_panda.py --help
-uv run --no-sync python tools/prepare_asv_main.py --help
-uv run --no-sync python tools/prepare_video_control.py --help
+scripts/devctl run python tools/finalize_asvspoof2019.py --help
+scripts/devctl run python tools/prepare_asvspoof2019.py --help
+scripts/devctl run python tools/prepare_vif_panda.py --help
+scripts/devctl run python tools/prepare_asv_main.py --help
+scripts/devctl run python tools/prepare_video_control.py --help
 ```
 
 这些工具的实际参数以 `--help` 和当前研究记录为准。历史导入日志不作为新实验入口。
@@ -73,7 +116,7 @@ uv run --no-sync python tools/prepare_video_control.py --help
 ```bash
 cp configs/train-logmel.example.json configs/train-logmel.local.json
 # 编辑实值路径、哈希、训练参数和输出目录
-uv run --no-sync deepfake-detection-archive train \
+scripts/devctl run python -m deepfake_detection_archive train \
   --config configs/train-logmel.local.json
 ```
 
@@ -81,7 +124,7 @@ uv run --no-sync deepfake-detection-archive train \
 媒体级头。训练只读取 train/dev 媒体；dev 用于早停和选择最佳 checkpoint，holdout 不参与。
 
 CUDA 训练支持 `float16`/`bfloat16` AMP 和梯度累积。先用小批量 profile，再调整 batch、
-精度、workers 和累积步数。8GB 显存下不要直接照搬模板参数；实际 AASIST-L 已接近显存上限。
+精度、workers 和累积步数。当前 RTX 4090 有 24 GiB 显存；旧机 8 GiB 的 AASIST-L 峰值不能作为当前 batch 上限。
 
 训练输出包括实验摘要、审计、失败记录、历史、最佳 checkpoint、`dev-scores.jsonl`和
 `dev-evaluation.json`。dev分数直接来自准备好的张量，不代表端到端解码/编码吞吐。
@@ -92,16 +135,16 @@ CUDA 训练支持 `float16`/`bfloat16` AMP 和梯度累积。先用小批量 pro
 
 冻结 SSL/视觉编码器只从本地加载已登记权重，不通过模型 ID 隐式下载。更换编码器、预处理
 或媒体内容会使用新的特征缓存；CLI、评测等无关代码变动可复用缓存，运行报告仍记录全源码版本。
-本轮切换到缓存v2，旧缓存保留，新键首次使用时重新生成；损坏缓存会明确报错。
+特征缓存采用 v2，旧版本缓存保留，新键首次使用时重新生成；损坏缓存会明确报错。
 
 ## 4. 推理和评测
 
 填好与 checkpoint 对应的推理配置后执行：
 
 ```bash
-uv run --no-sync deepfake-detection-archive infer \
+scripts/devctl run python -m deepfake_detection_archive infer \
   --config configs/infer-audio-waveform.local.json
-uv run --no-sync deepfake-detection-archive evaluate \
+scripts/devctl run python -m deepfake_detection_archive evaluate \
   --scores outputs/audio-dev-scores/scores.jsonl \
   --manifest data/audio-dev-only.jsonl \
   --output outputs/audio-dev-scores/evaluation.json
@@ -114,7 +157,7 @@ uv run --no-sync deepfake-detection-archive evaluate \
 中断后使用相同配置和输入恢复：
 
 ```bash
-uv run --no-sync deepfake-detection-archive infer \
+scripts/devctl run python -m deepfake_detection_archive infer \
   --config configs/infer-audio-waveform.local.json --resume
 ```
 
@@ -126,7 +169,7 @@ uv run --no-sync deepfake-detection-archive infer \
 本地分数导出：
 
 ```bash
-uv run --no-sync deepfake-detection-archive export \
+scripts/devctl run python -m deepfake_detection_archive export \
   --config configs/adapter.local.json \
   --scores outputs/audio-dev-scores/scores.jsonl \
   --output outputs/local-scores.csv
@@ -139,9 +182,9 @@ uv run --no-sync deepfake-detection-archive export \
 
 ```bash
 uv build --no-sources
-uv run --no-sync deepfake-detection-archive package \
+scripts/devctl run python -m deepfake_detection_archive package \
   --config configs/package.local.json
-uv run --no-sync deepfake-detection-archive verify-package \
+scripts/devctl run python -m deepfake_detection_archive verify-package \
   --bundle outputs/candidate.zip \
   --sha256 ACTUAL_BUNDLE_SHA256 \
   --extract-to outputs/candidate-verified
@@ -156,9 +199,11 @@ uv run --no-sync deepfake-detection-archive verify-package \
 代码变更先运行对应测试；准备提交或交付时运行标准检查：
 
 ```bash
-export UV_CACHE_DIR=/tmp/aigc-uv-cache
-bash tools/check_project.sh
+scripts/devctl check
 ```
 
-本地和 CI 使用同一入口，覆盖主动代码与当前开发工具，范围以该脚本为准；历史恢复脚本和归档不做自动格式修复。
+`scripts/devctl check` 委托 `tools/check_project.sh`；本地和 CI 使用同一检查定义，覆盖主动代码与当前开发工具，范围以该脚本为准；历史恢复脚本和归档不做自动格式修复。
 工程检查证明实现行为，不代替真实数据上的模型评测。
+
+本轮核对模块及导入工具的 `--help`；上述数据、训练、推理和打包示例需要实值配置与资产，
+尚未在当前服务器端到端执行。当前工作副本尚未接入这些训练资产，不能将命令示例当作已完成实验。

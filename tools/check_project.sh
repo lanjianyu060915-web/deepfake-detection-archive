@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.."
+ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+export PYTHONPATH="$ROOT/src${PYTHONPATH:+:$PYTHONPATH}"
+cd "$ROOT"
+
+for script in scripts/devctl scripts/install-global-direnv-hook.sh tools/check_project.sh; do
+  bash -n "$script"
+done
 
 model_tools=(
   tools/profile_models.py
