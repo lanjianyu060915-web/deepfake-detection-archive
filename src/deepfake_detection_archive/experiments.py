@@ -303,13 +303,17 @@ def _audit_training_records(
         [replace(record, split="unassigned") for record in selected],
         root,
         sources,
+        require_decoded=False,
     )
     atomic_json(
         output / "audit.json",
         {
             "audit": audit.to_dict(),
             "split_errors": errors,
-            "scope": "train/dev bytes only; original full manifest split metadata checked",
+            "scope": (
+                "train/dev registry and bytes; full split metadata checked; "
+                "actual decoding or verified feature cache required by preparation"
+            ),
         },
     )
     if errors or not audit.passed:

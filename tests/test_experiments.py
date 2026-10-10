@@ -154,6 +154,19 @@ def test_spawned_loader_worker_can_read_prepared_tensors(experiment: Path) -> No
     assert result.epochs_completed == 1
 
 
+def test_training_prepares_media_without_a_redundant_decode_pass(
+    experiment: Path,
+) -> None:
+    manifest = experiment.parent / "manifest.jsonl"
+    records = [
+        replace(record, decode_status="unknown") for record in load_manifest(manifest)
+    ]
+    write_manifest(records, manifest)
+    result = run_experiment(experiment)
+    assert result.epochs_completed == 1
+    assert len(load_scores(experiment.parent / "run" / "dev-scores.jsonl")) == 2
+
+
 @pytest.fixture
 def feature_experiment(experiment: Path) -> Path:
     transformers = pytest.importorskip("transformers")
