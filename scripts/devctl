@@ -3,10 +3,11 @@
 set -Eeuo pipefail
 
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+export PYTHONPATH="$ROOT/src${PYTHONPATH:+:$PYTHONPATH}"
 export CUDA_HOME="/usr/local/cuda-13.2"
 export CUDACXX="$CUDA_HOME/bin/nvcc"
 export UV_PYTHON_INSTALL_DIR="/opt/uv/python"
-export UV_PROJECT_ENVIRONMENT="/opt/venvs/deepfake-cu132"
+export UV_PROJECT_ENVIRONMENT="${UV_PROJECT_ENVIRONMENT:-/opt/venvs/deepfake-cu132}"
 export VIRTUAL_ENV="$UV_PROJECT_ENVIRONMENT"
 unset UV_NO_MANAGED_PYTHON
 export PATH="$VIRTUAL_ENV/bin:$CUDA_HOME/bin:$PATH"
@@ -19,21 +20,22 @@ usage() {
   doctor            检查 CUDA 13.2、Python、PyTorch、FFmpeg/GPU
   sync              按 uv.lock 同步 GPU+dev+research+media 依赖（仅环境管理员）
   lock-check        只检查 uv.lock 是否与 pyproject.toml 相符
+  check             运行 tools/check_project.sh 的标准检查
   test [pytest参数]  运行 pytest（默认 -q）
   lint [ruff参数]    只检查当前代码 src/ 和 tests/
-  lint-all          运行 ruff check .（包含归档与历史脚本）
   typecheck         运行 mypy（沿用项目配置）
   run <命令>        在共享虚拟环境中运行一个程序，不自动同步依赖
   help              查看此帮助
 
 注意：进入项目目录不会自动安装/更新依赖；sync 由维护者显式运行。
+默认环境为 /opt/venvs/deepfake-cu132；可用 UV_PROJECT_ENVIRONMENT 指定独立环境。
 HELP
 }
 
 require_venv() {
     if [[ ! -x "$PYTHON" ]]; then
         printf 'ERROR: 未发现项目虚拟环境: %s\n' "$PYTHON" >&2
-        printf '请先联系环境管理员初始化 /opt/venvs/deepfake-cu132。\n' >&2
+        printf '请先初始化指定环境，或联系共享环境管理员。\n' >&2
         exit 2
     fi
 }
@@ -73,12 +75,17 @@ case "$command" in
             printf 'ERROR: 有另一个同步进程正在修改共享环境。\n' >&2
             exit 3
         fi
-        uv sync --locked --python 3.12 --extra cu132 \
+        uv sync --locked --no-install-project --python 3.12 --extra cu132 \
             --group dev --group research --group media "$@"
         ;;
     lock-check)
         require_uv
         uv lock --check "$@"
+        ;;
+    check)
+        require_venv
+        require_uv
+        exec bash "$ROOT/tools/check_project.sh" "$@"
         ;;
     doctor)
         require_venv
@@ -118,10 +125,6 @@ PY
     lint)
         require_venv
         exec "$VIRTUAL_ENV/bin/ruff" check src tests "$@"
-        ;;
-    lint-all)
-        require_venv
-        exec "$VIRTUAL_ENV/bin/ruff" check . "$@"
         ;;
     typecheck)
         require_venv

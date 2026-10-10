@@ -1,6 +1,6 @@
 """Check optional research/media/ML dependencies with synthetic inputs only.
 
-Run after installing media, research, and either the cpu or cu130 extra.
+Run after installing media, research, and either the cpu or cu132 extra.
 This is an environment probe, not a detector, benchmark, or training run.
 """
 
@@ -31,6 +31,8 @@ import yaml
 from PIL import Image
 from sklearn.model_selection import GroupKFold
 from transformers import Wav2Vec2Config, Wav2Vec2Model
+
+from deepfake_detection_archive.media import VideoConfig, decode_video
 
 
 def require(condition: object, message: str) -> None:
@@ -88,31 +90,20 @@ def media_checks(directory: Path) -> dict[str, object]:
         ],
         check=True,
     )
-    samples = []
-    for _ in range(2):
-        capture = cv2.VideoCapture(str(video))
-        try:
-            require(capture.isOpened(), "Synthetic video did not open")
-            count = int(capture.get(cv2.CAP_PROP_FRAME_COUNT))
-            require(count == 16, "Unexpected synthetic video frame count")
-            indices = set(np.linspace(0, count - 1, 4, dtype=int).tolist())
-            frames = []
-            for index in range(count):
-                require(capture.grab(), "Synthetic frame grab failed")
-                if index in indices:
-                    ok, frame = capture.retrieve()
-                    require(ok, "Synthetic frame decode failed")
-                    frames.append(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
-            require(len(frames) == 4, "Unexpected sampled frame count")
-            samples.append(np.stack(frames))
-        finally:
-            capture.release()
-    np.testing.assert_array_equal(samples[0], samples[1])
+    # Exercise the project's actual FFmpeg/ffprobe path, including -fps_mode.
+    # OpenCV-only sampling can pass with an FFmpeg too old for project decoding.
+    config = VideoConfig(n_frames=4, height=64, width=64)
+    decoded_video = decode_video(video, config)
+    repeated_video = decode_video(video, config)
+    require(decoded_video.frames.shape == (4, 64, 64, 3), "Unexpected video shape")
+    require(decoded_video.frame_indices == (0, 5, 10, 15), "Unexpected frame indices")
+    np.testing.assert_array_equal(decoded_video.frames, repeated_video.frames)
     return {
         "audio_samples": len(decoded),
         "mel_shape": list(mel.shape),
         "phash": str(fingerprint),
-        "sampled_frames": len(samples[0]),
+        "sampled_frames": len(decoded_video.frames),
+        "project_video_decode": "PASS",
     }
 
 
@@ -237,6 +228,19 @@ def main() -> None:
     args = parser.parse_args()
     if args.device == "cuda" and not torch.cuda.is_available():
         raise RuntimeError("CUDA requested but unavailable in this process")
+    media_tools = {}
+    for name in ("ffmpeg", "ffprobe"):
+        executable = shutil.which(name)
+        if executable is None:
+            raise RuntimeError(f"{name} is required for project media decoding")
+        version = subprocess.run(  # noqa: S603 -- fixed media executables from PATH
+            [executable, "-version"],
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=10,
+        ).stdout.splitlines()[0]
+        media_tools[name] = {"path": executable, "version": version}
     distributions = (
         "torch",
         "torchvision",
@@ -261,6 +265,7 @@ def main() -> None:
         "recorded_at": datetime.now(UTC).isoformat(),
         "scope": "synthetic environment checks; no weights/data downloads or training",
         "versions": {name: importlib.metadata.version(name) for name in distributions},
+        "media_tools": media_tools,
     }
     with tempfile.TemporaryDirectory(prefix="aigc-environment-") as temporary:
         directory = Path(temporary)
