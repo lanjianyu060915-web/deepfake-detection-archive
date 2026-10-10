@@ -46,6 +46,7 @@ media = [
     "imagehash>=4.3,<5",
     "pyyaml>=6,<7",
     "tqdm>=4,<5",
+    "pyarrow>=26.0.0",
 ]
 
 [tool.uv]
