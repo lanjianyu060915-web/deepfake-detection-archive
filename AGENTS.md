@@ -15,8 +15,8 @@ USE CODEX NATIVE SUBAGENTS FOR INDEPENDENT PARALLEL SUBTASKS WHEN THAT IMPROVES 
 - 同时参加第七届中国人工智能大赛 AIGC 音视频伪造识别的音频、视频两项，主指标 EER 越低越好，最终离线交付。
 - 用户已确认整体方案并授权完成项目，自主管理本地 Git、依赖、公开数据获取及本地 GPU；暂停后已恢复执行。历史暂停检查点不覆盖后来的恢复指令。
 - 用户于2026-10-08确认已报名，官方没有额外信息，不再向其请求比赛资料。未知规范集中记在 `docs/competition/requirements.md`，继续本地开发，实际平台样例到来后适配。
-- 用户于2026-10-10将后续开发/训练转到云端，本地仅收尾，不再启动新训练。负责人发布Issue，队友在云端独立分支工作并交付PR，负责人审查合并。云端已分配实例按任务使用；购买/扩容及正式参赛提交仍由负责人决定。
-- 云端接手入口是 `docs/handoff/personal-cloud-codex.md`；环境与资产见同目录协作说明和清单。Git不包含数据/权重/大产物，不假定已上传或具备账号权限。当前本地收尾不自动推送或发布Issue。
+- 用户于2026-10-10将后续开发/训练转到云端，原电脑不再启动新训练。当前代码已迁入云端RTX4090服务器，先完成迁移后的环境与资产核对。负责人发布Issue，队友在独立分支工作并交付PR，负责人审查合并；购买/扩容及正式参赛提交仍由负责人决定。
+- 云端接手入口是 `docs/handoff/personal-cloud-codex.md`；环境与资产见同目录协作说明和清单。Git不包含数据/权重/大产物，不假定已上传或具备账号权限。用户已授权发布独立Issue，以及自行新建分支、管理提交并推送本轮迁移更新；不代替负责人合并。
 - 当前事实看 `docs/status.md`，算法路线看 `docs/plans/implementation-plan.md`；历史研究和工程测试不代替本届比赛成绩。
 
 ## 主线优先
@@ -60,14 +60,14 @@ USE CODEX NATIVE SUBAGENTS FOR INDEPENDENT PARALLEL SUBTASKS WHEN THAT IMPROVES 
 
 ## 环境与验证
 
-- Python3.12、uv和`uv.lock`；dev/research/media按需同步，CPU与cu130 extras互斥，当前主环境用cu130。新增依赖同步锁文件，不安装整份上游requirements或擅改系统驱动。
+- Python3.12、uv和`uv.lock`；dev/research/media按需同步，CPU与cu132 extras互斥，当前共享主环境为`/opt/venvs/deepfake-cu132`。新增依赖同步锁文件，不安装整份上游requirements或擅改系统驱动；CPU检查用独立环境。
 - 普通沙箱GPU/NVML或IPC受限与安装失败分开判断；实际运行证据看状态与实验记录。
 - 主动代码使用88字符行宽、Ruff和严格mypy。本地和CI共享以下入口，具体检查范围只在脚本维护：
 
 ```bash
-export UV_CACHE_DIR=/tmp/aigc-uv-cache
-uv sync --locked --group media --group research --extra cu130
-bash tools/check_project.sh
+# 维护者需要安装/同步时执行 scripts/devctl sync；进入目录不自动同步。
+scripts/devctl run python -m deepfake_detection_archive --help
+scripts/devctl check
 ```
 
 - 默认测试保护主动行为及归档；旧评测器7项stub不代替模型效果。远端CI状态按实际运行报告。

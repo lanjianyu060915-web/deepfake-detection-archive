@@ -18,12 +18,12 @@
 ```bash
 cp configs/train-logmel.example.json configs/train-logmel.local.json
 # 编辑真实清单、来源、路径、哈希、训练参数和新输出目录
-uv run --no-sync deepfake-detection-archive train \
+scripts/devctl run python -m deepfake_detection_archive train \
   --config configs/train-logmel.local.json
 ```
 
 训练使用 train/dev，dev 用于早停；holdout 不参与训练或模型选择。每次训练使用新的输出目录。
-模板默认 CUDA 与 AMP，只是 8GB 显存的保守起点，实际 batch 和累积步数应由一次 profile 决定。
+模板默认 CUDA 与 AMP，batch 和累积步数仅作起点，按当前 GPU 的实际 profile 调整。
 CPU 调试需同时设置 `device="cpu"` 和 `amp=false`。
 
 音频 SSL 模板的 `input_dim=768`、视频模板的 `input_dim=512` 对应当前候选编码器。更换编码器

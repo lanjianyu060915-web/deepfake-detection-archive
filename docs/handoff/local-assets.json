@@ -1,8 +1,37 @@
 {
   "created_at": "2026-10-10",
-  "transfer_status": "prepared locally; not uploaded",
+  "snapshot_scope": "Original computer handoff snapshot: local_exists, package sizes and hashes below describe that source, not the current server.",
+  "transfer_status": "Prepared on original computer; current destination availability is checked separately below. Upload status is not inferred from Git.",
   "paths_relative_to": "repository root",
-  "code_transport": "Git or outputs/handoff/20261010/project-code.bundle from final local handoff commit; not uploaded; checksum is beside the bundle",
+  "code_transport": "Current code is available on the server through Git. The original outputs/handoff/20261010/project-code.bundle remains an optional recovery source; checksum is beside the bundle.",
+  "current_workspace_check": {
+    "checked_at": "2026-10-10",
+    "required_paths_present": 0,
+    "required_paths_total": 7,
+    "scope": "All seven asset paths below are absent from this worktree and the main checkout. Other server storage is not implied absent.",
+    "shared_data_root": "/srv/shared-data",
+    "workspace_raw_alias": "data/shared-raw -> /srv/shared-data/datasets",
+    "shared_access": "root:dlteam; directories 2755, files 0644; path permissions and ACLs allow teammates to read. Experiment outputs/cache remain private to each worktree.",
+    "available_raw_inputs": [
+      {
+        "path": "/srv/shared-data/datasets/asvspoof2019-la",
+        "format": "Parquet; metadata readable, train 25380 / dev 24844 rows",
+        "state": "Both Parquet sizes and complete SHA-256 hashes match provenance.json. Not materialized to project media or imported; official protocol cross-check remains required."
+      },
+      {
+        "path": "/srv/shared-data/datasets/vif-panda/source_videos.zip",
+        "format": "ZIP directory readable, 7040 entries",
+        "state": "Size and complete SHA-256 match provenance.json. Not extracted or imported; research-only licensing limits are recorded in provenance.json."
+      },
+      {
+        "path": "/srv/shared-data/datasets/fakesound/FakeSound.zip",
+        "format": "ZIP directory readable, 1909 entries",
+        "state": "Not extracted; fake-only diagnostic set, not a binary training set or threshold-selection set."
+      }
+    ],
+    "integrity_scope": "Presence, sizes, archive/Parquet metadata and shared permissions checked; both ASV Parquet and ViF ZIP SHA-256 match existing provenance. FakeSound has no registered reference hash. Individual media, labels and licensing have not been revalidated.",
+    "remaining": "Connect materialized media, fixed manifests, source registries, HuBERT/ResNet18 weights and the original LogMel42 state. Existing official downloads are in progress; do not start duplicate downloads."
+  },
   "assets": [
     {
       "path": "data/asvspoof2019-la/LA",

@@ -1,16 +1,23 @@
-# 第一批云端 Issue 草稿
+# 云端 Issue 与领取入口
 
-这些Markdown可直接复制为GitHub Issue；尚未向远端发布。仓库也提供通用Issue/PR模板。
-编号是本地草稿顺序，不是已经存在的GitHub编号；发布后在依赖关系中换成真实编号。
+2026-10-10已按用户授权通过`gh`发布三个独立任务，正文保存在对应Markdown。
+三条任务分别承担本方向的数据接入、开发和验收，代码/数据准备可并行，不等待统一环境Issue。
+负责人尚未指定，队友按方向领取；本地文件前缀不是GitHub编号。
 
-| 顺序 | 草稿 | 建议分工 | 前置 | 完成后 |
+| 优先级 | GitHub Issue | 正文 | 建议方向 | 交付 |
 | --- | --- | --- | --- | --- |
-| P0 | [00 云端环境与资产](00-cloud-setup.md) | 一位环境负责人 | 已分配实例 | 提供可用环境与资产位置 |
-| P1 | [01 全量语音比较](01-audio-comparison.md) | 音频队友 | 00 | LogMel/HuBERT同划分结果 |
-| P1 | [02 受控视频基线](02-video-control.md) | 视频队友 | 00 | 元数据对照下的视觉结果 |
-| P2 | [03 数据覆盖与泛化](03-generalization-data.md) | 数据队友，可边做边与01/02协作 | 00 | 许可清楚、可训练的跨域数据 |
-| P2 | [04 冻结候选离线验收](04-offline-delivery.md) | 交付队友 | 有价值的01/02结果及候选冻结 | 可离线重现的双分支包 |
+| P1 | [#9](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/9) | [音频](01-audio-comparison.md) | 音频队友 | ASV接入、LogMel43/HuBERT双种子同划分结果 |
+| P1 | [#10](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/10) | [视频](02-video-control.md) | 视频队友 | ViF接入、holdout隔离、受控视觉双种子结果 |
+| P1 | [#11](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/11) | [数据与泛化](03-generalization-data.md) | 数据队友 | 至少一个可用非语音来源及跨域协议 |
 
-先发布00、01、02；人手足够时并行发布03。04在候选值得保留时再启动。
-不需要先完成训练续跑系统、全量数据重复审计或所有统计证明才开始实验。
+共享环境及全局FFmpeg已可用，剩余资产接入已拆入各任务。
+单GPU的profile、特征提取和训练在Issue中约定时段，避免同时满载；只读原数据复用，
+派生清单、outputs/cache各任务独立。
+
+迁移修复在[`chore/cloud-migration-cleanup`](https://github.com/lanjianyu060915-web/deepfake-detection-archive/tree/chore/cloud-migration-cleanup)
+分支，尚未合并到`main`。队友暂以该分支为任务基点，合并后使用最新`main`；
+开发命令为`scripts/devctl run ...`和`scripts/devctl check`。角色、职责、验收与PR要求以各Issue为准。
+
+[离线交付草稿](04-offline-delivery.md)保留待后续发布，启动条件是音频/视频真实候选完成且
+由负责人冻结；当前不安排空跑验收。不以训练续跑系统、重复审计或统计证明阻止探索实验。
 负责人按[协作说明](../cloud-collaboration.md#4-issue--分支--pr--审查--合并)审查并合并。
