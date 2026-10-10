@@ -1,0 +1,30 @@
+name: 比赛项目任务
+description: 云端数据、算法、评测或交付任务
+title: "[任务] "
+body:
+  - type: textarea
+    id: objective
+    attributes:
+      label: 目标与当前依据
+      description: 一项明确目标，链接当前状态、实验卡或相关问题。
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: 工作范围与比较协议
+      description: 数据/划分、基线、主要变量；需要的资产和前置Issue。
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: 交付与完成条件
+      description: 代码、配置、结果/产物位置、验证；无需保证新方法一定提升。
+    validations:
+      required: true
+  - type: textarea
+    id: resources
+    attributes:
+      label: 资源与协作
+      description: 已分配实例、GPU使用顺序、持久卷与负责人；按实际填写。
