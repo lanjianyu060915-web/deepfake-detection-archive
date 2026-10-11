@@ -11,7 +11,7 @@
 | 语音模型 | 同一 ASV train/dev 上 LogMel/HuBERT 各双种子；每次24,844条评分0失败 | A07–A19研究子集与AAC/带宽诊断已完成；跨来源及最终离线验收待做 |
 | 环境音 | 19,215条Urban配对媒体；AST12层dev EER1.39%；冻结holdout已见1.43%/未见6.51%，分别2,880/1,728条0失败 | 跨来源和真正混合内容覆盖有限 |
 | 音乐/联合训练 | 630条AIME；混合研究候选音乐dev0%、Urban2.21%；五桶评分0失败 | 未训练音乐仍薄弱；音乐dev仅16条real；原曲/artist关系未知 |
-| 视频模型 | 冻结 ResNet18 帧头双种子 EER20.55%/21.92%；Hunyuan train618/dev146 | 跨来源/生成器验收；主干微调和轻量时序尚未实现 |
+| 视频模型 | 冻结 ResNet18 帧头双种子 EER20.55%/21.92%；同划分解冻layer4与头为16.44%/16.44%，覆盖率1.0；Hunyuan train618/dev146 | 跨来源/生成器验收；轻量时序尚未实现 |
 | 鲁棒性 | AAC、带宽退化、H.264 的配对媒体工具与分数比较入口 | 语音LogMel全dev：AAC退化+0.20/+0.99点，8kHz采样率带限约+12点；视频评分待做 |
 | 离线交付 | 音视频研究权重、本地推理/恢复、导出打包；24条语音CPU断网演练 | 候选选择、双分支代表性批量验收、正式平台 I/O 适配 |
 
@@ -24,7 +24,7 @@
 | --- | --- | --- |
 | [音频泛化 #19](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/19) | #24交付AAC/带宽退化及A07–A19研究子集，原权重固定 | 针对带宽弱点训练；跨来源及未知攻击叠加退化待做 |
 | [视频泛化 #20](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/20) | 分配给 rrx59 | 新生成器开发诊断和H.264配对退化 |
-| [视频微调 #21](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/21) | 分配给 lanjianyu060915-web | 同划分ResNet18部分主干微调、实际EER及离线推理 |
+| [视频微调 #21](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/21) | #28交付同划分部分主干微调与`video_frames`离线推理，双种子dev EER16.44% | 跨来源/生成器验收；按本轮结果决定轻量时序 |
 | 环境音 AST 扩展 | PR #22 已合并；#23完成多生成器调优和冻结holdout；本轮补12层seed43 dev | 向更多来源迁移 |
 | [音乐混合训练 #25](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/25) | 完成AIME小样本、单独/混合训练与五桶dev评分，独立PR交付 | 扩大真实音乐和未训练路径，补真正混合内容 |
 
@@ -43,6 +43,7 @@ RTX4090按剩余显存与负载多人并发，任务在Issue记录占用，不�
 | LogMel | 0.784929% | 0.941915% |
 | 冻结 HuBERT | 1.498027% | 1.530612% |
 | 受控 ResNet18 帧头 | 20.547945% | 21.917808% |
+| 解冻 layer4+头的 ResNet18 帧头 | 16.438356% | 16.438356% |
 | 环境音 LogMel（独立小型研究集） | 45.714286% | 37.142857% |
 | 环境音 HuBERT（本地FP32端到端） | 28.571429% | 34.285714% |
 | 环境音 AST 末四层微调（本地FP32端到端） | 2.857143% | 5.714286% |
@@ -96,6 +97,12 @@ FSD8.5714%，全部本地FP32、0失败。本轮四次新训练及五桶dev评�
 尚不能证明跨来源/生成器泛化。旧154条holdout在probe前排除，未解码、评分或调参。
 详见[云端视频实验](experiments/vif-cloud-20261011/README.md)。
 
+同一划分上只解冻 `layer4` 与媒体头、主干学习率×0.1：双种子 dev EER 均为16.4384%，
+比冻结头低4.1与5.5个百分点，覆盖率1.0、0失败。dev 仅146条且两种子同分，
+只说明部分微调没有变差，不构成显著性证据。帧推理入口已接入 `scoring.py` 的
+`video_frames` 分支，尚未做独立进程的断网端到端演练。
+详见[视频微调实验](experiments/video-finetune-20261011/README.md)。
+
 旧主机全量 LogMel42 dev EER **0.510204%**，checkpoint未在云端恢复，
 不计入本轮双种子统计；详见[历史全量语音实验](experiments/asv-main-20261009/README.md)。
 
@@ -117,5 +124,6 @@ FakeSound 缺少 real、许可 unresolved，保持单类诊断，不用于二分
 ## 下一步
 
 环境音和音乐已完成首轮联合训练；下一轮扩大音乐来源与未训练生成路径，补真正混合内容音频。
-语音泛化诊断已交付；视频泛化和同划分部分微调继续并行，语音下一轮优先带宽增强。
+语音泛化诊断与视频同划分部分微调已交付；视频下一轮做跨来源验收并决定轻量时序，
+语音下一轮优先带宽增强。
 候选冻结后完成双分支离线验收。具体依赖、交付物和取舍见[路线图](roadmap.md)。

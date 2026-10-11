@@ -35,6 +35,16 @@ checkpoint。第一轮不引入时序模块、新数据或复杂增强。
   两个种子都在第 8 个 epoch 触发早停。
 - 帧缓存 764 条媒体，解码后按 224×224 float32 缓存；训练显存占用约 3.3 GiB。
 
+## 离线复算
+
+合并 `main` 后用独立进程、独立输出目录重新走 `config.py` 的 `video_frames`
+推理路径，对同一清单的 764 条媒体评分：0 失败、覆盖 1.0，其中 dev 146 条
+EER 仍为 16.4384%，与训练期 dev 分数的最大绝对差 0.0275、均值 0.0052
+（训练用 bfloat16 AMP，推理为 FP32）。输入只有本地清单、媒体和 hash 校验过的
+`best.pt`，没有隐式下载；全过程约 0.22 秒/条，瓶颈在视频解码。
+产物：`/var/tmp/lanjianyu-issue21-20261011/e2e-rehearsal/seed42/`
+（`scores.jsonl`、`report.json`、`metadata.json`）。
+
 ## 产物位置
 
 - 逐样本 dev 分数与评测：`outputs/video-finetune-20261011/seed{42,43}/dev-scores.jsonl`、
@@ -45,8 +55,7 @@ checkpoint。第一轮不引入时序模块、新数据或复杂增强。
 
 ## 未完成与限制
 
-- 未跑完整 `tools/check_project.sh`；本次只跑了改动相关的行为测试
-  `tests/test_video_finetune.py`（2 项通过）。
-- 离线推理路径已接入 `scoring.py` 的 `video_frames` 分支，但本轮没有用独立进程
-  跑一次断网端到端推理演练。
+- 训练会话只跑了改动相关的行为测试 `tests/test_video_finetune.py`（2 项通过）；
+  合并 `main` 时补齐 `tools/check_project.sh` 的本地与 CI 检查。
+- 独立进程只验证了本地加载与无隐式下载，没有做真正切断网络的整机演练。
 - dev 只有 146 条，EER 分辨率有限；结论只适用于当前受控划分。

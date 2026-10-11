@@ -11,6 +11,7 @@
 | [ASV 云端双种子](asv-cloud-20261011/README.md) | LogMel EER0.7849%/0.9419%；冻结HuBERT未改善同域dev | 未知攻击、跨来源及压缩评分 |
 | [语音压缩与未知攻击](audio-generalization-20261011/README.md) | LogMel42未知攻击EER2.97%；AAC退化较小，8kHz采样率带限EER13.10% | 带宽增强、跨来源及未知攻击叠加退化 |
 | [ViF 云端受控视频](vif-cloud-20261011/README.md) | Hunyuan train618/dev146；视觉EER20.55%/21.92%，优于同集元数据 | 跨来源/生成器与压缩评分，再决定微调/时序 |
+| [ViF 帧微调](video-finetune-20261011/README.md) | 同划分解冻layer4与头，双种子dev EER16.44%（冻结头对照20.55%/21.92%），覆盖率1.0 | 跨来源/生成器验收，再决定轻量时序 |
 | [配对环境音](nonspeech-20261011/README.md) | 462条可训练环境音，已供首轮模型对照使用 | 补生成器/来源 |
 | [环境音模型对照](nonspeech-logmel-20261011/README.md) | HuBERT本地FP32 EER28.57%/34.29%，优于本轮LogMel | 已开展AST微调，见下一行 |
 | [环境音 AST 首轮微调](audio-ast-20261011/README.md) | 小型单生成器双种子dev EER2.86%/5.71%；冻结研究候选holdout EER11.43% | 后续扩展见下一行 |
