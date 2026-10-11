@@ -4,6 +4,7 @@ import json
 import shutil
 import socket
 import wave
+from collections import Counter
 from dataclasses import replace
 from pathlib import Path
 from typing import Any
@@ -37,6 +38,22 @@ def test_balanced_sampling_corrects_class_imbalance_and_repeats_by_seed() -> Non
     assert len(first) == len(entries)
     fake_count = sum(entries[index][2] for index in first)
     assert 450 < fake_count < 550
+
+
+def test_source_balancing_preserves_rare_music_and_both_classes() -> None:
+    buckets = [("urban", 0)] * 100 + [("urban", 1)] * 800
+    buckets += [("music", 0)] * 10 + [("music", 1)] * 90
+    entries = [(Path(str(i)), "unused", label) for i, (_, label) in enumerate(buckets)]
+    sources = [source for source, _ in buckets]
+    first = list(_balanced_sampler(entries, torch.Generator().manual_seed(42), sources))
+    second = list(
+        _balanced_sampler(entries, torch.Generator().manual_seed(42), sources)
+    )
+    assert first == second
+    counts = Counter(buckets[index] for index in first)
+    assert len(first) == len(entries)
+    assert all(200 < count < 300 for count in counts.values())
+    assert len(counts) == 4
 
 
 @pytest.fixture
@@ -224,6 +241,7 @@ def test_repeated_epochs_verify_existing_cache_once(
         experiment,
         output_dir="repeat",
         balanced_sampling=True,
+        balance_sources=True,
         training={"max_epochs": 2, "device": "cpu", "seed": 23},
     )
     result = run_experiment(experiment)
@@ -526,6 +544,8 @@ def test_orphan_sidecar_is_subtracted_from_cache_budget(tmp_path: Path) -> None:
         {"segments": 2},
         {"batch_size": True},
         {"num_workers": -1},
+        {"balance_sources": "yes"},
+        {"balance_sources": True, "balanced_sampling": False},
         {"unexpected": 1},
         {"audio": {"sample_rate": 8000}},
         {"training": {"max_epochs": 0}},

@@ -1,0 +1,410 @@
+{
+  "experiment": "audio-music-20261011",
+  "scope": "Music and Urban research; train/dev only, no new holdout scoring",
+  "assets_root": "/var/tmp/deepfake-audio-music-20261011",
+  "score_direction": "higher_is_fake",
+  "eer_protocol": "eer_interpolated_v1",
+  "competition_approved": false,
+  "holdout_scored_this_round": false,
+  "music_dataset": {
+    "repository": "disco-eth/AIME",
+    "revision": "b84d4be5eda830b6eb714998569dba73530f2601",
+    "upstream_files": 90,
+    "upstream_bytes": 9087224372,
+    "inventory_count": 2790,
+    "selected_main_samples": 630,
+    "real_count": 105,
+    "fake_count": 525,
+    "connected_prompt_groups": 105,
+    "train_count": 438,
+    "dev_count": 96,
+    "holdout_count": 96,
+    "decode_failed": 0,
+    "manifest_sha256": "b681c3f82e039cae8ab34c6ada16bc0ebc258d5cf793721af688018cfe2866ae",
+    "unseen_manifest_sha256": "4a6476cc5c2f9f9f0fc24bf9c238023250a11eaa703c5a259c81e17bf786cea5",
+    "untrained_music_dev": {
+      "real_count": 16,
+      "fake_count": 9,
+      "generators": {
+        "Suno v3": 7,
+        "Udio": 2
+      },
+      "shares_real_with_main_dev": true
+    }
+  },
+  "mixed_dataset": {
+    "manifest_sha256": "60b78b9136618abe5f33e50c25b1f3fbe2bcbd794c0c3505987edeb69b48c5db",
+    "urban_train": 13450,
+    "music_train": 438,
+    "train_count": 13888,
+    "selection_split": "music dev only (96)",
+    "class_balanced_music_probability": 0.02961477306461386,
+    "source_class_balanced_music_probability": 0.5
+  },
+  "pretrained": {
+    "repository": "MIT/ast-finetuned-audioset-10-10-0.4593",
+    "revision": "f826b80d28226b62986cc218e5cec390b1096902",
+    "weights_sha256": "ae0c1e2ad4e1381d851fa9bf298ba13ebc9c5a914cdee2dbe427a6583869924d"
+  },
+  "previous_urban42": {
+    "run": "urban12-seed42 (previous training)",
+    "checkpoint_sha256": "8fa61daf42054b29fd61906c8c2fcf679ba4558e80472806197958b013c6e95c",
+    "evaluations": {
+      "music-dev": {
+        "sample_count": 96,
+        "real_count": 16,
+        "fake_count": 80,
+        "group_count": 16,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.225,
+        "scores": "/var/tmp/deepfake-audio-music-20261011/urban12-seed42-to-music-dev/scores.jsonl"
+      },
+      "music-untrained-dev": {
+        "sample_count": 25,
+        "real_count": 16,
+        "fake_count": 9,
+        "group_count": 16,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.2222222222222222,
+        "scores": "/var/tmp/deepfake-audio-music-20261011/urban12-seed42-to-music-unseen-dev/scores.jsonl"
+      },
+      "urban-dev": {
+        "sample_count": 2885,
+        "real_count": 577,
+        "fake_count": 2308,
+        "group_count": 36,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.01386481802426343,
+        "scores": "/var/tmp/deepfake-audio-expand-20261011/full12-512-lr1e-5-seed42-offline-dev/scores.jsonl"
+      },
+      "env-unseen-dev": {
+        "sample_count": 1731,
+        "real_count": 577,
+        "fake_count": 1154,
+        "group_count": 36,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.05025996533795494,
+        "scores": "/var/tmp/deepfake-audio-expand-20261011/full12-512-lr1e-5-seed42-unseen-dev/scores.jsonl"
+      },
+      "fsd-external-dev": {
+        "sample_count": 70,
+        "real_count": 35,
+        "fake_count": 35,
+        "group_count": 24,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.08571428571428572,
+        "scores": "/var/tmp/deepfake-audio-expand-20261011/full12-512-lr1e-5-seed42-fsd-external-dev/scores.jsonl"
+      }
+    }
+  },
+  "runs": [
+    {
+      "run": "urban12-seed43",
+      "code": {
+        "code_sha256": "04de8a6fc0e3c9d767c167c561728ed0dc0560435a06e0de4a71d242fb08b4f8",
+        "commit": "08c816d6cc2ef426b446c49a803702d730262308",
+        "dirty": false
+      },
+      "checkpoint": "/var/tmp/deepfake-audio-music-20261011/urban12-seed43/training/best.pt",
+      "checkpoint_sha256": "ff9982cbbae9642e547224aa9669f36fafeefec633a31ffc34dcad9a26c1d011",
+      "manifest_sha256": "eebe2feb8b9fe424ee03eedd7286a434d01b6420b6068667b23306240e0e3a22",
+      "train_count": 13450,
+      "dev_count": 2885,
+      "holdout_accessed": false,
+      "epochs_completed": 7,
+      "best_epoch": 2,
+      "seconds": 572.5125878741965,
+      "peak_cuda_allocated_bytes": 9072094208,
+      "peak_cuda_reserved_bytes": 9890168832,
+      "evaluations": {
+        "music-dev": {
+          "sample_count": 96,
+          "real_count": 16,
+          "fake_count": 80,
+          "group_count": 16,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.1875,
+          "scores": "/var/tmp/deepfake-audio-music-20261011/urban12-seed43-to-music-dev/scores.jsonl"
+        },
+        "music-untrained-dev": {
+          "sample_count": 25,
+          "real_count": 16,
+          "fake_count": 9,
+          "group_count": 16,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.2222222222222222,
+          "scores": "/var/tmp/deepfake-audio-music-20261011/urban12-seed43-to-music-unseen-dev/scores.jsonl"
+        },
+        "urban-dev": {
+          "sample_count": 2885,
+          "real_count": 577,
+          "fake_count": 2308,
+          "group_count": 36,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.016464471403812825,
+          "scores": "/var/tmp/deepfake-audio-music-20261011/urban12-seed43-offline-dev/scores.jsonl"
+        },
+        "env-unseen-dev": {
+          "sample_count": 1731,
+          "real_count": 577,
+          "fake_count": 1154,
+          "group_count": 36,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.03726169844020797,
+          "scores": "/var/tmp/deepfake-audio-music-20261011/urban12-seed43-unseen-dev/scores.jsonl"
+        },
+        "fsd-external-dev": {
+          "sample_count": 70,
+          "real_count": 35,
+          "fake_count": 35,
+          "group_count": 24,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.08571428571428572,
+          "scores": "/var/tmp/deepfake-audio-music-20261011/urban12-seed43-fsd-external-dev/scores.jsonl"
+        }
+      }
+    },
+    {
+      "run": "music12-seed42",
+      "code": {
+        "code_sha256": "6efb5c9a09b60b7db4dc997ebac7a1189e23e60815758e1131e58bf5f04f423e",
+        "commit": "08c816d6cc2ef426b446c49a803702d730262308",
+        "dirty": true
+      },
+      "checkpoint": "/var/tmp/deepfake-audio-music-20261011/music12-seed42/training/best.pt",
+      "checkpoint_sha256": "44311aa2496f4e825ec6969d56fefe515cdc6cf673e158a50dcf8cb598fa8e80",
+      "manifest_sha256": "b681c3f82e039cae8ab34c6ada16bc0ebc258d5cf793721af688018cfe2866ae",
+      "train_count": 438,
+      "dev_count": 96,
+      "holdout_accessed": false,
+      "epochs_completed": 15,
+      "best_epoch": 10,
+      "seconds": 83.9501679316163,
+      "peak_cuda_allocated_bytes": 9072094208,
+      "peak_cuda_reserved_bytes": 9890168832,
+      "evaluations": {
+        "music-dev": {
+          "sample_count": 96,
+          "real_count": 16,
+          "fake_count": 80,
+          "group_count": 16,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.0375,
+          "scores": "/var/tmp/deepfake-audio-music-20261011/music12-seed42-music-dev/scores.jsonl"
+        },
+        "music-untrained-dev": {
+          "sample_count": 25,
+          "real_count": 16,
+          "fake_count": 9,
+          "group_count": 16,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.4444444444444444,
+          "scores": "/var/tmp/deepfake-audio-music-20261011/music12-seed42-music-untrained-dev/scores.jsonl"
+        },
+        "urban-dev": {
+          "sample_count": 2885,
+          "real_count": 577,
+          "fake_count": 2308,
+          "group_count": 36,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.2738301559792028,
+          "scores": "/var/tmp/deepfake-audio-music-20261011/music12-seed42-urban-dev/scores.jsonl"
+        },
+        "env-unseen-dev": {
+          "sample_count": 1731,
+          "real_count": 577,
+          "fake_count": 1154,
+          "group_count": 36,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.2530329289428076,
+          "scores": "/var/tmp/deepfake-audio-music-20261011/music12-seed42-env-unseen-dev/scores.jsonl"
+        },
+        "fsd-external-dev": {
+          "sample_count": 70,
+          "real_count": 35,
+          "fake_count": 35,
+          "group_count": 24,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.2,
+          "scores": "/var/tmp/deepfake-audio-music-20261011/music12-seed42-fsd-external-dev/scores.jsonl"
+        }
+      }
+    },
+    {
+      "run": "mixed12-source-balanced-seed42",
+      "code": {
+        "code_sha256": "6efb5c9a09b60b7db4dc997ebac7a1189e23e60815758e1131e58bf5f04f423e",
+        "commit": "08c816d6cc2ef426b446c49a803702d730262308",
+        "dirty": true
+      },
+      "checkpoint": "/var/tmp/deepfake-audio-music-20261011/mixed12-source-balanced-seed42/training/best.pt",
+      "checkpoint_sha256": "3778216560eccbe6a07a2eef3aad0a38221f63c8c071b5b65fa6364310a0ff59",
+      "manifest_sha256": "60b78b9136618abe5f33e50c25b1f3fbe2bcbd794c0c3505987edeb69b48c5db",
+      "train_count": 13888,
+      "dev_count": 96,
+      "holdout_accessed": false,
+      "epochs_completed": 6,
+      "best_epoch": 1,
+      "seconds": 900.9292492391542,
+      "peak_cuda_allocated_bytes": 9072094208,
+      "peak_cuda_reserved_bytes": 9890168832,
+      "evaluations": {
+        "music-dev": {
+          "sample_count": 96,
+          "real_count": 16,
+          "fake_count": 80,
+          "group_count": 16,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.0,
+          "scores": "/var/tmp/deepfake-audio-music-20261011/mixed12-source-balanced-seed42-music-dev/scores.jsonl"
+        },
+        "music-untrained-dev": {
+          "sample_count": 25,
+          "real_count": 16,
+          "fake_count": 9,
+          "group_count": 16,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.1875,
+          "scores": "/var/tmp/deepfake-audio-music-20261011/mixed12-source-balanced-seed42-music-untrained-dev/scores.jsonl"
+        },
+        "urban-dev": {
+          "sample_count": 2885,
+          "real_count": 577,
+          "fake_count": 2308,
+          "group_count": 36,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.04549393414211438,
+          "scores": "/var/tmp/deepfake-audio-music-20261011/mixed12-source-balanced-seed42-urban-dev/scores.jsonl"
+        },
+        "env-unseen-dev": {
+          "sample_count": 1731,
+          "real_count": 577,
+          "fake_count": 1154,
+          "group_count": 36,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.11438474870017332,
+          "scores": "/var/tmp/deepfake-audio-music-20261011/mixed12-source-balanced-seed42-env-unseen-dev/scores.jsonl"
+        },
+        "fsd-external-dev": {
+          "sample_count": 70,
+          "real_count": 35,
+          "fake_count": 35,
+          "group_count": 24,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.11428571428571428,
+          "scores": "/var/tmp/deepfake-audio-music-20261011/mixed12-source-balanced-seed42-fsd-external-dev/scores.jsonl"
+        }
+      }
+    },
+    {
+      "run": "mixed12-class-balanced-seed42",
+      "code": {
+        "code_sha256": "6efb5c9a09b60b7db4dc997ebac7a1189e23e60815758e1131e58bf5f04f423e",
+        "commit": "08c816d6cc2ef426b446c49a803702d730262308",
+        "dirty": true
+      },
+      "checkpoint": "/var/tmp/deepfake-audio-music-20261011/mixed12-class-balanced-seed42/training/best.pt",
+      "checkpoint_sha256": "4b1da5d98caebd7d47eb86033c312a4c9699a7e6f8ec13e7ddca72efbcc884f7",
+      "manifest_sha256": "60b78b9136618abe5f33e50c25b1f3fbe2bcbd794c0c3505987edeb69b48c5db",
+      "train_count": 13888,
+      "dev_count": 96,
+      "holdout_accessed": false,
+      "epochs_completed": 7,
+      "best_epoch": 2,
+      "seconds": 967.0032864231616,
+      "peak_cuda_allocated_bytes": 9072094208,
+      "peak_cuda_reserved_bytes": 9890168832,
+      "evaluations": {
+        "music-dev": {
+          "sample_count": 96,
+          "real_count": 16,
+          "fake_count": 80,
+          "group_count": 16,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.0,
+          "scores": "/var/tmp/deepfake-audio-music-20261011/mixed12-class-balanced-seed42-music-dev/scores.jsonl"
+        },
+        "music-untrained-dev": {
+          "sample_count": 25,
+          "real_count": 16,
+          "fake_count": 9,
+          "group_count": 16,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.1111111111111111,
+          "scores": "/var/tmp/deepfake-audio-music-20261011/mixed12-class-balanced-seed42-music-untrained-dev/scores.jsonl"
+        },
+        "urban-dev": {
+          "sample_count": 2885,
+          "real_count": 577,
+          "fake_count": 2308,
+          "group_count": 36,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.022097053726169845,
+          "scores": "/var/tmp/deepfake-audio-music-20261011/mixed12-class-balanced-seed42-urban-dev/scores.jsonl"
+        },
+        "env-unseen-dev": {
+          "sample_count": 1731,
+          "real_count": 577,
+          "fake_count": 1154,
+          "group_count": 36,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.053726169844020795,
+          "scores": "/var/tmp/deepfake-audio-music-20261011/mixed12-class-balanced-seed42-env-unseen-dev/scores.jsonl"
+        },
+        "fsd-external-dev": {
+          "sample_count": 70,
+          "real_count": 35,
+          "fake_count": 35,
+          "group_count": 24,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.08571428571428572,
+          "scores": "/var/tmp/deepfake-audio-music-20261011/mixed12-class-balanced-seed42-fsd-external-dev/scores.jsonl"
+        }
+      }
+    }
+  ],
+  "selection": {
+    "research_candidate": "mixed12-class-balanced-seed42",
+    "checkpoint_sha256": "4b1da5d98caebd7d47eb86033c312a4c9699a7e6f8ec13e7ddca72efbcc884f7",
+    "basis": "Music dev ties at zero; compare Urban retention on dev, use remaining dev buckets as diagnostics; no holdout selection",
+    "formal_competition_candidate_frozen": false
+  },
+  "resource_scope": "training loop including dev; excludes cache preparation; timings observed with concurrent workloads",
+  "gpu_snapshot": {
+    "utilization_percent": 100,
+    "memory_used_mib": 19931,
+    "scope": "instantaneous two-training snapshot; not run average"
+  },
+  "limitations": [
+    "AIME prompt groups do not establish song/artist/album independence.",
+    "Music dev has only 16 real; untrained music dev only 7 Suno v3 and 2 Udio fake.",
+    "MusicGen sizes are one family; AudioLDM 2 Music is not a new family.",
+    "Music and Urban training do not cover arbitrary mixed-content audio or speech.",
+    "Original music license/attribution mapping unresolved; internal noncommercial research only."
+  ]
+}

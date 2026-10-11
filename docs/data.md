@@ -18,6 +18,7 @@
 | 环境音检测器与分数 | `/var/tmp/deepfake-nonspeech-logmel-20261011/` | LogMel/HuBERT双种子及本地FP32推理；团队可读 |
 | AST预训练、环境音微调与分数 | `/var/tmp/deepfake-audio-ast-20261011/` | `pretrained/ast-audioset/`固定预训练资源；四次训练、双种子dev及冻结候选holdout推理；团队可读 |
 | EnvSDD 城市环境音扩展 | `/var/tmp/deepfake-audio-expand-20261011/` | `envsdd-urban/` 19,215条；`unseen-dev/`、`unseen-holdout/` 为未训练生成器评测；四组AST、冻结候选和分数团队可读 |
+| AIME音乐与混合训练 | `/var/tmp/deepfake-audio-music-20261011/` | `aime/`主清单630条、105个描述组合；`mixed/`保留Urban train并加入音乐；固定原包、模型与分数团队可读 |
 | FakeSound 诊断清单 | `/var/tmp/lanjianyu-issue11-20261011/fakesound-v1/` | data_root 为其 `media/`，含缺失 real 记录 |
 
 共享原媒体和模型只读；`outputs/`、`cache/` 使用各自任务目录。
@@ -37,6 +38,7 @@
 | `tools/prepare_doppelganger.py` | 固定配对表/原媒体元数据 → 环境音研究清单 |
 | `tools/prepare_fakesound.py` | 固定 FakeSound ZIP → 诊断清单和失败记账 |
 | `tools/prepare_envsdd.py` | `import`：五成员配对环境音，排除旧研究集关联并重划分；`eval`：同一已划分原录音上的 AudioLCM/TangoFlux 诊断 |
+| `tools/prepare_aime.py` | 固定 AIME Parquet → 描述匹配音乐、prompt隔离与未训练生成路径诊断；不推断原曲/artist关系 |
 
 参数见各工具 `--help`，已有输入直接复用，不重复下载或物化。
 通用 `index` 只列媒体；标签、许可和已知组需来源证据，不能从目录猜测。
@@ -92,6 +94,22 @@ scripts/devctl run python tools/prepare_envsdd.py eval \
 
 真实媒体复用既有处理结果，生成媒体执行相同归一化。评测解码失败保留在清单及分母中。
 
+AIME音乐子集获取90个固定分片、共9,087,224,372字节，逐包官方SHA见
+[来源登记](research/source/aime/README.md)。已发布数据直接复用；新目录导入命令为：
+
+```bash
+scripts/devctl run python tools/prepare_aime.py \
+  --parquet-dir /var/tmp/deepfake-audio-music-20261011/upstream/aime \
+  --resources docs/research/source/aime/resources.json \
+  --output /var/tmp/deepfake-audio-music-20261011/aime --seed 42
+```
+
+主清单105条real、525条fake；train438/dev96/holdout96，零解码失败。
+MusicGen Small/Medium、AudioLDM 2 Large、Riffusion、Mustango参与训练。
+`unseen.jsonl` 另保留dev/holdout各16条real和9条未训练路径fake；训练不读取该清单。
+这些真实音乐已包含在主清单，不能相加当作独立媒体数量。
+按三标签描述组合和已确认重复隔离；未知原曲、artist与album不当成已确认独立实体。
+
 ## 划分与许可
 
 内部 `real=0`、`fake=1`；train 训练，dev 早停/选择，holdout 在候选冻结后验收。
@@ -105,6 +123,7 @@ scripts/devctl run python tools/prepare_envsdd.py eval \
 | Doppelganger/FSD50K | CC0 原媒体、CC BY 集合、生成音频附 Stability 条款；内部非商业研究 | [来源/许可和排除项](experiments/nonspeech-20261011/README.md#许可与归属) |
 | FakeSound | 媒体权利 unresolved；不批准训练/正式交付 | [诊断结论](experiments/nonspeech-20261011/README.md) |
 | EnvSDD/UrbanSound8K | 已取得原录音署名；CC BY 4.0 集合与 CC BY-NC 3.0 原媒体下的内部非商业研究，正式赛用未确认 | [来源与原始 credits](research/source/envsdd/README.md) |
+| AIME/MTG-Jamendo | 生成音乐CC BY 4.0、标签CC BY-NC-SA 4.0；真实音乐逐曲CC许可未映射，仅内部非商业研究，正式交付未批准 | [来源与用途](research/source/aime/README.md) |
 
 代码、权重、数据许可分别处理。公开可下载不代表正式比赛使用已获批；
 比赛外部资源要求集中在[比赛要求](competition/requirements.md)。

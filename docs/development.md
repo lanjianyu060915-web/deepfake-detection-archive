@@ -63,7 +63,10 @@ scripts/devctl run python -m deepfake_detection_archive train \
 训练只消费 train/dev，dev 早停并选择最佳 checkpoint；holdout 不进入模型选择。
 当前视频实现没有主干微调或时序模型，不能把帧均值当作时序学习。
 CUDA 支持 BF16/FP16 AMP、梯度累积；新方法先用一次小 profile 确定 batch 和输入规模。
-`balanced_sampling` 仅用于 train，`feature_batch_size` 控制冻结特征提取批量。
+`balanced_sampling` 仅用于 train 的类别平衡；同时开启 `balance_sources` 后，
+已存在的来源与类别组合等权抽样，避免小来源被淹没。它不改变 dev 选模指标；
+多来源实验需明确选模使用哪个 dev，并分别报告其他来源。
+`feature_batch_size` 控制冻结特征提取批量。
 `soundfile` 后端只用于原生目标采样率/单声道；通用媒体使用 FFmpeg。
 
 AST 使用 `architecture="audio_ast_v1"`，`model_config.trainable_layers` 指定可训练末端层数，
