@@ -9,11 +9,13 @@
 | 实验 | 当前结论 | 下一步 |
 | --- | --- | --- |
 | [ASV 云端双种子](asv-cloud-20261011/README.md) | LogMel EER0.7849%/0.9419%；冻结HuBERT未改善同域dev | 未知攻击、跨来源及压缩评分 |
+| [语音压缩与未知攻击](audio-generalization-20261011/README.md) | LogMel42未知攻击EER2.97%；AAC退化较小，8kHz采样率带限EER13.10% | 带宽增强、跨来源及未知攻击叠加退化 |
 | [ViF 云端受控视频](vif-cloud-20261011/README.md) | Hunyuan train618/dev146；视觉EER20.55%/21.92%，优于同集元数据 | 跨来源/生成器与压缩评分，再决定微调/时序 |
 | [配对环境音](nonspeech-20261011/README.md) | 462条可训练环境音，已供首轮模型对照使用 | 补生成器/来源 |
 | [环境音模型对照](nonspeech-logmel-20261011/README.md) | HuBERT本地FP32 EER28.57%/34.29%，优于本轮LogMel | 已开展AST微调，见下一行 |
 | [环境音 AST 首轮微调](audio-ast-20261011/README.md) | 小型单生成器双种子dev EER2.86%/5.71%；冻结研究候选holdout EER11.43% | 后续扩展见下一行 |
-| [多生成器环境音 AST](audio-envsdd-20261011/README.md) | 19,215条配对媒体；12层dev EER1.39%；冻结holdout已见1.43%/未见AudioLCM/TangoFlux6.51% | 跨来源、音乐及混合音频 |
+| [多生成器环境音 AST](audio-envsdd-20261011/README.md) | 19,215条配对媒体；12层dev EER1.39%；冻结holdout已见1.43%/未见AudioLCM/TangoFlux6.51% | 音乐联合训练见下一行；继续扩大来源 |
+| [音乐与环境音 AST 混合训练](audio-music-20261011/README.md) | 630条AIME音乐；单独/两种混合采样，五桶dev评分；补Urban12层seed43 | 扩大未训练音乐路径与真实原曲，补真正混合内容音频 |
 | [鲁棒性媒体试跑](robustness-smoke-20261011/README.md) | 媒体条件工具可用，没有模型评分 | 使用已选择模型得到实际 ΔEER |
 
 ## 历史探索

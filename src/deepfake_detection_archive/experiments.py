@@ -5,6 +5,7 @@ import os
 import random
 import tempfile
 import time
+from collections import Counter
 from dataclasses import asdict, dataclass, field, replace
 from functools import cached_property
 from pathlib import Path
@@ -57,6 +58,7 @@ class ExperimentConfig:
     feature_batch_size: int = 8
     num_workers: int = 0
     balanced_sampling: bool = False
+    balance_sources: bool = False
     segment_samples: int = 64600
     segments: int = 1
     audio: dict[str, Any] = field(default_factory=dict)
@@ -89,6 +91,10 @@ class ExperimentConfig:
             raise ValueError("num_workers must be a nonnegative integer")
         if type(self.balanced_sampling) is not bool:
             raise ValueError("balanced_sampling must be boolean")
+        if type(self.balance_sources) is not bool:
+            raise ValueError("balance_sources must be boolean")
+        if self.balance_sources and not self.balanced_sampling:
+            raise ValueError("balance_sources requires balanced_sampling")
         if self.modality not in ("audio", "video"):
             raise ValueError("modality must be audio or video")
         for name in (
@@ -244,13 +250,22 @@ def _worker_seed(_worker_id: int) -> None:
 
 
 def _balanced_sampler(
-    entries: list[tuple[Path, str, int]], generator: torch.Generator
+    entries: list[tuple[Path, str, int]],
+    generator: torch.Generator,
+    sources: list[str] | None = None,
 ) -> WeightedRandomSampler:
-    labels = torch.tensor([label for _, _, label in entries], dtype=torch.long)
-    counts = torch.bincount(labels, minlength=2)
-    weights = counts.double().reciprocal()[labels]
+    keys = (
+        [
+            (source, label)
+            for source, (_, _, label) in zip(sources, entries, strict=True)
+        ]
+        if sources is not None
+        else [("all", label) for _, _, label in entries]
+    )
+    counts = Counter(keys)
+    weights = [1.0 / counts[key] for key in keys]
     return WeightedRandomSampler(
-        weights.tolist(), len(entries), replacement=True, generator=generator
+        weights, len(entries), replacement=True, generator=generator
     )
 
 
@@ -591,7 +606,13 @@ def run_experiment(config_path: Path) -> TrainResult:  # noqa: PLR0915 -- experi
             loader_options["timeout"] = 30
             loader_options["persistent_workers"] = True
         sampler = (
-            _balanced_sampler(entries["train"], generator)
+            _balanced_sampler(
+                entries["train"],
+                generator,
+                [record.source for record in selected if record.split == "train"]
+                if config.balance_sources
+                else None,
+            )
             if config.balanced_sampling
             else None
         )
