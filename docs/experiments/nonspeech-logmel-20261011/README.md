@@ -64,5 +64,6 @@ seed43及低学习率配置同目录可直接使用；本地推理配置为 `inf
 `infer-hubert-seed43.json`。将同一输入清单的dev行保存到新产物目录的 `dev-manifest.jsonl`；
 重训后用新checkpoint的实际SHA更新推理配置，再以 `infer --config` 评分。
 
-下一轮优先补独立生成器/来源和通用音频表征，保持同一dev比较；不继续堆LogMel学习率搜索。
+后续[AST主干微调](../audio-ast-20261011/README.md)已在同一dev取得2.86%/5.71%，
+并完成一次冻结研究候选holdout评估；下一轮优先补独立生成器/来源，不继续堆LogMel学习率搜索。
 当前只作为内部非商业研究候选；数据和HuBERT权重的正式赛用许可仍按资源登记处理。

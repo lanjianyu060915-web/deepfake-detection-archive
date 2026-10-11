@@ -16,6 +16,7 @@
 | FakeSound ZIP | `/srv/shared-data/datasets/fakesound/FakeSound.zip` | 固定原包、单类诊断，不能训练二分类 |
 | 配对环境音 | `/var/tmp/lanjianyu-issue11-20261011/doppelganger-v2/` | 462 条实际可读媒体，附 manifest/sources/provenance |
 | 环境音检测器与分数 | `/var/tmp/deepfake-nonspeech-logmel-20261011/` | LogMel/HuBERT双种子及本地FP32推理；团队可读 |
+| AST预训练、环境音微调与分数 | `/var/tmp/deepfake-audio-ast-20261011/` | `pretrained/ast-audioset/`固定预训练资源；四次训练、双种子dev及冻结候选holdout推理；团队可读 |
 | FakeSound 诊断清单 | `/var/tmp/lanjianyu-issue11-20261011/fakesound-v1/` | data_root 为其 `media/`，含缺失 real 记录 |
 
 共享原媒体和模型只读；`outputs/`、`cache/` 使用各自任务目录。
@@ -76,9 +77,12 @@ GPU 有余量即可执行训练，并在任务 Issue 记录占用。
 ## 预训练模型
 
 固定来源、模型卡和许可在 [pretrained-resources](research/pretrained-resources/README.md)。
-HuBERT 为语音表征，ResNet18 为当前全帧空间表征，均不是已经训练的鉴伪分类器。
+HuBERT 为语音表征，ResNet18 为当前全帧空间表征，AST 为 AudioSet 通用音频表征。
+这些预训练资源需要另行训练鉴伪头或微调；已训练的检测器位置见上表和实验卡。
 必要时运行 `tools/prepare_pretrained.py` 获取/转换资源；权重和生成登记落在
 `models/pretrained/`，下载缓存在 `cache/pretrained/`。推理只加载已准备的本地资源。
+AST 使用 `scripts/devctl run python tools/prepare_pretrained.py prepare-ast` 获取；
+当前工作副本的 `models/pretrained/ast-audioset` 链接到上述共享只读 bundle。
 
 ## 旧实验资源恢复
 

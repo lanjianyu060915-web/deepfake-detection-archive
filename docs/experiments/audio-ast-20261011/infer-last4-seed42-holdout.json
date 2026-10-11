@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "manifest": "../../../outputs/audio-ast-20261011/holdout-manifest.jsonl",
+  "data_root": "../../../data/nonspeech-logmel-20261011",
+  "output_dir": "../../../outputs/audio-ast-20261011/last4-lr1e-5-seed42-offline-holdout",
+  "modality": "audio",
+  "model_kind": "audio_waveform",
+  "checkpoint": "../../../outputs/audio-ast-20261011/last4-lr1e-5-seed42/training/best.pt",
+  "checkpoint_sha256": "fef784ab65f4bf8e9285e1b69d1df39ac3e064dc9368d4f386298719e31000d4",
+  "device": "cuda",
+  "batch_size": 32,
+  "segment_samples": 64600,
+  "segments": 1,
+  "aggregation": "mean",
+  "audio": {
+    "sample_rate": 16000,
+    "backend": "soundfile"
+  },
+  "seed": 42
+}

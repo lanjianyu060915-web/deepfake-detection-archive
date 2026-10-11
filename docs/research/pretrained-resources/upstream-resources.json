@@ -42,5 +42,37 @@
       "sha256": "c59fb00d253ab5ae5d288f130c64dddf3b7af3d5ce35c96395ac7a3db5db88f5",
       "bytes": 2596
     }
+  },
+  "ast-audioset": {
+    "repository": "MIT/ast-finetuned-audioset-10-10-0.4593",
+    "revision": "f826b80d28226b62986cc218e5cec390b1096902",
+    "license": "BSD-3-Clause",
+    "files": {
+      "config.json": {
+        "url": "https://huggingface.co/MIT/ast-finetuned-audioset-10-10-0.4593/resolve/f826b80d28226b62986cc218e5cec390b1096902/config.json",
+        "sha256": "a93d525511d77e8ecc933d09674b85099815bbbb417c228a4edd655e252fb9ff",
+        "bytes": 26763
+      },
+      "preprocessor_config.json": {
+        "url": "https://huggingface.co/MIT/ast-finetuned-audioset-10-10-0.4593/resolve/f826b80d28226b62986cc218e5cec390b1096902/preprocessor_config.json",
+        "sha256": "8d04ba5a9c6fca5d39d0de2b1fd05ecf79deb589fbba279728bbebac39934231",
+        "bytes": 297
+      },
+      "model.safetensors": {
+        "url": "https://huggingface.co/MIT/ast-finetuned-audioset-10-10-0.4593/resolve/f826b80d28226b62986cc218e5cec390b1096902/model.safetensors",
+        "sha256": "ae0c1e2ad4e1381d851fa9bf298ba13ebc9c5a914cdee2dbe427a6583869924d",
+        "bytes": 346404948
+      },
+      "README.md": {
+        "url": "https://huggingface.co/MIT/ast-finetuned-audioset-10-10-0.4593/resolve/f826b80d28226b62986cc218e5cec390b1096902/README.md",
+        "sha256": "dbc8ce1fc5abd1635d073640d8cb032901bfe264a5e06507f363f10a6112cfc8",
+        "bytes": 1165
+      },
+      "LICENSE": {
+        "url": "https://raw.githubusercontent.com/YuanGongND/ast/master/LICENSE",
+        "sha256": "3b8967711439804577c6022cc9c9cc18c9e5312bf1ac3fc6e448784793df2bdc",
+        "bytes": 1516
+      }
+    }
   }
 }
