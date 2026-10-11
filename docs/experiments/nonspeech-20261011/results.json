@@ -1,0 +1,304 @@
+{
+  "created_at": "2026-10-11T02:36:48.371622+00:00",
+  "issue": "https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/11",
+  "base_commit": "4882afb",
+  "artifact_root": "/var/tmp/lanjianyu-issue11-20261011",
+  "importer_sha256": {
+    "tools/prepare_fakesound.py": "8135cf81009188032c4de9fd86e0d18ae21895b177e4fc69acbd64b091067beb",
+    "tools/prepare_doppelganger.py": "1584f773fc3f1fcc188d87cac0e9c3da51c56c1622bddeb17451b691e6f00bd6"
+  },
+  "fakesound": {
+    "archive_sha256": "96cfc28b1e2274ff3e4404be94c4039645e862376ec161549386a9e0577c0623",
+    "archive_bytes": 986570159,
+    "manifest_sha256": "2800983e26a396175c83d2d610c5ab44bb9c74f4c3273dbce404b27902ad0f8b",
+    "samples": 3798,
+    "archive_wavs": 1899,
+    "counts": {
+      "decode_status": {
+        "ok": 1899,
+        "unknown": 1899
+      },
+      "label": {
+        "0": 1899,
+        "1": 1899
+      },
+      "status": {
+        "available": 1899,
+        "missing": 1899
+      }
+    },
+    "decoded_label_counts": {
+      "1": 1899
+    },
+    "decode_coverage": 0.5,
+    "formats": {
+      "WAV/PCM_16/16000Hz/1ch": 135,
+      "WAV/PCM_16/32000Hz/1ch": 1764
+    },
+    "original_groups": 1718,
+    "connected_groups": 1718,
+    "elapsed_seconds": 13.102725504897535,
+    "decoded_samples_per_second": 144.9316784733216,
+    "license_status": "unresolved",
+    "training_allowed": false,
+    "binary_eer_eligible": false
+  },
+  "fakesound_originals_crossing_upstream_buckets": 135,
+  "doppelganger": {
+    "audit_passed": true,
+    "competition_approved": false,
+    "elapsed_seconds": 3.2756953043863177,
+    "eligible_samples": 462,
+    "excluded_source_ids": [
+      "134742",
+      "135034",
+      "146932",
+      "156946",
+      "176769",
+      "181896",
+      "18443",
+      "188041",
+      "188042",
+      "196382",
+      "209661",
+      "210314",
+      "233261",
+      "256452",
+      "263042",
+      "275154",
+      "328842",
+      "352609",
+      "366892",
+      "395684",
+      "397100"
+    ],
+    "failure_reasons": {
+      "paired_source_unavailable": 55,
+      "real_shorter_than_upstream_5s_conditioning_window": 55
+    },
+    "generator_weights_revision": "unknown",
+    "groups": 153,
+    "inventory_sha256": "7b3646024d48a5d0f3ceee34bbc58efca8dec61c85965d08c187600bffa6ec1f",
+    "manifest_sha256": "18e30516a73959cca46c55000617b73065f1141d5c7b08d097eba95c7d51ce4b",
+    "max_pairs_per_event": 40,
+    "metadata_sha256": "fdbd6985f824a01eeb5c5d3b837e699a2558323599a6f390189b99978ac4abdc",
+    "normalized_coverage": 0.8076923076923077,
+    "preprocessing": "mono, polyphase 16kHz, center 64600 samples, peak 0.95, PCM16 WAV",
+    "raw_bytes": 457121938,
+    "seed": 42,
+    "selected_events": {
+      "ANML": 40,
+      "BIRD": 32,
+      "FIRE": 40,
+      "FOOT": 40,
+      "RAIN": 40,
+      "WATR": 40,
+      "WIND": 14,
+      "WTHR": 40
+    },
+    "selected_pairs": 286,
+    "source": "doppelganger-fsd50k-cc0-environment-research",
+    "source_decode_coverage": 1.0,
+    "source_info_sha256": "ced921d00c4f7ace86b92c259689a1a40a8452808e93235021165ad2d8b77e6c",
+    "split_label_counts": {
+      "dev/0": 35,
+      "dev/1": 35,
+      "holdout/0": 35,
+      "holdout/1": 35,
+      "train/0": 161,
+      "train/1": 161
+    },
+    "status_counts": {
+      "available": 462,
+      "excluded": 110
+    },
+    "training_license_scope": "internal noncommercial detection research only",
+    "upstream_split": "mseb/test; re-partitioned for binary research pilot"
+  },
+  "doppelganger_acquisition_seconds": 324.5416525732726,
+  "doppelganger_v2_reused_downloads": true,
+  "input_verification": {
+    "config": "configs/train-logmel-doppelganger.example.json",
+    "config_sha256": "85c54fecc1265999c123f222ccc8eb90702afde26335616f354a469c3fe73df9",
+    "train_dev_pipeline_read_samples": 392,
+    "pipeline_errors": 0,
+    "pipeline_seconds": 0.1978351902216673,
+    "pipeline_samples_per_second": 1981.44728225943,
+    "holdout_scored": false,
+    "holdout_decoded_in_pipeline_check": false,
+    "group_counts": {
+      "train": 105,
+      "dev": 24,
+      "holdout": 24
+    },
+    "split_event_label_counts": {
+      "dev/ANML/0": 3,
+      "dev/ANML/1": 3,
+      "dev/BIRD/0": 3,
+      "dev/BIRD/1": 3,
+      "dev/FIRE/0": 6,
+      "dev/FIRE/1": 6,
+      "dev/FOOT/0": 3,
+      "dev/FOOT/1": 3,
+      "dev/RAIN/0": 6,
+      "dev/RAIN/1": 6,
+      "dev/WATR/0": 8,
+      "dev/WATR/1": 8,
+      "dev/WIND/0": 1,
+      "dev/WIND/1": 1,
+      "dev/WTHR/0": 5,
+      "dev/WTHR/1": 5,
+      "holdout/ANML/0": 2,
+      "holdout/ANML/1": 2,
+      "holdout/BIRD/0": 3,
+      "holdout/BIRD/1": 3,
+      "holdout/FIRE/0": 6,
+      "holdout/FIRE/1": 6,
+      "holdout/FOOT/0": 8,
+      "holdout/FOOT/1": 8,
+      "holdout/RAIN/0": 2,
+      "holdout/RAIN/1": 2,
+      "holdout/WATR/0": 3,
+      "holdout/WATR/1": 3,
+      "holdout/WIND/0": 4,
+      "holdout/WIND/1": 4,
+      "holdout/WTHR/0": 7,
+      "holdout/WTHR/1": 7,
+      "train/ANML/0": 14,
+      "train/ANML/1": 14,
+      "train/BIRD/0": 17,
+      "train/BIRD/1": 17,
+      "train/FIRE/0": 21,
+      "train/FIRE/1": 21,
+      "train/FOOT/0": 23,
+      "train/FOOT/1": 23,
+      "train/RAIN/0": 32,
+      "train/RAIN/1": 32,
+      "train/WATR/0": 20,
+      "train/WATR/1": 20,
+      "train/WIND/0": 7,
+      "train/WIND/1": 7,
+      "train/WTHR/0": 27,
+      "train/WTHR/1": 27
+    },
+    "normalized_format_counts": {
+      "16000/1/64600/PCM_16/129244": 462
+    },
+    "raw_format_counts_by_label": {
+      "0": {
+        "sample_rate": {
+          "44100": 286
+        },
+        "channels": {
+          "1": 286
+        },
+        "format": {
+          "WAV": 286
+        },
+        "subtype": {
+          "PCM_16": 286
+        }
+      },
+      "1": {
+        "sample_rate": {
+          "44100": 286
+        },
+        "channels": {
+          "1": 286
+        },
+        "format": {
+          "WAV": 286
+        },
+        "subtype": {
+          "PCM_16": 286
+        }
+      }
+    },
+    "dev_file_size_metadata_eer": 0.5,
+    "metadata_eer_scope": "constant file size after symmetric processing; not model EER"
+  },
+  "validation": {
+    "command": "scripts/devctl check",
+    "ruff": "passed",
+    "mypy": "passed",
+    "pytest_passed": 425,
+    "pytest_skipped": 1,
+    "pytest_seconds": 25.92,
+    "skip_reason": "tests/test_metrics.py fixed ASVspoof reference checkout is not present",
+    "video_tool_tests_passed": 3,
+    "legacy_stub_tests_passed": 7,
+    "build": "passed",
+    "targeted_new_tests_passed": 22,
+    "initial_standard_failure": "test_archive_mutation_during_extraction_aborts_publication expected ValueError after touch(), but no exception was raised; isolated rerun and final standard run passed without changing that test or ASV code",
+    "independent_review": "two preprocessing findings corrected: symmetric peak normalization and minimum 5s real conditioning window"
+  },
+  "gpu_training_started": false,
+  "holdout_scored": false,
+  "competition_approved": false,
+  "assets": {
+    "fakesound-v1/manifest.jsonl": {
+      "bytes": 2817834,
+      "sha256": "2800983e26a396175c83d2d610c5ab44bb9c74f4c3273dbce404b27902ad0f8b"
+    },
+    "fakesound-v1/sources.jsonl": {
+      "bytes": 487,
+      "sha256": "7c152d724f0a4c2ed79837dcd7dc74e5c10d2a653b4f04689333aa5102177fcd"
+    },
+    "fakesound-v1/provenance.jsonl": {
+      "bytes": 2089377,
+      "sha256": "8e828bb616e4fa7830434df65d68bbc145847bedd4e634870d770e2e4c50d621"
+    },
+    "fakesound-v1/import-summary.json": {
+      "bytes": 11693,
+      "sha256": "f4addb3eed397f01f2894b79176041bcfd5a3f4018393b5361c5393a0e7a2e55"
+    },
+    "doppelganger-v2/manifest.jsonl": {
+      "bytes": 379314,
+      "sha256": "18e30516a73959cca46c55000617b73065f1141d5c7b08d097eba95c7d51ce4b"
+    },
+    "doppelganger-v2/inventory.jsonl": {
+      "bytes": 470209,
+      "sha256": "7b3646024d48a5d0f3ceee34bbc58efca8dec61c85965d08c187600bffa6ec1f"
+    },
+    "doppelganger-v2/sources.jsonl": {
+      "bytes": 581,
+      "sha256": "15db7bf3933a6877f8323cbcc8edbe3745309b5503c423aa814c5e0a91376998"
+    },
+    "doppelganger-v2/provenance.jsonl": {
+      "bytes": 1007090,
+      "sha256": "6a0bcec70a792a0a908c58fdd8702bdf74e92a312a1a8525f623595f9dadec5a"
+    },
+    "doppelganger-v2/summary.json": {
+      "bytes": 1611,
+      "sha256": "9244c679ffc10f1e874f9f9d3abb19a88e35985810ef8acaca47f121a0f374a1"
+    },
+    "doppelganger-v2/input-verification.json": {
+      "bytes": 2277,
+      "sha256": "409c1cd4733ab7326dcab9243e7412c00c2e5981ab4e8b5ae0fbfacd8fb60e8f"
+    },
+    "doppelganger-v2/audit.json": {
+      "bytes": 109088,
+      "sha256": "15f708e45f1006233f3afe8564ac9d4374c60f72a89a731524c56027a9a65940"
+    },
+    "source-evidence/snapshots.json": {
+      "bytes": 3684,
+      "sha256": "1f8b18c000e1ef872a5b7741374ec598a47a4e30bc88c414dcbb0600fc1ff3bb"
+    },
+    "source-evidence/fsd50k-candidate-review.json": {
+      "bytes": 20626,
+      "sha256": "f33313974e35906d8e053df97da4e44bf95c7209d9a6640d3241ac31359eb14e"
+    },
+    "logs/check-project-final.log": {
+      "bytes": 2650,
+      "sha256": "8f59592df188ae4c6e2526b31c7b0f6a09e254c6180093930ce5299624cf3267"
+    },
+    "logs/reuse_downloads.py": {
+      "bytes": 1064,
+      "sha256": "a9c34d38256a0b141e41fa5ccc428075ca6ca54996832934a223947271f58401"
+    },
+    "logs/verify_inputs.py": {
+      "bytes": 3058,
+      "sha256": "1c0c6d9f6b483c1cd4bb2de09d14ac8661d4201f6891765a597852dc314efab5"
+    }
+  }
+}

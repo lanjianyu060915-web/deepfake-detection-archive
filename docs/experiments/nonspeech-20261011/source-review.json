@@ -1,0 +1,240 @@
+{
+  "review_kind": "metadata screening + evidence-based manual review of flagged records; no listening or forensic truth claim",
+  "scope": {
+    "target_events": [
+      "ANML",
+      "BIRD",
+      "FIRE",
+      "FOOT",
+      "RAIN",
+      "WATR",
+      "WIND",
+      "WTHR"
+    ],
+    "real_license": "CC0-1.0",
+    "candidate_pairs": 398,
+    "unique_uploaders": 233
+  },
+  "cross_check": {
+    "uploader_mismatches": [],
+    "title_mismatches": [],
+    "license_mismatches": []
+  },
+  "exclude_source_clip_ids": [
+    "18443",
+    "134742",
+    "135034",
+    "146932",
+    "156946",
+    "176769",
+    "181896",
+    "188041",
+    "188042",
+    "196382",
+    "209661",
+    "210314",
+    "233261",
+    "256452",
+    "263042",
+    "275154",
+    "328842",
+    "352609",
+    "366892",
+    "395684",
+    "397100"
+  ],
+  "remaining_candidate_pairs": 377,
+  "remaining_by_event": {
+    "ANML": 59,
+    "BIRD": 32,
+    "FIRE": 65,
+    "FOOT": 45,
+    "RAIN": 48,
+    "WATR": 72,
+    "WIND": 14,
+    "WTHR": 42
+  },
+  "max_pairs_if_cap_40_per_event": 286,
+  "notes": [
+    "每项排除连同其 SAO twin 一起排除。",
+    "无关键字命中不是录音真实性证明；保留 upstream real provenance 限定。",
+    "Foley、剪辑、降噪、增益变化本身不等于AI生成，未做全体排除。",
+    "158415 ANML 原标签含 Guitar/Music，description 为朋友家中6只猫；不据此判定人工合成，可在环境纯度筛选时另行排除。",
+    "342431/119779/274125/274126 等 FIRE 分类实际为唱片噪声，263810为松果Foley；仍可是真实物理实录，UCS事件类别有粗映射误差。"
+  ],
+  "sources": {
+    "fsd_metadata_sha256": "ced921d00c4f7ace86b92c259689a1a40a8452808e93235021165ad2d8b77e6c",
+    "fsd_labels_sha256": "ef861a4619691783bfceb7f43e1a395dcf969150ba4ad34dcb36b93abd26b3d6",
+    "manifest_sha256": "fdbd6985f824a01eeb5c5d3b837e699a2558323599a6f390189b99978ac4abdc"
+  },
+  "exclusions": [
+    {
+      "source_clip_id": "366892",
+      "event_id": "FIRE",
+      "reason": "uncertain_recording_provenance",
+      "detail": "tags 含 synthetic，但 description 只有 Crackling burning fire；隔离而不认定已证伪。",
+      "additional_note": "",
+      "source_url": "https://freesound.org/s/366892/"
+    },
+    {
+      "source_clip_id": "196382",
+      "event_id": "FIRE",
+      "reason": "speech_annotated",
+      "detail": "FSD50K eval 标注明确含 Speech/Human_voice；为本轮非语音子集剔除，不由标签推断语音占比。",
+      "additional_note": "",
+      "source_url": "https://freesound.org/s/196382/"
+    },
+    {
+      "source_clip_id": "134742",
+      "event_id": "ANML",
+      "reason": "uncertain_recording_provenance",
+      "detail": "description 仅称 SFX made in Reason，无法确认来自蛙声实录，隔离而不改标 fake。",
+      "additional_note": "",
+      "source_url": "https://freesound.org/s/134742/"
+    },
+    {
+      "source_clip_id": "18443",
+      "event_id": "FOOT",
+      "reason": "speech_annotated",
+      "detail": "FSD50K eval 标注明确含 Speech/Human_voice；为本轮非语音子集剔除，不由标签推断语音占比。",
+      "additional_note": "",
+      "source_url": "https://freesound.org/s/18443/"
+    },
+    {
+      "source_clip_id": "188041",
+      "event_id": "BIRD",
+      "reason": "event_imitation",
+      "detail": "description 明确经过修改的人声模仿秃鹫；不作为鸟类实录锚点。",
+      "additional_note": "",
+      "source_url": "https://freesound.org/s/188041/"
+    },
+    {
+      "source_clip_id": "146932",
+      "event_id": "WIND",
+      "reason": "explicit_synthesis",
+      "detail": "description 明确用 Xpand2 plug-in in Pro Tools 10 自生成风声。",
+      "additional_note": "",
+      "source_url": "https://freesound.org/s/146932/"
+    },
+    {
+      "source_clip_id": "256452",
+      "event_id": "ANML",
+      "reason": "unresolved_derivation",
+      "detail": "description 明确重新上传并编辑 tuberatanka 的 cat meow，但没有原始 clip ID；跨 uploader 衍生关系不能核对。",
+      "additional_note": "",
+      "source_url": "https://freesound.org/s/256452/"
+    },
+    {
+      "source_clip_id": "135034",
+      "event_id": "WIND",
+      "reason": "explicit_synthesis",
+      "detail": "description 明确用多个白噪声段经 EQ/Flange 构造风声，tags 含 synth。",
+      "additional_note": "",
+      "source_url": "https://freesound.org/s/135034/"
+    },
+    {
+      "source_clip_id": "352609",
+      "event_id": "BIRD",
+      "reason": "speech_annotated",
+      "detail": "FSD50K eval 标注明确含 Speech/Human_voice；为本轮非语音子集剔除，不由标签推断语音占比。",
+      "additional_note": "",
+      "source_url": "https://freesound.org/s/352609/"
+    },
+    {
+      "source_clip_id": "233261",
+      "event_id": "FOOT",
+      "reason": "speech_annotated",
+      "detail": "FSD50K eval 标注明确含 Speech/Human_voice；为本轮非语音子集剔除，不由标签推断语音占比。",
+      "additional_note": "description 为走廊人群环境，tags 明确 talking/speak，Speech+Conversation 标注。",
+      "source_url": "https://freesound.org/s/233261/"
+    },
+    {
+      "source_clip_id": "181896",
+      "event_id": "RAIN",
+      "reason": "event_imitation",
+      "detail": "description 明确泼水声编辑成雨声；这是 Foley 而非AI证据，保守排除自然雨声锚点。",
+      "additional_note": "",
+      "source_url": "https://freesound.org/s/181896/"
+    },
+    {
+      "source_clip_id": "209661",
+      "event_id": "FOOT",
+      "reason": "speech_annotated",
+      "detail": "FSD50K eval 标注明确含 Speech/Human_voice；为本轮非语音子集剔除，不由标签推断语音占比。",
+      "additional_note": "",
+      "source_url": "https://freesound.org/s/209661/"
+    },
+    {
+      "source_clip_id": "397100",
+      "event_id": "BIRD",
+      "reason": "explicit_synthesis",
+      "detail": "description 明确 synthesized bird sound。",
+      "additional_note": "",
+      "source_url": "https://freesound.org/s/397100/"
+    },
+    {
+      "source_clip_id": "395684",
+      "event_id": "WIND",
+      "reason": "event_substitute",
+      "detail": "description 称白噪声可用作 ambient wind，无风声实录声明。",
+      "additional_note": "",
+      "source_url": "https://freesound.org/s/395684/"
+    },
+    {
+      "source_clip_id": "188042",
+      "event_id": "BIRD",
+      "reason": "event_imitation",
+      "detail": "description 明确人声模仿鹌鹑；不作为鸟类实录锚点。",
+      "additional_note": "",
+      "source_url": "https://freesound.org/s/188042/"
+    },
+    {
+      "source_clip_id": "176769",
+      "event_id": "FIRE",
+      "reason": "uncertain_recording_provenance",
+      "detail": "filtered crackle noise collection for resampling，原标签包含 Keyboard_(musical)/Music，无法确认事件实录。",
+      "additional_note": "",
+      "source_url": "https://freesound.org/s/176769/"
+    },
+    {
+      "source_clip_id": "328842",
+      "event_id": "FOOT",
+      "reason": "speech_annotated",
+      "detail": "FSD50K eval 标注明确含 Speech/Human_voice；为本轮非语音子集剔除，不由标签推断语音占比。",
+      "additional_note": "description 明确 Man yelling hey! ... give it back，语音是命名/描述主体。",
+      "source_url": "https://freesound.org/s/328842/"
+    },
+    {
+      "source_clip_id": "210314",
+      "event_id": "RAIN",
+      "reason": "speech_annotated",
+      "detail": "FSD50K eval 标注明确含 Speech/Human_voice；为本轮非语音子集剔除，不由标签推断语音占比。",
+      "additional_note": "",
+      "source_url": "https://freesound.org/s/210314/"
+    },
+    {
+      "source_clip_id": "275154",
+      "event_id": "ANML",
+      "reason": "speech_annotated",
+      "detail": "FSD50K eval 标注明确含 Speech/Human_voice；为本轮非语音子集剔除，不由标签推断语音占比。",
+      "additional_note": "",
+      "source_url": "https://freesound.org/s/275154/"
+    },
+    {
+      "source_clip_id": "263042",
+      "event_id": "FOOT",
+      "reason": "speech_annotated",
+      "detail": "FSD50K eval 标注明确含 Speech/Human_voice；为本轮非语音子集剔除，不由标签推断语音占比。",
+      "additional_note": "",
+      "source_url": "https://freesound.org/s/263042/"
+    },
+    {
+      "source_clip_id": "156946",
+      "event_id": "FOOT",
+      "reason": "speech_annotated",
+      "detail": "FSD50K eval 标注明确含 Speech/Human_voice；为本轮非语音子集剔除，不由标签推断语音占比。",
+      "additional_note": "",
+      "source_url": "https://freesound.org/s/156946/"
+    }
+  ]
+}
