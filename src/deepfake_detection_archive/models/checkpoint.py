@@ -19,6 +19,7 @@ from .core import (
     MediaFeatureClassifier,
     MediaFeatureConfig,
 )
+from .finetune import VideoFrameClassifier, VideoFrameConfig
 
 
 SCHEMA_VERSION = 1
@@ -49,6 +50,8 @@ def create_model(architecture: str, config: dict[str, Any]) -> nn.Module:
         return FeatureHead(HeadConfig(**config))
     if architecture == "media_feature_head_v1":
         return MediaFeatureClassifier(MediaFeatureConfig(**config))
+    if architecture == "video_frame_finetune_v1":
+        return VideoFrameClassifier(VideoFrameConfig(**config))
     if architecture == "aasist_l_v1" and config == {}:
         return AASISTLite()
     raise ValueError(f"unsupported architecture/config: {architecture}")
@@ -61,6 +64,8 @@ def model_spec(model: nn.Module) -> tuple[str, dict[str, Any]]:
         return "feature_head_v1", asdict(model.config)
     if type(model) is MediaFeatureClassifier:
         return "media_feature_head_v1", asdict(model.config)
+    if type(model) is VideoFrameClassifier:
+        return "video_frame_finetune_v1", asdict(model.config)
     if type(model) is AASISTLite:
         return "aasist_l_v1", {}
     raise ValueError("checkpoint supports only registered model types")

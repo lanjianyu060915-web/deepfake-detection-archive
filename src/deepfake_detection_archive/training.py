@@ -15,7 +15,7 @@ import time
 from collections.abc import Iterable, Mapping
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any, Literal, cast
 
 import torch
 from torch import Tensor, nn
@@ -43,6 +43,7 @@ class TrainConfig:
     max_seconds: float | None = None
     max_grad_norm: float | None = None
     deterministic: bool = True
+    backbone_lr_scale: float = 1.0
 
     def __post_init__(self) -> None:  # noqa: PLR0912
         for name in ("max_epochs", "accumulation_steps", "patience"):
@@ -70,6 +71,8 @@ class TrainConfig:
             minimum_inclusive = name in ("weight_decay", "min_delta")
             if value < 0 or (value == 0 and not minimum_inclusive):
                 raise ValueError(f"{name} is outside its allowed range")
+        if not 0 < self.backbone_lr_scale <= 1:
+            raise ValueError("backbone_lr_scale must lie in (0, 1]")
         if not isinstance(self.device, str):
             raise TypeError("device must be a string")
         try:
@@ -158,6 +161,31 @@ def _prepare_batch(
         labels.to(device, dtype=torch.float32, non_blocking=True),
         lengths,
     )
+
+
+def _parameter_groups(
+    model: nn.Module, parameters: list[Tensor], config: TrainConfig
+) -> list[Any]:
+    """Split AdamW groups so a partially fine-tuned backbone trains slower.
+
+    Only models that expose a `backbone.` prefix take part; everything else
+    keeps the previous single-group behaviour, and a scale of one is a no-op.
+    """
+    if config.backbone_lr_scale == 1.0:
+        return cast(list[Any], list(parameters))
+    slow_ids = {
+        id(parameter)
+        for name, parameter in model.named_parameters()
+        if name.startswith("backbone.") and parameter.requires_grad
+    }
+    slow = [value for value in parameters if id(value) in slow_ids]
+    fast = [value for value in parameters if id(value) not in slow_ids]
+    if not slow or not fast:
+        return cast(list[Any], list(parameters))
+    return [
+        {"params": slow, "lr": config.learning_rate * config.backbone_lr_scale},
+        {"params": fast, "lr": config.learning_rate},
+    ]
 
 
 def _logits(model: nn.Module, inputs: Tensor, lengths: Tensor | None) -> Tensor:
@@ -333,7 +361,9 @@ def train_model(  # noqa: PLR0913, PLR0912, PLR0915
     previous_warn_only = torch.is_deterministic_algorithms_warn_only_enabled()
     model.to(device)
     optimizer = torch.optim.AdamW(
-        parameters, lr=config.learning_rate, weight_decay=config.weight_decay
+        _parameter_groups(model, parameters, config),
+        lr=config.learning_rate,
+        weight_decay=config.weight_decay,
     )
     scaler = torch.amp.GradScaler(
         "cuda", enabled=config.amp and config.amp_dtype == "float16"

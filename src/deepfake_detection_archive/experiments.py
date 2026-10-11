@@ -32,12 +32,14 @@ from .features import (
     Encoder,
     extract_audio_feature_batch,
     extract_features,
+    extract_video_frames,
     load_encoder,
     media_path,
 )
 from .media import AudioConfig, VideoConfig, decode_audio, sample_audio_segments
 from .models.checkpoint import create_model, save_checkpoint, verify_sha256
 from .models.encoders import FrozenAudioEncoder
+from .models.finetune import VideoFrameClassifier
 from .tracking import atomic_json, canonical_json, code_identity, object_hash, utc_now
 from .training import TrainConfig, TrainResult, train_model
 
@@ -106,9 +108,15 @@ class ExperimentConfig:
             "logmel_cnn_v1",
             "aasist_l_v1",
             "media_feature_head_v1",
+            "video_frame_finetune_v1",
         ):
             raise ValueError("unsupported experiment architecture")
-        if self.architecture != "media_feature_head_v1":
+        if self.architecture == "video_frame_finetune_v1":
+            if self.modality != "video" or self.segments != 1 or self.encoder:
+                raise ValueError(
+                    "video frame fine-tuning requires video, segments=1 and no encoder"
+                )
+        elif self.architecture != "media_feature_head_v1":
             if self.modality != "audio" or self.segments != 1 or self.encoder:
                 raise ValueError(
                     "waveform training requires audio, segments=1 and no encoder"
@@ -330,11 +338,14 @@ def _prepare_cache(  # noqa: C901, PLR0912, PLR0913, PLR0915, PLR0917 -- cache a
     cache: Path,
     encoder: Encoder | None,
     output: Path,
+    frame_preprocessing: dict[str, Any] | None = None,
 ) -> dict[str, list[tuple[Path, str, int]]]:
     audio_config, video_config = config.media_configs
     pipeline_files = ["media/__init__.py"]
     if encoder is not None:
         pipeline_files.extend(("features.py", "models/encoders.py"))
+    if frame_preprocessing is not None:
+        pipeline_files.extend(("features.py", "models/finetune.py"))
     pipeline_hash = object_hash(
         {name: file_sha256(Path(__file__).parent / name) for name in pipeline_files}
     )
@@ -347,6 +358,13 @@ def _prepare_cache(  # noqa: C901, PLR0912, PLR0913, PLR0915, PLR0917 -- cache a
         if config.modality == "audio"
         else {"video": asdict(video_config)}
     )
+    if frame_preprocessing is not None:
+        preprocessing = {
+            "video": asdict(video_config),
+            "frame_preprocessing": {
+                key: frame_preprocessing[key] for key in ("input_size", "mean", "std")
+            },
+        }
     cache.mkdir(parents=True, exist_ok=True)
     cache_bytes = sum(path.stat().st_size for path in cache.iterdir() if path.is_file())
     if cache_bytes > config.cache_max_bytes:
@@ -434,6 +452,10 @@ def _prepare_cache(  # noqa: C901, PLR0912, PLR0913, PLR0915, PLR0917 -- cache a
                 else:
                     if record.sample_id in prepared:
                         tensor = prepared.pop(record.sample_id)
+                    elif frame_preprocessing is not None:
+                        tensor = extract_video_frames(
+                            record, root, video_config, frame_preprocessing
+                        )
                     elif encoder is None:
                         decoded = decode_audio(media_path(record, root), audio_config)
                         tensor = torch.from_numpy(
@@ -534,12 +556,19 @@ def run_experiment(config_path: Path) -> TrainResult:
             if config.encoder
             else None
         )
+        # A trainable video backbone must see decoded pixels, not cached
+        # encoder features, so the frame cache replaces the frozen feature pass.
+        frame_preprocessing = (
+            model.preprocessing if isinstance(model, VideoFrameClassifier) else None
+        )
         cache = (
             (base / config.feature_cache).resolve()
             if config.feature_cache is not None
             else output / "prepared"
         )
-        entries = _prepare_cache(selected, config, root, cache, encoder, output)
+        entries = _prepare_cache(
+            selected, config, root, cache, encoder, output, frame_preprocessing
+        )
         # Release the frozen backbone before allocating optimizer state.
         del encoder
         generator = torch.Generator().manual_seed(train_config.seed)

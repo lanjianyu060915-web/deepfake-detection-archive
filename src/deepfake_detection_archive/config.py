@@ -57,9 +57,12 @@ class InferenceConfig:
             "audio_waveform",
             "audio_features",
             "video_features",
+            "video_frames",
         ):
             raise ValueError("unsupported model_kind")
-        if (self.modality == "video") != (self.model_kind == "video_features"):
+        if (self.modality == "video") != (
+            self.model_kind in ("video_features", "video_frames")
+        ):
             raise ValueError("model_kind and modality disagree")
         if self.aggregation not in ("mean", "median", "logsumexp", "trimmed_mean"):
             raise ValueError("unsupported aggregation")

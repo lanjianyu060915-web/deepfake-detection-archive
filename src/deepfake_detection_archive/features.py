@@ -174,3 +174,30 @@ def extract_features(  # noqa: PLR0913, PLR0917
                 raise ValueError("encoder returned invalid feature shape or values")
             result.append(features.cpu().float())
     return torch.cat(result)
+
+
+def extract_video_frames(
+    record: SampleRecord,
+    root: Path,
+    video_config: VideoConfig,
+    preprocessing: dict[str, Any],
+) -> Tensor:
+    """Decode one media into normalized frames [frames, 3, height, width].
+
+    Resize/crop policy, channel order and mean/std normalization are the ones
+    the frozen encoder path already uses, so a trainable backbone sees exactly
+    the preprocessing that the experiment configuration records.
+    """
+    if record.modality != "video":
+        raise ValueError("extract_video_frames requires a video record")
+    size = tuple(preprocessing["input_size"])
+    if size != (3, video_config.height, video_config.width):
+        raise ValueError("video dimensions must match the backbone input_size")
+    video = decode_video(media_path(record, root), video_config)
+    frames = torch.from_numpy(video.frames).permute(0, 3, 1, 2).float().div_(255)
+    mean = frames.new_tensor(preprocessing["mean"])[None, :, None, None]
+    std = frames.new_tensor(preprocessing["std"])[None, :, None, None]
+    result: Tensor = (frames - mean) / std
+    if result.ndim != 4 or not bool(torch.isfinite(result).all()):
+        raise ValueError("decoded frames must be finite [frames, 3, height, width]")
+    return result
