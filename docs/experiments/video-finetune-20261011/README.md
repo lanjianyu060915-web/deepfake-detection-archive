@@ -49,6 +49,11 @@ EER 仍为 16.4384%，与训练期 dev 分数的最大绝对差 0.0275、均值 
 产物：`/var/tmp/lanjianyu-issue21-20261011/e2e-rehearsal/seed42/`
 （`scores.jsonl`、`report.json`、`metadata.json`）。
 
+合并后的训练入口同样验证过：用同一配置、复用原帧缓存跑 1 个 epoch
+（`e2e-rehearsal/train-1epoch-merged/`），`train_loss` 0.6036988273021858、
+`dev_loss` 0.4648769383561121、`dev_eer` 19.178082% 与原始 seed42 第 1 个 epoch
+逐位相同，0 解码失败，说明合并没有改变训练行为。
+
 ## 产物位置
 
 - 逐样本 dev 分数与评测：`outputs/video-finetune-20261011/seed{42,43}/dev-scores.jsonl`、
