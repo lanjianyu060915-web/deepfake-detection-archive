@@ -11,8 +11,8 @@ from pathlib import Path
 from typing import Any
 from unittest import mock
 
-import pyarrow as pa
-import pyarrow.parquet as pq
+import pyarrow as pa  # type: ignore[import-untyped]
+import pyarrow.parquet as pq  # type: ignore[import-untyped]
 
 import prepare_asv_eval
 from deepfake_detection_archive.data.manifest import load_manifest
