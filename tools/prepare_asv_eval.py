@@ -40,9 +40,7 @@ LICENSE_URL = "https://opendatacommons.org/licenses/by/1-0/"
 MIRROR_REPO = "Bisher/ASVspoof_2019_LA"
 MIRROR_REVISION = "aea92dd83a9c56e070c0b1e9f02e7c0d96216a4c"
 EVAL_SHARD = "test-00000-of-00001.parquet"
-EVAL_SHARD_SHA256 = (
-    "8159935a94426bc36308278b23cecd8c4ca2a15b778a1087a4a0441d079c86af"
-)
+EVAL_SHARD_SHA256 = "8159935a94426bc36308278b23cecd8c4ca2a15b778a1087a4a0441d079c86af"
 EVAL_PROTOCOL = "ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt"
 EVAL_PROTOCOL_SHA256 = (
     "84fce576efff092269a0a6ad247d2e9f2f7b4d4e25a4545efb2518da92708036"
@@ -148,7 +146,9 @@ def _materialize_records(
             checksum = _bytes_sha256(audio["bytes"])
             previous = shared.get(checksum)
             if previous is not None and previous != (label, sample_id):
-                raise ValueError(f"identical bytes have conflicting labels: {sample_id}")
+                raise ValueError(
+                    f"identical bytes have conflicting labels: {sample_id}"
+                )
             shared[checksum] = (label, sample_id)
             with (media_root / f"{sample_id}.flac").open("xb") as stream:
                 stream.write(audio["bytes"])

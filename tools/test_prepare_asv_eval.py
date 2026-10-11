@@ -17,6 +17,7 @@ import pyarrow.parquet as pq  # type: ignore[import-untyped]
 
 from deepfake_detection_archive.data.manifest import load_manifest
 
+
 Row = tuple[str, str, str, int]
 
 
@@ -55,10 +56,7 @@ def _write_inputs(root: Path, rows: list[Row]) -> tuple[Path, Path, Path]:
             "speaker_id": pa.array([row[0] for row in rows], pa.string()),
             "audio_file_name": pa.array([row[1] for row in rows], pa.string()),
             "audio": pa.array(
-                [
-                    {"bytes": _flac(row[1]), "path": f"{row[1]}.flac"}
-                    for row in rows
-                ],
+                [{"bytes": _flac(row[1]), "path": f"{row[1]}.flac"} for row in rows],
                 prepare_asv_eval.SCHEMA.field("audio").type,
             ),
             "system_id": pa.array([row[2] for row in rows], pa.string()),
@@ -111,9 +109,7 @@ class PrepareAsvEvalTests(unittest.TestCase):
         records = {r.sample_id: r for r in load_manifest(output / "manifest.jsonl")}
         self.assertEqual(summary["rows"], 5)
         self.assertEqual(summary["label_counts"], {"fake": 3, "real": 2})
-        self.assertEqual(
-            summary["generator_counts"], {"A07": 2, "A08": 1, "human": 2}
-        )
+        self.assertEqual(summary["generator_counts"], {"A07": 2, "A08": 1, "human": 2})
         self.assertEqual(summary["speakers"], 2)
         self.assertEqual(summary["split"], "test")
         self.assertFalse(summary["official_evaluation"])
