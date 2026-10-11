@@ -5,6 +5,7 @@ import os
 import random
 import tempfile
 import time
+from collections import Counter
 from dataclasses import asdict, dataclass, field, replace
 from functools import cached_property
 from pathlib import Path
@@ -37,6 +38,7 @@ from .features import (
     media_path,
 )
 from .media import AudioConfig, VideoConfig, decode_audio, sample_audio_segments
+from .models.ast import ASTClassifier
 from .models.checkpoint import create_model, save_checkpoint, verify_sha256
 from .models.encoders import FrozenAudioEncoder
 from .models.finetune import VideoFrameClassifier
@@ -58,11 +60,13 @@ class ExperimentConfig:
     feature_batch_size: int = 8
     num_workers: int = 0
     balanced_sampling: bool = False
+    balance_sources: bool = False
     segment_samples: int = 64600
     segments: int = 1
     audio: dict[str, Any] = field(default_factory=dict)
     video: dict[str, Any] = field(default_factory=dict)
     encoder: dict[str, Any] = field(default_factory=dict)
+    pretrained: dict[str, Any] = field(default_factory=dict)
     feature_cache: str | None = None
     cache_max_bytes: int = 20 * 1024**3
     schema_version: int = 1
@@ -89,9 +93,20 @@ class ExperimentConfig:
             raise ValueError("num_workers must be a nonnegative integer")
         if type(self.balanced_sampling) is not bool:
             raise ValueError("balanced_sampling must be boolean")
+        if type(self.balance_sources) is not bool:
+            raise ValueError("balance_sources must be boolean")
+        if self.balance_sources and not self.balanced_sampling:
+            raise ValueError("balance_sources requires balanced_sampling")
         if self.modality not in ("audio", "video"):
             raise ValueError("modality must be audio or video")
-        for name in ("model_config", "training", "audio", "video", "encoder"):
+        for name in (
+            "model_config",
+            "training",
+            "audio",
+            "video",
+            "encoder",
+            "pretrained",
+        ):
             if not isinstance(getattr(self, name), dict):
                 raise TypeError(f"{name} must be an object")
         if any(
@@ -108,6 +123,7 @@ class ExperimentConfig:
             "logmel_cnn_v1",
             "aasist_l_v1",
             "media_feature_head_v1",
+            "audio_ast_v1",
             "video_frame_finetune_v1",
         ):
             raise ValueError("unsupported experiment architecture")
@@ -125,17 +141,22 @@ class ExperimentConfig:
             "audio" if self.modality == "audio" else "vision"
         ):
             raise ValueError("encoder kind must match experiment modality")
+        if self.pretrained and (
+            self.architecture != "audio_ast_v1"
+            or set(self.pretrained) != {"checkpoint", "sha256"}
+        ):
+            raise ValueError("pretrained requires AST checkpoint and sha256")
         _ = self.train_config
         audio, _ = self.media_configs
         if self.architecture == "aasist_l_v1" and (
             audio.sample_rate != 16000 or self.segment_samples != 64600
         ):
             raise ValueError("AASIST-L requires 16000 Hz and segment_samples=64600")
-        if (
-            self.architecture == "logmel_cnn_v1"
-            and audio.sample_rate != self.model_config.get("sample_rate", 16000)
-        ):
-            raise ValueError("audio and log-mel sample rates must agree")
+        if self.architecture in (
+            "logmel_cnn_v1",
+            "audio_ast_v1",
+        ) and audio.sample_rate != self.model_config.get("sample_rate", 16000):
+            raise ValueError("audio and model sample rates must agree")
 
     @cached_property
     def train_config(self) -> TrainConfig:
@@ -237,13 +258,22 @@ def _worker_seed(_worker_id: int) -> None:
 
 
 def _balanced_sampler(
-    entries: list[tuple[Path, str, int]], generator: torch.Generator
+    entries: list[tuple[Path, str, int]],
+    generator: torch.Generator,
+    sources: list[str] | None = None,
 ) -> WeightedRandomSampler:
-    labels = torch.tensor([label for _, _, label in entries], dtype=torch.long)
-    counts = torch.bincount(labels, minlength=2)
-    weights = counts.double().reciprocal()[labels]
+    keys = (
+        [
+            (source, label)
+            for source, (_, _, label) in zip(sources, entries, strict=True)
+        ]
+        if sources is not None
+        else [("all", label) for _, _, label in entries]
+    )
+    counts = Counter(keys)
+    weights = [1.0 / counts[key] for key in keys]
     return WeightedRandomSampler(
-        weights.tolist(), len(entries), replacement=True, generator=generator
+        weights, len(entries), replacement=True, generator=generator
     )
 
 
@@ -338,12 +368,15 @@ def _prepare_cache(  # noqa: C901, PLR0912, PLR0913, PLR0915, PLR0917 -- cache a
     cache: Path,
     encoder: Encoder | None,
     output: Path,
+    audio_preprocessor: ASTClassifier | None = None,
     frame_preprocessing: dict[str, Any] | None = None,
 ) -> dict[str, list[tuple[Path, str, int]]]:
     audio_config, video_config = config.media_configs
     pipeline_files = ["media/__init__.py"]
     if encoder is not None:
         pipeline_files.extend(("features.py", "models/encoders.py"))
+    if audio_preprocessor is not None:
+        pipeline_files.append("models/ast.py")
     if frame_preprocessing is not None:
         pipeline_files.extend(("features.py", "models/finetune.py"))
     pipeline_hash = object_hash(
@@ -358,12 +391,11 @@ def _prepare_cache(  # noqa: C901, PLR0912, PLR0913, PLR0915, PLR0917 -- cache a
         if config.modality == "audio"
         else {"video": asdict(video_config)}
     )
+    if audio_preprocessor is not None:
+        preprocessing["ast"] = audio_preprocessor.preprocessing
     if frame_preprocessing is not None:
-        preprocessing = {
-            "video": asdict(video_config),
-            "frame_preprocessing": {
-                key: frame_preprocessing[key] for key in ("input_size", "mean", "std")
-            },
+        preprocessing["frame_preprocessing"] = {
+            key: frame_preprocessing[key] for key in ("input_size", "mean", "std")
         }
     cache.mkdir(parents=True, exist_ok=True)
     cache_bytes = sum(path.stat().st_size for path in cache.iterdir() if path.is_file())
@@ -463,6 +495,10 @@ def _prepare_cache(  # noqa: C901, PLR0912, PLR0913, PLR0915, PLR0917 -- cache a
                                 decoded.waveform, config.segment_samples, 1
                             )[0]
                         )
+                        if audio_preprocessor is not None:
+                            tensor = audio_preprocessor.prepare_waveforms(
+                                tensor[None, :]
+                            )[0]
                     else:
                         tensor = extract_features(
                             record,
@@ -511,7 +547,7 @@ def _prepare_cache(  # noqa: C901, PLR0912, PLR0913, PLR0915, PLR0917 -- cache a
     return entries
 
 
-def run_experiment(config_path: Path) -> TrainResult:
+def run_experiment(config_path: Path) -> TrainResult:  # noqa: PLR0915 -- experiment lifecycle
     """Audit bytes and splits, prepare train/dev only, train and record provenance."""
     config = load_experiment_config(config_path)
     os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
@@ -549,6 +585,11 @@ def run_experiment(config_path: Path) -> TrainResult:
         train_config = config.train_config
         torch.manual_seed(train_config.seed)
         model = create_model(config.architecture, config.model_config)
+        if isinstance(model, ASTClassifier) and config.pretrained:
+            model.initialize_pretrained(
+                (base / config.pretrained["checkpoint"]).resolve(),
+                config.pretrained["sha256"],
+            )
         initial = save_checkpoint(output / "initial.pt", model)
         report["initial_checkpoint"] = initial
         encoder = (
@@ -556,18 +597,22 @@ def run_experiment(config_path: Path) -> TrainResult:
             if config.encoder
             else None
         )
-        # A trainable video backbone must see decoded pixels, not cached
-        # encoder features, so the frame cache replaces the frozen feature pass.
-        frame_preprocessing = (
-            model.preprocessing if isinstance(model, VideoFrameClassifier) else None
-        )
         cache = (
             (base / config.feature_cache).resolve()
             if config.feature_cache is not None
             else output / "prepared"
         )
         entries = _prepare_cache(
-            selected, config, root, cache, encoder, output, frame_preprocessing
+            selected,
+            config,
+            root,
+            cache,
+            encoder,
+            output,
+            audio_preprocessor=model if isinstance(model, ASTClassifier) else None,
+            frame_preprocessing=(
+                model.preprocessing if isinstance(model, VideoFrameClassifier) else None
+            ),
         )
         # Release the frozen backbone before allocating optimizer state.
         del encoder
@@ -583,7 +628,13 @@ def run_experiment(config_path: Path) -> TrainResult:
             loader_options["timeout"] = 30
             loader_options["persistent_workers"] = True
         sampler = (
-            _balanced_sampler(entries["train"], generator)
+            _balanced_sampler(
+                entries["train"],
+                generator,
+                [record.source for record in selected if record.split == "train"]
+                if config.balance_sources
+                else None,
+            )
             if config.balanced_sampling
             else None
         )

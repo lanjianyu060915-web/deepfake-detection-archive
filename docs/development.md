@@ -57,14 +57,25 @@ scripts/devctl run python -m deepfake_detection_archive train \
 | --- | --- |
 | 音频波形 | LogMel CNN / AASIST-L：`train-logmel.example.json`、`train-aasist-l.example.json` |
 | 语音 SSL | 冻结本地 HuBERT ＋轻量头：`train-audio-ssl-head.example.json` |
-| 环境音 | LogMel：`train-logmel-doppelganger.example.json` |
+| 环境音 | LogMel：`train-logmel-doppelganger.example.json`；[多生成器 AST 微调配置](experiments/audio-envsdd-20261011/README.md) |
 | 视频 | 冻结逐帧视觉编码器＋共享头/聚合：`train-video-head.example.json` |
 
 训练只消费 train/dev，dev 早停并选择最佳 checkpoint；holdout 不进入模型选择。
 当前视频实现没有主干微调或时序模型，不能把帧均值当作时序学习。
 CUDA 支持 BF16/FP16 AMP、梯度累积；新方法先用一次小 profile 确定 batch 和输入规模。
-`balanced_sampling` 仅用于 train，`feature_batch_size` 控制冻结特征提取批量。
+`balanced_sampling` 仅用于 train 的类别平衡；同时开启 `balance_sources` 后，
+已存在的来源与类别组合等权抽样，避免小来源被淹没。它不改变 dev 选模指标；
+多来源实验需明确选模使用哪个 dev，并分别报告其他来源。
+`feature_batch_size` 控制冻结特征提取批量。
 `soundfile` 后端只用于原生目标采样率/单声道；通用媒体使用 FFmpeg。
+
+AST 使用 `architecture="audio_ast_v1"`，`model_config.trainable_layers` 指定可训练末端层数，
+末层LayerNorm和分类头始终训练。`pretrained.checkpoint`/`sha256` 指向固定本地
+`model.safetensors`；只缓存输入filterbank，微调层保留梯度。
+训练产出的checkpoint无需预训练目录；推理复用 `model_kind="audio_waveform"`。
+4秒输入可用 `backbone_config.max_length=512`；初始化时按 AST 上游方法居中裁剪
+预训练时间位置编码，两个特殊 token 和频率位置保持原序，减少无用 padding。
+这会改变注意力序列，需重新训练，不能当成旧1024帧模型的无损推理开关。
 
 每次新实验使用新输出目录。输出包含 `experiment.json`、配置和资产标识、失败记录、
 `training/history.json`、`training/best.pt`、`dev-scores.jsonl` 与 `dev-evaluation.json`。
@@ -142,7 +153,9 @@ scripts/devctl run python -m deepfake_detection_archive verify-package \
 
 ## 开发与协作
 
-单 GPU 的占用在 Issue 协调，数据/权重只读，任务 outputs/cache 独立。
+RTX4090 可多人并发使用：先用实际小批量确定显存，按剩余显存和利用率启动有价值的任务，
+在 Issue 记录占用和预计耗时；负载饱和时按总吞吐调整 batch 或错开重任务，不设个人独占。
+每个任务固定独立工作副本和 outputs/cache，数据/权重只读，不修改其他运行任务或共享环境。
 PR 给出实际改动、必要测试、样本数和算法结果；无收益实验如实记录。
 
 ```bash

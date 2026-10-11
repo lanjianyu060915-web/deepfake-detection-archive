@@ -10,11 +10,16 @@
 | ASVspoof LA Parquet | `/srv/shared-data/datasets/asvspoof2019-la/` | 官方 train/dev 物化输入；#9 已接入协议与 FLAC |
 | ASV 训练清单/媒体 | `/var/tmp/lanjianyu-issue9-20261011/data/main/`、`data/LA/` | #9 已完成四次训练和完整dev评分 |
 | 音频检测器及分数 | `/var/tmp/lanjianyu-issue9-20261011/runs/` | LogMel/HuBERT各两种子，见云端音频实验卡 |
+| 语音泛化共享发布 | `/var/tmp/deepfake-audio-generalization-20261011/` | `data`引用#19数据；`outputs`保存原始分数引用和可读评测摘要；HuBERT引用#9可读bundle |
 | HuBERT 本地 bundle | `/var/tmp/lanjianyu-issue9-20261011/hubert/models/hubert-base-ls960/` | #9 已恢复固定版本，内部语音研究 |
 | ViF Panda ZIP | `/srv/shared-data/datasets/vif-panda/` | #10 已导入并复现受控划分 |
 | 受控视频资产及检测器 | `/var/tmp/lanjianyu-issue10-20261011/` | `control/`清单、`resnet18-a1/`编码器、`seed42/`与`seed43/`检测器和分数 |
 | FakeSound ZIP | `/srv/shared-data/datasets/fakesound/FakeSound.zip` | 固定原包、单类诊断，不能训练二分类 |
 | 配对环境音 | `/var/tmp/lanjianyu-issue11-20261011/doppelganger-v2/` | 462 条实际可读媒体，附 manifest/sources/provenance |
+| 环境音检测器与分数 | `/var/tmp/deepfake-nonspeech-logmel-20261011/` | LogMel/HuBERT双种子及本地FP32推理；团队可读 |
+| AST预训练、环境音微调与分数 | `/var/tmp/deepfake-audio-ast-20261011/` | `pretrained/ast-audioset/`固定预训练资源；四次训练、双种子dev及冻结候选holdout推理；团队可读 |
+| EnvSDD 城市环境音扩展 | `/var/tmp/deepfake-audio-expand-20261011/` | `envsdd-urban/` 19,215条；`unseen-dev/`、`unseen-holdout/` 为未训练生成器评测；四组AST、冻结候选和分数团队可读 |
+| AIME音乐与混合训练 | `/var/tmp/deepfake-audio-music-20261011/` | `aime/`主清单630条、105个描述组合；`mixed/`保留Urban train并加入音乐；固定原包、模型与分数团队可读 |
 | FakeSound 诊断清单 | `/var/tmp/lanjianyu-issue11-20261011/fakesound-v1/` | data_root 为其 `media/`，含缺失 real 记录 |
 
 共享原媒体和模型只读；`outputs/`、`cache/` 使用各自任务目录。
@@ -28,11 +33,14 @@
 | `tools/finalize_asvspoof2019.py` | 已完成的官方 ZIP 发布与提取 |
 | `tools/prepare_asvspoof2019.py` | 官方协议和 FLAC → 标准清单 |
 | `tools/prepare_asv_parquet.py` | 固定共享 Parquet 与官方协议 → 原始 FLAC；不重编码 |
+| `tools/prepare_asv_eval.py` | 固定官方eval协议与镜像Parquet → 未知攻击研究清单；既有发布直接复用 |
 | `tools/prepare_asv_main.py` | 既有 ASV 清单 → 训练子集；历史单条排除应显式配置 |
 | `tools/prepare_vif_panda.py` | 固定 ViF ZIP → Panda 媒体、来源与配对关系 |
 | `tools/prepare_video_control.py` | 既有 ViF 与 pilot 划分 → 受控 train/dev 与元数据对照 |
 | `tools/prepare_doppelganger.py` | 固定配对表/原媒体元数据 → 环境音研究清单 |
 | `tools/prepare_fakesound.py` | 固定 FakeSound ZIP → 诊断清单和失败记账 |
+| `tools/prepare_envsdd.py` | `import`：五成员配对环境音，排除旧研究集关联并重划分；`eval`：同一已划分原录音上的 AudioLCM/TangoFlux 诊断 |
+| `tools/prepare_aime.py` | 固定 AIME Parquet → 描述匹配音乐、prompt隔离与未训练生成路径诊断；不推断原曲/artist关系 |
 
 参数见各工具 `--help`，已有输入直接复用，不重复下载或物化。
 通用 `index` 只列媒体；标签、许可和已知组需来源证据，不能从目录猜测。
@@ -49,10 +57,60 @@ scripts/devctl run python -m deepfake_detection_archive train \
   --config configs/train-logmel-doppelganger.local.json
 ```
 
-安排 GPU 后再执行训练。该清单为 train322/dev70/holdout70、153 个连通组；
+GPU 有余量即可执行训练，并在任务 Issue 记录占用。
+该清单为 train322/dev70/holdout70、153 个连通组；
 `manifest.jsonl` 为可训练样本，`inventory.jsonl` 保留全部572条选中项及排除记录。
 最终 manifest SHA-256：`18e30516a73959cca46c55000617b73065f1141d5c7b08d097eba95c7d51ce4b`。
 完整获取命令、来源版本和处理规则见[环境音实验卡](experiments/nonspeech-20261011/README.md)。
+
+EnvSDD 扩展使用[固定分片与署名资源](research/source/envsdd/README.md)，
+下载完成后在新输出目录导入：
+
+```bash
+scripts/devctl run python tools/prepare_envsdd.py import \
+  --parquet-dir /var/tmp/deepfake-audio-expand-20261011/upstream/envsdd \
+  --credits docs/research/source/envsdd/FREESOUNDCREDITS.txt \
+  --urban-metadata /var/tmp/deepfake-audio-expand-20261011/upstream/UrbanSound8K.csv \
+  --exclude-manifest data/nonspeech-logmel-20261011/manifest.jsonl \
+  --output /var/tmp/deepfake-audio-expand-20261011/envsdd-urban
+```
+
+导入只取 UrbanSound8K；同一原切片的 real 与四种生成方法成组使用。
+原切片短于3.99秒、旧研究集关联及失败项整组排除并保留库存，
+所有使用媒体对称处理为4秒、单声道16kHz、峰值0.95的PCM16。
+按原录音与已知上传者重新划分，不沿用存在同录音交叉的上游 train/validation。
+本轮可用19,215条，train13,450/dev2,885/holdout2,880；238个连通组。
+清单 SHA-256：`eebe2feb8b9fe424ee03eedd7286a434d01b6420b6068667b23306240e0e3a22`。
+
+未参与训练的 AudioLCM/TangoFlux 使用独立的 `upstream/extra/` 分片，
+仅按指定 split 的原文件名关联，不重新划分；当前 dev 为577条 real、每生成器577条 fake。
+已发布数据可直接使用，不重复执行以下物化命令：
+
+```bash
+scripts/devctl run python tools/prepare_envsdd.py eval \
+  --parquet-dir /var/tmp/deepfake-audio-expand-20261011/upstream/extra/envsdd \
+  --manifest data/audio-expand-20261011/manifest.jsonl \
+  --data-root data/audio-expand-20261011 --split dev \
+  --output /var/tmp/deepfake-audio-expand-20261011/unseen-dev
+```
+
+真实媒体复用既有处理结果，生成媒体执行相同归一化。评测解码失败保留在清单及分母中。
+
+AIME音乐子集获取90个固定分片、共9,087,224,372字节，逐包官方SHA见
+[来源登记](research/source/aime/README.md)。已发布数据直接复用；新目录导入命令为：
+
+```bash
+scripts/devctl run python tools/prepare_aime.py \
+  --parquet-dir /var/tmp/deepfake-audio-music-20261011/upstream/aime \
+  --resources docs/research/source/aime/resources.json \
+  --output /var/tmp/deepfake-audio-music-20261011/aime --seed 42
+```
+
+主清单105条real、525条fake；train438/dev96/holdout96，零解码失败。
+MusicGen Small/Medium、AudioLDM 2 Large、Riffusion、Mustango参与训练。
+`unseen.jsonl` 另保留dev/holdout各16条real和9条未训练路径fake；训练不读取该清单。
+这些真实音乐已包含在主清单，不能相加当作独立媒体数量。
+按三标签描述组合和已确认重复隔离；未知原曲、artist与album不当成已确认独立实体。
 
 ## 划分与许可
 
@@ -66,7 +124,8 @@ scripts/devctl run python -m deepfake_detection_archive train \
 | ViF Panda/HD-VILA | 非商业计算研究，正式赛用未确认 | [固定来源与许可](research/source/vif-panda/provenance.json) |
 | Doppelganger/FSD50K | CC0 原媒体、CC BY 集合、生成音频附 Stability 条款；内部非商业研究 | [来源/许可和排除项](experiments/nonspeech-20261011/README.md#许可与归属) |
 | FakeSound | 媒体权利 unresolved；不批准训练/正式交付 | [诊断结论](experiments/nonspeech-20261011/README.md) |
-| EnvSDD/Urban 辅助材料 | 归属与许可问题未闭合，未进入当前训练主线 | 整理前记录见 Git `4bbd292` |
+| EnvSDD/UrbanSound8K | 已取得原录音署名；CC BY 4.0 集合与 CC BY-NC 3.0 原媒体下的内部非商业研究，正式赛用未确认 | [来源与原始 credits](research/source/envsdd/README.md) |
+| AIME/MTG-Jamendo | 生成音乐CC BY 4.0、标签CC BY-NC-SA 4.0；真实音乐逐曲CC许可未映射，仅内部非商业研究，正式交付未批准 | [来源与用途](research/source/aime/README.md) |
 
 代码、权重、数据许可分别处理。公开可下载不代表正式比赛使用已获批；
 比赛外部资源要求集中在[比赛要求](competition/requirements.md)。
@@ -74,9 +133,12 @@ scripts/devctl run python -m deepfake_detection_archive train \
 ## 预训练模型
 
 固定来源、模型卡和许可在 [pretrained-resources](research/pretrained-resources/README.md)。
-HuBERT 为语音表征，ResNet18 为当前全帧空间表征，均不是已经训练的鉴伪分类器。
+HuBERT 为语音表征，ResNet18 为当前全帧空间表征，AST 为 AudioSet 通用音频表征。
+这些预训练资源需要另行训练鉴伪头或微调；已训练的检测器位置见上表和实验卡。
 必要时运行 `tools/prepare_pretrained.py` 获取/转换资源；权重和生成登记落在
 `models/pretrained/`，下载缓存在 `cache/pretrained/`。推理只加载已准备的本地资源。
+AST 使用 `scripts/devctl run python tools/prepare_pretrained.py prepare-ast` 获取；
+当前工作副本的 `models/pretrained/ast-audioset` 链接到上述共享只读 bundle。
 
 ## 旧实验资源恢复
 

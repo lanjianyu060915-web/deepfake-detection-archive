@@ -4,6 +4,7 @@ import json
 import shutil
 import socket
 import wave
+from collections import Counter
 from dataclasses import replace
 from pathlib import Path
 from typing import Any
@@ -37,6 +38,22 @@ def test_balanced_sampling_corrects_class_imbalance_and_repeats_by_seed() -> Non
     assert len(first) == len(entries)
     fake_count = sum(entries[index][2] for index in first)
     assert 450 < fake_count < 550
+
+
+def test_source_balancing_preserves_rare_music_and_both_classes() -> None:
+    buckets = [("urban", 0)] * 100 + [("urban", 1)] * 800
+    buckets += [("music", 0)] * 10 + [("music", 1)] * 90
+    entries = [(Path(str(i)), "unused", label) for i, (_, label) in enumerate(buckets)]
+    sources = [source for source, _ in buckets]
+    first = list(_balanced_sampler(entries, torch.Generator().manual_seed(42), sources))
+    second = list(
+        _balanced_sampler(entries, torch.Generator().manual_seed(42), sources)
+    )
+    assert first == second
+    counts = Counter(buckets[index] for index in first)
+    assert len(first) == len(entries)
+    assert all(200 < count < 300 for count in counts.values())
+    assert len(counts) == 4
 
 
 @pytest.fixture
@@ -121,6 +138,56 @@ def _change(path: Path, **changes: Any) -> None:
     path.write_text(json.dumps(config))
 
 
+def test_ast_cached_training_and_offline_checkpoint_roundtrip(
+    experiment: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from transformers import ASTModel  # noqa: PLC0415 -- optional model dependency
+
+    def no_pretrained_download(*args: Any, **kwargs: Any) -> None:
+        raise AssertionError("checkpoint restore must be self-contained")
+
+    monkeypatch.setattr(ASTModel, "from_pretrained", no_pretrained_download)
+    _change(
+        experiment,
+        architecture="audio_ast_v1",
+        model_config={
+            "backbone_config": {
+                "hidden_size": 16,
+                "num_hidden_layers": 2,
+                "num_attention_heads": 2,
+                "intermediate_size": 24,
+                "max_length": 32,
+                "num_mel_bins": 32,
+            },
+            "trainable_layers": 1,
+        },
+    )
+    result = run_experiment(experiment)
+    root = experiment.parent
+    scorer = OfflineScorer(
+        InferenceConfig(
+            manifest="manifest.jsonl",
+            data_root="media",
+            output_dir="inference",
+            modality="audio",
+            device="cpu",
+            checkpoint=str(result.best_checkpoint),
+            checkpoint_sha256=result.checkpoint_sha256,
+            segment_samples=400,
+            audio={"sample_rate": 16000, "backend": "soundfile"},
+        ),
+        root,
+    )
+    records = {r.sample_id: r for r in load_manifest(root / "manifest.jsonl")}
+    scores = load_scores(root / "run" / "dev-scores.jsonl")
+    assert len(scores) == 2
+    for score in scores:
+        assert scorer(records[score.sample_id]) == pytest.approx(score.score, abs=1e-6)
+    report = json.loads((root / "run" / "experiment.json").read_text())
+    assert report["train_count"] == report["dev_count"] == 2
+    assert not report["holdout_accessed"]
+
+
 def test_waveform_experiment_caches_only_train_dev_and_records_provenance(
     experiment: Path,
 ) -> None:
@@ -174,6 +241,7 @@ def test_repeated_epochs_verify_existing_cache_once(
         experiment,
         output_dir="repeat",
         balanced_sampling=True,
+        balance_sources=True,
         training={"max_epochs": 2, "device": "cpu", "seed": 23},
     )
     result = run_experiment(experiment)
@@ -476,6 +544,8 @@ def test_orphan_sidecar_is_subtracted_from_cache_budget(tmp_path: Path) -> None:
         {"segments": 2},
         {"batch_size": True},
         {"num_workers": -1},
+        {"balance_sources": "yes"},
+        {"balance_sources": True, "balanced_sampling": False},
         {"unexpected": 1},
         {"audio": {"sample_rate": 8000}},
         {"training": {"max_epochs": 0}},

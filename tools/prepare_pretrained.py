@@ -1,4 +1,4 @@
-"""Prepare pinned local ResNet18/HuBERT resources for training and inference."""
+"""Prepare pinned local ResNet18/HuBERT/AST resources for training and inference."""
 
 from __future__ import annotations
 
@@ -47,6 +47,14 @@ SOURCES: dict[str, dict[str, Any]] = {
             },
         },
     },
+}
+
+AST_SOURCE = {
+    "repository": "MIT/ast-finetuned-audioset-10-10-0.4593",
+    "revision": "f826b80d28226b62986cc218e5cec390b1096902",
+    "weights_sha256": (
+        "ae0c1e2ad4e1381d851fa9bf298ba13ebc9c5a914cdee2dbe427a6583869924d"
+    ),
 }
 
 
@@ -220,6 +228,53 @@ def download_hubert_xet() -> None:
         print(json.dumps({"downloaded_via_xet": filename, **actual}), flush=True)
 
 
+def prepare_ast() -> None:
+    """Download the unchanged AudioSet AST bundle; retain its source and license."""
+    target = MODELS / "ast-audioset"
+    base = (
+        f"https://huggingface.co/{AST_SOURCE['repository']}"
+        f"/resolve/{AST_SOURCE['revision']}"
+    )
+    files: dict[str, Any] = {}
+    for name in (
+        "config.json",
+        "preprocessor_config.json",
+        "model.safetensors",
+        "README.md",
+    ):
+        expected = (
+            {"sha256": AST_SOURCE["weights_sha256"], "bytes": 346404948}
+            if name == "model.safetensors"
+            else {}
+        )
+        files[name] = {
+            "url": f"{base}/{name}",
+            **fetch(f"{base}/{name}", target / name, expected),
+        }
+    license_url = "https://raw.githubusercontent.com/YuanGongND/ast/master/LICENSE"
+    files["LICENSE"] = {
+        "url": license_url,
+        **fetch(license_url, target / "LICENSE", {}),
+    }
+    (EVIDENCE / "ast-audioset.json").write_text(
+        json.dumps(
+            {
+                "repository": AST_SOURCE["repository"],
+                "revision": AST_SOURCE["revision"],
+                "license": "BSD-3-Clause",
+                "files": files,
+            },
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    print(
+        json.dumps({"prepared": str(target), "revision": AST_SOURCE["revision"]}),
+        flush=True,
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -229,6 +284,7 @@ def main() -> None:
             "download-resnet",
             "download-hubert-xet",
             "convert",
+            "prepare-ast",
         ),
     )
     phase = parser.parse_args().phase
@@ -238,6 +294,7 @@ def main() -> None:
         "download-resnet": lambda: download(("resnet18-a1",)),
         "download-hubert-xet": download_hubert_xet,
         "convert": convert,
+        "prepare-ast": prepare_ast,
     }[phase]()
 
 

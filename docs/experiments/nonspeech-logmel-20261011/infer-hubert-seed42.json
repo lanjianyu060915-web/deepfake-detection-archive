@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "manifest": "../../../outputs/nonspeech-logmel-20261011/dev-manifest.jsonl",
+  "data_root": "../../../data/nonspeech-logmel-20261011",
+  "output_dir": "../../../outputs/nonspeech-logmel-20261011/hubert-seed42-offline-dev",
+  "modality": "audio",
+  "model_kind": "audio_features",
+  "checkpoint": "../../../outputs/nonspeech-logmel-20261011/hubert-seed42/training/best.pt",
+  "checkpoint_sha256": "d495e7debeaaa2555ee59c759600d84280debe181450eaadea1344e9a4399ae0",
+  "device": "cuda",
+  "batch_size": 32,
+  "segment_samples": 64600,
+  "segments": 1,
+  "aggregation": "mean",
+  "audio": {
+    "sample_rate": 16000,
+    "backend": "soundfile"
+  },
+  "encoder": {
+    "kind": "audio",
+    "model_dir": "../../../models/nonspeech-hubert-20261011",
+    "expected_hashes": {
+      "config.json": "56be398848bbd9cbc720172b0d45b2f01cac7652f2968f0f31f5faf9f2986acc",
+      "model.safetensors": "411e8e7f967ba2a68bc6fba072e6374effc390225c7fdb75b8731edd95717e15",
+      "preprocessor_config.json": "4a93853b74278b7c769d07f5a861e5d12ceb5db2bced5620d335f87238cb9e86"
+    }
+  },
+  "seed": 42
+}

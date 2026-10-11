@@ -1,0 +1,746 @@
+{
+  "repo": "disco-eth/AIME",
+  "revision": "b84d4be5eda830b6eb714998569dba73530f2601",
+  "group_indices": {
+    "real_100": [
+      19,
+      39,
+      40,
+      60,
+      81,
+      101,
+      119,
+      136
+    ],
+    "musicgen_small": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19
+    ],
+    "audioldm2_large": [
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81
+    ],
+    "riffusion": [
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119
+    ],
+    "mustango": [
+      120,
+      121,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      131,
+      132,
+      133,
+      134,
+      135,
+      136
+    ],
+    "musicgen_medium": [
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39
+    ]
+  },
+  "total_bytes": 9087224372,
+  "files": [
+    {
+      "index": 3,
+      "path": "data/train-00003-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00003-of-00210.parquet",
+      "size": 75388685,
+      "sha256": "3613451c58e5044be7936b227b11aa6acce68905ad5bf8f0b73409665a2da369"
+    },
+    {
+      "index": 4,
+      "path": "data/train-00004-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00004-of-00210.parquet",
+      "size": 40401539,
+      "sha256": "46b536c90324584f321a0d95ac2654a043817fd1848cbb410d1e25ff7f8f25e2"
+    },
+    {
+      "index": 5,
+      "path": "data/train-00005-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00005-of-00210.parquet",
+      "size": 40401538,
+      "sha256": "f441a006a15cf8b4de277fe61cd3f64a52d7a5ecb2776911320c96712525f23c"
+    },
+    {
+      "index": 6,
+      "path": "data/train-00006-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00006-of-00210.parquet",
+      "size": 40401536,
+      "sha256": "a4bd19b213e3f001ff910c5f507afe42d3d3bd71a7f5941622c91d29a4530dda"
+    },
+    {
+      "index": 7,
+      "path": "data/train-00007-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00007-of-00210.parquet",
+      "size": 40401537,
+      "sha256": "6e9d4c95ae082135240c20bad943590b7cc8173e1cf14d7b533499f763ba4f13"
+    },
+    {
+      "index": 8,
+      "path": "data/train-00008-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00008-of-00210.parquet",
+      "size": 40401510,
+      "sha256": "8481ca761f10d290f620c81a63bb07ada4115bd4108390fe850d6798ba6c70fd"
+    },
+    {
+      "index": 9,
+      "path": "data/train-00009-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00009-of-00210.parquet",
+      "size": 40401551,
+      "sha256": "cd67a8bc5047d90fd7d50592c27f9a998e98e4bfbb1faeb86382e8b48ef98ed2"
+    },
+    {
+      "index": 10,
+      "path": "data/train-00010-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00010-of-00210.parquet",
+      "size": 40401483,
+      "sha256": "7d11a0bcc92a96ab81f0fd72420996a8b98b988ea2d021d34d8382ad8700b3ab"
+    },
+    {
+      "index": 11,
+      "path": "data/train-00011-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00011-of-00210.parquet",
+      "size": 40401455,
+      "sha256": "8f6a411abb98520ded37dc8851a869b3708bd9d77c33aa662a7a9c1e8561bd5f"
+    },
+    {
+      "index": 12,
+      "path": "data/train-00012-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00012-of-00210.parquet",
+      "size": 40401514,
+      "sha256": "c6f35b38e493f2aa525f2381e35f28f2d6110a0d50b85d6b37e0da2f000bdc04"
+    },
+    {
+      "index": 13,
+      "path": "data/train-00013-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00013-of-00210.parquet",
+      "size": 40401474,
+      "sha256": "f4749da649faf5cbf46815c0879eaa7d8f58096c5658d3adcfc59f229d476182"
+    },
+    {
+      "index": 14,
+      "path": "data/train-00014-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00014-of-00210.parquet",
+      "size": 40401521,
+      "sha256": "5b5547f45d69534162e3a6704de79310f8ddb92e242c6458dc2ca97bda5d336a"
+    },
+    {
+      "index": 15,
+      "path": "data/train-00015-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00015-of-00210.parquet",
+      "size": 40401482,
+      "sha256": "55b9fbbd401041b8af001f9ff6bfc18499d066a108ee5bb42e21518cd8b05e3d"
+    },
+    {
+      "index": 16,
+      "path": "data/train-00016-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00016-of-00210.parquet",
+      "size": 40401536,
+      "sha256": "77ca638eebf175fd7f5e1caf3f7b5ff608de69edf18ca0c7246295c1ca690c0f"
+    },
+    {
+      "index": 17,
+      "path": "data/train-00017-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00017-of-00210.parquet",
+      "size": 40401492,
+      "sha256": "a52af12dcbd5fc0959cea17d682fc3e7c0707716e04f53aeb6cd4fa6313c5bd1"
+    },
+    {
+      "index": 18,
+      "path": "data/train-00018-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00018-of-00210.parquet",
+      "size": 40401463,
+      "sha256": "44a866b1cd0fb633814581e004b1f31058cd392435fc70643c1ad82d21c2b812"
+    },
+    {
+      "index": 19,
+      "path": "data/train-00019-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00019-of-00210.parquet",
+      "size": 1097420451,
+      "sha256": "b0fe83c97f906456eb551c29cb573df5e08bb769734f933494475512c2783b85"
+    },
+    {
+      "index": 23,
+      "path": "data/train-00023-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00023-of-00210.parquet",
+      "size": 165350213,
+      "sha256": "e958aadf87c042924e719dc2ab6636d90f684655bbe39e457d0338c0ed8c76b2"
+    },
+    {
+      "index": 24,
+      "path": "data/train-00024-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00024-of-00210.parquet",
+      "size": 40401537,
+      "sha256": "3e4bc600f3687a5fa6476da4bdc2af3396c05baaa209ff6f89040868ba9fc5dc"
+    },
+    {
+      "index": 25,
+      "path": "data/train-00025-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00025-of-00210.parquet",
+      "size": 40401422,
+      "sha256": "82edd71263a1a48dd9f75cca01d3f9d594f2891086aba188b39991a065e3ac30"
+    },
+    {
+      "index": 26,
+      "path": "data/train-00026-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00026-of-00210.parquet",
+      "size": 40401546,
+      "sha256": "2d33bc46ad0270b1829e8cb1df11818aec60b139a110a716f050484ac908f492"
+    },
+    {
+      "index": 27,
+      "path": "data/train-00027-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00027-of-00210.parquet",
+      "size": 40401622,
+      "sha256": "078934e3bdfefce4a7b1d0f9b22ac0b209b427d58d6c4c05851c07305565cc6c"
+    },
+    {
+      "index": 28,
+      "path": "data/train-00028-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00028-of-00210.parquet",
+      "size": 40401517,
+      "sha256": "74bc6713b54c3ed20dedb55cf3eb7865241bf285f0b1f0e0742a83c22946488f"
+    },
+    {
+      "index": 29,
+      "path": "data/train-00029-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00029-of-00210.parquet",
+      "size": 40401489,
+      "sha256": "97dd89023a4beab1990e35a6d3860ba7ee0227733075eee4b5666b9d5ee20a9b"
+    },
+    {
+      "index": 30,
+      "path": "data/train-00030-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00030-of-00210.parquet",
+      "size": 40401546,
+      "sha256": "ec86c5ca7cbd077f932eecc4c86bb0c97d85fd55c014cd1e4d2833ea7e9d0b06"
+    },
+    {
+      "index": 31,
+      "path": "data/train-00031-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00031-of-00210.parquet",
+      "size": 40401424,
+      "sha256": "3d04113f8c94be15ed67bfd71bf0b269da554181012173f568d4de94a92d3c95"
+    },
+    {
+      "index": 32,
+      "path": "data/train-00032-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00032-of-00210.parquet",
+      "size": 40401494,
+      "sha256": "d919a3f11148d04fd79d82d3d3bb1ae9c85db66f7eff0fd69105a0035b3f22e9"
+    },
+    {
+      "index": 33,
+      "path": "data/train-00033-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00033-of-00210.parquet",
+      "size": 40401447,
+      "sha256": "b9669ad4b2b7d2f30468afdd0888e4f65c381120f0d644eef45519eb6c22ef10"
+    },
+    {
+      "index": 34,
+      "path": "data/train-00034-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00034-of-00210.parquet",
+      "size": 40401519,
+      "sha256": "d0c23c6e2f4c030f969b380579a6f3825616e3351ffc235f53f4f5751f5773f6"
+    },
+    {
+      "index": 35,
+      "path": "data/train-00035-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00035-of-00210.parquet",
+      "size": 40401536,
+      "sha256": "8c5e01bf8f06641e413d5cc5928c6a92d6a05b223e5226ffca087ade6bbf0df7"
+    },
+    {
+      "index": 36,
+      "path": "data/train-00036-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00036-of-00210.parquet",
+      "size": 40401497,
+      "sha256": "37b0478667fc75c3daa8aac25d51ec215b7f3a44b516cd3d1f5ea7a4e36b93db"
+    },
+    {
+      "index": 37,
+      "path": "data/train-00037-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00037-of-00210.parquet",
+      "size": 40401423,
+      "sha256": "6236883e70124d9d36fa5d91c029db62cbd936feb35dd9a2cc1bf7cdb9067fdd"
+    },
+    {
+      "index": 38,
+      "path": "data/train-00038-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00038-of-00210.parquet",
+      "size": 40401519,
+      "sha256": "eb082afa58e9d217260721908f6086950c85748ca0044477417ebdede21a7318"
+    },
+    {
+      "index": 39,
+      "path": "data/train-00039-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00039-of-00210.parquet",
+      "size": 112285371,
+      "sha256": "1cb83e4ea663c5fb6402f4a59ebc62b614e0e39daaa6ae97942c76606c2554e2"
+    },
+    {
+      "index": 40,
+      "path": "data/train-00040-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00040-of-00210.parquet",
+      "size": 937473015,
+      "sha256": "9964b94101c6f7fe8c7542028293ccdffe44bf40dc96eee0550aac08b3ed4a55"
+    },
+    {
+      "index": 60,
+      "path": "data/train-00060-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00060-of-00210.parquet",
+      "size": 524021331,
+      "sha256": "9a7c91258266ba2abc42e3c0e3aebfa1e44099d9552ae44802e804239a0f3c6d"
+    },
+    {
+      "index": 64,
+      "path": "data/train-00064-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00064-of-00210.parquet",
+      "size": 189496165,
+      "sha256": "690760c07e36f0306453b12d6b7646dc8075927e0c209f1f31b7e75b60cd0b15"
+    },
+    {
+      "index": 65,
+      "path": "data/train-00065-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00065-of-00210.parquet",
+      "size": 19311260,
+      "sha256": "968c4743a0f2c242a4ef554c5357ff097333843800c05f36a05da247037bde6b"
+    },
+    {
+      "index": 66,
+      "path": "data/train-00066-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00066-of-00210.parquet",
+      "size": 19315947,
+      "sha256": "d50f404b634323a18777c23e3b8ea9f598dfde293429ab3fe22ab435d6459cf2"
+    },
+    {
+      "index": 67,
+      "path": "data/train-00067-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00067-of-00210.parquet",
+      "size": 19292102,
+      "sha256": "da6394dd4a47a39926f97b24105b331140bd1c4e20894e02cf598bcddc19a4cf"
+    },
+    {
+      "index": 68,
+      "path": "data/train-00068-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00068-of-00210.parquet",
+      "size": 19275337,
+      "sha256": "706b610e0d7d0f4d4ae2a118468d7f5c0f70f3cedcc83f4c1d6b8b41551af485"
+    },
+    {
+      "index": 69,
+      "path": "data/train-00069-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00069-of-00210.parquet",
+      "size": 19220621,
+      "sha256": "73053413d73ed78ac21acc0c4db3fb3b403ce2ed9d5b397157e7d1d027d39c16"
+    },
+    {
+      "index": 70,
+      "path": "data/train-00070-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00070-of-00210.parquet",
+      "size": 19251624,
+      "sha256": "e2b0c620906c68c64810b78ab4c14fa65dd0251d4a6973754616aa53fecf5fc2"
+    },
+    {
+      "index": 71,
+      "path": "data/train-00071-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00071-of-00210.parquet",
+      "size": 19312202,
+      "sha256": "669249a0d29601d827a7fe748eed34c8a0ff23e625b786c51c64ac892b11393c"
+    },
+    {
+      "index": 72,
+      "path": "data/train-00072-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00072-of-00210.parquet",
+      "size": 19200896,
+      "sha256": "8a3274f8f7bf50e07ca9703aaa1efc61bc62e1c5414933cd963b1421b3ee8183"
+    },
+    {
+      "index": 73,
+      "path": "data/train-00073-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00073-of-00210.parquet",
+      "size": 19280490,
+      "sha256": "0ba2f074ca7d0c65c4bc63965f5e4bcb4b42240a5d42409ec0dd481bdee1e5e3"
+    },
+    {
+      "index": 74,
+      "path": "data/train-00074-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00074-of-00210.parquet",
+      "size": 19205813,
+      "sha256": "fe4d3e32bb605b772fb34d188ae0fa4abed2db47c8bf39d5e9265d0943003a39"
+    },
+    {
+      "index": 75,
+      "path": "data/train-00075-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00075-of-00210.parquet",
+      "size": 19286787,
+      "sha256": "7fcd3e7a607b1d3082f9406b514e07f0ffec531267223e94ceca13086738f093"
+    },
+    {
+      "index": 76,
+      "path": "data/train-00076-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00076-of-00210.parquet",
+      "size": 19277764,
+      "sha256": "963f113fcc4e99d19ccc1f4fb5b8ab818c8bf0028e7c711463e103400e6324ce"
+    },
+    {
+      "index": 77,
+      "path": "data/train-00077-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00077-of-00210.parquet",
+      "size": 19341313,
+      "sha256": "8f897e61b84b7de292dbc37837fe01c303356c9f4636cd3709b0bd029a540938"
+    },
+    {
+      "index": 78,
+      "path": "data/train-00078-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00078-of-00210.parquet",
+      "size": 19070924,
+      "sha256": "da1e3f6437364e900a3b2262925d67f32db884ad05d48322bd5c62a1ce1c1c2b"
+    },
+    {
+      "index": 79,
+      "path": "data/train-00079-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00079-of-00210.parquet",
+      "size": 19198797,
+      "sha256": "43a0a305f8b94fafaf73134cc3f6e71b41bdf6c1235d4c457c0677c8cf2ea19b"
+    },
+    {
+      "index": 80,
+      "path": "data/train-00080-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00080-of-00210.parquet",
+      "size": 19178171,
+      "sha256": "153397693ff9166e8d47b77d9b29e9227cadd6bddcac8eb09a9b08a28df435bd"
+    },
+    {
+      "index": 81,
+      "path": "data/train-00081-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00081-of-00210.parquet",
+      "size": 1050915149,
+      "sha256": "d051b6293ad8916d19598a72400069de1d905d841e6ac4d6d751b2f83fdb0fe6"
+    },
+    {
+      "index": 101,
+      "path": "data/train-00101-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00101-of-00210.parquet",
+      "size": 395637047,
+      "sha256": "270f7156d8bd9f30ebdc1a02ba8f7cb249945cc724da2e14f3a25b14d3096dbf"
+    },
+    {
+      "index": 102,
+      "path": "data/train-00102-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00102-of-00210.parquet",
+      "size": 689751466,
+      "sha256": "ca0294228aa649b12de55dcd8e038eb483eae6979a98fcfa34d2677ebe7cddf8"
+    },
+    {
+      "index": 103,
+      "path": "data/train-00103-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00103-of-00210.parquet",
+      "size": 27977812,
+      "sha256": "43470296f593009880391ad5ad589beaa051e332d1e531f3927e87164fc53ed1"
+    },
+    {
+      "index": 104,
+      "path": "data/train-00104-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00104-of-00210.parquet",
+      "size": 27977574,
+      "sha256": "214a1616889581739218ce34673e038b77d09dba241c8700aecfc829cf0f9640"
+    },
+    {
+      "index": 105,
+      "path": "data/train-00105-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00105-of-00210.parquet",
+      "size": 27977526,
+      "sha256": "687160254edce59c8e461ef94f35508f7380143d720c160cd48adc19677a1fcd"
+    },
+    {
+      "index": 106,
+      "path": "data/train-00106-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00106-of-00210.parquet",
+      "size": 27977491,
+      "sha256": "ba243089708effcd5ce90a106d6df2165d0d127c1f59ffc196c5540c98d1a795"
+    },
+    {
+      "index": 107,
+      "path": "data/train-00107-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00107-of-00210.parquet",
+      "size": 27977759,
+      "sha256": "565ad6909c40b9227f4c5f6dba22e6caa4e22e232b48f73e041a440d6fecb4e0"
+    },
+    {
+      "index": 108,
+      "path": "data/train-00108-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00108-of-00210.parquet",
+      "size": 27977819,
+      "sha256": "5ae1db822c071e8cb20abf1297b03b01964f0b85e6f5468878e3ebf7d4dc4779"
+    },
+    {
+      "index": 109,
+      "path": "data/train-00109-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00109-of-00210.parquet",
+      "size": 27977715,
+      "sha256": "ae58f45eae83fee0664c6be9a9f823e0094b9dccc27859442a8170910a335845"
+    },
+    {
+      "index": 110,
+      "path": "data/train-00110-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00110-of-00210.parquet",
+      "size": 27977348,
+      "sha256": "877026cfe673d7797d3cfdf7c026e513f580d7e4c292608dd13908568944d5b6"
+    },
+    {
+      "index": 111,
+      "path": "data/train-00111-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00111-of-00210.parquet",
+      "size": 27976436,
+      "sha256": "17f40c2fba8ec0bcc49558d09624cb135d152a54e4ef3be474487a922d7da31c"
+    },
+    {
+      "index": 112,
+      "path": "data/train-00112-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00112-of-00210.parquet",
+      "size": 27975354,
+      "sha256": "77d8e2d6384415c106be3186b6717286f6c209ce245a3d0f4e07cfbae64f03d0"
+    },
+    {
+      "index": 113,
+      "path": "data/train-00113-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00113-of-00210.parquet",
+      "size": 27977025,
+      "sha256": "e1c8802895440c5ced08512ac99a2372f31cd05f5ac919ab96bba6d765893c4b"
+    },
+    {
+      "index": 114,
+      "path": "data/train-00114-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00114-of-00210.parquet",
+      "size": 27975876,
+      "sha256": "e64b6aad98325873120a78652ca4237a07ad8cd64e16eaecb203b596cabeaf94"
+    },
+    {
+      "index": 115,
+      "path": "data/train-00115-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00115-of-00210.parquet",
+      "size": 27977719,
+      "sha256": "df48b92d449fff434e41fa31cdfad8b7ebb91ef2f99a7114d34d101086cebc06"
+    },
+    {
+      "index": 116,
+      "path": "data/train-00116-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00116-of-00210.parquet",
+      "size": 27977582,
+      "sha256": "0a38aa61eaa447becf3bf9abb0151add55343f1aa9765030bcaaa73552147ff2"
+    },
+    {
+      "index": 117,
+      "path": "data/train-00117-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00117-of-00210.parquet",
+      "size": 27977406,
+      "sha256": "1fdc587621d8f6c34ef13140ded05defef57c360ab21956bed94b38452f1acbc"
+    },
+    {
+      "index": 118,
+      "path": "data/train-00118-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00118-of-00210.parquet",
+      "size": 27977783,
+      "sha256": "3dc57d82180b870f753921f09912192dcfb867104b28e6a87f96c9d3f190c17d"
+    },
+    {
+      "index": 119,
+      "path": "data/train-00119-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00119-of-00210.parquet",
+      "size": 704726880,
+      "sha256": "b5396d8c6ea6bf2b394714a66c51b876435092ccb01ec08eab6c3644841cfb68"
+    },
+    {
+      "index": 120,
+      "path": "data/train-00120-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00120-of-00210.parquet",
+      "size": 189687786,
+      "sha256": "949065714e28713b4c7dfcd841a7de332892dbb848ede02505e858152cffae7d"
+    },
+    {
+      "index": 121,
+      "path": "data/train-00121-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00121-of-00210.parquet",
+      "size": 9682715,
+      "sha256": "73bd40834a418be69471943626ea30eaedf8b3b0c31ebe7936c3bf48cc4418da"
+    },
+    {
+      "index": 122,
+      "path": "data/train-00122-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00122-of-00210.parquet",
+      "size": 9687705,
+      "sha256": "c8122ebe5980a199bc32f931d36e313da9362fe1704b786b9fba146e9b4a2cbd"
+    },
+    {
+      "index": 123,
+      "path": "data/train-00123-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00123-of-00210.parquet",
+      "size": 9809179,
+      "sha256": "48258f8b2de71ed30e7a0223880f4dc4371de85554d87fe882dd1693427908cf"
+    },
+    {
+      "index": 124,
+      "path": "data/train-00124-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00124-of-00210.parquet",
+      "size": 9701629,
+      "sha256": "ac92643f8172da09aa6ca61e7e04346e343dfe545e843799818746079e85a69b"
+    },
+    {
+      "index": 125,
+      "path": "data/train-00125-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00125-of-00210.parquet",
+      "size": 9895311,
+      "sha256": "a4a966daba7be03fbd30ed6101beea9c641ff95933e2f7fc70dc34b19831b437"
+    },
+    {
+      "index": 126,
+      "path": "data/train-00126-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00126-of-00210.parquet",
+      "size": 9691528,
+      "sha256": "84548bd9670ee63b78d789dc72eef393549450fcf4af232a8ffb9ac0850323e9"
+    },
+    {
+      "index": 127,
+      "path": "data/train-00127-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00127-of-00210.parquet",
+      "size": 9537241,
+      "sha256": "d571040d146d62c07077ebf9000b8519218c1c04d870714ca84c3e4dd0fb5a14"
+    },
+    {
+      "index": 128,
+      "path": "data/train-00128-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00128-of-00210.parquet",
+      "size": 9574342,
+      "sha256": "a0490c10fcefa81fcc0c1cb035b62f45e8d7ef2e2b4e5a8009369f1eda4a9497"
+    },
+    {
+      "index": 129,
+      "path": "data/train-00129-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00129-of-00210.parquet",
+      "size": 9932386,
+      "sha256": "3177a72a2661f00a15968fb006dd40263163d1a2329a56e135cfab88df6904ba"
+    },
+    {
+      "index": 130,
+      "path": "data/train-00130-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00130-of-00210.parquet",
+      "size": 9686136,
+      "sha256": "86820d1c9d0c73d94317ccc138a68e9056dfba3d8ee554c3e80db02412e4052f"
+    },
+    {
+      "index": 131,
+      "path": "data/train-00131-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00131-of-00210.parquet",
+      "size": 9762211,
+      "sha256": "3de4c884c6217effee4139acfdec845e100671cca9d50774d4447e1543ac2a2b"
+    },
+    {
+      "index": 132,
+      "path": "data/train-00132-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00132-of-00210.parquet",
+      "size": 9827266,
+      "sha256": "ed7cc4f0185aab91e82beb93a99d98d9c841bcd7d192a92c48755a8b62e6013d"
+    },
+    {
+      "index": 133,
+      "path": "data/train-00133-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00133-of-00210.parquet",
+      "size": 9756687,
+      "sha256": "e6567403c629d80ebea98b897b5cd5973e75c4a50bbbebbda3acfd8da4c3ef5a"
+    },
+    {
+      "index": 134,
+      "path": "data/train-00134-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00134-of-00210.parquet",
+      "size": 9750930,
+      "sha256": "71e211bb1baf4eee5a1eaf6ea93618122f66ca4c5fdb4d3e6fd7867bec760a3b"
+    },
+    {
+      "index": 135,
+      "path": "data/train-00135-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00135-of-00210.parquet",
+      "size": 9890624,
+      "sha256": "f4a4f4c64d363cd76c3792e442fec0b3ca70fbeea44685ae514cc4884aad3397"
+    },
+    {
+      "index": 136,
+      "path": "data/train-00136-of-00210.parquet",
+      "url": "https://huggingface.co/datasets/disco-eth/AIME/resolve/b84d4be5eda830b6eb714998569dba73530f2601/data/train-00136-of-00210.parquet",
+      "size": 841183481,
+      "sha256": "a513ea745af582d97dc469c12524e754eda4b594052aa9e5cc66085bca8bc1ee"
+    }
+  ]
+}

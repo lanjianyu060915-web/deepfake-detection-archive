@@ -27,6 +27,7 @@ from .models import (
     load_checkpoint,
     pool_media_scores,
 )
+from .models.ast import ASTClassifier
 from .models.core import PoolingMethod
 
 
@@ -66,9 +67,9 @@ class OfflineScorer:
             self.encoder = None
             self.frame_preprocessing = self.model.preprocessing
         elif config.model_kind == "audio_waveform":
-            if not isinstance(self.model, (LogMelCNN, AASISTLite)):
-                raise ValueError("audio_waveform requires logmel_cnn or AASIST-L")
-            if isinstance(self.model, LogMelCNN) and (
+            if not isinstance(self.model, (LogMelCNN, AASISTLite, ASTClassifier)):
+                raise ValueError("audio_waveform requires LogMel, AASIST-L or AST")
+            if isinstance(self.model, (LogMelCNN, ASTClassifier)) and (
                 self.model.config.sample_rate != self.audio.sample_rate
             ):
                 raise ValueError("decoder/model sample rates disagree")
@@ -120,6 +121,8 @@ class OfflineScorer:
                 self.config.segments,
             )
         )
+        if isinstance(self.model, ASTClassifier):
+            observations = self.model.prepare_waveforms(observations)
         scores = [
             self.model(
                 observations[start : start + self.config.batch_size].to(self.device)

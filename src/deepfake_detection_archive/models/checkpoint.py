@@ -11,6 +11,7 @@ import torch
 from torch import nn
 
 from .aasist import AASISTLite
+from .ast import ASTClassifier, ASTConfig
 from .core import (
     FeatureHead,
     HeadConfig,
@@ -54,6 +55,8 @@ def create_model(architecture: str, config: dict[str, Any]) -> nn.Module:
         return VideoFrameClassifier(VideoFrameConfig(**config))
     if architecture == "aasist_l_v1" and config == {}:
         return AASISTLite()
+    if architecture == "audio_ast_v1":
+        return ASTClassifier(ASTConfig(**config))
     raise ValueError(f"unsupported architecture/config: {architecture}")
 
 
@@ -68,6 +71,8 @@ def model_spec(model: nn.Module) -> tuple[str, dict[str, Any]]:
         return "video_frame_finetune_v1", asdict(model.config)
     if type(model) is AASISTLite:
         return "aasist_l_v1", {}
+    if type(model) is ASTClassifier:
+        return "audio_ast_v1", asdict(model.config)
     raise ValueError("checkpoint supports only registered model types")
 
 

@@ -12,10 +12,10 @@ import os
 import random
 import tempfile
 import time
-from collections.abc import Iterable, Mapping
+from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, Literal, cast
+from typing import Any, Literal
 
 import torch
 from torch import Tensor, nn
@@ -164,7 +164,7 @@ def _prepare_batch(
 
 
 def _parameter_groups(
-    model: nn.Module, parameters: list[Tensor], config: TrainConfig
+    model: nn.Module, parameters: Sequence[nn.Parameter], config: TrainConfig
 ) -> list[Any]:
     """Split AdamW groups so a partially fine-tuned backbone trains slower.
 
@@ -172,7 +172,7 @@ def _parameter_groups(
     keeps the previous single-group behaviour, and a scale of one is a no-op.
     """
     if config.backbone_lr_scale == 1.0:
-        return cast(list[Any], list(parameters))
+        return list(parameters)
     slow_ids = {
         id(parameter)
         for name, parameter in model.named_parameters()
@@ -181,7 +181,7 @@ def _parameter_groups(
     slow = [value for value in parameters if id(value) in slow_ids]
     fast = [value for value in parameters if id(value) not in slow_ids]
     if not slow or not fast:
-        return cast(list[Any], list(parameters))
+        return list(parameters)
     return [
         {"params": slow, "lr": config.learning_rate * config.backbone_lr_scale},
         {"params": fast, "lr": config.learning_rate},
