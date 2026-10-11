@@ -44,15 +44,15 @@ HuBERT batch32编码3批0.423秒、allocated2.35GiB/reserved2.86GiB。它们是�
 数据准备（已有已验证ZIP，不重复下载或归档校验）：
 
 ```bash
-uv run --no-sync python tools/prepare_asvspoof2019.py \
+scripts/devctl run python tools/prepare_asvspoof2019.py \
   --root data/asvspoof2019-la/LA --output-dir data/asvspoof2019-la-main
-uv run --no-sync python tools/prepare_asv_main.py \
+scripts/devctl run python tools/prepare_asv_main.py \
   --manifest data/asvspoof2019-la-main/manifest.jsonl \
   --root data/asvspoof2019-la/LA \
   --sources data/asvspoof2019-la-pilot/sources.jsonl \
   --output-dir data/asvspoof2019-la-main --exclude-train LA_T_1023667
 OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 OPENBLAS_NUM_THREADS=1 \
-  uv run --no-sync python -m deepfake_detection_archive train --config \
+  scripts/devctl run python -m deepfake_detection_archive train --config \
   docs/experiments/asv-main-20261009/logmel-seed42.json
 ```
 
@@ -67,7 +67,8 @@ OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 OPENBLAS_NUM_THREADS=1 \
 ## 已完成结果与云端接续
 
 2026-10-10核对：**LogMel seed42已完成；LogMel43与HuBERT42/43尚未训练**。
-后续运行移交云端，任务见[Issue01](../../handoff/issues/01-audio-comparison.md)。
+后续运行移交云端，任务见[音频任务 #9](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/9)。
+2026-10-11四组[云端双种子实验](../asv-cloud-20261011/README.md)已交付，本页保留旧主机结果。
 
 | 指标 | 实际值 |
 | --- | ---: |
@@ -92,4 +93,4 @@ OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 OPENBLAS_NUM_THREADS=1 \
 原run记录源码commit `9eb78ee`、`dirty=true`及源码哈希，保留该事实；
 后续提交包含批量缓存和入口修正，不能把本次运行改写为使用后续commit完成。
 小型结果与完整30轮曲线数据纳入Git：`summary.json`、`training-history.json`。
-原模型和连续分数仍在Git外，迁移成员及SHA见[资产目录](../../handoff/local-assets.json)。
+原模型和连续分数仍在Git外，迁移成员及SHA见[资源说明](../../data.md#旧实验资源恢复)。

@@ -4,17 +4,9 @@
 /src/deepfake_detection_archive/models/_vendor/** -text -whitespace
 /docs/competition/source/** -text -whitespace
 /docs/research/source/** -text -whitespace
-/docs/research/pretrained-resources/source/** -text -whitespace
-/docs/research/pretrained-resources/prepare_resources.py -text -whitespace
 /docs/research/pretrained-resources/*-model-card.md -text -whitespace
 /docs/research/pretrained-resources/Apache-2.0.txt -text -whitespace
-/docs/research/offline-rehearsal/source/** -text -whitespace
-/docs/research/offline-rehearsal/resume/before-*.py.txt -text -whitespace
-/docs/research/offline-rehearsal/model-execution-*/** -text -whitespace
 /docs/experiments/**/source/** -text -whitespace
 /docs/experiments/**/training/** -text -whitespace
-/docs/experiments/**/run_audit.executed.py.txt -text -whitespace
 /docs/experiments/**/configs/** -text -whitespace
-/docs/experiments/**/launch.sh -text -whitespace
-/docs/checkpoints/**/asv-finalizer-draft/** -text -whitespace
 /tools/restore_backup.py -text -whitespace

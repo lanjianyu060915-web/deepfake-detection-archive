@@ -1,7 +1,8 @@
 # ViF 尺寸/时长受控数据与元数据基线
 
-2026-10-09准备，2026-10-10交接。受控数据与元数据基线已完成，视觉模型尚未训练，
-后续在云端按下列固定配置推进，见[Issue02](../../handoff/issues/02-video-control.md)。本轮把现有视频资产转成可训练的受控数据，
+本页记录2026-10-09的受控数据准备与元数据基线；
+后续视觉双种子已由[云端视频实验](../vif-cloud-20261011/README.md)交付。
+当时把现有视频资产转成可训练的受控数据，
 不增加新数据下载，也不访问原 pilot 的 154 条 holdout 媒体或分数。
 
 ## 做法与数据
@@ -53,7 +54,7 @@ HunyuanVideo，其余6条分散在4个生成器。这是数据支持不足，不
 从仓库根目录运行：
 
 ```bash
-PYTHONPATH=src OPENBLAS_NUM_THREADS=1 .venv/bin/python tools/prepare_video_control.py \
+OPENBLAS_NUM_THREADS=1 scripts/devctl run python tools/prepare_video_control.py \
   --manifest data/vif-panda-research/manifest.jsonl \
   --pilot outputs/experiment-planning/vif-pilot/manifest.jsonl \
   --data-root data/vif-panda-research/media \
@@ -65,13 +66,10 @@ PYTHONPATH=src OPENBLAS_NUM_THREADS=1 .venv/bin/python tools/prepare_video_contr
 本机已准备两种子训练配置，沿用冻结ResNet18、4帧、center_crop、同一轻量头和训练参数：
 
 ```bash
-PYTHONPATH=src .venv/bin/python -m deepfake_detection_archive train \
+scripts/devctl run python -m deepfake_detection_archive train \
   --config docs/experiments/vif-control-20261009/train-hunyuan_geometry_duration-seed42.json
 ```
 
 对应seed43配置一并纳入Git，配置相对路径均以配置所在目录为基准。
-先运行Hunyuan单生成器受控实验，再决定是否投入微调；配置纳入Git，资产需按交接清单迁入，
+先运行Hunyuan单生成器受控实验，再决定是否投入微调；配置纳入Git，资产按[数据说明](../../data.md)接入，
 准备工具生成划分和元数据基线；训练配置单独保存在本目录。旧pilot holdout继续保留，未经触碰。
-
-针对工具的3项行为检查通过：旧划分与holdout整组隔离、pilot新增关系继承、逐桶真假平衡
-及确定性；Ruff/格式/严格mypy通过。未重复项目全量检查，交由主代理提交前统一执行。

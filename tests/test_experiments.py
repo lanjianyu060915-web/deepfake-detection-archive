@@ -12,6 +12,7 @@ import numpy as np
 import pytest
 import torch
 
+from deepfake_detection_archive.config import InferenceConfig
 from deepfake_detection_archive.contracts import load_scores
 from deepfake_detection_archive.data.manifest import (
     SampleRecord,
@@ -25,6 +26,7 @@ from deepfake_detection_archive.experiments import (
     load_experiment_config,
     run_experiment,
 )
+from deepfake_detection_archive.scoring import OfflineScorer
 
 
 def test_balanced_sampling_corrects_class_imbalance_and_repeats_by_seed() -> None:
@@ -154,6 +156,31 @@ def test_spawned_loader_worker_can_read_prepared_tensors(experiment: Path) -> No
     assert result.epochs_completed == 1
 
 
+def test_repeated_epochs_verify_existing_cache_once(
+    experiment: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    run_experiment(experiment)
+    verified = []
+    from deepfake_detection_archive.models.checkpoint import verify_sha256  # noqa: PLC0415
+
+    def count_verification(path: Path, digest: str) -> None:
+        verified.append(path)
+        verify_sha256(path, digest)
+
+    monkeypatch.setattr(
+        "deepfake_detection_archive.experiments.verify_sha256", count_verification
+    )
+    _change(
+        experiment,
+        output_dir="repeat",
+        balanced_sampling=True,
+        training={"max_epochs": 2, "device": "cpu", "seed": 23},
+    )
+    result = run_experiment(experiment)
+    assert result.epochs_completed == 2
+    assert sorted(verified) == sorted((experiment.parent / "cache").glob("*.pt"))
+
+
 def test_training_prepares_media_without_a_redundant_decode_pass(
     experiment: Path,
 ) -> None:
@@ -269,6 +296,69 @@ def test_changed_feature_implementation_invalidates_cache(
     _change(feature_experiment, output_dir="changed-implementation")
     with pytest.raises(ValueError, match="sample preparation failed"):
         run_experiment(feature_experiment)
+
+
+def test_feature_scoring_reads_media_hash_once(
+    feature_experiment: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    result = run_experiment(feature_experiment)
+    config = json.loads(feature_experiment.read_text())
+    scorer = OfflineScorer(
+        InferenceConfig(
+            manifest="manifest.jsonl",
+            data_root="media",
+            output_dir="scores",
+            modality="audio",
+            checkpoint=str(result.best_checkpoint),
+            checkpoint_sha256=result.checkpoint_sha256,
+            device="cpu",
+            model_kind="audio_features",
+            encoder=config["encoder"],
+            segments=2,
+            segment_samples=400,
+        ),
+        feature_experiment.parent,
+    )
+    record = load_manifest(feature_experiment.parent / "manifest.jsonl")[0]
+    media = feature_experiment.parent / "media" / record.path
+    reads = []
+    original_open = Path.open
+
+    def count_reads(path: Path, *args: Any, **kwargs: Any) -> Any:
+        if path == media:
+            reads.append(path)
+        return original_open(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "open", count_reads)
+    assert np.isfinite(scorer(record))
+    assert reads == [media]
+
+
+@pytest.mark.parametrize(
+    "tensor",
+    [
+        torch.zeros(400, dtype=torch.float64),
+        torch.full((400,), float("nan")),
+        torch.zeros(2),
+    ],
+    ids=["wrong-dtype", "nonfinite", "wrong-shape"],
+)
+def test_invalid_registered_cache_is_reported_before_training(
+    experiment: Path, tensor: torch.Tensor
+) -> None:
+    run_experiment(experiment)
+    cached = next((experiment.parent / "cache").glob("*.pt"))
+    torch.save(tensor, cached)
+    sidecar = cached.with_suffix(".json")
+    metadata = json.loads(sidecar.read_text())
+    metadata["sha256"] = file_sha256(cached)
+    sidecar.write_text(json.dumps(metadata))
+    _change(experiment, output_dir="invalid-cache")
+    with pytest.raises(ValueError, match="sample preparation failed"):
+        run_experiment(experiment)
+    output = experiment.parent / "invalid-cache"
+    assert json.loads((output / "decode_failures.json").read_text())
+    assert not (output / "training").exists()
 
 
 def test_corrupt_cache_is_reported_and_training_does_not_start(

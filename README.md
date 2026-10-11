@@ -1,103 +1,76 @@
 # AIGC 音视频伪造识别
 
-第七届中国人工智能大赛 AIGC 音视频伪造识别项目，同时参加音频和视频两项。项目输出
-逐样本连续伪造分数，以 EER 选择模型，并面向安全屋离线交付。
+第七届中国人工智能大赛比赛项目，分别检测音频和视频中的生成内容。
+输入本地媒体，输出逐样本连续伪造分数；以 EER 选择模型，最终离线运行。
+内部约定 `real=0`、`fake=1`，分数越高越倾向伪造。
 
-**当前阶段：全量语音LogMel已完成，开发集EER为0.51%，代码已迁入云端服务器。**
-这是已知生成器语音开发集结果，尚无本届比赛成绩。HuBERT和受控视觉模型尚未训练；
-视频受控划分和配置已保存，当前服务器的媒体仍待导入。音频、视频和数据任务已发布，
-队友领取后完成分支/PR，由负责人审查合并。
-新云端Codex先读[个人交接](docs/handoff/personal-cloud-codex.md)。
+**当前阶段：基线开发，尚未完成双分支比赛系统。**
 
-项目只保留影响实验真实性和离线运行的必要检查。配置在入口解析，内部直接传递；每轮实验
-保存一份配置、结果和必要日志，不再用重复校验、历史绑定或多份证明代替算法进展。
+| 方向 | 已完成 | 当前缺口 |
+| --- | --- | --- |
+| 语音 | 云端 LogMel 双种子 EER **0.7849% / 0.9419%**；冻结 HuBERT 对照已完成 | 未知攻击、跨来源及压缩泛化待做 |
+| 非语音 | 231 对真实/生成环境音，已接入训练接口 | 尚未训练；音乐、混合音频和其他生成器覆盖不足 |
+| 视频 | 受控 train618/dev146；双种子 EER **20.55% / 21.92%** | 跨生成器泛化、微调和时序模型未完成 |
+| 离线系统 | 音视频研究权重、训练/推理/评测及打包入口；24 条语音离线演练 | 候选选择、双分支代表性批量验收和正式平台适配未完成 |
 
-## 入口
+以上是已知攻击语音和单生成器视频开发集结果，不能代表本届比赛或通用音视频效果。
+[项目状态](docs/status.md)记录交付事实，[路线图](docs/roadmap.md)列出执行顺序与完成条件。
 
-| 文档 | 内容 |
-| --- | --- |
-| [云端交接](docs/handoff/personal-cloud-codex.md) | 个人交接Prompt、协作流程、资产与首批Issue |
-| [项目状态](docs/status.md) | 当前数据、模型结果、验证和缺口 |
-| [实施方案](docs/plans/implementation-plan.md) | 音频/视频路线、阶段和下一步 |
-| [开发指南](docs/development.md) | data → train → infer → evaluate → package |
-| [比赛要求](docs/competition/requirements.md) | 已知官方事实和集中登记的未知项 |
-| [文献与参考](docs/research/literature.md) | 候选方法、数据和适用边界 |
-| [工具与 skills](docs/research/tooling.md) | 环境、固定参考和项目 skills |
-| [历史归档](archive/README.md) | 朋友旧照片项目，默认只读 |
+## 环境
 
-用户已报名，官方没有提供额外资料。项目按公开赛题和本地约定继续开发，不再把未公布的
-I/O、硬件或外部资产细则作为研究训练的阻塞项；平台提供样例后只更新适配层。
-
-## 快速开始
-
-当前服务器使用 RTX 4090 24 GiB、Python 3.12 和共享环境
-`/opt/venvs/deepfake-cu132`，依赖由 `uv.lock` 固定。开发、研究、媒体依赖及 11 项项目
-skills 已就绪，无需重新安装。先从仓库根目录检查并查看命令：
+Python 3.12、uv、FFmpeg/ffprobe。当前 RTX 4090 服务器共享环境已就绪：
 
 ```bash
-scripts/devctl doctor
 scripts/devctl run python -m deepfake_detection_archive --help
 ```
 
-`scripts/devctl` 从当前工作副本加载源码，不向共享环境安装项目，也不自动同步依赖。
-共享环境维护、可选 direnv 激活及独立 CPU 环境见[开发指南](docs/development.md)。
-当前验证结果见[项目状态](docs/status.md)；训练前仍需接入媒体、清单和权重，详见
-[环境与资产](docs/handoff/cloud-collaboration.md)。
+新机器安装、CPU 环境和共享环境维护见[开发指南](docs/development.md#环境)。
+日常运行不重新同步依赖或做全量环境检查。
 
-当前主线命令：
+## 数据 → 训练 → 推理 → 评测
+
+[数据说明](docs/data.md)集中列出来源、实际资产和准备命令。
+`configs/` 提供[配置模板](configs/README.md)，相对路径从配置文件目录解析。
+以 LogMel 为例，复制模板并填写数据路径：
 
 ```bash
-# 建立媒体清单
-scripts/devctl run python -m deepfake_detection_archive index \
-  --root data/audio --modality audio --source YOUR_SOURCE \
-  --output data/audio-index.jsonl
-
-# 训练、推理与评测：先从 configs/*.example.json 复制并填写实值配置
+cp configs/train-logmel.example.json configs/train-logmel.local.json
 scripts/devctl run python -m deepfake_detection_archive train \
   --config configs/train-logmel.local.json
+
+# 填写选定 checkpoint、哈希和 dev 清单，output_dir 设为 ../outputs/audio-dev
+cp configs/infer-audio-waveform.example.json configs/infer-audio-waveform.local.json
 scripts/devctl run python -m deepfake_detection_archive infer \
   --config configs/infer-audio-waveform.local.json
 scripts/devctl run python -m deepfake_detection_archive evaluate \
-  --scores outputs/audio-dev-scores/scores.jsonl \
-  --manifest data/audio-dev-only.jsonl \
-  --output outputs/audio-dev-scores/evaluation.json
+  --scores outputs/audio-dev/scores.jsonl \
+  --manifest data/audio-dev.jsonl --output outputs/audio-dev/evaluation.json
 ```
 
-这些命令的完整前置条件、数据字段、推理恢复和打包步骤见[开发指南](docs/development.md)。
-配置模板不是可直接运行的实验；必须替换占位路径、哈希、清单和输出目录。
+视频训练使用 `train-video-head.example.json`，推理使用 `infer-video-head.example.json`。
+推理读取本地权重，不联网下载；有标签时再计算 EER。
+完整参数、训练输出、推理恢复及离线打包见[开发指南](docs/development.md)。
 
-## 当前方法
-
-- 音频：已取得全量 LogMel 基线，下一步比较冻结 HuBERT 表征；AASIST-L 保留为对照，再补环境声、
-  音乐和音效等通用音频。
-- 视频：先控制宽度、来源和编码捷径，再比较主干微调和轻量时间特征；当前冻结帧特征结果
-  不能证明已学到可靠生成伪迹。
-- 数据：同一原媒体、派生样本和已知身份组不能跨 split；dev 用于模型选择，holdout 在候选
-  冻结后验收。
-- 评测：内部 `real=0`、`fake=1`，高分更倾向伪造；失败样本保留记录并计入覆盖率。
-
-## 工作区
+## 项目结构
 
 ```text
-src/deepfake_detection_archive/  当前比赛代码
-tests/                            主动行为与回归测试
-configs/                          数据、训练、推理和打包模板
-docs/                             当前说明、研究和实验记录
-.agents/skills/                   Git 跟踪的 11 项项目 skills
-archive/legacy-20261005/          冻结的旧照片项目
-data/ models/ outputs/ cache/     Git 忽略的本地数据与产物
-external/                         Git 忽略的固定上游参考
+src/deepfake_detection_archive/  数据、模型、训练、评测与离线推理
+tools/                          数据准备、预训练资源准备、实验辅助工具
+configs/                        可复制的配置模板
+tests/                          行为回归
+docs/                           项目指南、路线图、实验结论与来源许可
+data/ models/ outputs/ cache/   本地资产和运行产物，Git 忽略
+archive/                        冻结的旧项目，独立于比赛代码
 ```
 
-旧项目的 UI、身份检索、底图溯源、Windows 打包和历史阈值不属于当前主线。归档中的 1,526 个
-文件及恢复工具保持原字节，不参与当前包的 lint、类型检查和构建。
+| 文档 | 用途 |
+| --- | --- |
+| [状态](docs/status.md) / [路线图](docs/roadmap.md) | 做了什么、缺什么、下一步交付什么 |
+| [数据](docs/data.md) / [开发指南](docs/development.md) | 准备数据、训练、评分、离线运行 |
+| [实验结果](docs/experiments/README.md) | 配置、结果和算法结论 |
+| [比赛要求](docs/competition/requirements.md) | 已知规则及待适配的官方接口 |
+| [方法参考](docs/research/literature.md) | 音频、视频候选与采用依据 |
 
-## 检查与协作
-
-```bash
-scripts/devctl check
-```
-
-11 项项目 skills 位于 `.agents/skills/`，来源由 `skills-lock.json` 固定，协作者克隆后可直接
-使用。Git 提交遵循 LoRA：Logical、Observable、Reversible、Atomic。已发布任务与迁移分支
-见[任务入口](docs/handoff/issues/README.md)，PR 由负责人审查合并。
+代码变更先跑对应测试，提交前运行一次 `scripts/devctl check`。
+任务在 GitHub Issues 管理，分支与 PR 交付；数据和权重共享只读，输出与缓存按任务独立。
+Git 保存代码、配置、必要来源和简洁实验结论；日志、逐样本大分数和临时工作记录留在运行目录。

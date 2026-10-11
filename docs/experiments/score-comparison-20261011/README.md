@@ -40,23 +40,16 @@
 后续候选应保留分生成器诊断。这些差异不能外推到全量LogMel42的0.510204%结果；
 pilot dev曾用于早停，仅有19个保守统计组，不作正式置信区间、holdout或泛化结论。
 
-## 复现与产物
+## 使用与历史产物
 
-在仓库根目录运行，不需要原媒体、权重或GPU：
+当前比较入口为 `tools/compare_scores.py`，实际使用见
+[开发指南](../../development.md#压缩与重采样对照)。
+本表来自同一批512条dev的四份已有分数，没有新训练或推理。
+历史逐样本分数与本次一次性分组脚本已从当前文档树移除，可从提交 `4bbd292` 恢复：
 
 ```bash
-for candidate in logmel-seed43 aasist-l-seed42 aasist-l-seed43-retry1; do
-  scripts/devctl run python tools/compare_scores.py \
-    --baseline-scores docs/experiments/asv-pilot-quarantine-20261008/training/logmel-seed42/dev-scores.jsonl \
-    --candidate-scores "docs/experiments/asv-pilot-quarantine-20261008/training/$candidate/dev-scores.jsonl" \
-    --output "outputs/score-comparison-20261011/$candidate.json"
-done
-scripts/devctl run python docs/experiments/score-comparison-20261011/by_generator.py
+git show 4bbd292:docs/experiments/asv-pilot-quarantine-20261008/training/logmel-seed42/dev-scores.jsonl
 ```
 
-三份完整配对报告、生成器摘要及标准检查日志保存在本机
-`outputs/score-comparison-20261011/`，不重复提交历史分数或完整DET曲线。
-运行时没有核对模型身份或重验清单/原媒体；工具报告保留这两项未核验标记。
-18项新回归覆盖配对、失败交集、缺类、错误元数据及固定阈值；独立评审通过。
-本地标准检查431项pytest通过（25.33秒，无跳过），3项视频工具测试、Ruff、严格mypy和
-构建通过；研究复算脚本的Ruff、格式及mypy单独通过。远端验证按本轮PR实际结果报告。
+完整配对报告保存在原实例 `outputs/score-comparison-20261011/`，不作为新候选默认输入。
+后续应使用候选实际产出的分数，保留同一批ID和两边失败分母。

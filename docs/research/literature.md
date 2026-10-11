@@ -6,7 +6,7 @@
 
 | 文献 / 项目 | 阅读与核验范围 | 可迁移内容与采用边界 |
 | --- | --- | --- |
-| [AASIST](https://arxiv.org/abs/2110.01200)，2021 预印本 / ICASSP 2022；[作者代码](https://github.com/clovaai/aasist) | 方法与实验、5 页 PDF；检查模型配置、训练/评测入口及 MIT 许可 | 以谱域和时域的图注意力整合伪迹；AASIST-L 约 85K 参数，可作 8GB 条件下的首个可训练语音候选。原配方依赖旧环境，不能把 ASVspoof 2019 成绩当作本届泛化结果。 |
+| [AASIST](https://arxiv.org/abs/2110.01200)，2021 预印本 / ICASSP 2022；[作者代码](https://github.com/clovaai/aasist) | 方法与实验、5 页 PDF；检查模型配置、训练/评测入口及 MIT 许可 | 以谱域和时域的图注意力整合伪迹；AASIST-L 约 85K 参数，保留为语音对照。原配方依赖旧环境，不能把 ASVspoof 2019 成绩当作本届泛化结果。 |
 | [ASVspoof 2021](https://www.asvspoof.org/index2021.html)；[官方工具](https://github.com/asvspoof-challenge/2021) | DF/LA 数据说明、协议与 `eval-package/eval_metrics.py` 的 DET/EER 实现 | 学习样本协议、评分方向及跨编解码条件评测。其离散 EER 算法是交叉核对参考，不能取代本届官方实现；逐子目录核对工具许可。 |
 | [ASVspoof 5 资源设计](https://arxiv.org/abs/2502.08857)，2025；[评测计划 v0.6](https://www.asvspoof.org/file/ASVspoof5___Evaluation_Plan_Phase2.pdf) | 数据设计、说话人互斥分区、未知及对抗攻击协议 | 使用更接近现实采集条件和未知攻击的留出设计。主任务与指标组合不同，借鉴协议，不把 min-tDCF/minDCF 直接替换本赛 EER。 |
 | [XLS-R + SLS 方法论文](https://openreview.net/attachment?id=acJMIXJg2u&name=pdf)，ACM MM 2024；[复现仓库](https://github.com/Yash-Sukhdeve/XLS-R-SLS-Deepfake-Detection)；[XLS-R 上游](https://github.com/facebookresearch/fairseq/tree/main/examples/wav2vec/xlsr) | 层级表征加权、RawBoost 与训练策略 | 第二条语音候选采用冻结 SSL 特征与轻量头，再比较少量层解冻。复现仓库不是已确认可直接提交的作者基线；fairseq 旧依赖与 Python 3.12 的迁移成本须先测量。 |
@@ -26,7 +26,7 @@
 | [Towards Universal Fake Image Detectors that Generalize Across Generative Models](https://openaccess.thecvf.com/content/CVPR2023/html/Ojha_Towards_Universal_Fake_Image_Detectors_That_Generalize_Across_Generative_Models_CVPR_2023_paper.html)，CVPR 2023；[代码](https://github.com/Yuheng-Li/UniversalFakeDetect) | 未知扩散生成器失效分析、冻结 CLIP 线性探测及 JPEG/模糊实验 | 首个低成本空间基线可采用冻结视觉特征与轻量头。图像结果不是视频时序证据；仓库许可证仍需进一步确认，思想可借鉴而代码暂不直接引入。 |
 | [Community Forensics](https://openaccess.thecvf.com/content/CVPR2025/html/Park_Community_Forensics_Using_Thousands_of_Generators_to_Train_Fake_Image_CVPR_2025_paper.html)，CVPR 2025；[训练/评测代码](https://github.com/s-jyeon/CommunityForensicsTrain) | §3–4 的生成器多样性、固定样本预算对比、JPEG/模糊实验；检查 224/384 checkpoint 加载入口与 MIT 许可 | 借鉴多生成器覆盖、对称增强和可缓存空间特征；旧项目也用过相关检测器。完整数据达 TB 量级，当前不下载；代码许可不自动覆盖所有数据和权重。 |
 | [AI-Generated Video Detection via Spatio-Temporal Anomaly Learning](https://arxiv.org/abs/2403.16638)，PRCV 2024；[AIGVDet](https://github.com/multimediaFor/AIGVDet) | RGB/RAFT 光流两分支、分数级融合、视频平均及 H.264 实验 | 证明应单独检验时间信息，而非只检测人脸。光流的成本与较旧生成器覆盖限制使它成为后续消融；学术/非商业条款须确认。 |
-| [Preserving Forgery Artifacts: AI-Generated Video Detection at Native Scale](https://proceedings.iclr.cc/paper_files/paper/2026/hash/20e45668fefa793bd9f2edf19be12c4b-Abstract-Conference.html)，ICLR 2026；[作者代码](https://github.com/mgiant/Qwen2.5ViT-AIGVDetection) | 固定缩放丢失伪迹的问题、可变空间尺度和时长、公开推理与 checkpoint 入口 | 优先把保比例、局部裁块与多尺度纳入轻量消融。Qwen 视觉主干、原尺度视频模型的 8GB 可行性未测，许可证未明确，不作为首版依赖。 |
+| [Preserving Forgery Artifacts: AI-Generated Video Detection at Native Scale](https://proceedings.iclr.cc/paper_files/paper/2026/hash/20e45668fefa793bd9f2edf19be12c4b-Abstract-Conference.html)，ICLR 2026；[作者代码](https://github.com/mgiant/Qwen2.5ViT-AIGVDetection) | 固定缩放丢失伪迹的问题、可变空间尺度和时长、公开推理与 checkpoint 入口 | 优先把保比例、局部裁块与多尺度纳入轻量消融。Qwen 视觉主干、原尺度视频模型的当前资源可行性未测，许可证未明确，不作为首版依赖。 |
 
 以上空间/视频研究以各自 AUC、Accuracy 或特定协议报告性能。是否能降低本赛 EER，必须在固定的未知生成器、来源与压缩留出集上重新比较。
 
@@ -53,4 +53,4 @@
 
 ## 研究结论与待验证假设
 
-本项目采用“数据及 EER 契约先行、空间/语音基线先可复现、跨域检验后再增加容量”的顺序，这是结合论文与 8GB 预算作出的工程判断。待验证假设是：多生成器覆盖、对称压缩/重采样增强、稳健媒体级聚合、冻结预训练表征和轻量时间信息，能以较低资源改善未知域 EER。未通过消融前不称其为有效优化或本届最佳方案。
+当前顺序是先完成可比音视频基线，再按实际结果增加容量和时间信息；使用已分配的RTX4090。具体优先级见[路线图](../roadmap.md)。待验证假设是：多生成器覆盖、对称压缩/重采样增强、稳健媒体级聚合、冻结预训练表征和轻量时间信息，能以较低资源改善未知域 EER。未通过消融前不称其为有效优化或本届最佳方案。

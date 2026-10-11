@@ -1,7 +1,0 @@
-{
-  "architecture": "aasist_l_v1",
-  "config": {},
-  "schema_version": 1,
-  "score_direction": "higher_is_fake",
-  "sha256": "f673a25129e1bde9d8d3c79b475bc616eccd2cabb5a839a4352ae1923b21941b"
-}

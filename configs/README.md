@@ -8,7 +8,7 @@
 | 阶段 | 模板 |
 | --- | --- |
 | 数据 | `manifest.example.jsonl`、`sources.example.jsonl`、`audit.example.json` |
-| 音频训练 | `train-logmel.example.json`、`train-aasist-l.example.json`、`train-audio-ssl-head.example.json` |
+| 音频训练 | `train-logmel.example.json`、`train-aasist-l.example.json`、`train-audio-ssl-head.example.json`、`train-logmel-doppelganger.example.json` |
 | 视频训练 | `train-video-head.example.json` |
 | 推理 | `infer-audio-waveform.example.json`、`infer-audio-ssl-head.example.json`、`infer-video-head.example.json` |
 | 导出与交付 | `adapter.example.json`、`package.example.json` |

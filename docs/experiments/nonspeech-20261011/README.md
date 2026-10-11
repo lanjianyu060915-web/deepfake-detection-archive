@@ -30,11 +30,6 @@
 全部输出是 16 kHz、单声道、64,600 点、PCM16、129,244 bytes；dev 文件大小这一常量
 元数据基线 EER 为 50%，不代表检测模型 EER，也不证明其他捷径消失。
 
-最终 `scripts/devctl check`：425 项 pytest 通过、1 项因缺少固定 ASVspoof 参考 checkout
-跳过；Ruff、严格 mypy、3 项视频工具测试、7 项历史 stub 和构建通过。首次检查中既有
-ASV 归档 `touch()` 时间戳测试失败，单独复查与最终整轮均通过；本任务没有修改该测试或
-ASV 导入代码，保留两次日志供追溯。
-
 ## FakeSound：1,899 个实际伪造片段，原始媒体未提供
 
 输入为 `/srv/shared-data/datasets/fakesound/FakeSound.zip`，986,570,159 bytes，SHA-256
@@ -189,6 +184,5 @@ scripts/devctl run python tools/prepare_doppelganger.py \
 `manifest.jsonl` 是可训练清单，`inventory.jsonl` 包含全部选中样本及排除/失败记录，
 不能互换；`sources.jsonl`、`provenance.jsonl`、`audit.json` 与同目录媒体配套读取。
 
-导入工具的行为测试覆盖缺失/损坏记录、许可归属不一致、整对排除、上传者/原媒体隔离、
-两类对称处理和禁止覆盖。针对性检查先行，PR 前运行一次 `scripts/devctl check`；
-实际验证结果记录于 `results.json`，不把工程检查当作模型效果。
+导入工具与共享数据已完成交付。后续算法任务直接使用上述输入训练，
+取得 dev 分数后再决定是否扩充来源和生成器。

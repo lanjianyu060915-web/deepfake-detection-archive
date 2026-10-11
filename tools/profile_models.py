@@ -308,7 +308,9 @@ def main() -> None:
     )
     parser.add_argument("--batches", nargs="+", type=int)
     parser.add_argument(
-        "--summary", type=Path, default=Path("docs/research/model-profile.json")
+        "--summary",
+        type=Path,
+        default=Path("outputs/profiles/cuda-models/summary.json"),
     )
     args = parser.parse_args()
     if not 1 <= args.max_seconds <= 540:

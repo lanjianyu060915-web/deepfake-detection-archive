@@ -1,68 +1,32 @@
-# 固定预训练资源与离线转换
+# 预训练编码器来源
 
-这两项资源是已授权获取的候选冻结编码器，不是训练完成的鉴伪分类器。真实数据效果、
-跨域泛化与官方外部权重规则须另外验证。
+这些权重是冻结编码器，不是训练完成的鉴伪分类器。当前实例可用位置见
+[数据与模型资源](../../data.md#预训练模型)。正式外部权重使用规则待比赛平台确认。
 
-完整官方 Apache 2.0 文本归档于 `Apache-2.0.txt`，并原字节复制到两个本地资源目录的
-`LICENSE`，供后续本地转移时随附。来源、获取时间与哈希见 `license-materials.json`。
-附带许可文本不代表赛方已批准使用外部权重；正式提交前仍须核对官方资源规则。
+| 资源 | 固定上游版本 | 用途 |
+| --- | --- | --- |
+| [timm/resnet18.a1_in1k](https://huggingface.co/timm/resnet18.a1_in1k/tree/491b427b45c94c7fb0e78b5474cc919aff584bbf) | `491b427b45c94c7fb0e78b5474cc919aff584bbf` | 全帧空间特征 |
+| [facebook/hubert-base-ls960](https://huggingface.co/facebook/hubert-base-ls960/tree/dba3bb02fda4248b6e082697eee756de8fe8aa8a) | `dba3bb02fda4248b6e082697eee756de8fe8aa8a` | 语音表征，不能代替非语音覆盖 |
 
-| 资源 | 固定版本 | 来源许可 | 本地用途 |
-| --- | --- | --- | --- |
-| [timm/resnet18.a1_in1k](https://huggingface.co/timm/resnet18.a1_in1k/tree/491b427b45c94c7fb0e78b5474cc919aff584bbf) | `491b427b45c94c7fb0e78b5474cc919aff584bbf` | 官方模型卡声明 Apache-2.0 | 全帧通用视觉表征，不要求人脸 |
-| [facebook/hubert-base-ls960](https://huggingface.co/facebook/hubert-base-ls960/tree/dba3bb02fda4248b6e082697eee756de8fe8aa8a) | `dba3bb02fda4248b6e082697eee756de8fe8aa8a` | 官方模型卡声明 Apache-2.0 | 冻结语音表征；不能据此宣称音乐、环境声覆盖 |
+两份原模型卡及 Apache-2.0 文本在本目录保留；原文件URL/哈希见
+`upstream-resources.json`，历史转换后哈希见 `converted-resources.json`，
+许可材料索引见 `license-materials.json`。这些是固定来源记录，不是当前机器就绪报告。
 
-`prepare_resources.py` 保存精确转换过程。所有原文件位于 Git 忽略的 `cache/pretrained/`，
-转换权重位于 `models/pretrained/`。执行时先验证脚本内固定的上游 SHA-256 和已知字节数，
-再读取权重。`.bin` 仅使用 `torch.load(weights_only=True)` 反序列化。
-
-本次实际转换的脚本原字节另归档于 `source/conversion-script.py`，其 SHA-256 与
-`converted-resources.json` 的 `_provenance.script_sha256` 一致。当前入口仅修复
-HuBERT 加载信息中 `set` 到 JSON 列表的诊断序列化；权重转换逻辑没有变化。
+资源准备入口已移至 `tools/prepare_pretrained.py`，不再在 docs 中维护可执行副本：
 
 ```bash
-.venv/bin/python docs/research/pretrained-resources/prepare_resources.py download
-.venv/bin/python docs/research/pretrained-resources/prepare_resources.py convert
-.venv/bin/python docs/research/pretrained-resources/prepare_resources.py probe
+scripts/devctl run python tools/prepare_pretrained.py download
+scripts/devctl run python tools/prepare_pretrained.py convert
 ```
 
-本次大文件 HuBERT 使用已安装官方 Hub/Xet 客户端加速，仅下载声明的三个固定文件；
-原 urllib 阶段仅处理 ResNet，完成后才进行全量来源登记。Xet 分支必须显式限制缓存：
+已有已登记资源直接复用。需要较快获取HuBERT时可用同工具的 `download-hubert-xet`；
+它使用已安装的官方Hub客户端、固定revision及显式本地缓存。
+下载位于 `cache/pretrained/`，转换权重位于 `models/pretrained/<资源>/`，
+本次生成登记位于 `models/pretrained/registry/`，不写入Git文档目录。
 
-```bash
-HF_HOME="$PWD/cache/pretrained/hf-home" \
-HF_HUB_CACHE="$PWD/cache/pretrained/huggingface-hub" \
-HF_XET_CACHE="$PWD/cache/pretrained/xet" \
-HF_HUB_DISABLE_TELEMETRY=1 \
-.venv/bin/python docs/research/pretrained-resources/prepare_resources.py download-hubert-xet
-```
+ResNet18仅移除 `fc.weight`/`fc.bias`，保存feature-only state_dict；
+HuBERT使用 `torch.load(weights_only=True)` 后转为safetensors，配置保持原字节。
+来源哈希在获取/转换边界核对；模型加载继续使用本地严格加载，无隐式下载。
+每份转换资源附带本目录Apache许可，部署时随资源保留模型卡和来源。
 
-GPU 探针额外使用 `HF_HUB_OFFLINE=1`，现有加载器本身也显式传入 `local_files_only=True`。
-
-ResNet18 仅移除 `fc.weight`、`fc.bias` 后保存 bare state_dict；由现有
-`FrozenVisionEncoder('resnet18', ...)` 以 `pretrained=False` 构造再 strict 加载。
-HuBERT 不重命名或移除权重键，只将连续 tensor 保存为 metadata `format=pt` 的
-safetensors，配置文件保持原字节；由现有 `FrozenAudioEncoder` 离线严格加载。
-
-生成证据：`upstream-resources.json` 保存原 URL、版本、大小和哈希；
-`converted-resources.json` 保存转换后的哈希、转换说明、脚本哈希与依赖版本；
-`loading-verification.json` 保存真实加载信息及随机输入 CUDA 前向、冻结状态和显存。
-模型卡另按固定版本保留原始副本。若严格加载失败，资源不能计为就绪，也不允许通过
-忽略未知键来使验证通过。
-
-GPU 探针只验证预训练资源的工程兼容性，不执行优化步骤，也不报告 EER、准确率或比赛成绩。
-
-## 本次结果
-
-两份原资源均已通过固定大小/哈希校验并转换，现有加载器报告 missing、unexpected、
-mismatched keys 全部为零。实际命令分支、缓存隔离、诊断修复与工具版本见
-`execution-record.json`。
-
-| 资源 | 转换位置 | 输出特征 | 随机输入探针峰值 allocated / reserved |
-| --- | --- | --- | --- |
-| ResNet18 | `models/pretrained/resnet18-a1/encoder.pt` | `[1, 512]` | 55,282,176 / 71,303,168 bytes |
-| HuBERT | `models/pretrained/hubert-base-ls960/model.safetensors` | `[1, 768]` | 419,782,656 / 482,344,960 bytes |
-
-探针输入分别为 224×224 RGB 全帧和 16kHz 一秒音频，全部参数冻结、输出有限；
-单次冷启动耗时仅留作诊断，不能解释为稳定吞吐。用于实际运行的权重哈希从
-`converted-resources.json` 读取，禁止以运行时临时计算的新哈希代替可信记录。
+旧安装/前向探针和脚本执行流水在整理前提交 `4bbd292`，不作为新训练前置门。
