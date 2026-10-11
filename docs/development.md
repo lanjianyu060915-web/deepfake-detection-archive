@@ -141,6 +141,25 @@ scripts/devctl run python tools/prepare_robustness.py \
 同一 ID 表示配对样本，条件清单分别评分；不拼成重复的独立样本，也不重新划分。
 此工具不读取 holdout 媒体；解码成功不能证明模型鲁棒，真实结果以模型评分为准。
 
+取得两份评分后，使用同一个比较入口：
+
+```bash
+scripts/devctl run python tools/compare_scores.py \
+  --baseline-scores outputs/robustness/audio-original/scores.jsonl \
+  --candidate-scores outputs/robustness/audio-aac64k/scores.jsonl \
+  --output outputs/robustness/audio-aac64k-comparison.json
+```
+
+它按sample_id对齐并核对标签、模态、来源、内容类型、生成器及组字段；两份文件必须包含
+同一批完整ID，输入顺序不限。报告保留两边各自的全量覆盖率和失败原因，只有全量双类评分
+齐全时给出全量ΔEER；共同成功子集另列样本数、覆盖率、排除ID和配对EER。
+ΔEER为候选减基准，单位为0–1的比例；乘100后是百分点。共同成功子集不代替完整集验收。
+
+可用`--threshold`传入已在基准dev上冻结的一个数值，比较两边的FAR/FRR；工具不自动选阈值。
+分数文件不能证明模型一致或数据来源，报告明确标记这两项未核验。媒体鲁棒性比较仍须保持
+checkpoint、编码器、采样、聚合和精度一致，检查两次推理metadata中的配置，并用现有
+`evaluate --manifest`核对各自清单。工具也可描述性比较不同候选，不能由此声称是同模型鲁棒性。
+
 ## 3. 训练
 
 选择与模型对应的模板，例如 LogMel：
