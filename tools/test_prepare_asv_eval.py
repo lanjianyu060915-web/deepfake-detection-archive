@@ -225,7 +225,9 @@ class PrepareAsvEvalTests(unittest.TestCase):
                 protocol = self.root / f"bad-protocol-{index}.txt"
                 protocol.write_text(_protocol_text(rows), encoding="utf-8")
                 self.pin(self.parquet, protocol)
-                with self.assertRaisesRegex(ValueError, "invalid eval protocol row"):
+                with self.assertRaisesRegex(
+                    ValueError, "invalid eval protocol row|expected five protocol"
+                ):
                     self.materialize(
                         protocol_path=protocol,
                         output_root=self.root / f"out-bad-{index}",
