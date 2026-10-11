@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "manifest": "../../../outputs/audio-expand-20261011/dev-manifest.jsonl",
+  "data_root": "../../../data/audio-expand-20261011",
+  "output_dir": "../../../outputs/audio-expand-20261011/full12-512-lr1e-5-seed42-offline-dev",
+  "modality": "audio",
+  "model_kind": "audio_waveform",
+  "checkpoint": "../../../outputs/audio-expand-20261011/full12-512-lr1e-5-seed42/training/best.pt",
+  "checkpoint_sha256": "8fa61daf42054b29fd61906c8c2fcf679ba4558e80472806197958b013c6e95c",
+  "device": "cuda",
+  "batch_size": 16,
+  "segment_samples": 64000,
+  "segments": 1,
+  "aggregation": "mean",
+  "audio": {
+    "sample_rate": 16000,
+    "backend": "soundfile"
+  },
+  "seed": 42
+}

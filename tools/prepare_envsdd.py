@@ -7,6 +7,7 @@ import csv
 import io
 import json
 import math
+import shutil
 from collections import Counter, defaultdict
 from dataclasses import asdict, replace
 from datetime import UTC, datetime
@@ -40,6 +41,7 @@ MEMBERS = {
     ("audioldm2", "tta"),
     ("audioldm1", "ata"),
 }
+EVAL_MEMBERS = {("audiolcm", "tta"), ("tangoflux", "tta")}
 RATE = 16000
 SAMPLES = 64000
 
@@ -68,16 +70,19 @@ def _normalize(raw: bytes, destination: Path) -> dict[str, Any]:
     return {"original": original, "pre_normalization_peak": peak}
 
 
-def _prepare_row(
+def _prepare_row(  # noqa: PLR0913 -- shared row preparation with explicit member scope
     row: dict[str, Any],
     metadata: dict[str, str],
     uploader: str,
     reason: str,
     output: Path,
+    *,
+    allowed_members: set[tuple[str, str]] | None = None,
 ) -> tuple[SampleRecord, dict[str, Any]]:
     filename = row["filename"]
     model, attack = row["generative_model"], row["attack_type"]
-    if (model, attack) not in MEMBERS or row["label"] != (
+    allowed = MEMBERS if allowed_members is None else allowed_members
+    if (model, attack) not in allowed or row["label"] != (
         "real" if model == "real" else "fake"
     ):
         raise ValueError(f"unexpected EnvSDD member: {filename}/{model}/{attack}")
@@ -280,8 +285,132 @@ def prepare(  # noqa: PLR0913, PLR0915 -- one streaming dataset import
     return summary
 
 
+def prepare_eval(
+    parquet_dir: Path,
+    manifest: Path,
+    data_root: Path,
+    split: str,
+    output: Path,
+) -> dict[str, Any]:
+    """Join unseen generators to existing real samples without changing splits."""
+    if split not in ("dev", "holdout"):
+        raise ValueError("evaluation split must be dev or holdout")
+    reals = [r for r in load_manifest(manifest) if r.split == split and r.label == 0]
+    if not reals or any(r.status != "available" for r in reals):
+        raise ValueError("evaluation requires available real samples")
+    provenance_path = data_root / "provenance.jsonl"
+    selected_ids = {r.sample_id for r in reals}
+    provenance = {}
+    with provenance_path.open(encoding="utf-8") as stream:
+        for line in stream:
+            entry = json.loads(line)
+            if entry["sample_id"] in selected_ids:
+                provenance[entry["sample_id"]] = entry
+    by_filename = {provenance[r.sample_id]["filename"]: r for r in reals}
+    parquet_paths = sorted(parquet_dir.rglob("*.parquet"))
+    members: dict[str, set[tuple[str, str]]] = defaultdict(set)
+    inputs = {
+        str(path): file_sha256(path)
+        for path in [
+            *parquet_paths,
+            manifest,
+            provenance_path,
+            data_root / "sources.jsonl",
+        ]
+    }
+    output.mkdir(parents=True, exist_ok=False)
+    (output / "raw").mkdir()
+    (output / "media").mkdir()
+    records = list(reals)
+    with (output / "provenance.jsonl").open("w", encoding="utf-8") as stream:
+        for real in reals:
+            destination = output / real.path
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(data_root / real.path, destination)
+            entry = {
+                "sample_id": real.sample_id,
+                "filename": provenance[real.sample_id]["filename"],
+                "metadata": provenance[real.sample_id]["metadata"],
+                "uploader": provenance[real.sample_id]["uploader"],
+                "source_data_root": str(data_root),
+                "source_provenance": provenance[real.sample_id],
+                "copied_processed_media": real.path,
+            }
+            stream.write(json.dumps(entry, ensure_ascii=False) + "\n")
+        for path in parquet_paths:
+            for batch in pq.ParquetFile(path).iter_batches(batch_size=32):
+                for row in batch.to_pylist():
+                    member = (row["generative_model"], row["attack_type"])
+                    if (
+                        row["dataset"] != "UrbanSound8K"
+                        or row["filename"] not in by_filename
+                        or member not in EVAL_MEMBERS
+                    ):
+                        continue
+                    name = row["filename"]
+                    if member in members[name]:
+                        raise ValueError(
+                            f"duplicate evaluation member: {name}/{member}"
+                        )
+                    members[name].add(member)
+                    real = by_filename[row["filename"]]
+                    known = provenance[real.sample_id]
+                    record, entry = _prepare_row(
+                        row,
+                        known["metadata"],
+                        known["uploader"],
+                        "",
+                        output,
+                        allowed_members=EVAL_MEMBERS,
+                    )
+                    records.append(
+                        replace(
+                            record,
+                            split=real.split,
+                            parent_id=real.sample_id,
+                            original_id=real.original_id,
+                            group_id=real.group_id,
+                            derivation_group_id=real.derivation_group_id,
+                        )
+                    )
+                    entry["parquet"] = str(path)
+                    stream.write(json.dumps(entry, ensure_ascii=False) + "\n")
+    missing = [name for name in by_filename if members[name] != EVAL_MEMBERS]
+    if missing:
+        raise ValueError(
+            f"missing unseen-generator members for {len(missing)} families"
+        )
+    manifest_hash = write_manifest(records, output / "manifest.jsonl")
+    inventory_hash = write_manifest(records, output / "inventory.jsonl")
+    shutil.copyfile(data_root / "sources.jsonl", output / "sources.jsonl")
+    summary: dict[str, Any] = {
+        "source": SOURCE,
+        "revision": REVISION,
+        "split": split,
+        "input_sha256": inputs,
+        "samples": len(records),
+        "real_samples": len(reals),
+        "generator_counts": dict(Counter(r.generator for r in records if r.label == 1)),
+        "status_counts": dict(Counter(r.status for r in records)),
+        "decode_failed": sum(r.decode_status == "failed" for r in records),
+        "normalized_coverage": sum(r.status == "available" for r in records)
+        / len(records),
+        "manifest_sha256": manifest_hash,
+        "inventory_sha256": inventory_hash,
+        "competition_approved": False,
+        "evaluation_scope": "unseen generators on existing source-isolated split; no training",
+        "preprocessing": "existing real media; fake mono, polyphase 16kHz, center crop/pad 64000 samples, peak 0.95, PCM16",
+    }
+    atomic_json(output / "summary.json", summary)
+    return summary
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
+    commands = parser.add_subparsers(dest="command", required=True)
+    importer = commands.add_parser(
+        "import", help="Prepare five-member training families"
+    )
     for name in (
         "parquet-dir",
         "credits",
@@ -289,22 +418,31 @@ def main() -> None:
         "exclude-manifest",
         "output",
     ):
-        parser.add_argument(f"--{name}", type=Path, required=True)
-    parser.add_argument("--seed", type=int, default=42)
+        importer.add_argument(f"--{name}", type=Path, required=True)
+    importer.add_argument("--seed", type=int, default=42)
+    evaluator = commands.add_parser("eval", help="Prepare unseen-generator evaluation")
+    for name in ("parquet-dir", "manifest", "data-root", "output"):
+        evaluator.add_argument(f"--{name}", type=Path, required=True)
+    evaluator.add_argument("--split", choices=("dev", "holdout"), required=True)
     args = parser.parse_args()
-    print(
-        json.dumps(
-            prepare(
-                args.parquet_dir,
-                args.credits,
-                args.urban_metadata,
-                args.exclude_manifest,
-                args.output,
-                seed=args.seed,
-            ),
-            indent=2,
+    if args.command == "import":
+        summary = prepare(
+            args.parquet_dir,
+            args.credits,
+            args.urban_metadata,
+            args.exclude_manifest,
+            args.output,
+            seed=args.seed,
         )
-    )
+    else:
+        summary = prepare_eval(
+            args.parquet_dir,
+            args.manifest,
+            args.data_root,
+            args.split,
+            args.output,
+        )
+    print(json.dumps(summary, indent=2))
 
 
 if __name__ == "__main__":

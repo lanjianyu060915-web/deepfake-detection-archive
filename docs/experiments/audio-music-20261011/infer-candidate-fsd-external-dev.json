@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "manifest": "../../../outputs/audio-ast-20261011/dev-manifest.jsonl",
+  "data_root": "../../../data/nonspeech-logmel-20261011",
+  "output_dir": "../../../outputs/audio-music-20261011/mixed12-class-balanced-seed42-fsd-external-dev",
+  "modality": "audio",
+  "model_kind": "audio_waveform",
+  "checkpoint": "../../../outputs/audio-music-20261011/mixed12-class-balanced-seed42/training/best.pt",
+  "checkpoint_sha256": "4b1da5d98caebd7d47eb86033c312a4c9699a7e6f8ec13e7ddca72efbcc884f7",
+  "device": "cuda",
+  "batch_size": 8,
+  "segment_samples": 64000,
+  "segments": 1,
+  "aggregation": "mean",
+  "audio": {
+    "sample_rate": 16000,
+    "backend": "soundfile"
+  },
+  "seed": 42
+}
