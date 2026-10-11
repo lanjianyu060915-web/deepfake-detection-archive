@@ -12,7 +12,8 @@
 | [ViF 云端受控视频](vif-cloud-20261011/README.md) | Hunyuan train618/dev146；视觉EER20.55%/21.92%，优于同集元数据 | 跨来源/生成器与压缩评分，再决定微调/时序 |
 | [配对环境音](nonspeech-20261011/README.md) | 462条可训练环境音，已供首轮模型对照使用 | 补生成器/来源 |
 | [环境音模型对照](nonspeech-logmel-20261011/README.md) | HuBERT本地FP32 EER28.57%/34.29%，优于本轮LogMel | 已开展AST微调，见下一行 |
-| [环境音 AST 微调](audio-ast-20261011/README.md) | 双种子离线dev EER2.86%/5.71%；冻结研究候选holdout EER11.43% | 补独立生成器/来源，再扩音乐/混合音频 |
+| [环境音 AST 首轮微调](audio-ast-20261011/README.md) | 小型单生成器双种子dev EER2.86%/5.71%；冻结研究候选holdout EER11.43% | 后续扩展见下一行 |
+| [多生成器环境音 AST](audio-envsdd-20261011/README.md) | 19,215条配对媒体；12层dev EER1.39%；冻结holdout已见1.43%/未见AudioLCM/TangoFlux6.51% | 跨来源、音乐及混合音频 |
 | [鲁棒性媒体试跑](robustness-smoke-20261011/README.md) | 媒体条件工具可用，没有模型评分 | 使用已选择模型得到实际 ΔEER |
 
 ## 历史探索

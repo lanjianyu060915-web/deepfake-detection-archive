@@ -17,7 +17,7 @@
 | 配对环境音 | `/var/tmp/lanjianyu-issue11-20261011/doppelganger-v2/` | 462 条实际可读媒体，附 manifest/sources/provenance |
 | 环境音检测器与分数 | `/var/tmp/deepfake-nonspeech-logmel-20261011/` | LogMel/HuBERT双种子及本地FP32推理；团队可读 |
 | AST预训练、环境音微调与分数 | `/var/tmp/deepfake-audio-ast-20261011/` | `pretrained/ast-audioset/`固定预训练资源；四次训练、双种子dev及冻结候选holdout推理；团队可读 |
-| EnvSDD 城市环境音扩展 | `/var/tmp/deepfake-audio-expand-20261011/` | 固定分片在`upstream/`；导入数据、AST训练与分数按任务独立保存 |
+| EnvSDD 城市环境音扩展 | `/var/tmp/deepfake-audio-expand-20261011/` | `envsdd-urban/` 19,215条；`unseen-dev/`、`unseen-holdout/` 为未训练生成器评测；四组AST、冻结候选和分数团队可读 |
 | FakeSound 诊断清单 | `/var/tmp/lanjianyu-issue11-20261011/fakesound-v1/` | data_root 为其 `media/`，含缺失 real 记录 |
 
 共享原媒体和模型只读；`outputs/`、`cache/` 使用各自任务目录。
@@ -36,7 +36,7 @@
 | `tools/prepare_video_control.py` | 既有 ViF 与 pilot 划分 → 受控 train/dev 与元数据对照 |
 | `tools/prepare_doppelganger.py` | 固定配对表/原媒体元数据 → 环境音研究清单 |
 | `tools/prepare_fakesound.py` | 固定 FakeSound ZIP → 诊断清单和失败记账 |
-| `tools/prepare_envsdd.py` | EnvSDD UrbanSound8K Parquet、原 metadata/credits → 五成员配对环境音；排除旧研究集关联并重划分 |
+| `tools/prepare_envsdd.py` | `import`：五成员配对环境音，排除旧研究集关联并重划分；`eval`：同一已划分原录音上的 AudioLCM/TangoFlux 诊断 |
 
 参数见各工具 `--help`，已有输入直接复用，不重复下载或物化。
 通用 `index` 只列媒体；标签、许可和已知组需来源证据，不能从目录猜测。
@@ -63,7 +63,7 @@ EnvSDD 扩展使用[固定分片与署名资源](research/source/envsdd/README.m
 下载完成后在新输出目录导入：
 
 ```bash
-scripts/devctl run python tools/prepare_envsdd.py \
+scripts/devctl run python tools/prepare_envsdd.py import \
   --parquet-dir /var/tmp/deepfake-audio-expand-20261011/upstream/envsdd \
   --credits docs/research/source/envsdd/FREESOUNDCREDITS.txt \
   --urban-metadata /var/tmp/deepfake-audio-expand-20261011/upstream/UrbanSound8K.csv \
@@ -75,6 +75,22 @@ scripts/devctl run python tools/prepare_envsdd.py \
 原切片短于3.99秒、旧研究集关联及失败项整组排除并保留库存，
 所有使用媒体对称处理为4秒、单声道16kHz、峰值0.95的PCM16。
 按原录音与已知上传者重新划分，不沿用存在同录音交叉的上游 train/validation。
+本轮可用19,215条，train13,450/dev2,885/holdout2,880；238个连通组。
+清单 SHA-256：`eebe2feb8b9fe424ee03eedd7286a434d01b6420b6068667b23306240e0e3a22`。
+
+未参与训练的 AudioLCM/TangoFlux 使用独立的 `upstream/extra/` 分片，
+仅按指定 split 的原文件名关联，不重新划分；当前 dev 为577条 real、每生成器577条 fake。
+已发布数据可直接使用，不重复执行以下物化命令：
+
+```bash
+scripts/devctl run python tools/prepare_envsdd.py eval \
+  --parquet-dir /var/tmp/deepfake-audio-expand-20261011/upstream/extra/envsdd \
+  --manifest data/audio-expand-20261011/manifest.jsonl \
+  --data-root data/audio-expand-20261011 --split dev \
+  --output /var/tmp/deepfake-audio-expand-20261011/unseen-dev
+```
+
+真实媒体复用既有处理结果，生成媒体执行相同归一化。评测解码失败保留在清单及分母中。
 
 ## 划分与许可
 

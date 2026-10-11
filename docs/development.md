@@ -57,7 +57,7 @@ scripts/devctl run python -m deepfake_detection_archive train \
 | --- | --- |
 | 音频波形 | LogMel CNN / AASIST-L：`train-logmel.example.json`、`train-aasist-l.example.json` |
 | 语音 SSL | 冻结本地 HuBERT ＋轻量头：`train-audio-ssl-head.example.json` |
-| 环境音 | LogMel：`train-logmel-doppelganger.example.json`；[AST末端主干微调配置](experiments/audio-ast-20261011/README.md) |
+| 环境音 | LogMel：`train-logmel-doppelganger.example.json`；[多生成器 AST 微调配置](experiments/audio-envsdd-20261011/README.md) |
 | 视频 | 冻结逐帧视觉编码器＋共享头/聚合：`train-video-head.example.json` |
 
 训练只消费 train/dev，dev 早停并选择最佳 checkpoint；holdout 不进入模型选择。
@@ -70,6 +70,9 @@ AST 使用 `architecture="audio_ast_v1"`，`model_config.trainable_layers` 指�
 末层LayerNorm和分类头始终训练。`pretrained.checkpoint`/`sha256` 指向固定本地
 `model.safetensors`；只缓存输入filterbank，微调层保留梯度。
 训练产出的checkpoint无需预训练目录；推理复用 `model_kind="audio_waveform"`。
+4秒输入可用 `backbone_config.max_length=512`；初始化时按 AST 上游方法居中裁剪
+预训练时间位置编码，两个特殊 token 和频率位置保持原序，减少无用 padding。
+这会改变注意力序列，需重新训练，不能当成旧1024帧模型的无损推理开关。
 
 每次新实验使用新输出目录。输出包含 `experiment.json`、配置和资产标识、失败记录、
 `training/history.json`、`training/best.pt`、`dev-scores.jsonl` 与 `dev-evaluation.json`。

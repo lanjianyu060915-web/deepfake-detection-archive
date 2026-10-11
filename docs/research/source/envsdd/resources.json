@@ -56,5 +56,32 @@
       "sha256": "b207f7a53f9e5eb02a5dd71d58fb8b66c88c24c0637b926dc72d9d400a6a2354",
       "bytes": 494104
     }
+  },
+  "evaluation_only": {
+    "split": "remain",
+    "purpose": "AudioLCM/TangoFlux unseen-generator evaluation, joined by existing split filenames; never training",
+    "total_bytes": 1604943386,
+    "files": [
+      {
+        "path": "data/remain-00025-of-00040.parquet",
+        "size": 393704846,
+        "sha256": "c3927ff2c4fd913bf5bb1441b6f074da41522b5fd62bcd93e983440686ceb5f7"
+      },
+      {
+        "path": "data/remain-00026-of-00040.parquet",
+        "size": 397806080,
+        "sha256": "e42058d106bb6a9f785a364e95f6f76d42799c9f14ad919dc7b8fee3a7a24219"
+      },
+      {
+        "path": "data/remain-00038-of-00040.parquet",
+        "size": 444744727,
+        "sha256": "35357913a873762f1cb23ca3afa2ba144358896ab4a1ed68a57c8e3bd6461a35"
+      },
+      {
+        "path": "data/remain-00039-of-00040.parquet",
+        "size": 368687733,
+        "sha256": "8080142319033d4f55e5394edfd7f0236d6346bf126a85b2ed33283a57b6855b"
+      }
+    ]
   }
 }
