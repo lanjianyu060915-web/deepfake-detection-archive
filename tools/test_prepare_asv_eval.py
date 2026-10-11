@@ -155,6 +155,8 @@ class PrepareAsvEvalTests(unittest.TestCase):
         rows = _rows()
         rows[1] = ("LA_0100", "LA_E_0002", "A09", 1)
         parquet, protocol, _ = _write_inputs(self.root / "contradiction", rows)
+        # Keep the official protocol unchanged so only the mirror disagrees.
+        protocol.write_text(_protocol_text(_rows()), encoding="utf-8")
         self.pin(parquet, protocol)
         output = self.root / "out-contradiction"
         with self.assertRaisesRegex(ValueError, "metadata mismatch"):
@@ -177,8 +179,10 @@ class PrepareAsvEvalTests(unittest.TestCase):
             )
 
     def test_rejects_duplicate_mirror_samples(self) -> None:
-        rows = [*_rows(), _rows()[0]]
-        parquet, protocol, _ = _write_inputs(self.root / "duplicate", rows)
+        parquet, protocol, _ = _write_inputs(
+            self.root / "duplicate", [*_rows(), _rows()[0]]
+        )
+        protocol.write_text(_protocol_text(_rows()), encoding="utf-8")
         self.pin(parquet, protocol)
         with self.assertRaisesRegex(ValueError, "duplicate mirror sample"):
             self.materialize(
@@ -216,6 +220,7 @@ class PrepareAsvEvalTests(unittest.TestCase):
             with self.subTest(rows=rows):
                 protocol = self.root / f"bad-protocol-{index}.txt"
                 protocol.write_text(_protocol_text(rows), encoding="utf-8")
+                self.pin(self.parquet, protocol)
                 with self.assertRaisesRegex(ValueError, "invalid eval protocol row"):
                     self.materialize(
                         protocol_path=protocol,
