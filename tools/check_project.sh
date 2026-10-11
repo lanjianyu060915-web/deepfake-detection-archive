@@ -14,6 +14,7 @@ model_tools=(
   tools/prepare_pretrained.py
   tools/prepare_asvspoof2019.py
   tools/prepare_asv_parquet.py
+  tools/prepare_asv_eval.py
   tools/finalize_asvspoof2019.py
   tools/prepare_vif_panda.py
   tools/prepare_asv_main.py
@@ -23,6 +24,7 @@ model_tools=(
   tools/prepare_video_control.py
   tools/prepare_robustness.py
   tools/compare_scores.py
+  tools/test_prepare_asv_eval.py
   tools/test_prepare_video_control.py
 )
 
@@ -32,5 +34,5 @@ uv run --no-sync mypy
 uv run --no-sync mypy "${model_tools[@]}"
 uv run --no-sync pytest -q
 uv run --no-sync python -B -m unittest discover \
-  -s tools -p 'test_prepare_video_control.py' -v
+  -s tools -p 'test_*.py' -v
 uv build --no-sources
