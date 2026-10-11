@@ -1,6 +1,7 @@
 """Tiny CPU AST behavior tests; no downloaded weights or GPU execution."""
 
 import json
+from dataclasses import replace
 from pathlib import Path
 from unittest.mock import patch
 
@@ -102,3 +103,43 @@ def test_verified_local_pretrained_loading(config, tmp_path: Path):
         torch.testing.assert_close(model.head.state_dict()[key], tensor)
     with pytest.raises(ValueError, match="SHA-256 mismatch"):
         model.initialize_pretrained(path, "0" * 64)
+
+
+def test_pretrained_time_crop_preserves_frequency_and_special_tokens(config, tmp_path):
+    upstream_config = transformers.ASTConfig(
+        **{**config.backbone_config, "max_length": 64, "num_mel_bins": 48}
+    )
+    upstream = transformers.ASTForAudioClassification(upstream_config)
+    original = upstream.audio_spectrogram_transformer.state_dict()
+    key = "embeddings.position_embeddings"
+    with torch.no_grad():
+        original[key].copy_(
+            torch.arange(original[key].numel()).reshape_as(original[key])
+        )
+    upstream.save_pretrained(tmp_path)
+    target_config = replace(
+        config, backbone_config={**config.backbone_config, "num_mel_bins": 48}
+    )
+    target = ASTClassifier(target_config).eval()
+    path = tmp_path / "model.safetensors"
+    target.initialize_pretrained(path, sha256_file(path))
+    actual = target.backbone.state_dict()
+    # Source is 4 frequencies x 5 times; target keeps central times 1:3 per frequency.
+    grid = original[key][:, 2:].reshape(1, 4, 5, 16)
+    expected = torch.cat(
+        (original[key][:, :2], grid[:, :, 1:3].reshape(1, 8, 16)), dim=1
+    )
+    torch.testing.assert_close(actual[key], expected)
+    for name, tensor in original.items():
+        if name != key:
+            torch.testing.assert_close(actual[name], tensor)
+    with torch.no_grad():
+        assert target(torch.randn(2, 32, 48)).shape == (2,)
+    larger = ASTClassifier(
+        replace(
+            target_config,
+            backbone_config={**target_config.backbone_config, "max_length": 96},
+        )
+    )
+    with pytest.raises(ValueError, match="can only be shortened"):
+        larger.initialize_pretrained(path, sha256_file(path))

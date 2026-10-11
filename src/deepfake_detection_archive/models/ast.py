@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Self, cast
 
-from torch import Tensor, nn
+from torch import Tensor, cat, nn
 
 
 @dataclass(frozen=True)
@@ -117,9 +117,23 @@ class ASTClassifier(nn.Module):
         verify_sha256(path, expected_sha256)
         backbone = ASTModel.from_pretrained(
             str(path.parent),
-            config=self.backbone.config,
             local_files_only=True,
             use_safetensors=True,
             attn_implementation="sdpa",
         )
-        self.backbone.load_state_dict(backbone.state_dict(), strict=True)
+        state = backbone.state_dict()
+        source, target = backbone.config, self.backbone.config
+        if target.max_length != source.max_length:
+            if target.max_length > source.max_length:
+                raise ValueError("AST pretrained input length can only be shortened")
+            frequency, old_time = backbone.embeddings.get_shape(source)  # type: ignore[no-untyped-call]
+            _, new_time = self.backbone.embeddings.get_shape(target)  # type: ignore[no-untyped-call]
+            key = "embeddings.position_embeddings"
+            position = state[key]
+            grid = position[:, 2:].reshape(1, frequency, old_time, source.hidden_size)
+            start = old_time // 2 - new_time // 2
+            patches = grid[:, :, start : start + new_time].reshape(
+                1, frequency * new_time, source.hidden_size
+            )
+            state[key] = cat((position[:, :2], patches), dim=1)
+        self.backbone.load_state_dict(state, strict=True)
