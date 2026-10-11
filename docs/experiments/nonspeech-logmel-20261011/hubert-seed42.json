@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "manifest": "../../../data/nonspeech-logmel-20261011/manifest.jsonl",
+  "data_root": "../../../data/nonspeech-logmel-20261011",
+  "sources": "../../../data/nonspeech-logmel-20261011/sources.jsonl",
+  "output_dir": "../../../outputs/nonspeech-logmel-20261011/hubert-seed42",
+  "modality": "audio",
+  "architecture": "media_feature_head_v1",
+  "model_config": {
+    "input_dim": 768,
+    "hidden_dim": 64,
+    "dropout": 0.1,
+    "aggregation": "mean",
+    "trim_fraction": 0.1
+  },
+  "training": {
+    "device": "cuda",
+    "amp": true,
+    "amp_dtype": "bfloat16",
+    "max_epochs": 50,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "accumulation_steps": 1,
+    "patience": 10,
+    "min_delta": 0.0,
+    "max_grad_norm": 1.0,
+    "seed": 42,
+    "deterministic": true
+  },
+  "batch_size": 64,
+  "num_workers": 2,
+  "segment_samples": 64600,
+  "segments": 1,
+  "audio": {
+    "sample_rate": 16000,
+    "max_duration_seconds": 60,
+    "max_samples": 960000,
+    "backend": "soundfile"
+  },
+  "encoder": {
+    "kind": "audio",
+    "model_dir": "../../../models/nonspeech-hubert-20261011",
+    "expected_hashes": {
+      "config.json": "56be398848bbd9cbc720172b0d45b2f01cac7652f2968f0f31f5faf9f2986acc",
+      "model.safetensors": "411e8e7f967ba2a68bc6fba072e6374effc390225c7fdb75b8731edd95717e15",
+      "preprocessor_config.json": "4a93853b74278b7c769d07f5a861e5d12ceb5db2bced5620d335f87238cb9e86"
+    }
+  },
+  "feature_cache": "../../../cache/nonspeech-logmel-20261011/hubert-bf16",
+  "cache_max_bytes": 21474836480,
+  "balanced_sampling": true,
+  "feature_batch_size": 32
+}
