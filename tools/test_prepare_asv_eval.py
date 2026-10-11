@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-# ruff: noqa: PT009 - standalone unittest checks alongside the CLI tool
+# ruff: noqa: PT009, PT027 - standalone unittest checks alongside the CLI tool
 import hashlib
 import json
 import tempfile
@@ -11,10 +11,10 @@ from pathlib import Path
 from typing import Any
 from unittest import mock
 
+import prepare_asv_eval
 import pyarrow as pa  # type: ignore[import-untyped]
 import pyarrow.parquet as pq  # type: ignore[import-untyped]
 
-import prepare_asv_eval
 from deepfake_detection_archive.data.manifest import load_manifest
 
 Row = tuple[str, str, str, int]
@@ -193,12 +193,16 @@ class PrepareAsvEvalTests(unittest.TestCase):
 
     def test_rejects_unpinned_shard_or_protocol(self) -> None:
         output = self.root / "out-unpinned"
-        with mock.patch.object(prepare_asv_eval, "EVAL_SHARD_SHA256", "0" * 64):
-            with self.assertRaisesRegex(ValueError, "eval shard SHA256 mismatch"):
-                self.materialize(output_root=output)
-        with mock.patch.object(prepare_asv_eval, "EVAL_PROTOCOL_SHA256", "0" * 64):
-            with self.assertRaisesRegex(ValueError, "eval protocol SHA256 mismatch"):
-                self.materialize(output_root=output)
+        with (
+            mock.patch.object(prepare_asv_eval, "EVAL_SHARD_SHA256", "0" * 64),
+            self.assertRaisesRegex(ValueError, "eval shard SHA256 mismatch"),
+        ):
+            self.materialize(output_root=output)
+        with (
+            mock.patch.object(prepare_asv_eval, "EVAL_PROTOCOL_SHA256", "0" * 64),
+            self.assertRaisesRegex(ValueError, "eval protocol SHA256 mismatch"),
+        ):
+            self.materialize(output_root=output)
         self.assertFalse(output.exists())
 
     def test_rejects_existing_output_root(self) -> None:
