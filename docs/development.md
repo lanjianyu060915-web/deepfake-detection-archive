@@ -142,7 +142,9 @@ scripts/devctl run python -m deepfake_detection_archive verify-package \
 
 ## 开发与协作
 
-单 GPU 的占用在 Issue 协调，数据/权重只读，任务 outputs/cache 独立。
+RTX4090 可多人并发使用：先用实际小批量确定显存，按剩余显存和利用率启动有价值的任务，
+在 Issue 记录占用和预计耗时；负载饱和时按总吞吐调整 batch 或错开重任务，不设个人独占。
+每个任务固定独立工作副本和 outputs/cache，数据/权重只读，不修改其他运行任务或共享环境。
 PR 给出实际改动、必要测试、样本数和算法结果；无收益实验如实记录。
 
 ```bash

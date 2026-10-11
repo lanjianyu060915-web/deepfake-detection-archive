@@ -15,6 +15,7 @@
 | 受控视频资产及检测器 | `/var/tmp/lanjianyu-issue10-20261011/` | `control/`清单、`resnet18-a1/`编码器、`seed42/`与`seed43/`检测器和分数 |
 | FakeSound ZIP | `/srv/shared-data/datasets/fakesound/FakeSound.zip` | 固定原包、单类诊断，不能训练二分类 |
 | 配对环境音 | `/var/tmp/lanjianyu-issue11-20261011/doppelganger-v2/` | 462 条实际可读媒体，附 manifest/sources/provenance |
+| 环境音检测器与分数 | `/var/tmp/deepfake-nonspeech-logmel-20261011/` | LogMel/HuBERT双种子及本地FP32推理；团队可读 |
 | FakeSound 诊断清单 | `/var/tmp/lanjianyu-issue11-20261011/fakesound-v1/` | data_root 为其 `media/`，含缺失 real 记录 |
 
 共享原媒体和模型只读；`outputs/`、`cache/` 使用各自任务目录。
@@ -49,7 +50,8 @@ scripts/devctl run python -m deepfake_detection_archive train \
   --config configs/train-logmel-doppelganger.local.json
 ```
 
-安排 GPU 后再执行训练。该清单为 train322/dev70/holdout70、153 个连通组；
+GPU 有余量即可执行训练，并在任务 Issue 记录占用。
+该清单为 train322/dev70/holdout70、153 个连通组；
 `manifest.jsonl` 为可训练样本，`inventory.jsonl` 保留全部572条选中项及排除记录。
 最终 manifest SHA-256：`18e30516a73959cca46c55000617b73065f1141d5c7b08d097eba95c7d51ce4b`。
 完整获取命令、来源版本和处理规则见[环境音实验卡](experiments/nonspeech-20261011/README.md)。

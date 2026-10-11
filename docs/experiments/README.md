@@ -10,7 +10,8 @@
 | --- | --- | --- |
 | [ASV 云端双种子](asv-cloud-20261011/README.md) | LogMel EER0.7849%/0.9419%；冻结HuBERT未改善同域dev | 未知攻击、跨来源及压缩评分 |
 | [ViF 云端受控视频](vif-cloud-20261011/README.md) | Hunyuan train618/dev146；视觉EER20.55%/21.92%，优于同集元数据 | 跨来源/生成器与压缩评分，再决定微调/时序 |
-| [配对环境音](nonspeech-20261011/README.md) | 462条可训练环境音，已完成数据交付 | 训练首个非语音候选并补生成器/来源 |
+| [配对环境音](nonspeech-20261011/README.md) | 462条可训练环境音，已供首轮模型对照使用 | 补生成器/来源 |
+| [环境音模型对照](nonspeech-logmel-20261011/README.md) | HuBERT本地FP32 EER28.57%/34.29%，优于本轮LogMel | 补独立生成器/来源及通用表征 |
 | [鲁棒性媒体试跑](robustness-smoke-20261011/README.md) | 媒体条件工具可用，没有模型评分 | 使用已选择模型得到实际 ΔEER |
 
 ## 历史探索
