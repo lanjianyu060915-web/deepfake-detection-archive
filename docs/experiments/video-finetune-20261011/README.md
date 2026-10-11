@@ -31,9 +31,12 @@ checkpoint。第一轮不引入时序模块、新数据或复杂增强。
 
 ## 资源
 
-- 618 条训练样本每 epoch 约 3.2 秒（约 194 samples/s），dev 146 条约 0.6 秒，
-  两个种子都在第 8 个 epoch 触发早停。
-- 帧缓存 764 条媒体，解码后按 224×224 float32 缓存；训练显存占用约 3.3 GiB。
+- 每个 epoch 实测 3.5–3.8 秒，首 epoch 5.3–5.4 秒（含预热），两个种子都在第 8 个
+  epoch 触发早停；`training/history.json` 的 `seconds` 没有拆分训练与 dev 的时间。
+- 显存补测（同一 `best.pt` 与训练配置，batch 8 媒体=32 帧、bfloat16 AMP、AdamW）：
+  一步训练峰值 0.20 GiB（`torch.cuda.max_memory_allocated`）。此前记录的“约 3.3 GiB”
+  无法用该配置复现，以本次测量为准。
+- 帧缓存 764 条媒体，解码后按 224×224 float32 缓存。
 
 ## 离线复算
 
@@ -41,7 +44,8 @@ checkpoint。第一轮不引入时序模块、新数据或复杂增强。
 推理路径，对同一清单的 764 条媒体评分：0 失败、覆盖 1.0，其中 dev 146 条
 EER 仍为 16.4384%，与训练期 dev 分数的最大绝对差 0.0275、均值 0.0052
 （训练用 bfloat16 AMP，推理为 FP32）。输入只有本地清单、媒体和 hash 校验过的
-`best.pt`，没有隐式下载；全过程约 0.22 秒/条，瓶颈在视频解码。
+  `best.pt`，没有隐式下载；全程约 0.22 秒/条（T10k 投影口径），逐条解码是主要
+  开销（未单独计时）。
 产物：`/var/tmp/lanjianyu-issue21-20261011/e2e-rehearsal/seed42/`
 （`scores.jsonl`、`report.json`、`metadata.json`）。
 
