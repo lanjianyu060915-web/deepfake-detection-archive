@@ -2,7 +2,7 @@
 
 2026-10-10已按用户授权通过`gh`发布三个独立任务，正文保存在对应Markdown。
 三条任务分别承担本方向的数据接入、开发和验收，代码/数据准备可并行，不等待统一环境Issue。
-负责人尚未指定，队友按方向领取；本地文件前缀不是GitHub编号。
+队友已开始推进，领取和进度以各 Issue 为准；本地文件前缀不是GitHub编号。
 
 | 优先级 | GitHub Issue | 正文 | 建议方向 | 交付 |
 | --- | --- | --- | --- | --- |
@@ -14,8 +14,8 @@
 单GPU的profile、特征提取和训练在Issue中约定时段，避免同时满载；只读原数据复用，
 派生清单、outputs/cache各任务独立。
 
-迁移修复在[`chore/cloud-migration-cleanup`](https://github.com/lanjianyu060915-web/deepfake-detection-archive/tree/chore/cloud-migration-cleanup)
-分支，尚未合并到`main`。队友暂以该分支为任务基点，合并后使用最新`main`；
+迁移修复已通过 [PR #12](https://github.com/lanjianyu060915-web/deepfake-detection-archive/pull/12)
+合并到`main`，新任务从最新`main`建立分支；
 开发命令为`scripts/devctl run ...`和`scripts/devctl check`。角色、职责、验收与PR要求以各Issue为准。
 
 [离线交付草稿](04-offline-delivery.md)保留待后续发布，启动条件是音频/视频真实候选完成且
