@@ -90,8 +90,11 @@ class VideoFrameClassifier(nn.Module):
         if not hasattr(self.backbone, config.trainable_prefix):
             raise ValueError("trainable_prefix is not a backbone submodule")
         self.head = FeatureHead(
-            HeadConfig(int(cast(int, self.backbone.num_features)), config.hidden_dim,
-                       config.dropout)
+            HeadConfig(
+                int(cast(int, self.backbone.num_features)),
+                config.hidden_dim,
+                config.dropout,
+            )
         )
         self.preprocessing: dict[str, Any] = resolve_model_data_config(  # type: ignore[no-untyped-call]
             self.backbone

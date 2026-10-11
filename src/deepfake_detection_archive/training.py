@@ -45,7 +45,7 @@ class TrainConfig:
     deterministic: bool = True
     backbone_lr_scale: float = 1.0
 
-    def __post_init__(self) -> None:  # noqa: PLR0912
+    def __post_init__(self) -> None:  # noqa: C901, PLR0912
         for name in ("max_epochs", "accumulation_steps", "patience"):
             if type(getattr(self, name)) is not int or getattr(self, name) <= 0:
                 raise ValueError(f"{name} must be a positive integer")

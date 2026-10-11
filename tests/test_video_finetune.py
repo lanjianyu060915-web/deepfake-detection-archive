@@ -2,6 +2,7 @@
 
 import pytest
 
+
 torch = pytest.importorskip("torch")
 
 from deepfake_detection_archive.models.checkpoint import (  # noqa: E402
@@ -16,7 +17,7 @@ from deepfake_detection_archive.models.finetune import (  # noqa: E402
 
 
 def _config(tmp_path):
-    import timm
+    timm = pytest.importorskip("timm")
 
     backbone = timm.create_model("resnet18", pretrained=False, num_classes=0)
     path = tmp_path / "encoder.pt"
