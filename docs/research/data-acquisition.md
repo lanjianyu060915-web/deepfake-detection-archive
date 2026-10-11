@@ -67,6 +67,11 @@ SHA-256 的 CSV 重算；其元数据审计不涉及媒体下载或模型表现�
 | 内容 | 10 秒通用音频伪造片段；论文说明基于 AudioCaps 的原音频，以 AudioLDM/AudioLDM2 进行片段重建 | 覆盖环境声/通用音频，而非仅语音。 |
 | 标签 | 卡片的 4 个类别是 `easy`、`hard`、`zero-shot` 等伪造难度/条件；上游 README 的 `label=0` 表示 deepfake | 此发布物不应误记为完整 binary real/fake 数据集；不能把难度类标签直接当比赛标签，也不能用不配对真实音频拼成训练集。 |
 
+2026-10-11 实包核对发现：该 README 的数字方向与固定 ZIP 元数据冲突，实际发布的
+1,899 个 manipulated WAV 全对应 raw `label=1`，另有 1,899 个缺失原始项对应 raw `label=0`。
+导入保留原标签及冲突依据，许可仍为 unresolved；详见
+[非语音数据接入记录](../experiments/nonspeech-20261011/README.md)。不可仅套用上表的 README 数字。
+
 推荐把它作为首个 **fake-only 外部诊断集**：模型在 EnvSDD 上训练时，对 FakeSound 只计算
 伪造分数分布、召回和失败样例，不用来选择最终阈值；需二元 EER 时，必须使用经许可并在
 原始媒体层面配对的 bona fide 数据。
