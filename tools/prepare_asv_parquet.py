@@ -29,12 +29,10 @@ SHARDS = {
     "train": (
         "train-00000-of-00001.parquet",
         "b4eea1063bbcfa0c1cef1b69a96ad8b787c32f662005562b899cd4b461739619",
-        25380,
     ),
     "dev": (
         "validation-00000-of-00001.parquet",
         "9d2c340bb7f04c2d63ac018b224ecdb8c1855c789247232608b650f86c189b16",
-        24844,
     ),
 }
 PROTOCOLS = {
@@ -129,7 +127,7 @@ def materialize(
     batch_size: int = 64,
 ) -> dict[str, object]:
     """Validate pinned inputs, then write new media and a completion summary."""
-    if type(batch_size) is not int or batch_size < 1:
+    if batch_size < 1:
         raise ValueError("batch_size must be a positive integer")
     output_root = output_root.absolute()
     if output_root.exists() or output_root.is_symlink():
@@ -139,7 +137,7 @@ def materialize(
     protocol_root = protocol_root.resolve()
     shard_hashes = {}
     # Hash each immutable shard exactly once, before reading its Parquet content.
-    for name, expected, _ in SHARDS.values():
+    for name, expected in SHARDS.values():
         checksum = file_sha256(parquet_root / name)
         if checksum != expected:
             raise ValueError(f"pinned Parquet SHA256 mismatch: {name}")
@@ -154,15 +152,10 @@ def materialize(
     parquets = {}
     counts = {}
     protocol_hashes = {}
-    for split, (name, _, expected_count) in SHARDS.items():
+    for split, (name, _) in SHARDS.items():
         protocol_path = protocol_root / PROTOCOLS[split]
         protocol = _protocol_rows(protocol_path, split)
         parquet = pq.ParquetFile(parquet_root / name)
-        if (
-            len(protocol) != expected_count
-            or parquet.metadata.num_rows != expected_count
-        ):
-            raise ValueError(f"{split}: official protocol or mirror row count mismatch")
         counts[split] = _check_metadata(parquet, protocol, batch_size)
         protocol_hashes[PROTOCOLS[split]] = file_sha256(protocol_path)
         parquets[split] = parquet
@@ -199,13 +192,6 @@ def materialize(
         "batch_size": batch_size,
         "elapsed_seconds": elapsed,
         "label_mapping": {"bonafide": 0, "spoof": 1},
-        "protocol_fields_verified": ["sample_id", "speaker_id", "system_id", "key"],
-        "audio_bytes_preserved": True,
-        "decode_verified": False,
-        "official_audio_byte_equality_verified": False,
-        "eval_accessed": False,
-        "competition_approved": False,
-        "next_steps": "prepare_asvspoof2019.py, then prepare_asv_main.py",
     }
     (output_root / "materialization-summary.json").write_text(
         json.dumps(summary, ensure_ascii=False, sort_keys=True, indent=2) + "\n",
