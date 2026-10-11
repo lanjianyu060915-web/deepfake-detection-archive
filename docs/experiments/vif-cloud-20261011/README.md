@@ -9,7 +9,7 @@ ResNet18-a1，在宽高/FPS/整秒时长桶受控的 train/dev 上训练媒体�
 - ZIP revision `c9e9b30e47e216f72c50664c43750674a79c0ded`，SHA-256
   `6f47fc9935c6545c7c237a6d15ef8c0e7e26a6826160bb54a6f2f5e83d2c6fae`；
   从共享只读输入导入 4,612 条 Panda 媒体，用时 7.24 秒；Kinetics 媒体未解包。
-- 复用 [旧 pilot 清单](../vif-pilot-20261007/manifest.jsonl) 的
+- 复用 [固定版本旧 pilot 清单](https://github.com/lanjianyu060915-web/deepfake-detection-archive/blob/4bbd2925259f86b1022ae5bb71f733684681b95d/docs/experiments/vif-pilot-20261007/manifest.jsonl) 的
   train716/dev154/holdout154 归属，将 full 与 pilot 的登记关系合并后，
   在 ffprobe 前排除旧 holdout 整组154条。其余4,458条探测0失败，用时33.23秒。
 - 导入包含全部 Panda 文件的原字节复制和哈希；旧 holdout 没有执行 ffprobe、
@@ -32,7 +32,7 @@ EER **53.424658%**，与 [原受控准备](../vif-control-20261009/README.md) �
 
 固定 `timm/resnet18.a1_in1k` revision
 `491b427b45c94c7fb0e78b5474cc919aff584bbf`，复用
-[既有转换器](../../research/pretrained-resources/prepare_resources.py) 仅移除分类器两键。
+[资源准备工具](../../research/pretrained-resources/README.md) 仅移除分类器两键。
 转换后 `encoder.pt` 为44,780,495字节，SHA-256
 `db6fd0c5cfb2b712d1904bb8b7edcf41a850491bdf42729e4ab485e89f1b6889`，
 与历史字节完全一致；120个张量与固定上游逐值一致，CPU strict load通过。
@@ -100,7 +100,17 @@ outputs/experiments/vif-cloud-20261011 -> <assets>
 
 导入/控制的精确命令、环境与退出码见 `logs/data-import.execution.json` 和
 `logs/data-control.execution.json`。使用现有 `tools/prepare_vif_panda.py --exploratory`
-及 `tools/prepare_video_control.py --seed 42 --workers 4`，pilot指向Git内旧清单。
+及 `tools/prepare_video_control.py --seed 42 --workers 4`。
+在新任务目录恢复固定的 pilot 划分，准备受控集时显式传入
+`--pilot "$assets/pilot-manifest.jsonl"`：
+
+```bash
+assets=/var/tmp/your-new-video-task
+mkdir -p "$assets"
+git show 4bbd292:docs/experiments/vif-pilot-20261007/manifest.jsonl \
+  > "$assets/pilot-manifest.jsonl"
+```
+
 ResNet只恢复既有固定资源，不在推理或训练时下载。实际训练命令：
 
 ```bash
