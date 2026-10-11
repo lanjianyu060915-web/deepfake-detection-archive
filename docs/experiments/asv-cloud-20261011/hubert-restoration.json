@@ -1,0 +1,76 @@
+{
+  "created_at_utc": "2026-10-11T02:47:31.296810+00:00",
+  "repository": "facebook/hubert-base-ls960",
+  "revision": "dba3bb02fda4248b6e082697eee756de8fe8aa8a",
+  "bundle": "/var/tmp/lanjianyu-issue9-20261011/hubert/models/hubert-base-ls960",
+  "upstream_hashes_and_bytes_match": true,
+  "converted_hashes_and_bytes_match_historical": true,
+  "converted_files": {
+    "config.json": {
+      "sha256": "56be398848bbd9cbc720172b0d45b2f01cac7652f2968f0f31f5faf9f2986acc",
+      "bytes": 1385
+    },
+    "model.safetensors": {
+      "sha256": "411e8e7f967ba2a68bc6fba072e6374effc390225c7fdb75b8731edd95717e15",
+      "bytes": 377510584
+    },
+    "preprocessor_config.json": {
+      "sha256": "4a93853b74278b7c769d07f5a861e5d12ceb5db2bced5620d335f87238cb9e86",
+      "bytes": 213
+    }
+  },
+  "bundle_files": {
+    "LICENSE": {
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "bytes": 11358
+    },
+    "README.md": {
+      "sha256": "c59fb00d253ab5ae5d288f130c64dddf3b7af3d5ce35c96395ac7a3db5db88f5",
+      "bytes": 2596
+    },
+    "config.json": {
+      "sha256": "56be398848bbd9cbc720172b0d45b2f01cac7652f2968f0f31f5faf9f2986acc",
+      "bytes": 1385
+    },
+    "model.safetensors": {
+      "sha256": "411e8e7f967ba2a68bc6fba072e6374effc390225c7fdb75b8731edd95717e15",
+      "bytes": 377510584
+    },
+    "preprocessor_config.json": {
+      "sha256": "4a93853b74278b7c769d07f5a861e5d12ceb5db2bced5620d335f87238cb9e86",
+      "bytes": 213
+    }
+  },
+  "loading_info": {
+    "missing_keys": [],
+    "unexpected_keys": [],
+    "mismatched_keys": [],
+    "error_msgs": []
+  },
+  "cpu_check": {
+    "input_shape": [
+      1,
+      16000
+    ],
+    "output_shape": [
+      1,
+      768
+    ],
+    "sample_rate": 16000,
+    "output_dtype": "torch.float32",
+    "all_parameters_frozen": true,
+    "finite_outputs": true,
+    "local_files_only": true,
+    "cuda_visible_devices": ""
+  },
+  "duration_seconds": 108.0903501259163,
+  "versions": {
+    "torch": "2.14.1+cu132",
+    "transformers": "5.19.0",
+    "safetensors": "0.8.0",
+    "huggingface-hub": "2.2.0"
+  },
+  "wrapper_script_sha256": "383a6f6bc32d0f55ecc936826139a74ca24311c8860011442bc609d09af38019",
+  "reused_conversion_script_sha256": "f98a0acfefc7bf6da653f727f3f2958a43394508eb58c0459de5bd14487dd64c",
+  "boundary": "CPU synthetic-input compatibility only; no training, CUDA profile, detection EER or competition permission claim."
+}
