@@ -109,6 +109,38 @@ scripts/devctl run python tools/prepare_video_control.py --help
 
 这些工具的实际参数以 `--help` 和当前研究记录为准。历史导入日志不作为新实验入口。
 
+### dev 压缩与重采样对照
+
+已有 dev 清单和模型后，用同一批样本检查常见媒体处理造成的退化。先准备条件媒体：
+
+```bash
+scripts/devctl run python tools/prepare_robustness.py \
+  --manifest data/audio-dev-only.jsonl --data-root data/audio \
+  --output-dir outputs/robustness/audio-dev \
+  --condition audio_aac64k --condition audio_bandlimit8k
+
+scripts/devctl run python tools/prepare_robustness.py \
+  --manifest data/video-dev-only.jsonl --data-root data/video \
+  --output-dir outputs/robustness/video-dev \
+  --condition video_h264_crf23 --condition video_h264_crf35
+```
+
+工具接受纯 dev、单模态且包含真假两类的清单；每次使用新输出目录。条件参数不依赖标签，
+源文件只读；失败保留在条件清单中并计入覆盖率。条件目录下的 `manifest.jsonl` 和 `media/`
+配套使用，`summary.json` 给出各条件的清单、data_root、参数和失败信息。
+`baseline.jsonl` 保留原路径，其 data_root 仍为输入媒体根目录。
+
+分别复制现有推理实值配置，只改变 manifest、data_root 和 output_dir，保持本地 checkpoint、
+采样/抽帧、聚合与精度一致。音频使用 FFmpeg 后端，使 AAC 和原音频采用相同解码入口；
+8 kHz 条件最终保存为 16 kHz FLAC，测试的是带宽损失。每种条件继续运行现有 `infer` 和
+`evaluate --manifest`，比较原媒体与扰动后的 EER、覆盖率及分生成器结果。
+转码保留源声道，降混统一由现有解码器完成，避免条件额外引入音量变化；损坏输入沿用项目
+严格解码参数，转码器不会把部分恢复的媒体计作成功。
+如需固定阈值错误率，使用原 dev 选定的同一阈值，不在各条件重新调参。
+
+同一 ID 表示配对样本，条件清单分别评分；不拼成重复的独立样本，也不重新划分。
+此工具不读取 holdout 媒体；解码成功不能证明模型鲁棒，真实结果以模型评分为准。
+
 ## 3. 训练
 
 选择与模型对应的模板，例如 LogMel：
@@ -202,8 +234,20 @@ scripts/devctl run python -m deepfake_detection_archive verify-package \
 scripts/devctl check
 ```
 
-`scripts/devctl check` 委托 `tools/check_project.sh`；本地和 CI 使用同一检查定义，覆盖主动代码与当前开发工具，范围以该脚本为准；历史恢复脚本和归档不做自动格式修复。
+`scripts/devctl check` 委托 `tools/check_project.sh`；本地和 CI 使用同一检查定义，覆盖主动代码、
+当前开发工具、归档字节完整性和包构建，范围以该脚本为准。旧照片评测器stub不再默认运行；
+历史恢复脚本和归档不做自动格式修复。
 工程检查证明实现行为，不代替真实数据上的模型评测。
+
+GitHub Actions 使用 Ubuntu 24.04、Python 3.12.15、uv 0.13.0，在工作区独立 `.venv` 中按
+`uv.lock` 安装 `dev/media/research` 和 `cpu` extra，不修改服务器共享GPU环境。先运行
+`tools/check_environment.py --device cpu`，再执行标准检查；探针结果写入日志及
+`outputs/environment/ci.json`。ASVspoof2021固定评分参考由CI检出，使上游EER核对实际执行。
+
+CI的FFmpeg/ffprobe使用BtbN固定月底构建 `n8.1.3-9-g29e619e767`，下载后校验SHA-256；
+版本、来源和摘要统一维护在[工作流](../.github/workflows/checks.yml)。[上游保留策略](https://github.com/BtbN/FFmpeg-Builds#release-retention-policy)
+为两年，须在2028-09前更新固定版本。服务器继续使用已安装的全局版本，宿主二进制不进入wheel。
+PR触发检查，`main`推送也触发；同一PR或分支的新运行取消过时运行，避免重复消耗资源。
 
 本轮核对模块及导入工具的 `--help`；上述数据、训练、推理和打包示例需要实值配置与资产，
 尚未在当前服务器端到端执行。当前工作副本尚未接入这些训练资产，不能将命令示例当作已完成实验。

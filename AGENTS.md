@@ -70,7 +70,8 @@ scripts/devctl run python -m deepfake_detection_archive --help
 scripts/devctl check
 ```
 
-- 默认测试保护主动行为及归档；旧评测器7项stub不代替模型效果。远端CI状态按实际运行报告。
+- 默认测试保护主动行为及归档字节完整性；旧照片评测器stub仅供历史项目恢复时手动运行。
+  CI使用独立CPU环境和固定媒体工具链，执行合成环境探针及标准检查；状态按实际运行报告。
 - 11项项目skills由固定`npx skills@1.7.1 --copy`管理并纳入Git，协作者克隆即用。更新审阅上游差异及许可，适配写在本仓库，不手改第三方skill。上传、发布、遥测和云示例不代表授权。
 
 ## Git与协作

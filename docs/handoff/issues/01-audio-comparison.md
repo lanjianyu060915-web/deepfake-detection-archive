@@ -30,7 +30,7 @@
 
 当前服务器为 RTX 4090 24GiB，Python 3.12.15、torch 2.14.1+cu132；共享环境 `/opt/venvs/deepfake-cu132` 已可用，FFmpeg/ffprobe 已全局安装到 `/usr/local/bin`。复用现有依赖，不重新安装环境或修改驱动。
 
-在自己的 clone/worktree 中，基于迁移修复分支 [`chore/cloud-migration-cleanup`](https://github.com/lanjianyu060915-web/deepfake-detection-archive/tree/chore/cloud-migration-cleanup) 建立 `issue/<本Issue编号>-<主题>`；该分支合并后改用最新 `main`。在仓库根目录使用统一入口：
+迁移修复已通过 PR #12 合并。在自己的 clone/worktree 中，基于最新 `main` 建立 `issue/<本Issue编号>-<主题>`。在仓库根目录使用统一入口：
 
 ```bash
 scripts/devctl run python -m deepfake_detection_archive --help
