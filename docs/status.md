@@ -8,11 +8,11 @@
 | 模块 | 已完成 | 未完成 |
 | --- | --- | --- |
 | 数据/评测 | 标准 manifest、来源登记、组级划分、EER 与失败覆盖率 | 比赛数据及官方评测程序尚未提供 |
-| 语音模型 | 同一 ASV train/dev 上 LogMel/HuBERT 各双种子；每次24,844条评分0失败 | 未知攻击、跨来源、压缩及端到端离线路径验收 |
+| 语音模型 | 同一 ASV train/dev 上 LogMel/HuBERT 各双种子；每次24,844条评分0失败 | A07–A19研究子集与AAC/带宽诊断已完成；跨来源及最终离线验收待做 |
 | 环境音 | 19,215条Urban配对媒体；AST12层dev EER1.39%；冻结holdout已见1.43%/未见6.51%，分别2,880/1,728条0失败 | 跨来源和真正混合内容覆盖有限 |
 | 音乐/联合训练 | 630条AIME；混合研究候选音乐dev0%、Urban2.21%；五桶评分0失败 | 未训练音乐仍薄弱；音乐dev仅16条real；原曲/artist关系未知 |
 | 视频模型 | 冻结 ResNet18 帧头双种子 EER20.55%/21.92%；Hunyuan train618/dev146 | 跨来源/生成器验收；主干微调和轻量时序尚未实现 |
-| 鲁棒性 | AAC、带宽退化、H.264 的配对媒体工具与分数比较入口 | 只有小样本转码试跑，没有模型 EER 退化结果 |
+| 鲁棒性 | AAC、带宽退化、H.264 的配对媒体工具与分数比较入口 | 语音LogMel全dev：AAC退化+0.20/+0.99点，8kHz采样率带限约+12点；视频评分待做 |
 | 离线交付 | 音视频研究权重、本地推理/恢复、导出打包；24条语音CPU断网演练 | 候选选择、双分支代表性批量验收、正式平台 I/O 适配 |
 
 **现阶段最重要的成果缺口是通用音频、候选泛化及双分支离线验收。**
@@ -22,7 +22,7 @@
 
 | 任务 | 状态 | 下一份交付 |
 | --- | --- | --- |
-| [音频泛化 #19](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/19) | 分配给 lanjianyu060915-web | 固定语音候选的压缩退化与未知攻击实际分数 |
+| [音频泛化 #19](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/19) | #24交付AAC/带宽退化及A07–A19研究子集，原权重固定 | 针对带宽弱点训练；跨来源及未知攻击叠加退化待做 |
 | [视频泛化 #20](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/20) | 分配给 rrx59 | 新生成器开发诊断和H.264配对退化 |
 | [视频微调 #21](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/21) | 分配给 lanjianyu060915-web | 同划分ResNet18部分主干微调、实际EER及离线推理 |
 | 环境音 AST 扩展 | PR #22 已合并；#23完成多生成器调优和冻结holdout；本轮补12层seed43 dev | 向更多来源迁移 |
@@ -52,7 +52,10 @@ RTX4090按剩余显存与负载多人并发，任务在Issue记录占用，不�
 
 音频使用 train25,379/dev24,844，两种子 LogMel 均优于冻结 HuBERT，
 本轮保留 LogMel42 为较优研究候选。HuBERT 的 BF16 编码缓存评分不等于离线 FP32 编码评测。
-这是已知 A01–A06 语音开发集；未知攻击、非语音和最终 holdout 未验收。
+这是已知 A01–A06 语音开发集。后续固定权重诊断覆盖A07–A19研究子集12,000条，
+LogMel42/43 EER2.9712%/4.1442%，HuBERT均6.0096%；全dev AAC及8kHz采样率带限均0失败。
+带限后LogMel EER13.10%/13.18%，是下一训练弱点；攻击与说话人同时改变，不能分离归因。
+跨来源及最终holdout仍未验收，详见[语音泛化实验](experiments/audio-generalization-20261011/README.md)。
 详见[云端音频实验](experiments/asv-cloud-20261011/README.md)。
 
 环境音仅train322/dev70，HuBERT的BF16缓存EER25.71%/31.43%，不能替代上表FP32端到端数字。
@@ -114,5 +117,5 @@ FakeSound 缺少 real、许可 unresolved，保持单类诊断，不用于二分
 ## 下一步
 
 环境音和音乐已完成首轮联合训练；下一轮扩大音乐来源与未训练生成路径，补真正混合内容音频。
-三项队友任务并行推进语音泛化、视频泛化和同划分部分微调，再决定增强与时序投入。
+语音泛化诊断已交付；视频泛化和同划分部分微调继续并行，语音下一轮优先带宽增强。
 候选冻结后完成双分支离线验收。具体依赖、交付物和取舍见[路线图](roadmap.md)。
