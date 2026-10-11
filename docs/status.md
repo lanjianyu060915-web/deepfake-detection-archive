@@ -30,12 +30,17 @@
   音频变换、确定性抽帧和研究工具合成检查通过。系统旧FFmpeg4.4.2会被该探针明确拒绝。
 - 已恢复固定提交`9b33f5e`的ASVspoof2021只读评分参考；当前不需要恢复另外两套上游依赖。
 
-鲁棒性分支提交前标准检查：**413项pytest通过（25.24秒，无跳过）**；另有3项视频工具测试和7项旧评测器
-stub通过，Ruff、61文件格式检查、严格mypy（32+8文件）、Shell语法、sdist/wheel构建通过。
-9项新回归与独立评审通过。验证入口为`scripts/devctl check`。
-构建有uv0.13.0与固定uv_build0.12系列不一致的提示，构建成功；未为消除提示升级锁文件。
-环境报告在本机`outputs/environment/`；本轮完整检查日志为
-`outputs/robustness-smoke-20261011/project-check.log`，远端CI结果按对应提交的实际运行报告。
+CI更新后的标准检查：**413项pytest通过（25.47秒，无跳过）**；另有3项视频工具测试，
+Ruff、61文件格式检查、严格mypy（32+8文件）、Shell语法、sdist/wheel构建通过。
+旧照片评测器7项stub不再默认执行，1,526个归档文件与恢复工具的字节完整性仍由pytest保护。
+uv与构建后端统一到0.13系列，锁文件核对通过，运行时依赖未变。验证入口为`scripts/devctl check`。
+
+CI已更新为独立CPU环境、固定并校验SHA-256的FFmpeg月底构建、合成环境探针和固定ASV评分参考，
+与服务器共享GPU环境隔离。损坏音频回归改用固定坏帧，另修复一处`touch()`时间精度造成的偶发测试失败；
+不改生产失败处理，不放宽断言。针对性检查及独立评审通过。
+本机使用CI同版FFmpeg的CPU合成探针和标准检查日志在`outputs/environment/ci-refresh-20261011/`；
+本机探针使用共享环境中的CUDA wheel执行CPU前向，干净CPU wheel环境以
+[PR #13的实际CI结果](https://github.com/lanjianyu060915-web/deepfake-detection-archive/pull/13/checks)为准。
 
 ## 最新真实结果
 
@@ -82,7 +87,7 @@ AAC、8 kHz带宽退化和H.264 CRF23/35，保留配对ID和失败分母，使�
 
 原电脑2026-10-10收尾检查：**400项pytest通过（15.70秒，无跳过）**；
 3项视频工具测试、7项旧评测器stub、Ruff、58文件格式、严格mypy及构建通过。
-检查入口为`tools/check_project.sh`。远端CI尚未运行，工程通过不等于模型泛化有效。
+检查入口为`tools/check_project.sh`。当时尚未运行远端CI，工程通过不等于模型泛化有效。
 
 ## 云端下一步与资产
 

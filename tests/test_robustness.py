@@ -241,14 +241,41 @@ def test_bad_and_unavailable_rows_retain_failure_denominator(
     assert summary["conditions"]["audio_aac64k"]["failure_count"] == 2
 
 
-def test_truncated_audio_is_not_repaired_into_a_successful_condition(
+def test_corrupt_audio_is_not_repaired_into_a_successful_condition(
     prepare: Any,
     tmp_path: Path,
     media: dict[str, Path],
 ) -> None:
-    source = tmp_path / "truncated.flac"
-    sf.write(source, np.sin(2 * np.pi * 440 * np.arange(32000) / 16000), 16000)
-    source.write_bytes(source.read_bytes()[:-100])
+    source = tmp_path / "corrupt.flac"
+    # PCM16 FLAC: 3 x 4096 samples of 0.25 at 16 kHz, no optional metadata.
+    # The second frame's reserved subframe padding bit (offset 59) is set to 1.
+    # Fixed bytes avoid depending on libsndfile's encoding or tail truncation.
+    source.write_bytes(
+        bytes.fromhex(
+            "664c6143800000221000100000000b00000b03e800f000003000"
+            "e7f4f8fb2ab685448cefb8078f14e75e"
+            "fff8c508006f010009e574"
+            "fff8c5080168810009890c"
+            "fff8c50802610100093d84"
+        )
+    )
+    repaired = subprocess.run(
+        [
+            "ffmpeg",
+            "-v",
+            "error",
+            "-i",
+            str(source),
+            "-c:a",
+            "aac",
+            str(tmp_path / "repaired.m4a"),
+        ],
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=20,
+    )
+    assert "invalid subframe padding" in repaired.stderr
     manifest = tmp_path / "input.jsonl"
     write_manifest(rows("audio", source.name), manifest)
     output = tmp_path / "output"

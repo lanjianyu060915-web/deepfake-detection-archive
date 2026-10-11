@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import os
 import runpy
 import stat
 import zipfile
@@ -312,7 +313,9 @@ def test_archive_mutation_during_extraction_aborts_publication(
 
     def mutate_after_extract(*args: Any, **kwargs: Any) -> int:
         size: int = original_extract(*args, **kwargs)
-        source.touch()
+        # touch() can retain the old timestamp on a fast/coarse-clock filesystem.
+        current = source.stat()
+        os.utime(source, ns=(current.st_atime_ns, current.st_mtime_ns + 1_000_000_000))
         return size
 
     monkeypatch.setitem(STATE, "_extract_member", mutate_after_extract)

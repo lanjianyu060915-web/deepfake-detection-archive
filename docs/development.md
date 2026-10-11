@@ -234,8 +234,20 @@ scripts/devctl run python -m deepfake_detection_archive verify-package \
 scripts/devctl check
 ```
 
-`scripts/devctl check` 委托 `tools/check_project.sh`；本地和 CI 使用同一检查定义，覆盖主动代码与当前开发工具，范围以该脚本为准；历史恢复脚本和归档不做自动格式修复。
+`scripts/devctl check` 委托 `tools/check_project.sh`；本地和 CI 使用同一检查定义，覆盖主动代码、
+当前开发工具、归档字节完整性和包构建，范围以该脚本为准。旧照片评测器stub不再默认运行；
+历史恢复脚本和归档不做自动格式修复。
 工程检查证明实现行为，不代替真实数据上的模型评测。
+
+GitHub Actions 使用 Ubuntu 24.04、Python 3.12.15、uv 0.13.0，在工作区独立 `.venv` 中按
+`uv.lock` 安装 `dev/media/research` 和 `cpu` extra，不修改服务器共享GPU环境。先运行
+`tools/check_environment.py --device cpu`，再执行标准检查；探针结果写入日志及
+`outputs/environment/ci.json`。ASVspoof2021固定评分参考由CI检出，使上游EER核对实际执行。
+
+CI的FFmpeg/ffprobe使用BtbN固定月底构建 `n8.1.3-9-g29e619e767`，下载后校验SHA-256；
+版本、来源和摘要统一维护在[工作流](../.github/workflows/checks.yml)。[上游保留策略](https://github.com/BtbN/FFmpeg-Builds#release-retention-policy)
+为两年，须在2028-09前更新固定版本。服务器继续使用已安装的全局版本，宿主二进制不进入wheel。
+PR触发检查，`main`推送也触发；同一PR或分支的新运行取消过时运行，避免重复消耗资源。
 
 本轮核对模块及导入工具的 `--help`；上述数据、训练、推理和打包示例需要实值配置与资产，
 尚未在当前服务器端到端执行。当前工作副本尚未接入这些训练资产，不能将命令示例当作已完成实验。
