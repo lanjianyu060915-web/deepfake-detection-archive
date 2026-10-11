@@ -16,6 +16,7 @@ model_tools=(
   tools/prepare_vif_panda.py
   tools/prepare_asv_main.py
   tools/prepare_video_control.py
+  tools/prepare_robustness.py
   tools/test_prepare_video_control.py
 )
 

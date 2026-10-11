@@ -109,6 +109,38 @@ scripts/devctl run python tools/prepare_video_control.py --help
 
 这些工具的实际参数以 `--help` 和当前研究记录为准。历史导入日志不作为新实验入口。
 
+### dev 压缩与重采样对照
+
+已有 dev 清单和模型后，用同一批样本检查常见媒体处理造成的退化。先准备条件媒体：
+
+```bash
+scripts/devctl run python tools/prepare_robustness.py \
+  --manifest data/audio-dev-only.jsonl --data-root data/audio \
+  --output-dir outputs/robustness/audio-dev \
+  --condition audio_aac64k --condition audio_bandlimit8k
+
+scripts/devctl run python tools/prepare_robustness.py \
+  --manifest data/video-dev-only.jsonl --data-root data/video \
+  --output-dir outputs/robustness/video-dev \
+  --condition video_h264_crf23 --condition video_h264_crf35
+```
+
+工具接受纯 dev、单模态且包含真假两类的清单；每次使用新输出目录。条件参数不依赖标签，
+源文件只读；失败保留在条件清单中并计入覆盖率。条件目录下的 `manifest.jsonl` 和 `media/`
+配套使用，`summary.json` 给出各条件的清单、data_root、参数和失败信息。
+`baseline.jsonl` 保留原路径，其 data_root 仍为输入媒体根目录。
+
+分别复制现有推理实值配置，只改变 manifest、data_root 和 output_dir，保持本地 checkpoint、
+采样/抽帧、聚合与精度一致。音频使用 FFmpeg 后端，使 AAC 和原音频采用相同解码入口；
+8 kHz 条件最终保存为 16 kHz FLAC，测试的是带宽损失。每种条件继续运行现有 `infer` 和
+`evaluate --manifest`，比较原媒体与扰动后的 EER、覆盖率及分生成器结果。
+转码保留源声道，降混统一由现有解码器完成，避免条件额外引入音量变化；损坏输入沿用项目
+严格解码参数，转码器不会把部分恢复的媒体计作成功。
+如需固定阈值错误率，使用原 dev 选定的同一阈值，不在各条件重新调参。
+
+同一 ID 表示配对样本，条件清单分别评分；不拼成重复的独立样本，也不重新划分。
+此工具不读取 holdout 媒体；解码成功不能证明模型鲁棒，真实结果以模型评分为准。
+
 ## 3. 训练
 
 选择与模型对应的模板，例如 LogMel：
