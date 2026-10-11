@@ -121,6 +121,56 @@ def _change(path: Path, **changes: Any) -> None:
     path.write_text(json.dumps(config))
 
 
+def test_ast_cached_training_and_offline_checkpoint_roundtrip(
+    experiment: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from transformers import ASTModel  # noqa: PLC0415 -- optional model dependency
+
+    def no_pretrained_download(*args: Any, **kwargs: Any) -> None:
+        raise AssertionError("checkpoint restore must be self-contained")
+
+    monkeypatch.setattr(ASTModel, "from_pretrained", no_pretrained_download)
+    _change(
+        experiment,
+        architecture="audio_ast_v1",
+        model_config={
+            "backbone_config": {
+                "hidden_size": 16,
+                "num_hidden_layers": 2,
+                "num_attention_heads": 2,
+                "intermediate_size": 24,
+                "max_length": 32,
+                "num_mel_bins": 32,
+            },
+            "trainable_layers": 1,
+        },
+    )
+    result = run_experiment(experiment)
+    root = experiment.parent
+    scorer = OfflineScorer(
+        InferenceConfig(
+            manifest="manifest.jsonl",
+            data_root="media",
+            output_dir="inference",
+            modality="audio",
+            device="cpu",
+            checkpoint=str(result.best_checkpoint),
+            checkpoint_sha256=result.checkpoint_sha256,
+            segment_samples=400,
+            audio={"sample_rate": 16000, "backend": "soundfile"},
+        ),
+        root,
+    )
+    records = {r.sample_id: r for r in load_manifest(root / "manifest.jsonl")}
+    scores = load_scores(root / "run" / "dev-scores.jsonl")
+    assert len(scores) == 2
+    for score in scores:
+        assert scorer(records[score.sample_id]) == pytest.approx(score.score, abs=1e-6)
+    report = json.loads((root / "run" / "experiment.json").read_text())
+    assert report["train_count"] == report["dev_count"] == 2
+    assert not report["holdout_accessed"]
+
+
 def test_waveform_experiment_caches_only_train_dev_and_records_provenance(
     experiment: Path,
 ) -> None:

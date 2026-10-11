@@ -30,6 +30,9 @@ CPU 调试需同时设置 `device="cpu"` 和 `amp=false`。
 时按实际特征维度调整，并登记本地权重。编码器和预处理必须与推理配置一致。训练当前不支持
 optimizer/RNG 恢复；中断后在新输出目录重启。
 
+AudioSet AST部分主干微调的实值配置见[环境音AST实验](../docs/experiments/audio-ast-20261011/README.md)。
+它复用波形推理模板，checkpoint自包含前端配置和全部权重；预训练来源只在初始化时加载。
+
 `adapter.example.json` 只描述本地连续分数导出，官方格式公布后再更新。`package.example.json`
 需要显式列出最终代码、配置、权重、依赖和许可，不会自动收集资产。
 

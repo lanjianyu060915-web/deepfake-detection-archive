@@ -19,6 +19,7 @@ model_tools=(
   tools/prepare_asv_main.py
   tools/prepare_doppelganger.py
   tools/prepare_fakesound.py
+  tools/prepare_envsdd.py
   tools/prepare_video_control.py
   tools/prepare_robustness.py
   tools/compare_scores.py

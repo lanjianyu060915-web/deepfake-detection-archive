@@ -1,0 +1,221 @@
+{
+  "experiment": "nonspeech-logmel-20261011",
+  "scope": "environment research pilot; dev-selected, holdout not scored",
+  "assets_root": "/var/tmp/deepfake-nonspeech-logmel-20261011",
+  "data_root": "/var/tmp/lanjianyu-issue11-20261011/doppelganger-v2",
+  "manifest_sha256": "18e30516a73959cca46c55000617b73065f1141d5c7b08d097eba95c7d51ce4b",
+  "sources_sha256": "15db7bf3933a6877f8323cbcc8edbe3745309b5503c423aa814c5e0a91376998",
+  "code": {
+    "code_sha256": "691abff7a3920931dc694fcc634ef7806ef7da6a22bab39670d19fc23a8e7f18",
+    "commit": "4661f4ce42a7d171084103eca15e8f4228d445c9",
+    "dirty": true
+  },
+  "counts": {
+    "train": 322,
+    "dev": 70,
+    "holdout": 70
+  },
+  "score_direction": "higher_is_fake",
+  "eer_protocol": "eer_interpolated_v1",
+  "training_score_scope": "prepared tensors; HuBERT features encoded under BF16 AMP",
+  "training_memory_scope": "training only; HuBERT feature encoding excluded",
+  "runs": [
+    {
+      "run": "seed42",
+      "config": "logmel-seed42.json",
+      "dev_eer": 0.45714285714285713,
+      "sample_count": 70,
+      "failure_count": 0,
+      "coverage": 1.0,
+      "best_epoch": 1,
+      "epochs_completed": 6,
+      "experiment_seconds": 9.28675336111337,
+      "training_seconds": 6.609026852063835,
+      "peak_training_cuda_allocated_bytes": 925849600,
+      "checkpoint": "seed42/training/best.pt",
+      "checkpoint_sha256": "3d77d935e9694eaed34a2ca13309cfc1bd8b11ddf5666b6cdb6c62d050c62998",
+      "scores": "seed42/dev-scores.jsonl",
+      "scores_sha256": "839860608179616091503b348e30c4294e7c00aae7ed6236a3c9ea9b3156b586"
+    },
+    {
+      "run": "seed43",
+      "config": "logmel-seed43.json",
+      "dev_eer": 0.37142857142857144,
+      "sample_count": 70,
+      "failure_count": 0,
+      "coverage": 1.0,
+      "best_epoch": 3,
+      "epochs_completed": 8,
+      "experiment_seconds": 9.630988472141325,
+      "training_seconds": 7.390211629681289,
+      "peak_training_cuda_allocated_bytes": 925849600,
+      "checkpoint": "seed43/training/best.pt",
+      "checkpoint_sha256": "2754199b75e2399236f6ae0ab95c9b0601454af5166095aa912a59561f36bd6a",
+      "scores": "seed43/dev-scores.jsonl",
+      "scores_sha256": "e069c8099d3b873905056c00aa83261b86b22cadbdd67a47cd2d1b19b6f501b5"
+    },
+    {
+      "run": "lr1e-4-seed42",
+      "config": "logmel-lr1e-4-seed42.json",
+      "dev_eer": 0.45714285714285713,
+      "sample_count": 70,
+      "failure_count": 0,
+      "coverage": 1.0,
+      "best_epoch": 6,
+      "epochs_completed": 16,
+      "experiment_seconds": 12.846671989187598,
+      "training_seconds": 10.616131680086255,
+      "peak_training_cuda_allocated_bytes": 925849600,
+      "checkpoint": "lr1e-4-seed42/training/best.pt",
+      "checkpoint_sha256": "e720140dbff38e0a04d726abbf00bcbac6c0197d95b575afca0903973c558f9a",
+      "scores": "lr1e-4-seed42/dev-scores.jsonl",
+      "scores_sha256": "5fdb528ff7de76b54b1359aa350e46bf1c8624e0f98a76d195ceb475d614858d"
+    },
+    {
+      "run": "lr1e-4-seed43",
+      "config": "logmel-lr1e-4-seed43.json",
+      "dev_eer": 0.4,
+      "sample_count": 70,
+      "failure_count": 0,
+      "coverage": 1.0,
+      "best_epoch": 4,
+      "epochs_completed": 14,
+      "experiment_seconds": 11.778529261238873,
+      "training_seconds": 9.542201303876936,
+      "peak_training_cuda_allocated_bytes": 925849600,
+      "checkpoint": "lr1e-4-seed43/training/best.pt",
+      "checkpoint_sha256": "0041affc13b161012b1b0243f82eca30eb0b0e93a1d4e24875a250563ce3c5d8",
+      "scores": "lr1e-4-seed43/dev-scores.jsonl",
+      "scores_sha256": "c2120fb1bdebdcefd363d8606be38136df9d06c06a44a9def53cdd7708ac89b0"
+    },
+    {
+      "run": "hubert-seed42",
+      "config": "hubert-seed42.json",
+      "dev_eer": 0.2571428571428571,
+      "sample_count": 70,
+      "failure_count": 0,
+      "coverage": 1.0,
+      "best_epoch": 16,
+      "epochs_completed": 26,
+      "experiment_seconds": 14.578622316010296,
+      "training_seconds": 7.2417185148224235,
+      "peak_training_cuda_allocated_bytes": 87346176,
+      "checkpoint": "hubert-seed42/training/best.pt",
+      "checkpoint_sha256": "d495e7debeaaa2555ee59c759600d84280debe181450eaadea1344e9a4399ae0",
+      "scores": "hubert-seed42/dev-scores.jsonl",
+      "scores_sha256": "5414aa9da6e25c6c478290e3caed127769310a932be7fdbdb2c0903ebf82b2b5"
+    },
+    {
+      "run": "hubert-seed43",
+      "config": "hubert-seed43.json",
+      "dev_eer": 0.3142857142857143,
+      "sample_count": 70,
+      "failure_count": 0,
+      "coverage": 1.0,
+      "best_epoch": 5,
+      "epochs_completed": 15,
+      "experiment_seconds": 11.830611851066351,
+      "training_seconds": 5.823241441510618,
+      "peak_training_cuda_allocated_bytes": 87346176,
+      "checkpoint": "hubert-seed43/training/best.pt",
+      "checkpoint_sha256": "8d4836636fa91e44f6ce0cf8eab035ecd724c2ae6b4764ef642d6c9ee1cb2a1f",
+      "scores": "hubert-seed43/dev-scores.jsonl",
+      "scores_sha256": "0e3a8b168b23db871e51a5d3a76ae62c79630a1d4715143b8ed52a305620d9a2"
+    }
+  ],
+  "offline_scope": "FP32 local media decoding and HuBERT encoding; both seeds run concurrently",
+  "offline": [
+    {
+      "run": "hubert-seed42-offline-dev",
+      "config": "infer-hubert-seed42.json",
+      "dev_eer": 0.2857142857142857,
+      "sample_count": 70,
+      "failure_count": 0,
+      "coverage": 1.0,
+      "startup_seconds": 5.5276003666222095,
+      "sample_call_seconds": 1.0869534807279706,
+      "scores": "hubert-seed42-offline-dev/scores.jsonl",
+      "scores_sha256": "ecb5476a30bd177823d105cacf220e593708d6e6ced32cad73922937527526b6",
+      "per_event": {
+        "ANML": {
+          "pairs": 3,
+          "eer": 0.3333333333333333
+        },
+        "BIRD": {
+          "pairs": 3,
+          "eer": 0.3333333333333333
+        },
+        "FIRE": {
+          "pairs": 6,
+          "eer": 0.3333333333333333
+        },
+        "FOOT": {
+          "pairs": 3,
+          "eer": 0.0
+        },
+        "RAIN": {
+          "pairs": 6,
+          "eer": 0.0
+        },
+        "WATR": {
+          "pairs": 8,
+          "eer": 0.375
+        },
+        "WIND": {
+          "pairs": 1,
+          "eer": 1.0
+        },
+        "WTHR": {
+          "pairs": 5,
+          "eer": 0.2
+        }
+      }
+    },
+    {
+      "run": "hubert-seed43-offline-dev",
+      "config": "infer-hubert-seed43.json",
+      "dev_eer": 0.34285714285714286,
+      "sample_count": 70,
+      "failure_count": 0,
+      "coverage": 1.0,
+      "startup_seconds": 5.65588696859777,
+      "sample_call_seconds": 1.0722390450537205,
+      "scores": "hubert-seed43-offline-dev/scores.jsonl",
+      "scores_sha256": "4f8e0d359d091a5a204bce4a7dd58e17d30b242b57f08590e8bd5f40a917b35a",
+      "per_event": {
+        "ANML": {
+          "pairs": 3,
+          "eer": 0.3333333333333333
+        },
+        "BIRD": {
+          "pairs": 3,
+          "eer": 0.3333333333333333
+        },
+        "FIRE": {
+          "pairs": 6,
+          "eer": 0.3333333333333333
+        },
+        "FOOT": {
+          "pairs": 3,
+          "eer": 0.3333333333333333
+        },
+        "RAIN": {
+          "pairs": 6,
+          "eer": 0.0
+        },
+        "WATR": {
+          "pairs": 8,
+          "eer": 0.375
+        },
+        "WIND": {
+          "pairs": 1,
+          "eer": 0.0
+        },
+        "WTHR": {
+          "pairs": 5,
+          "eer": 0.4
+        }
+      }
+    }
+  ]
+}

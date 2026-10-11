@@ -27,4 +27,4 @@ body:
     id: resources
     attributes:
       label: 资源与协作
-      description: 已分配实例、GPU使用顺序、持久卷与负责人；按实际填写。
+      description: 实例、GPU峰值显存与并发余量、产物目录和负责人；按实际填写。
