@@ -68,6 +68,7 @@ OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 OPENBLAS_NUM_THREADS=1 \
 
 2026-10-10核对：**LogMel seed42已完成；LogMel43与HuBERT42/43尚未训练**。
 后续运行移交云端，任务见[音频任务 #9](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/9)。
+2026-10-11四组[云端双种子实验](../asv-cloud-20261011/README.md)已交付，本页保留旧主机结果。
 
 | 指标 | 实际值 |
 | --- | ---: |

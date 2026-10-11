@@ -8,16 +8,18 @@
 | 资产 | 实际位置 | 当前用途 |
 | --- | --- | --- |
 | ASVspoof LA Parquet | `/srv/shared-data/datasets/asvspoof2019-la/` | 官方 train/dev 物化输入；#9 已接入协议与 FLAC |
-| ASV 训练清单/媒体 | `/var/tmp/lanjianyu-issue9-20261011/data/main/`、`data/LA/` | #9 正在训练，最终共享交付以其 PR 为准 |
+| ASV 训练清单/媒体 | `/var/tmp/lanjianyu-issue9-20261011/data/main/`、`data/LA/` | #9 已完成四次训练和完整dev评分 |
+| 音频检测器及分数 | `/var/tmp/lanjianyu-issue9-20261011/runs/` | LogMel/HuBERT各两种子，见云端音频实验卡 |
 | HuBERT 本地 bundle | `/var/tmp/lanjianyu-issue9-20261011/hubert/models/hubert-base-ls960/` | #9 已恢复固定版本，内部语音研究 |
-| ViF Panda ZIP | `/srv/shared-data/datasets/vif-panda/` | #10 导入并恢复受控划分；受控视觉结果待交付 |
+| ViF Panda ZIP | `/srv/shared-data/datasets/vif-panda/` | #10 已导入并复现受控划分 |
+| 受控视频资产及检测器 | `/var/tmp/lanjianyu-issue10-20261011/` | `control/`清单、`resnet18-a1/`编码器、`seed42/`与`seed43/`检测器和分数 |
 | FakeSound ZIP | `/srv/shared-data/datasets/fakesound/FakeSound.zip` | 固定原包、单类诊断，不能训练二分类 |
 | 配对环境音 | `/var/tmp/lanjianyu-issue11-20261011/doppelganger-v2/` | 462 条实际可读媒体，附 manifest/sources/provenance |
 | FakeSound 诊断清单 | `/var/tmp/lanjianyu-issue11-20261011/fakesound-v1/` | data_root 为其 `media/`，含缺失 real 记录 |
 
 共享原媒体和模型只读；`outputs/`、`cache/` 使用各自任务目录。
 `/var/tmp` 产物当前可定位，但不是已确认的持久卷；实例回收前由维护者迁入平台持久化存储。
-账号对在制 run 的访问可能尚未开放，不根据目录或中间 checkpoint 宣称训练完成。
+音视频任务已交付的目录组为 `dlteam`，团队可读；实际配置与权重标识见实验卡。
 
 ## 导入与训练清单
 
@@ -25,6 +27,7 @@
 | --- | --- |
 | `tools/finalize_asvspoof2019.py` | 已完成的官方 ZIP 发布与提取 |
 | `tools/prepare_asvspoof2019.py` | 官方协议和 FLAC → 标准清单 |
+| `tools/prepare_asv_parquet.py` | 固定共享 Parquet 与官方协议 → 原始 FLAC；不重编码 |
 | `tools/prepare_asv_main.py` | 既有 ASV 清单 → 训练子集；历史单条排除应显式配置 |
 | `tools/prepare_vif_panda.py` | 固定 ViF ZIP → Panda 媒体、来源与配对关系 |
 | `tools/prepare_video_control.py` | 既有 ViF 与 pilot 划分 → 受控 train/dev 与元数据对照 |
@@ -82,6 +85,6 @@ HuBERT 为语音表征，ResNet18 为当前全帧空间表征，均不是已经�
 `bb1a70097a9b0159c9febb56bb8c757ac5ccb9b2ae43e571f01b90cc70b37d8c`。
 历史状态包 `outputs/handoff/20261010/research-state.tar.gz`，SHA-256
 `5d3880c3e19548e3c3f7f4e3bfa0150bca3bcb05f08320d7df444505c9757e90`，曾包含
-固定清单、小模型与分数；本实例尚未确认该包存在，#9 不等待它而补跑同条件基线。
+固定清单、小模型与分数；本实例尚未确认该包存在，#9 已补跑同条件双种子基线。
 旧训练清单哈希为 `8b204f61a679a2789280a731aae1cefb63a29bd6fe009e66b0b34347aa148257`。
 完整历史资源索引保留在整理前 Git 提交 `4bbd292`，不作为新训练的额外前置门。

@@ -8,8 +8,8 @@
 
 | 实验 | 当前结论 | 下一步 |
 | --- | --- | --- |
-| [ASV 全量语音](asv-main-20261009/README.md) | LogMel42 dev EER 0.510204%；尚非通用音频/未知攻击结论 | #9 完成云端 LogMel/HuBERT 双种子可比实验 |
-| [ViF 受控视频](vif-control-20261009/README.md) | Hunyuan train618/dev146；元数据 EER 约50%；视觉结果未交付 | #10 实际训练受控空间基线 |
+| [ASV 云端双种子](asv-cloud-20261011/README.md) | LogMel EER0.7849%/0.9419%；冻结HuBERT未改善同域dev | 未知攻击、跨来源及压缩评分 |
+| [ViF 云端受控视频](vif-cloud-20261011/README.md) | Hunyuan train618/dev146；视觉EER20.55%/21.92%，优于同集元数据 | 跨来源/生成器与压缩评分，再决定微调/时序 |
 | [配对环境音](nonspeech-20261011/README.md) | 462条可训练环境音，已完成数据交付 | 训练首个非语音候选并补生成器/来源 |
 | [鲁棒性媒体试跑](robustness-smoke-20261011/README.md) | 媒体条件工具可用，没有模型评分 | 使用已选择模型得到实际 ΔEER |
 
@@ -17,6 +17,8 @@
 
 | 实验 | 保留理由 |
 | --- | --- |
+| [ASV 旧主机全量](asv-main-20261009/README.md) | LogMel42 EER0.510204%；云端旧权重未恢复，不计入本轮统计 |
+| [ViF 受控数据准备](vif-control-20261009/README.md) | 保留匹配与元数据基线方法；实际模型结果见云端实验 |
 | [ASV 小样本对照](asv-pilot-quarantine-20261008/README.md) | LogMel/AASIST-L 两种子比较，解释为何优先 LogMel/SSL |
 | [ViF pad](vif-pilot-20261007/README.md) / [crop](vif-crop-control-20261007/README.md) | 记录元数据捷径和中心裁剪无稳定收益 |
 | [历史分数比较](score-comparison-20261011/README.md) | 既有四模型分数复算，说明生成器差异；不计为新模型结果 |
