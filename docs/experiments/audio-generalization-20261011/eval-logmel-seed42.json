@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "manifest": "../../../data/eval/manifest.jsonl",
+  "manifest": "../../../data/eval-subset/manifest.jsonl",
   "data_root": "../../../data/eval",
   "output_dir": "../../../outputs/audio-generalization-20261011/eval-logmel-seed42",
   "modality": "audio",
