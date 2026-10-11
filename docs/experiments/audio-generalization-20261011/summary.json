@@ -1,0 +1,856 @@
+{
+  "assets_root": "/var/tmp/lanjianyu-issue19-20261011",
+  "checkpoints": {
+    "hubert-seed42": {
+      "path": "runs/hubert-seed42/training/best.pt",
+      "sha256": "0ddb969a69ab10cf8083301c17c8a7c21c5262244b1129cf069f55ebd3e5a4fd"
+    },
+    "hubert-seed43": {
+      "path": "runs/hubert-seed43/training/best.pt",
+      "sha256": "2da67f370830cf0a7825497d4399635b797dfc6ccd0ab4b13adb19f53e138557"
+    },
+    "logmel-seed42": {
+      "path": "runs/logmel-seed42/training/best.pt",
+      "sha256": "40604358a1e013b73d47223672876a4386c8efba497c31263f65a1c10b810bba"
+    },
+    "logmel-seed43": {
+      "path": "runs/logmel-seed43/training/best.pt",
+      "sha256": "695d356fb8d3d82b88511be358b52a0e81b53c5677ff50c308433918e008a348"
+    }
+  },
+  "code_commit": "9bcb8a2d6ac261b1623266b3aede30d21dd1a42c",
+  "comparisons": {
+    "logmel-seed42-aac64k-vs-clean": {
+      "baseline_eer": 0.007849293563579277,
+      "baseline_scores_sha256": "95fc41410394b8e4a10f816e76d6bb3c26a116eb506c7c3e0f186c302ade6579",
+      "candidate_eer": 0.009811616954474097,
+      "candidate_scores_sha256": "14cabbe097e5a535851ccf60659e5059683986757926fd36a16fd1beff61598f",
+      "common_coverage": 1.0,
+      "common_delta_eer": 0.00196232339089482,
+      "common_sample_count": 24844,
+      "fullset_delta_eer": 0.00196232339089482
+    },
+    "logmel-seed42-bandlimit8k-vs-clean": {
+      "baseline_eer": 0.007849293563579277,
+      "baseline_scores_sha256": "95fc41410394b8e4a10f816e76d6bb3c26a116eb506c7c3e0f186c302ade6579",
+      "candidate_eer": 0.13096519555077143,
+      "candidate_scores_sha256": "e2482849b8b6910b0163fe69b47b9e51dd75ef2fd8cc5901eddec5e86f153a72",
+      "common_coverage": 1.0,
+      "common_delta_eer": 0.12311590198719216,
+      "common_sample_count": 24844,
+      "fullset_delta_eer": 0.12311590198719216
+    },
+    "logmel-seed43-aac64k-vs-clean": {
+      "baseline_eer": 0.009419152276295133,
+      "baseline_scores_sha256": "b6845ec9ecb8050f1c5481a495e766e45aef31e1847cb90c211f88abd0c4f4a1",
+      "candidate_eer": 0.019285970577682096,
+      "candidate_scores_sha256": "ba1cd4c6ff247d2296f0f8f6b9cc23c921e3ba096dfeb040a4f950154b9ad7d1",
+      "common_coverage": 1.0,
+      "common_delta_eer": 0.009866818301386963,
+      "common_sample_count": 24844,
+      "fullset_delta_eer": 0.009866818301386963
+    },
+    "logmel-seed43-bandlimit8k-vs-clean": {
+      "baseline_eer": 0.009419152276295133,
+      "baseline_scores_sha256": "b6845ec9ecb8050f1c5481a495e766e45aef31e1847cb90c211f88abd0c4f4a1",
+      "candidate_eer": 0.13177251524937209,
+      "candidate_scores_sha256": "74333354c3ddcc33a877f954a536b81800d55b27366673c6df875b85fc0fc62d",
+      "common_coverage": 1.0,
+      "common_delta_eer": 0.12235336297307695,
+      "common_sample_count": 24844,
+      "fullset_delta_eer": 0.12235336297307695
+    }
+  },
+  "decoder_check": {
+    "bit_identical_waveforms": 200,
+    "compared_samples": 200,
+    "max_abs_difference": 0.0,
+    "shape_mismatches": 0
+  },
+  "dev": {
+    "label_counts": {
+      "fake": 22296,
+      "real": 2548
+    },
+    "manifest": "data/dev/manifest.jsonl",
+    "manifest_sha256": "31476ba0867751b69b7fe8ef170db8a7ab1d29549ffbc6a79df48c47143bdbf8",
+    "rows": 24844
+  },
+  "eer_protocol": "eer_interpolated_v1",
+  "eval_source": {
+    "generator_counts": {
+      "A07": 4914,
+      "A08": 4914,
+      "A09": 4914,
+      "A10": 4914,
+      "A11": 4914,
+      "A12": 4914,
+      "A13": 4914,
+      "A14": 4914,
+      "A15": 4914,
+      "A16": 4914,
+      "A17": 4914,
+      "A18": 4914,
+      "A19": 4914,
+      "human": 7355
+    },
+    "label_counts": {
+      "fake": 63882,
+      "real": 7355
+    },
+    "manifest_sha256": "819d6be7d254c970eb39809187e5a7dd57a2843d06710e754a8aba8bf4f259a5",
+    "mirror_repo": "Bisher/ASVspoof_2019_LA",
+    "mirror_revision": "aea92dd83a9c56e070c0b1e9f02e7c0d96216a4c",
+    "parquet_sha256": "8159935a94426bc36308278b23cecd8c4ca2a15b778a1087a4a0441d079c86af",
+    "protocol_sha256": "84fce576efff092269a0a6ad247d2e9f2f7b4d4e25a4545efb2518da92708036",
+    "rows": 71237,
+    "speakers": 67,
+    "split": "test"
+  },
+  "eval_subset": {
+    "attack_counts": {
+      "A07": 800,
+      "A08": 800,
+      "A09": 800,
+      "A10": 800,
+      "A11": 800,
+      "A12": 800,
+      "A13": 800,
+      "A14": 800,
+      "A15": 800,
+      "A16": 800,
+      "A17": 800,
+      "A18": 800,
+      "A19": 800
+    },
+    "bonafide_selected": 1600,
+    "bonafide_target": 1600,
+    "label_counts": {
+      "fake": 10400,
+      "real": 1600
+    },
+    "manifest_sha256": "1d6aa6771e524a0fbd3498cdc2befdec1ba42df8e0080b83ea0715ebac6e0069",
+    "per_attack_target": 800,
+    "selected_rows": 12000,
+    "selection": "per-attack round-robin over speakers with sorted sample IDs, then the same round-robin for bonafide",
+    "source_manifest": "data/eval/manifest.jsonl",
+    "source_rows": 71237,
+    "speakers_used": 48
+  },
+  "experiment": "audio-generalization-20261011",
+  "official_evaluation": false,
+  "robustness_conditions": {
+    "aac64k": {
+      "errors": {},
+      "failure_count": 0,
+      "ffmpeg_version": "ffmpeg version N-127271-gba987fe24d-20261010 Copyright (c) 2000-2026 the FFmpeg developers",
+      "manifest": "data/robustness-aac64k/audio_aac64k/manifest.jsonl",
+      "manifest_sha256": "a6fb9b53fe97710255044cabcf651e6550073c976ed2bc3adb392da373756d3f",
+      "parameters": [
+        "-map",
+        "0:a:0",
+        "-vn",
+        "-ar",
+        "16000",
+        "-c:a",
+        "aac",
+        "-b:a",
+        "64k"
+      ],
+      "sample_count": 24844,
+      "transcode_seconds": 1677.470116848126
+    },
+    "bandlimit8k": {
+      "errors": {},
+      "failure_count": 0,
+      "ffmpeg_version": "ffmpeg version N-127271-gba987fe24d-20261010 Copyright (c) 2000-2026 the FFmpeg developers",
+      "manifest": "data/robustness-bandlimit8k/audio_bandlimit8k/manifest.jsonl",
+      "manifest_sha256": "b26a9cb0cd3db33f0bc1273243def292d5eefe77d98a7e7fb9477b447e095416",
+      "parameters": [
+        "-map",
+        "0:a:0",
+        "-vn",
+        "-af",
+        "aresample=8000,aresample=16000",
+        "-ar",
+        "16000",
+        "-c:a",
+        "flac"
+      ],
+      "sample_count": 24844,
+      "transcode_seconds": 942.1575175821781
+    }
+  },
+  "runs": {
+    "dev-hubert-seed42-clean": {
+      "config": "dev-hubert-seed42-clean.json",
+      "config_sha256": "387b8301dbb182ade354972100f808e7ac69f48ed3876e24851f4d28e8129539",
+      "coverage": 1.0,
+      "eer": 0.015306122448979591,
+      "evaluation_sha256": "78cff352ba84dd037f92ee4e00026339de40a07d0c72ffdf48a9e64c5d4a43a0",
+      "failure_count": 0,
+      "per_attack_eer": {
+        "A01": {
+          "eer": 0.004305705059203444,
+          "failure_count": 0,
+          "fake_count": 3716,
+          "real_count": 2548,
+          "sample_count": 6264
+        },
+        "A02": {
+          "eer": 0.003532182103610675,
+          "failure_count": 0,
+          "fake_count": 3716,
+          "real_count": 2548,
+          "sample_count": 6264
+        },
+        "A03": {
+          "eer": 0.004305705059203444,
+          "failure_count": 0,
+          "fake_count": 3716,
+          "real_count": 2548,
+          "sample_count": 6264
+        },
+        "A04": {
+          "eer": 0.008634222919937205,
+          "failure_count": 0,
+          "fake_count": 3716,
+          "real_count": 2548,
+          "sample_count": 6264
+        },
+        "A05": {
+          "eer": 0.003532182103610675,
+          "failure_count": 0,
+          "fake_count": 3716,
+          "real_count": 2548,
+          "sample_count": 6264
+        },
+        "A06": {
+          "eer": 0.033359497645211934,
+          "failure_count": 0,
+          "fake_count": 3716,
+          "real_count": 2548,
+          "sample_count": 6264
+        }
+      },
+      "scores_sha256": "caa04b2592806ec19fcb27ab07f979f03079392a4808960e0d87b0358a7f0e05",
+      "success_count": 24844
+    },
+    "dev-hubert-seed43-clean": {
+      "config": "dev-hubert-seed43-clean.json",
+      "config_sha256": "806cb441440ef06eb2d745383cdabd420727284aa13dab221fbbf6a7df0930e8",
+      "coverage": 1.0,
+      "eer": 0.015339074273412271,
+      "evaluation_sha256": "a1c78e878eb024a52f152987459c1601af708f34dd2033ae2d08c2374ea41639",
+      "failure_count": 0,
+      "per_attack_eer": {
+        "A01": {
+          "eer": 0.0066718995290423865,
+          "failure_count": 0,
+          "fake_count": 3716,
+          "real_count": 2548,
+          "sample_count": 6264
+        },
+        "A02": {
+          "eer": 0.009811616954474097,
+          "failure_count": 0,
+          "fake_count": 3716,
+          "real_count": 2548,
+          "sample_count": 6264
+        },
+        "A03": {
+          "eer": 0.00706436420722135,
+          "failure_count": 0,
+          "fake_count": 3716,
+          "real_count": 2548,
+          "sample_count": 6264
+        },
+        "A04": {
+          "eer": 0.009811616954474097,
+          "failure_count": 0,
+          "fake_count": 3716,
+          "real_count": 2548,
+          "sample_count": 6264
+        },
+        "A05": {
+          "eer": 0.0043171114599686025,
+          "failure_count": 0,
+          "fake_count": 3716,
+          "real_count": 2548,
+          "sample_count": 6264
+        },
+        "A06": {
+          "eer": 0.032574568288854,
+          "failure_count": 0,
+          "fake_count": 3716,
+          "real_count": 2548,
+          "sample_count": 6264
+        }
+      },
+      "scores_sha256": "f52ee0af34620dd345fb82f1b90a223b2bfb1f9a18b21d3a3049699310651dff",
+      "success_count": 24844
+    },
+    "dev-logmel-seed42-aac64k": {
+      "config": "dev-logmel-seed42-aac64k.json",
+      "config_sha256": "e3c0dd8d488663c27d2f36f573ae5fe95d968407b157082e3c5afb4dc5c606a5",
+      "coverage": 1.0,
+      "eer": 0.009811616954474097,
+      "evaluation_sha256": "f0d87ae0550fceacdda48de1e352b7f547bfacbfb647abc13e7838cb10cdbc47",
+      "failure_count": 0,
+      "scores_sha256": "14cabbe097e5a535851ccf60659e5059683986757926fd36a16fd1beff61598f",
+      "success_count": 24844
+    },
+    "dev-logmel-seed42-bandlimit8k": {
+      "config": "dev-logmel-seed42-bandlimit8k.json",
+      "config_sha256": "86173bd1bbe737af9435d3da8779d85a2282ce5f63941c988c54ebe58ba0ddb5",
+      "coverage": 1.0,
+      "eer": 0.13096519555077143,
+      "evaluation_sha256": "b4eb91b6200070885b14b69ee7cd808f7a15b9af83afd2e8e65e56f4f0b31cd6",
+      "failure_count": 0,
+      "scores_sha256": "e2482849b8b6910b0163fe69b47b9e51dd75ef2fd8cc5901eddec5e86f153a72",
+      "success_count": 24844
+    },
+    "dev-logmel-seed42-clean": {
+      "config": "dev-logmel-seed42-clean.json",
+      "config_sha256": "48895eba52ad65ca8c8e663d1dfe0e828f683ecb701c4974e7057db016722f2c",
+      "coverage": 1.0,
+      "eer": 0.007849293563579277,
+      "evaluation_sha256": "1d3ffbe206f0a890266d2b99937b21f62eb1d81704e92a4ffc055434bf87599a",
+      "failure_count": 0,
+      "per_attack_eer": {
+        "A01": {
+          "eer": 0.001883745963401507,
+          "failure_count": 0,
+          "fake_count": 3716,
+          "real_count": 2548,
+          "sample_count": 6264
+        },
+        "A02": {
+          "eer": 0.0019623233908948193,
+          "failure_count": 0,
+          "fake_count": 3716,
+          "real_count": 2548,
+          "sample_count": 6264
+        },
+        "A03": {
+          "eer": 0.001076426264800861,
+          "failure_count": 0,
+          "fake_count": 3716,
+          "real_count": 2548,
+          "sample_count": 6264
+        },
+        "A04": {
+          "eer": 0.007849293563579277,
+          "failure_count": 0,
+          "fake_count": 3716,
+          "real_count": 2548,
+          "sample_count": 6264
+        },
+        "A05": {
+          "eer": 0.008880516684607105,
+          "failure_count": 0,
+          "fake_count": 3716,
+          "real_count": 2548,
+          "sample_count": 6264
+        },
+        "A06": {
+          "eer": 0.011571582346609257,
+          "failure_count": 0,
+          "fake_count": 3716,
+          "real_count": 2548,
+          "sample_count": 6264
+        }
+      },
+      "scores_sha256": "95fc41410394b8e4a10f816e76d6bb3c26a116eb506c7c3e0f186c302ade6579",
+      "success_count": 24844
+    },
+    "dev-logmel-seed43-aac64k": {
+      "config": "dev-logmel-seed43-aac64k.json",
+      "config_sha256": "ec9e3bd425e7d01d56465683ec85dd228c669925a1238e10e5d4e78359bc6596",
+      "coverage": 1.0,
+      "eer": 0.019285970577682096,
+      "evaluation_sha256": "4afef04179ef98b9d35c5d9b1366b6f75f50e010ff5878a2b86cf768cd7a1dd9",
+      "failure_count": 0,
+      "scores_sha256": "ba1cd4c6ff247d2296f0f8f6b9cc23c921e3ba096dfeb040a4f950154b9ad7d1",
+      "success_count": 24844
+    },
+    "dev-logmel-seed43-bandlimit8k": {
+      "config": "dev-logmel-seed43-bandlimit8k.json",
+      "config_sha256": "f4fe7cf9f611b7d77d21219fee69e70a8734bb6070ebbc0b89a56335f7e433b8",
+      "coverage": 1.0,
+      "eer": 0.13177251524937209,
+      "evaluation_sha256": "a2aa2384c5b09fc294c5c18559772c76594abbd24f17959f0dc2843bd23f244b",
+      "failure_count": 0,
+      "scores_sha256": "74333354c3ddcc33a877f954a536b81800d55b27366673c6df875b85fc0fc62d",
+      "success_count": 24844
+    },
+    "dev-logmel-seed43-clean": {
+      "config": "dev-logmel-seed43-clean.json",
+      "config_sha256": "5336fc04fe60983040cc978b4ad0ca9045ce3c2bbc69ccdad02a72cc1c918dd0",
+      "coverage": 1.0,
+      "eer": 0.009419152276295133,
+      "evaluation_sha256": "69949ab4dbdf569d87a1ec11c1b6b517b38a33cfb5643d4e539568c12226495d",
+      "failure_count": 0,
+      "per_attack_eer": {
+        "A01": {
+          "eer": 0.002960172228202368,
+          "failure_count": 0,
+          "fake_count": 3716,
+          "real_count": 2548,
+          "sample_count": 6264
+        },
+        "A02": {
+          "eer": 0.0011773940345368916,
+          "failure_count": 0,
+          "fake_count": 3716,
+          "real_count": 2548,
+          "sample_count": 6264
+        },
+        "A03": {
+          "eer": 0.004709576138147566,
+          "failure_count": 0,
+          "fake_count": 3716,
+          "real_count": 2548,
+          "sample_count": 6264
+        },
+        "A04": {
+          "eer": 0.013455328310010764,
+          "failure_count": 0,
+          "fake_count": 3716,
+          "real_count": 2548,
+          "sample_count": 6264
+        },
+        "A05": {
+          "eer": 0.007804090419806243,
+          "failure_count": 0,
+          "fake_count": 3716,
+          "real_count": 2548,
+          "sample_count": 6264
+        },
+        "A06": {
+          "eer": 0.015698587127158554,
+          "failure_count": 0,
+          "fake_count": 3716,
+          "real_count": 2548,
+          "sample_count": 6264
+        }
+      },
+      "scores_sha256": "b6845ec9ecb8050f1c5481a495e766e45aef31e1847cb90c211f88abd0c4f4a1",
+      "success_count": 24844
+    },
+    "eval-hubert-seed42": {
+      "config": "eval-hubert-seed42.json",
+      "config_sha256": "052bb4b4de6abc2dfb0cb3d3a6864d36db1dddd1bf49cae4a16208ef89e55e4a",
+      "coverage": 1.0,
+      "eer": 0.06009615384615385,
+      "evaluation_sha256": "9e23ffdad38ae3b229e4648bf4bd7afd064f920ba6efb401dc90928bd402b458",
+      "failure_count": 0,
+      "per_attack_eer": {
+        "A07": {
+          "eer": 0.0175,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A08": {
+          "eer": 0.0275,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A09": {
+          "eer": 0.00375,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A10": {
+          "eer": 0.05,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A11": {
+          "eer": 0.013125,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A12": {
+          "eer": 0.005625,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A13": {
+          "eer": 0.000625,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A14": {
+          "eer": 0.02875,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A15": {
+          "eer": 0.025,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A16": {
+          "eer": 0.015,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A17": {
+          "eer": 0.071875,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A18": {
+          "eer": 0.12375,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A19": {
+          "eer": 0.1375,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        }
+      },
+      "scores_sha256": "105d1ec497abdefd92ed293f0afb4b63351386e062157872adfeea1537f4b8b2",
+      "success_count": 12000
+    },
+    "eval-hubert-seed43": {
+      "config": "eval-hubert-seed43.json",
+      "config_sha256": "816b637bfc46c37af72ae2e0a7910de56ed9d503f27eec8c1f62d079e7d6f03c",
+      "coverage": 1.0,
+      "eer": 0.06009615384615385,
+      "evaluation_sha256": "e55ea9c24682911836a27a9a74b531b124b0e82d0d3a34f4b962c64bd4dcd54f",
+      "failure_count": 0,
+      "per_attack_eer": {
+        "A07": {
+          "eer": 0.020625,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A08": {
+          "eer": 0.03,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A09": {
+          "eer": 0.00375,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A10": {
+          "eer": 0.060625,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A11": {
+          "eer": 0.01875,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A12": {
+          "eer": 0.005,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A13": {
+          "eer": 0.0,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A14": {
+          "eer": 0.04125,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A15": {
+          "eer": 0.0325,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A16": {
+          "eer": 0.0175,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A17": {
+          "eer": 0.071875,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A18": {
+          "eer": 0.125,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A19": {
+          "eer": 0.145625,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        }
+      },
+      "scores_sha256": "fa5e7340ffa5c3ee328cd6a4265dba6116572228be553e83a102b6eebb792d67",
+      "success_count": 12000
+    },
+    "eval-logmel-seed42": {
+      "config": "eval-logmel-seed42.json",
+      "config_sha256": "82de55378825bc1ed447f0c10ca61689dcc07060a1aa0060bf20a53c542c8386",
+      "coverage": 1.0,
+      "eer": 0.029711538461538463,
+      "evaluation_sha256": "ec0de0d9c20246101f1f5697b7de71d1affb5d54e3353a0c317a52f9caf308dc",
+      "failure_count": 0,
+      "per_attack_eer": {
+        "A07": {
+          "eer": 0.006875,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A08": {
+          "eer": 0.000625,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A09": {
+          "eer": 0.0,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A10": {
+          "eer": 0.01,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A11": {
+          "eer": 0.0025,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A12": {
+          "eer": 0.0025,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A13": {
+          "eer": 0.0025,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A14": {
+          "eer": 0.01125,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A15": {
+          "eer": 0.02,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A16": {
+          "eer": 0.0075,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A17": {
+          "eer": 0.118125,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A18": {
+          "eer": 0.01875,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A19": {
+          "eer": 0.0225,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        }
+      },
+      "scores_sha256": "8e4078bcaee0dc16bc7965583bf7eccdb1fc3c497f72abacef9b91d871a61632",
+      "success_count": 12000
+    },
+    "eval-logmel-seed43": {
+      "config": "eval-logmel-seed43.json",
+      "config_sha256": "74ba53e1000a3d11403b967031b6c1f570f4e8acaa25f7ed1a46b18b56e106c7",
+      "coverage": 1.0,
+      "eer": 0.041442307692307695,
+      "evaluation_sha256": "36d3203ab71b2e793f85ca90dabcdf1e0acec175b4738038f9696615c2082447",
+      "failure_count": 0,
+      "per_attack_eer": {
+        "A07": {
+          "eer": 0.013125,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A08": {
+          "eer": 0.005,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A09": {
+          "eer": 0.0,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A10": {
+          "eer": 0.013125,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A11": {
+          "eer": 0.00625,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A12": {
+          "eer": 0.00625,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A13": {
+          "eer": 0.005625,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A14": {
+          "eer": 0.013125,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A15": {
+          "eer": 0.02375,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A16": {
+          "eer": 0.0225,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A17": {
+          "eer": 0.139375,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A18": {
+          "eer": 0.08375,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        },
+        "A19": {
+          "eer": 0.020625,
+          "failure_count": 0,
+          "fake_count": 800,
+          "real_count": 1600,
+          "sample_count": 2400
+        }
+      },
+      "scores_sha256": "87de9c5b262254ff152be392a22f880a50a7f5329fefb81406cefa64ed9a1d6f",
+      "success_count": 12000
+    }
+  },
+  "scope": "frozen ASV candidates under AAC/8 kHz degradation and unseen attacks",
+  "score_direction": "higher_is_fake"
+}
