@@ -1,7 +1,7 @@
 # 当前项目状态
 
-更新日期：2026-10-11。**音频 LogMel/HuBERT 双种子对照已完成；负责人已完成鲁棒性媒体准备及配对分数比较入口。尚无本届比赛成绩。**
-本轮完成四次云端音频训练与完整dev评分；负责人通过 Issue 分工、审查 PR 并合并。
+更新日期：2026-10-11。**音频和受控视频双种子对照均已完成；尚无本届比赛成绩。**
+音频结果已由 PR #17 合并，视频结果在 PR #18 审查交付；下表记录两项最新实验。
 接手先读[个人交接](handoff/personal-cloud-codex.md)和[云端协作](handoff/cloud-collaboration.md)。
 
 ## 当前约定
@@ -35,6 +35,10 @@ Ruff、70文件格式检查、严格mypy（33+12文件）、Shell语法、sdist/
 旧照片评测器7项stub不再默认执行，1,526个归档文件与恢复工具的字节完整性仍由pytest保护。
 uv与构建后端统一到0.13系列，锁文件核对通过，运行时依赖未变。验证入口为`scripts/devctl check`。
 
+本轮视频实验标准检查通过453项pytest（27.05秒，无跳过）及3项视频控制工具测试，
+Ruff、严格mypy和构建均通过；新汇总脚本单独通过Ruff/格式/严格mypy。
+完整记录位于`/var/tmp/lanjianyu-issue10-20261011/logs/project-check.log`。
+
 CI已更新为独立CPU环境、固定并校验SHA-256的FFmpeg月底构建、合成环境探针和固定ASV评分参考，
 与服务器共享GPU环境隔离。[PR #13的远端CI](https://github.com/lanjianyu060915-web/deepfake-detection-archive/actions/runs/38104568560)
 已通过，实际使用Python3.12.15及CPU wheels。损坏音频及时间戳回归不再依赖不稳定fixture。
@@ -49,7 +53,7 @@ CI已更新为独立CPU环境、固定并校验SHA-256的FFmpeg月底构建、�
 | 云端 LogMel42/43 | 与旧实验相同清单SHA256；64,600采样点单片段 | dev EER **0.7849% / 0.9419%**；最佳第23/20轮，各24,844条评分0失败 |
 | 云端冻结 HuBERT42/43 | 相同train/dev；BF16编码缓存、FP32分类头评分 | dev EER **1.4980% / 1.5306%**；最佳第26/20轮，各24,844条评分0失败 |
 | 视频受控数据 | ViF Panda排除旧holdout154后probe4,458条，0失败 | Hunyuan受控train618/dev146，各自真假各半 |
-| 视频元数据对照 | 上述Hunyuan受控dev | 宽度EER50.00%、联合元数据53.42%；视觉模型尚未训练 |
+| 视频受控视觉/元数据对照 | 上述Hunyuan受控dev146；冻结ResNet18、4帧center_crop、batch64/BF16头训练 | seed42/43 EER **20.547945%/21.917808%**；各146条评分0失败；宽度50.00%、联合元数据53.424658% |
 | 非语音辅助研究 | EnvSDD现有530条/106文件，106真424假 | 未训练；归属及非商用许可边界未完成，首批云端任务不依赖 |
 | 压缩/重采样鲁棒性准备 | 4条ASV dev音频、4条ViF dev视频，各真假2/2；4种条件 | 16个派生文件转码及项目解码0失败，未进行模型评分 |
 | 配对分数比较 | 历史ASV pilot 512条dev、四模型/种子已有评分 | 三组总体及18组生成器复算与历史一致，0失败；没有新推理 |
@@ -64,13 +68,16 @@ CI已更新为独立CPU环境、固定并校验SHA-256的FFmpeg月底构建、�
 完整FLAC登记解码50,224条，0失败；跨划分高相关候选仅排除一条train音频，保留整个说话人。
 结果、协议、代码版本和分生成器EER见[全量语音实验卡](experiments/asv-main-20261009/README.md)。
 
-**以上EER均来自已知A01–A06生成器的语音开发集，不能代表比赛、通用音频或未知生成器泛化。**
+**上述语音EER来自已知A01–A06开发集，不能代表比赛、通用音频或未知生成器泛化。**
 旧主机run第30轮仍是最佳；本轮完成双种子观察，仍没有最终留出验收。
 分数由最佳checkpoint对准备好的dev张量产生，耗时不等于端到端离线吞吐。
 
 视频受控集主要由HunyuanVideo支持，不能称为七生成器受控评测。
 尺寸/时长匹配降低了简单元数据捷径，但不证明其他偏差已消失。
-旧154条holdout媒体及分数未触碰。详情见[视频受控实验卡](experiments/vif-control-20261009/README.md)。
+云端恢复原包时复制并哈希了全部Panda原字节；旧154条holdout在probe前排除，
+未进行帧解码、特征提取、评分或调参。两种子均最佳第4轮、第9轮早停，
+train618/dev146的登记关系无跨分；完整数据与实验记录见
+[云端视频实验卡](experiments/vif-cloud-20261011/README.md)。
 
 负责人独立完成[鲁棒性媒体准备试跑](experiments/robustness-smoke-20261011/README.md)：
 AAC、8 kHz带宽退化和H.264 CRF23/35，保留配对ID和失败分母，使用CPU。
@@ -78,7 +85,9 @@ AAC、8 kHz带宽退化和H.264 CRF23/35，保留配对ID和失败分母，使�
 
 配套[配对分数比较与历史复算](experiments/score-comparison-20261011/README.md)已完成：按ID对齐，
 保留两侧全量失败分母，另报共同成功子集和ΔEER；可传同一冻结阈值诊断校准变化。
-本轮音频候选已在上述任务目录交付，尚未进行新的媒体鲁棒性评分。
+音频候选已在其任务目录交付；新视频checkpoint在
+`/var/tmp/lanjianyu-issue10-20261011/seed{42,43}/training/best.pt`。
+尚未进行候选模型的媒体鲁棒性评分。
 
 ## 历史结果与工程
 
@@ -104,7 +113,7 @@ AAC、8 kHz带宽退化和H.264 CRF23/35，保留配对ID和失败分母，使�
 1. [音频#9](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/9)：
    ASV/HuBERT接入及双种子对照完成，提交PR审查；后续安排候选泛化与离线路径验证。
 2. [视频#10](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/10)：
-   接入ViF/ResNet18资产，完成受控视觉双种子基线。
+   ViF/ResNet18已接入，受控视觉双种子完成；等待PR审查，后续开展跨来源/生成器与压缩鲁棒性评测。
 3. [数据#11](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/11)：
    非语音及跨来源/生成器覆盖，可与模型任务并行。
 4. [离线交付草稿](handoff/issues/04-offline-delivery.md)：尚未发布，候选冻结后启动。

@@ -1,0 +1,836 @@
+{
+  "scope": "HunyuanVideo single-source controlled development comparison",
+  "score_direction": "higher_is_fake; visual mean frame logits",
+  "selection_split": "dev",
+  "holdout_probe_decode_scoring": false,
+  "competition_approved": false,
+  "assets_root": "/var/tmp/lanjianyu-issue10-20261011",
+  "manifest": {
+    "path": "/var/tmp/lanjianyu-issue10-20261011/control/hunyuan_geometry_duration.jsonl",
+    "sha256": "f055a8ebf966ef3dbc3c90351e0c5bcbd7cd9ea8829660afe8a3432f74d542a2"
+  },
+  "sources": {
+    "path": "/var/tmp/lanjianyu-issue10-20261011/vif-panda-research/sources.jsonl",
+    "sha256": "4b992a4af234e4c4914948c86851607f022c6f750e85b852646f7c6e888398fa"
+  },
+  "metadata_scores": {
+    "path": "/var/tmp/lanjianyu-issue10-20261011/control/hunyuan_geometry_duration-scores.jsonl",
+    "sha256": "340010a54a52c3136656876829224a8d7c4e49542d7eb65fa4672cb99be3dbc7"
+  },
+  "data_preparation": {
+    "manifest_sha256": "3e36cfcacdeeb41f724a3ef2beacc24159396f8462aa8edf6bdb2fafbb5bc273",
+    "pilot_sha256": "f3b004bb94174d02899b9a8763c3619da121f90f53f919e5884e171c716d6638",
+    "seed": 42,
+    "excluded_holdout_related": 154,
+    "probe_failures": [],
+    "source_count": 1,
+    "source_holdout": "unavailable: all records have the same registered source",
+    "variants": {
+      "expanded": {
+        "counts": {
+          "train": {
+            "total": 3614,
+            "labels": {
+              "1": 1807,
+              "0": 1807
+            },
+            "fake_generators": {
+              "CogVideoX1.5-5B-I2V": 291,
+              "CogVideoX1.5-5B-T": 301,
+              "HunyuanVideo-I2V": 302,
+              "HunyuanVideo": 309,
+              "Wan2.1-T2V-1.3B": 294,
+              "Wan2.2-TI2V-5B-I": 141,
+              "Wan2.2-TI2V-5B-T": 169
+            },
+            "components": 885
+          },
+          "dev": {
+            "total": 844,
+            "labels": {
+              "1": 422,
+              "0": 422
+            },
+            "fake_generators": {
+              "CogVideoX1.5-5B-I2V": 71,
+              "CogVideoX1.5-5B-T": 65,
+              "HunyuanVideo-I2V": 77,
+              "HunyuanVideo": 73,
+              "Wan2.1-T2V-1.3B": 76,
+              "Wan2.2-TI2V-5B-I": 28,
+              "Wan2.2-TI2V-5B-T": 32
+            },
+            "components": 211
+          }
+        },
+        "metadata_models": {
+          "width_only": {
+            "fields": [
+              "width"
+            ],
+            "eer": 0.22652789393798592
+          },
+          "numeric_media": {
+            "fields": [
+              "width",
+              "height",
+              "fps",
+              "duration_seconds",
+              "bit_rate"
+            ],
+            "eer": 0.32701421800947866
+          }
+        }
+      },
+      "matched_geometry": {
+        "counts": {
+          "train": {
+            "total": 664,
+            "labels": {
+              "1": 332,
+              "0": 332
+            },
+            "fake_generators": {
+              "CogVideoX1.5-5B-I2V": 1,
+              "HunyuanVideo": 309,
+              "Wan2.1-T2V-1.3B": 21,
+              "Wan2.2-TI2V-5B-I": 1
+            },
+            "components": 445
+          },
+          "dev": {
+            "total": 164,
+            "labels": {
+              "1": 82,
+              "0": 82
+            },
+            "fake_generators": {
+              "CogVideoX1.5-5B-T": 2,
+              "HunyuanVideo-I2V": 1,
+              "HunyuanVideo": 73,
+              "Wan2.1-T2V-1.3B": 4,
+              "Wan2.2-TI2V-5B-I": 2
+            },
+            "components": 107
+          }
+        },
+        "metadata_models": {
+          "width_only": {
+            "fields": [
+              "width"
+            ],
+            "eer": 0.5
+          },
+          "numeric_media": {
+            "fields": [
+              "width",
+              "height",
+              "fps",
+              "duration_seconds",
+              "bit_rate"
+            ],
+            "eer": 0.4024390243902439
+          }
+        }
+      },
+      "matched_geometry_duration": {
+        "counts": {
+          "train": {
+            "total": 646,
+            "labels": {
+              "1": 323,
+              "0": 323
+            },
+            "fake_generators": {
+              "CogVideoX1.5-5B-I2V": 1,
+              "HunyuanVideo": 309,
+              "Wan2.1-T2V-1.3B": 13
+            },
+            "components": 343
+          },
+          "dev": {
+            "total": 158,
+            "labels": {
+              "1": 79,
+              "0": 79
+            },
+            "fake_generators": {
+              "CogVideoX1.5-5B-T": 1,
+              "HunyuanVideo-I2V": 1,
+              "HunyuanVideo": 73,
+              "Wan2.1-T2V-1.3B": 2,
+              "Wan2.2-TI2V-5B-I": 2
+            },
+            "components": 84
+          }
+        },
+        "metadata_models": {
+          "width_only": {
+            "fields": [
+              "width"
+            ],
+            "eer": 0.5
+          },
+          "numeric_media": {
+            "fields": [
+              "width",
+              "height",
+              "fps",
+              "duration_seconds",
+              "bit_rate"
+            ],
+            "eer": 0.5063291139240507
+          }
+        }
+      },
+      "hunyuan_geometry_duration": {
+        "counts": {
+          "train": {
+            "total": 618,
+            "labels": {
+              "1": 309,
+              "0": 309
+            },
+            "fake_generators": {
+              "HunyuanVideo": 309
+            },
+            "components": 332
+          },
+          "dev": {
+            "total": 146,
+            "labels": {
+              "1": 73,
+              "0": 73
+            },
+            "fake_generators": {
+              "HunyuanVideo": 73
+            },
+            "components": 80
+          }
+        },
+        "metadata_models": {
+          "width_only": {
+            "fields": [
+              "width"
+            ],
+            "eer": 0.5
+          },
+          "numeric_media": {
+            "fields": [
+              "width",
+              "height",
+              "fps",
+              "duration_seconds",
+              "bit_rate"
+            ],
+            "eer": 0.5342465753424658
+          }
+        }
+      }
+    },
+    "generator_dev_diagnostics": {
+      "CogVideoX1.5-5B-I2V": {
+        "counts": {
+          "train": {
+            "total": 516,
+            "labels": {
+              "1": 258,
+              "0": 258
+            },
+            "fake_generators": {
+              "HunyuanVideo": 246,
+              "Wan2.1-T2V-1.3B": 12
+            },
+            "components": 275
+          },
+          "dev": {
+            "total": 0,
+            "labels": {},
+            "fake_generators": {},
+            "components": 0
+          }
+        },
+        "metadata_models": {
+          "unavailable": "both labels required in train and dev"
+        }
+      },
+      "CogVideoX1.5-5B-T": {
+        "counts": {
+          "train": {
+            "total": 502,
+            "labels": {
+              "1": 251,
+              "0": 251
+            },
+            "fake_generators": {
+              "CogVideoX1.5-5B-I2V": 1,
+              "HunyuanVideo": 242,
+              "Wan2.1-T2V-1.3B": 8
+            },
+            "components": 261
+          },
+          "dev": {
+            "total": 2,
+            "labels": {
+              "1": 1,
+              "0": 1
+            },
+            "fake_generators": {
+              "CogVideoX1.5-5B-T": 1
+            },
+            "components": 2
+          }
+        },
+        "metadata_models": {
+          "width_only": {
+            "fields": [
+              "width"
+            ],
+            "eer": 0.5
+          },
+          "numeric_media": {
+            "fields": [
+              "width",
+              "height",
+              "fps",
+              "duration_seconds",
+              "bit_rate"
+            ],
+            "eer": 1.0
+          }
+        }
+      },
+      "HunyuanVideo": {
+        "counts": {
+          "train": {
+            "total": 18,
+            "labels": {
+              "1": 9,
+              "0": 9
+            },
+            "fake_generators": {
+              "Wan2.1-T2V-1.3B": 9
+            },
+            "components": 10
+          },
+          "dev": {
+            "total": 112,
+            "labels": {
+              "1": 56,
+              "0": 56
+            },
+            "fake_generators": {
+              "HunyuanVideo": 56
+            },
+            "components": 61
+          }
+        },
+        "metadata_models": {
+          "width_only": {
+            "fields": [
+              "width"
+            ],
+            "eer": 0.5
+          },
+          "numeric_media": {
+            "fields": [
+              "width",
+              "height",
+              "fps",
+              "duration_seconds",
+              "bit_rate"
+            ],
+            "eer": 0.5178571428571429
+          }
+        }
+      },
+      "HunyuanVideo-I2V": {
+        "counts": {
+          "train": {
+            "total": 500,
+            "labels": {
+              "1": 250,
+              "0": 250
+            },
+            "fake_generators": {
+              "CogVideoX1.5-5B-I2V": 1,
+              "HunyuanVideo": 237,
+              "Wan2.1-T2V-1.3B": 12
+            },
+            "components": 255
+          },
+          "dev": {
+            "total": 2,
+            "labels": {
+              "1": 1,
+              "0": 1
+            },
+            "fake_generators": {
+              "HunyuanVideo-I2V": 1
+            },
+            "components": 1
+          }
+        },
+        "metadata_models": {
+          "width_only": {
+            "fields": [
+              "width"
+            ],
+            "eer": 0.5
+          },
+          "numeric_media": {
+            "fields": [
+              "width",
+              "height",
+              "fps",
+              "duration_seconds",
+              "bit_rate"
+            ],
+            "eer": 1.0
+          }
+        }
+      },
+      "Wan2.1-T2V-1.3B": {
+        "counts": {
+          "train": {
+            "total": 500,
+            "labels": {
+              "1": 250,
+              "0": 250
+            },
+            "fake_generators": {
+              "CogVideoX1.5-5B-I2V": 1,
+              "HunyuanVideo": 249
+            },
+            "components": 273
+          },
+          "dev": {
+            "total": 4,
+            "labels": {
+              "1": 2,
+              "0": 2
+            },
+            "fake_generators": {
+              "Wan2.1-T2V-1.3B": 2
+            },
+            "components": 2
+          }
+        },
+        "metadata_models": {
+          "width_only": {
+            "fields": [
+              "width"
+            ],
+            "eer": 0.5
+          },
+          "numeric_media": {
+            "fields": [
+              "width",
+              "height",
+              "fps",
+              "duration_seconds",
+              "bit_rate"
+            ],
+            "eer": 0.5
+          }
+        }
+      },
+      "Wan2.2-TI2V-5B-I": {
+        "counts": {
+          "train": {
+            "total": 564,
+            "labels": {
+              "1": 282,
+              "0": 282
+            },
+            "fake_generators": {
+              "CogVideoX1.5-5B-I2V": 1,
+              "HunyuanVideo": 269,
+              "Wan2.1-T2V-1.3B": 12
+            },
+            "components": 291
+          },
+          "dev": {
+            "total": 4,
+            "labels": {
+              "1": 2,
+              "0": 2
+            },
+            "fake_generators": {
+              "Wan2.2-TI2V-5B-I": 2
+            },
+            "components": 2
+          }
+        },
+        "metadata_models": {
+          "width_only": {
+            "fields": [
+              "width"
+            ],
+            "eer": 0.5
+          },
+          "numeric_media": {
+            "fields": [
+              "width",
+              "height",
+              "fps",
+              "duration_seconds",
+              "bit_rate"
+            ],
+            "eer": 0.5
+          }
+        }
+      },
+      "Wan2.2-TI2V-5B-T": {
+        "counts": {
+          "train": {
+            "total": 558,
+            "labels": {
+              "1": 279,
+              "0": 279
+            },
+            "fake_generators": {
+              "CogVideoX1.5-5B-I2V": 1,
+              "HunyuanVideo": 266,
+              "Wan2.1-T2V-1.3B": 12
+            },
+            "components": 289
+          },
+          "dev": {
+            "total": 0,
+            "labels": {},
+            "fake_generators": {},
+            "components": 0
+          }
+        },
+        "metadata_models": {
+          "unavailable": "both labels required in train and dev"
+        }
+      }
+    }
+  },
+  "data_isolation_audit": {
+    "path": "/var/tmp/lanjianyu-issue10-20261011/control/data-isolation-audit.json",
+    "sha256": "4c0320c91c27085a99f86dc954f9263133678fd2d44637e9a5f6ec2acf1437f5"
+  },
+  "encoder_restoration": {
+    "schema_version": 1,
+    "timestamp_utc": "2026-10-11T03:53:05.129184+00:00",
+    "purpose": "Issue #10 固定视觉编码器恢复与 CPU 工程兼容检查；未训练、未使用 GPU。",
+    "repository": "timm/resnet18.a1_in1k",
+    "revision": "491b427b45c94c7fb0e78b5474cc919aff584bbf",
+    "license": "Apache-2.0",
+    "checkpoint": "/var/tmp/lanjianyu-issue10-20261011/resnet18-a1/encoder.pt",
+    "actual": {
+      "sha256": "db6fd0c5cfb2b712d1904bb8b7edcf41a850491bdf42729e4ab485e89f1b6889",
+      "bytes": 44780495
+    },
+    "historical_expected": {
+      "sha256": "db6fd0c5cfb2b712d1904bb8b7edcf41a850491bdf42729e4ab485e89f1b6889",
+      "bytes": 44780495
+    },
+    "byte_exact_historical_match": true,
+    "feature_state_keys": 120,
+    "all_tensors_bit_equal_to_pinned_upstream_minus_fc": true,
+    "strict_load": true,
+    "missing_keys": [],
+    "unexpected_keys": [],
+    "synthetic_cpu_output_shape": [
+      1,
+      512
+    ],
+    "synthetic_cpu_output_all_finite": true,
+    "all_parameters_frozen": true,
+    "device": "cpu",
+    "preprocessing": {
+      "input_size": [
+        3,
+        224,
+        224
+      ],
+      "interpolation": "bicubic",
+      "mean": [
+        0.485,
+        0.456,
+        0.406
+      ],
+      "std": [
+        0.229,
+        0.224,
+        0.225
+      ],
+      "crop_pct": 0.95,
+      "crop_mode": "center"
+    },
+    "conversion_script": "/home/lanjianyu/deepfake-detection-archive/docs/research/pretrained-resources/prepare_resources.py",
+    "conversion_script_sha256": "f98a0acfefc7bf6da653f727f3f2958a43394508eb58c0459de5bd14487dd64c",
+    "restore_script_sha256": "3a7f5757713c21248a12827d1dffe7aba1f46758b310e3d553383e72cc4814e4",
+    "competition_approval": "尚未确认；来源许可不等同于赛方批准。"
+  },
+  "profile": {
+    "scope": "four train-only videos; no EER or saved detector; first media includes GPU warmup",
+    "script_sha256": "2bf5f5bfa8ad798e7d5a30df79373605e6a1a66ce0efebd03916107d688d7d86",
+    "gpu": "NVIDIA GeForce RTX 4090",
+    "torch": "2.14.1+cu132",
+    "encoder_sha256": "db6fd0c5cfb2b712d1904bb8b7edcf41a850491bdf42729e4ab485e89f1b6889",
+    "sample_ids": [
+      "vif:source_videos/Panda-70M/real/HunyuanVideo-I2V/12Pi1daK0JQ-1.mp4",
+      "vif:source_videos/Panda-70M/real/HunyuanVideo-I2V/18X9UPK3SoU-0.mp4",
+      "vif:source_videos/Panda-70M/fake/HunyuanVideo/-6r04gCLMWw-0.mp4",
+      "vif:source_videos/Panda-70M/fake/HunyuanVideo/-BYN56NP6vA-1.mp4"
+    ],
+    "frozen_encoder_trainable_parameters": 0,
+    "features": {
+      "precision": "float32",
+      "frames_per_video": 4,
+      "feature_batch_size": 8,
+      "actual_forward_batch": 4,
+      "num_workers": 0,
+      "shape": [
+        4,
+        4,
+        512
+      ],
+      "media_seconds": [
+        0.4867808734998107,
+        0.22487690020352602,
+        0.2011629557237029,
+        0.24359498731791973
+      ],
+      "videos_per_second_including_decode_and_warmup": 3.458963711820752,
+      "peak_allocated_bytes": 73292800,
+      "peak_reserved_bytes": 100663296,
+      "finite_outputs": true
+    },
+    "head": {
+      "precision": "bfloat16",
+      "batch_size": 64,
+      "input_shape": [
+        64,
+        4,
+        512
+      ],
+      "optimizer_steps": 3,
+      "warmup_steps": 1,
+      "step_seconds": [
+        0.46522477827966213,
+        0.004096820019185543,
+        0.0023226970806717873
+      ],
+      "samples_per_second_excluding_warmup": 19939.19449219081,
+      "peak_allocated_bytes": 18892800,
+      "peak_reserved_bytes": 25165824,
+      "finite_loss_and_gradients": true
+    }
+  },
+  "runs": {
+    "seed42": {
+      "config": {
+        "path": "/home/lanjianyu/deepfake-detection-archive/docs/experiments/vif-cloud-20261011/seed42.json",
+        "sha256": "07e30e9138008a8fbabe4d08341fe5b5e1fcac357bb68ad96d594596b1dc9abe"
+      },
+      "code": {
+        "code_sha256": "b2bcff71b3df67d624c44e0ecc469a38d62811a69015910167a16d8d560cbc51",
+        "commit": "4bbd2925259f86b1022ae5bb71f733684681b95d",
+        "dirty": true
+      },
+      "provenance": {
+        "code_sha256": "b2bcff71b3df67d624c44e0ecc469a38d62811a69015910167a16d8d560cbc51",
+        "data_sha256": "f055a8ebf966ef3dbc3c90351e0c5bcbd7cd9ea8829660afe8a3432f74d542a2",
+        "encoder_sha256": "338c88128c15611cddfa127d7d119c668c3357dfc0a3ccb05ef8c00140e8df2e",
+        "manifest_sha256": "f055a8ebf966ef3dbc3c90351e0c5bcbd7cd9ea8829660afe8a3432f74d542a2",
+        "sources_sha256": "4b992a4af234e4c4914948c86851607f022c6f750e85b852646f7c6e888398fa",
+        "weights_sha256": "0672ed9faa8a2ffecd5f55e22dc15711129f834f8703dd3abc6d207edb4c38fb"
+      },
+      "train_count": 618,
+      "dev_count": 146,
+      "best_epoch": 4,
+      "epochs_completed": 9,
+      "stop_reason": "early_stopping",
+      "checkpoint": {
+        "path": "/var/tmp/lanjianyu-issue10-20261011/seed42/training/best.pt",
+        "sha256": "279167fafeeb55ae7c9c8f903834a5489dc92e31918875b08257a7fed62da86d"
+      },
+      "scores": {
+        "path": "/var/tmp/lanjianyu-issue10-20261011/seed42/dev-scores.jsonl",
+        "sha256": "a0003a2cecdf599a92fe6760198498282d466184c8ec42fde571b28e1f1cf92b"
+      },
+      "decode_failure_count": 0,
+      "skipped_optimizer_updates": 0,
+      "experiment_seconds": 179.95026323199272,
+      "training_seconds": 3.67565462552011,
+      "median_training_samples_per_second": 2354.848606001093,
+      "peak_cuda_allocated_bytes": 68962304,
+      "peak_cuda_reserved_bytes": 167772160,
+      "dev_scoring_seconds_excluding_decode": 0.050931502133607864,
+      "evaluation": {
+        "sample_count": 146,
+        "success_count": 146,
+        "failure_count": 0,
+        "unlabeled_count": 0,
+        "coverage": 1.0,
+        "failure_rate": 0.0,
+        "fullset_eer": 0.2054794520547945,
+        "fullset_reason": null,
+        "successful_subset_metrics": {
+          "protocol": "eer_interpolated_v1",
+          "eer": 0.2054794520547945,
+          "roc_auc": 0.8600112591480578,
+          "real_count": 73,
+          "fake_count": 73,
+          "lower_point": {
+            "threshold": -0.26363956928253174,
+            "far": 0.2054794520547945,
+            "frr": 0.2054794520547945
+          },
+          "upper_point": {
+            "threshold": -0.26363956928253174,
+            "far": 0.2054794520547945,
+            "frr": 0.2054794520547945
+          },
+          "interpolation_weight": 0.0,
+          "nearest_point": {
+            "threshold": -0.26363956928253174,
+            "far": 0.2054794520547945,
+            "frr": 0.2054794520547945
+          },
+          "nearest_eer": 0.2054794520547945
+        },
+        "successful_subset_reason": null,
+        "failures_by_code": {},
+        "failed_sample_ids": [],
+        "real_count": 73,
+        "fake_count": 73,
+        "group_count": 0,
+        "real_group_count": 0,
+        "fake_group_count": 0,
+        "missing_group_count": 146,
+        "frozen_threshold": null,
+        "successful_subset_far": null,
+        "successful_subset_frr": null
+      },
+      "comparisons": {
+        "width_only": {
+          "baseline_eer": 0.5,
+          "candidate_eer": 0.2054794520547945,
+          "candidate_minus_baseline_eer": -0.2945205479452055,
+          "common_sample_count": 146,
+          "common_coverage": 1.0,
+          "excluded_sample_ids": []
+        },
+        "numeric_media": {
+          "baseline_eer": 0.5342465753424658,
+          "candidate_eer": 0.2054794520547945,
+          "candidate_minus_baseline_eer": -0.32876712328767127,
+          "common_sample_count": 146,
+          "common_coverage": 1.0,
+          "excluded_sample_ids": []
+        }
+      }
+    },
+    "seed43": {
+      "config": {
+        "path": "/home/lanjianyu/deepfake-detection-archive/docs/experiments/vif-cloud-20261011/seed43.json",
+        "sha256": "c1de08325770ddbcdbcf7b6872b2103dd710343c5c464cc0eacbeefbedb5e049"
+      },
+      "code": {
+        "code_sha256": "b2bcff71b3df67d624c44e0ecc469a38d62811a69015910167a16d8d560cbc51",
+        "commit": "4bbd2925259f86b1022ae5bb71f733684681b95d",
+        "dirty": true
+      },
+      "provenance": {
+        "code_sha256": "b2bcff71b3df67d624c44e0ecc469a38d62811a69015910167a16d8d560cbc51",
+        "data_sha256": "f055a8ebf966ef3dbc3c90351e0c5bcbd7cd9ea8829660afe8a3432f74d542a2",
+        "encoder_sha256": "338c88128c15611cddfa127d7d119c668c3357dfc0a3ccb05ef8c00140e8df2e",
+        "manifest_sha256": "f055a8ebf966ef3dbc3c90351e0c5bcbd7cd9ea8829660afe8a3432f74d542a2",
+        "sources_sha256": "4b992a4af234e4c4914948c86851607f022c6f750e85b852646f7c6e888398fa",
+        "weights_sha256": "79a878fab1986ff516082d1f4f3a2e2d3da82ff161e7610748666da1329ee3e7"
+      },
+      "train_count": 618,
+      "dev_count": 146,
+      "best_epoch": 4,
+      "epochs_completed": 9,
+      "stop_reason": "early_stopping",
+      "checkpoint": {
+        "path": "/var/tmp/lanjianyu-issue10-20261011/seed43/training/best.pt",
+        "sha256": "1db761d225a3becfdb6b975227e45f265fc66b1da9bf37ee1d0eb9b01827c91b"
+      },
+      "scores": {
+        "path": "/var/tmp/lanjianyu-issue10-20261011/seed43/dev-scores.jsonl",
+        "sha256": "41a7800794aee875471c583e0583fe25004b30ebc5d2862357d1a8eaa2b2691d"
+      },
+      "decode_failure_count": 0,
+      "skipped_optimizer_updates": 0,
+      "experiment_seconds": 6.812168297357857,
+      "training_seconds": 3.776536059565842,
+      "median_training_samples_per_second": 2302.7776438688056,
+      "peak_cuda_allocated_bytes": 68962304,
+      "peak_cuda_reserved_bytes": 134217728,
+      "dev_scoring_seconds_excluding_decode": 0.05180221330374479,
+      "evaluation": {
+        "sample_count": 146,
+        "success_count": 146,
+        "failure_count": 0,
+        "unlabeled_count": 0,
+        "coverage": 1.0,
+        "failure_rate": 0.0,
+        "fullset_eer": 0.2191780821917808,
+        "fullset_reason": null,
+        "successful_subset_metrics": {
+          "protocol": "eer_interpolated_v1",
+          "eer": 0.2191780821917808,
+          "roc_auc": 0.848189153687371,
+          "real_count": 73,
+          "fake_count": 73,
+          "lower_point": {
+            "threshold": -0.5337527990341187,
+            "far": 0.2191780821917808,
+            "frr": 0.2191780821917808
+          },
+          "upper_point": {
+            "threshold": -0.5337527990341187,
+            "far": 0.2191780821917808,
+            "frr": 0.2191780821917808
+          },
+          "interpolation_weight": 0.0,
+          "nearest_point": {
+            "threshold": -0.5337527990341187,
+            "far": 0.2191780821917808,
+            "frr": 0.2191780821917808
+          },
+          "nearest_eer": 0.2191780821917808
+        },
+        "successful_subset_reason": null,
+        "failures_by_code": {},
+        "failed_sample_ids": [],
+        "real_count": 73,
+        "fake_count": 73,
+        "group_count": 0,
+        "real_group_count": 0,
+        "fake_group_count": 0,
+        "missing_group_count": 146,
+        "frozen_threshold": null,
+        "successful_subset_far": null,
+        "successful_subset_frr": null
+      },
+      "comparisons": {
+        "width_only": {
+          "baseline_eer": 0.5,
+          "candidate_eer": 0.2191780821917808,
+          "candidate_minus_baseline_eer": -0.2808219178082192,
+          "common_sample_count": 146,
+          "common_coverage": 1.0,
+          "excluded_sample_ids": []
+        },
+        "numeric_media": {
+          "baseline_eer": 0.5342465753424658,
+          "candidate_eer": 0.2191780821917808,
+          "candidate_minus_baseline_eer": -0.31506849315068497,
+          "common_sample_count": 146,
+          "common_coverage": 1.0,
+          "excluded_sample_ids": []
+        }
+      }
+    }
+  }
+}

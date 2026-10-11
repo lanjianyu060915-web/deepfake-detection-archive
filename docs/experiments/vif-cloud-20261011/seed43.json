@@ -1,0 +1,52 @@
+{
+  "architecture": "media_feature_head_v1",
+  "batch_size": 64,
+  "cache_max_bytes": 1073741824,
+  "data_root": "../../../data/vif-panda-research/media",
+  "encoder": {
+    "architecture": "resnet18",
+    "checkpoint": "../../../models/pretrained/resnet18-a1/encoder.pt",
+    "expected_sha256": "db6fd0c5cfb2b712d1904bb8b7edcf41a850491bdf42729e4ab485e89f1b6889",
+    "kind": "vision"
+  },
+  "feature_cache": "../../../cache/vif-cloud-20261011",
+  "manifest": "../../../outputs/experiments/vif-cloud-20261011/control/hunyuan_geometry_duration.jsonl",
+  "modality": "video",
+  "model_config": {
+    "aggregation": "mean",
+    "dropout": 0.1,
+    "hidden_dim": 64,
+    "input_dim": 512,
+    "trim_fraction": 0.1
+  },
+  "num_workers": 0,
+  "output_dir": "../../../outputs/experiments/vif-cloud-20261011/seed43",
+  "schema_version": 1,
+  "segments": 1,
+  "sources": "../../../data/vif-panda-research/sources.jsonl",
+  "training": {
+    "accumulation_steps": 1,
+    "amp": true,
+    "amp_dtype": "bfloat16",
+    "deterministic": true,
+    "device": "cuda",
+    "learning_rate": 0.001,
+    "max_epochs": 20,
+    "max_grad_norm": 1.0,
+    "min_delta": 0.0,
+    "patience": 5,
+    "seed": 43,
+    "weight_decay": 0.0001
+  },
+  "video": {
+    "height": 224,
+    "max_duration_seconds": 600.0,
+    "max_output_bytes": 536870912,
+    "max_source_frames": 100000,
+    "max_source_pixels": 40000000,
+    "n_frames": 4,
+    "resize_mode": "center_crop",
+    "timeout_seconds": 60.0,
+    "width": 224
+  }
+}
