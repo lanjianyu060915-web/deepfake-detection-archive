@@ -130,3 +130,66 @@ def test_offline_scorer_checks_status_before_media_or_model(tmp_path: Path) -> N
     )
     with pytest.raises(MediaError, match="excluded"):
         scorer(sample)
+
+
+@pytest.mark.parametrize("mode", ["waveform", "features", "standalone"])
+@pytest.mark.parametrize(
+    "failure", ["path_escape", "unregistered_hash", "hash_mismatch"]
+)
+def test_media_boundaries_preserve_scoring_errors(
+    tmp_path: Path, mode: str, failure: str
+) -> None:
+    torch = pytest.importorskip("torch")
+    from deepfake_detection_archive.config import InferenceConfig  # noqa: PLC0415
+    from deepfake_detection_archive.features import extract_features  # noqa: PLC0415
+    from deepfake_detection_archive.media import (  # noqa: PLC0415
+        AudioConfig,
+        MediaError,
+        VideoConfig,
+    )
+    from deepfake_detection_archive.models.encoders import FrozenAudioEncoder  # noqa: PLC0415
+    from deepfake_detection_archive.scoring import OfflineScorer  # noqa: PLC0415
+
+    root = tmp_path / "media"
+    root.mkdir()
+    path = root / "sample.wav"
+    if failure == "path_escape":
+        outside = tmp_path / "outside.wav"
+        outside.write_bytes(b"outside")
+        path.symlink_to(outside)
+    else:
+        path.write_bytes(b"changed media")
+    record = SampleRecord(
+        "sample",
+        path.name,
+        "audio",
+        0,
+        "s",
+        sha256="unknown" if failure == "unregistered_hash" else "a" * 64,
+    )
+    # No encoder weights or model should be used for an invalid media boundary.
+    encoder = object.__new__(FrozenAudioEncoder)
+    if mode == "standalone":
+        with pytest.raises(MediaError) as raised:
+            extract_features(
+                record, root, encoder, AudioConfig(), VideoConfig(), 400, 1, "cpu", 1
+            )
+    else:
+        scorer = object.__new__(OfflineScorer)
+        scorer.config = InferenceConfig(
+            manifest="manifest.jsonl",
+            data_root="media",
+            output_dir="scores",
+            modality="audio",
+            checkpoint="checkpoint.pt",
+            checkpoint_sha256="a" * 64,
+            device="cpu",
+        )
+        scorer.root = root
+        scorer.audio = AudioConfig()
+        scorer.video = VideoConfig()
+        scorer.device = torch.device("cpu")
+        scorer.encoder = encoder if mode == "features" else None
+        with pytest.raises(MediaError) as raised:
+            scorer(record)
+    assert raised.value.code == failure

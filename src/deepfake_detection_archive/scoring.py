@@ -10,8 +10,8 @@ import torch
 from torch import Tensor
 
 from .config import InferenceConfig
-from .data.manifest import SampleRecord, file_sha256
-from .features import extract_features, load_encoder
+from .data.manifest import SampleRecord
+from .features import extract_features, load_encoder, media_path
 from .media import (
     AudioConfig,
     MediaError,
@@ -79,13 +79,6 @@ class OfflineScorer:
             raise MediaError(record.status, record.failure_reason)
         if record.modality != self.config.modality:
             raise MediaError("wrong_modality", "sample differs from run modality")
-        path = (self.root / record.path).resolve(strict=True)
-        if not path.is_relative_to(self.root):
-            raise MediaError("path_escape", "resolved media path escapes data_root")
-        if record.sha256 == "unknown":
-            raise MediaError("unregistered_hash", "media needs a registered SHA-256")
-        if file_sha256(path) != record.sha256:
-            raise MediaError("hash_mismatch", "media differs from registered bytes")
         if self.encoder is not None:
             features = extract_features(
                 record,
@@ -100,7 +93,7 @@ class OfflineScorer:
             )
             result: Tensor = self.model(features[None, ...].to(self.device))
             return float(result[0].float().cpu())
-        decoded = decode_audio(path, self.audio)
+        decoded = decode_audio(media_path(record, self.root), self.audio)
         observations = torch.from_numpy(
             sample_audio_segments(
                 decoded.waveform,

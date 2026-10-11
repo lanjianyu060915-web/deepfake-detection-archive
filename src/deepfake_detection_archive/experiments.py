@@ -216,8 +216,10 @@ class _CachedDataset(Dataset[tuple[Tensor, Tensor]]):
         return len(self.entries)
 
     def __getitem__(self, index: int) -> tuple[Tensor, Tensor]:
-        path, digest, label = self.entries[index]
-        return _load_tensor(path, digest), torch.tensor(label, dtype=torch.float32)
+        # Cache preparation validates bytes and tensors once before training.
+        path, _, label = self.entries[index]
+        value = torch.load(path, map_location="cpu", weights_only=True)
+        return value, torch.tensor(label, dtype=torch.float32)
 
 
 def _worker_seed(_worker_id: int) -> None:

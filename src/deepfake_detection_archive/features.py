@@ -6,15 +6,15 @@ from typing import Any
 import torch
 from torch import Tensor
 
-from .data.manifest import SampleRecord
+from .data.manifest import SampleRecord, file_sha256
 from .media import (
     AudioConfig,
+    MediaError,
     VideoConfig,
     decode_audio,
     decode_video,
     sample_audio_segments,
 )
-from .models.checkpoint import verify_sha256
 from .models.encoders import FrozenAudioEncoder, FrozenVisionEncoder
 
 
@@ -62,8 +62,11 @@ def media_path(record: SampleRecord, root: Path) -> Path:
     resolved_root = root.resolve(strict=True)
     path = (resolved_root / record.path).resolve(strict=True)
     if not path.is_relative_to(resolved_root):
-        raise ValueError("media path escapes data_root")
-    verify_sha256(path, record.sha256)
+        raise MediaError("path_escape", "resolved media path escapes data_root")
+    if record.sha256 == "unknown":
+        raise MediaError("unregistered_hash", "media needs a registered SHA-256")
+    if file_sha256(path) != record.sha256:
+        raise MediaError("hash_mismatch", "media differs from registered bytes")
     return path
 
 
