@@ -14,10 +14,8 @@
 | `huggingface/skills` | `ca0325bb20b2d0a1b2efa893670c4c72f79e707b` | `huggingface-datasets`、`huggingface-papers` |
 
 这些是经过筛选的 11 项项目依赖；不把 ds-skills 的 535 项完整目录复制进仓库。
-项目用途、适配限制和文件哈希记录在
-[`docs/research/tooling.md`](../docs/research/tooling.md)、
-[`docs/research/ds-skills.json`](../docs/research/ds-skills.json) 与
-[`docs/research/tooling-lock.json`](../docs/research/tooling-lock.json)。
+来源与固定版本以根目录 `skills-lock.json` 为准，第三方许可见本目录
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。这些工具辅助实现，不作为模型实验的前置门。
 
 ## 管理命令
 

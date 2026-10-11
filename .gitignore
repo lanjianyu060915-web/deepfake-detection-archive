@@ -52,3 +52,6 @@ htmlcov/
 .vscode/
 
 .omx/
+
+# Machine-specific paths and experimental overrides.
+/configs/*.local.json
