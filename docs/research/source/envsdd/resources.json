@@ -1,0 +1,60 @@
+{
+  "repo_id": "EnvSDD/EnvSDD",
+  "revision": "b0832726deb55484dbce869c6f09c41f7e9e5fbb",
+  "total_bytes": 3003079622,
+  "files": [
+    {
+      "path": "data/train-00000-of-00052.parquet",
+      "size": 366419134,
+      "sha256": "f9a1729963eabe542c138fee8bc8e589c047069871bb16c134c56457d9a55d24"
+    },
+    {
+      "path": "data/train-00001-of-00052.parquet",
+      "size": 409815554,
+      "sha256": "548bc704a20ed2fd46a94beba6d754528f19d7282d900c347f89793969163a08"
+    },
+    {
+      "path": "data/train-00002-of-00052.parquet",
+      "size": 357963989,
+      "sha256": "904aa316849d5395b69e9f7d3f28567cb864605e21d2ba74dc7afc9865e3c12d"
+    },
+    {
+      "path": "data/train-00003-of-00052.parquet",
+      "size": 362066413,
+      "sha256": "9379be83f95c5de88accc88187d11d56e516d801b5f9f407316e05e5ea9b5c48"
+    },
+    {
+      "path": "data/train-00004-of-00052.parquet",
+      "size": 361152810,
+      "sha256": "45f287cbfd772b4d72101ab42167ff5099c2dafa40dd481644bf194ed915dea8"
+    },
+    {
+      "path": "data/train-00005-of-00052.parquet",
+      "size": 370996069,
+      "sha256": "f661aefa5c3765c03c4adfcdfd29297d0f1a2807b0862dfe6366e1d44bc8829f"
+    },
+    {
+      "path": "data/validation-00000-of-00015.parquet",
+      "size": 368476675,
+      "sha256": "5fd414844332fbaf479964beeff869d29f71428f18421be0b827b596a2289cbd"
+    },
+    {
+      "path": "data/validation-00001-of-00015.parquet",
+      "size": 406188978,
+      "sha256": "c7ee6d1214ee34ae2d27ec3c5491cefd5c495354a10d642371f42fcbb8ff235c"
+    }
+  ],
+  "official_metadata_url": "https://huggingface.co/api/datasets/EnvSDD/EnvSDD/tree/b0832726deb55484dbce869c6f09c41f7e9e5fbb/data?limit=1000",
+  "attribution": {
+    "FREESOUNDCREDITS.txt": {
+      "url": "https://raw.githubusercontent.com/speechbrain/speechbrain/89ead74d163463d30c62329a09cfdb4c54f5abc1/recipes/UrbanSound8k/SoundClassification/UrbanSound8k/FREESOUNDCREDITS.txt",
+      "sha256": "aaee9fbc47f256da4d17b6a371b98687272c0bd42c81fa7d36ed4035cb12bd77",
+      "bytes": 26155
+    },
+    "UrbanSound8K.csv": {
+      "url": "https://raw.githubusercontent.com/speechbrain/speechbrain/89ead74d163463d30c62329a09cfdb4c54f5abc1/recipes/UrbanSound8k/SoundClassification/UrbanSound8k/metadata/UrbanSound8K.csv",
+      "sha256": "b207f7a53f9e5eb02a5dd71d58fb8b66c88c24c0637b926dc72d9d400a6a2354",
+      "bytes": 494104
+    }
+  }
+}
