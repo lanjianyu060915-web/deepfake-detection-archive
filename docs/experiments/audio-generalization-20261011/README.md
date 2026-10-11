@@ -23,9 +23,9 @@ LogMel 两个种子逐位复现（0.7849%、0.9419%），两个 HuBERT 得到 1.
 
 | 用途 | 内容 | 数量 | 标识 |
 | --- | --- | --- | --- |
-| 退化诊断 | ASVspoof2019 LA train/dev 划分出的 dev | 24,844（真2,548/假22,296，A01–A06，20 说话人） | `data/dev/manifest.jsonl` |
-| 未知攻击 | 官方 CM eval 协议标签 + 固定镜像媒体 | 71,237（真7,355/假63,882，A07–A19 各4,914，67 说话人） | `data/eval/import-summary.json` |
-| 未知攻击子集 | 每攻击按说话人轮转取 800 假 + 同说话人 1,600 真 | 12,000（真1,600/假10,400，48 说话人） | `data/eval-subset/selection.json` |
+| 退化诊断 | ASVspoof2019 LA train/dev 划分出的 dev | 24,844（真2,548/假22,296，A01–A06，20 说话人） | `data/audio-generalization-20261011/data/dev/manifest.jsonl` |
+| 未知攻击 | 官方 CM eval 协议标签 + 固定镜像媒体 | 71,237（真7,355/假63,882，A07–A19 各4,914，67 说话人） | `data/audio-generalization-20261011/data/eval/import-summary.json` |
+| 未知攻击子集 | 每攻击按说话人轮转取 800 假 + 同说话人 1,600 真 | 12,000（真1,600/假10,400，48 说话人） | `data/audio-generalization-20261011/data/eval-subset/selection.json` |
 
 未知攻击媒体取自固定镜像 `Bisher/ASVspoof_2019_LA@aea92dd83a9c56e070c0b1e9f02e7c0d96216a4c`
 的 eval 分片（SHA-256 `8159935a…c86af`，4,381,501,164 字节），标签与攻击 ID 取自官方
@@ -33,7 +33,7 @@ LogMel 两个种子逐位复现（0.7849%、0.9419%），两个 HuBERT 得到 1.
 ZIP64 范围读取并校验成员 CRC32）。导入工具要求两个文件的 SHA-256 与清单完全一致、且镜像
 元数据逐行等于官方协议，否则拒绝写入任何媒体。
 
-eval 的 67 个说话人与 train/dev 的 20 个说话人**没有任何交集**，三个划分两两不重叠，
+eval 的67个说话人与 train、dev 各20个说话人（合计40个）**没有交集**，三个划分两两不重叠，
 因此这一轮同时是未见攻击与未见说话人诊断。ASVspoof2021 与 in-the-wild 仍保留为最终
 holdout，本轮未使用。
 
@@ -53,7 +53,9 @@ AAC 64 kbps（16 kHz、保留源声道）、8 kHz 带限后再恢复到 16 kHz�
 
 两种退化的差别很大：AAC 64 kbps 只让 LogMel42 从 0.78% 升到 0.98%（+0.20 点），
 LogMel43 从 0.94% 升到 1.93%（+0.99 点）；而 8 kHz 带限把两个种子都推到 13% 以上，
-增加约 12 个点。说明当前候选对编码器类压缩基本免疫，但对 8 kHz 以上的频谱细节高度依赖。
+增加约 12 个点。本轮 AAC 64 kbps 条件的退化小于带限条件，不能推广到其他编码器或码率。
+降采样至 8 kHz 后有效带宽约为 4 kHz；结果提示模型对约 4–8 kHz 的信息或相应重采样变化敏感，
+下一轮优先测试带宽增强。
 AAC 条件的解码器与其它条件不同（见解码器交叉检查），两条路径在 FLAC 上不可区分，
 因此这里反映的是编码本身。
 
@@ -73,9 +75,9 @@ AAC 条件的解码器与其它条件不同（见解码器交叉检查），两�
 （例如 A10 为 5.00% 对 6.06%），分数文件哈希也不同，属聚合指标上的巧合而非重复运行。
 
 A17/A18/A19 是四个候选共同的困难族：LogMel42 在 A17 上 EER 11.81%，两个 HuBERT 在 A18/A19
-上达到 12%–15%。相反 A09 对四个候选几乎无威胁。已知攻击 A01–A06 的 dev EER 在 1% 上下，
-换到未见攻击后 LogMel42 从 0.78% 升到 2.97%，冻结 HuBERT 从 1.50% 升到 6.01%，
-说明现有候选的泛化能力主要被新攻击族限制，而不是被 A01–A06 的训练分布限制。
+上达到 12%–15%。本子集的 A09 组 EER 为0%–0.38%。已知攻击 A01–A06 的 LogMel dev EER 在 1% 上下，
+换到未见攻击后 LogMel42 从 0.78% 升到 2.97%，冻结 HuBERT42 从本轮 clean 的1.5306%升到6.0096%。
+这里同时改变攻击族、说话人和样本组成，只能说明在该联合分布上退化，不能将差异单独归因于攻击。
 
 ## 解码器交叉检查
 
@@ -86,29 +88,50 @@ A17/A18/A19 是四个候选共同的困难族：LogMel42 在 A17 上 EER 11.81%�
 
 ## 复现
 
+共享发布根为 `/var/tmp/deepfake-audio-generalization-20261011/`，组 `dlteam`。
+`data` 引用原任务数据，`hubert-base-ls960` 引用 Issue #9 的团队可读 bundle；
+`outputs/<run>/scores.jsonl` 引用原始分数，`evaluation.json` 从这些未修改分数重新计算，
+12组EER、覆盖率与原摘要一致。原任务的私有metadata/report未冒充共享发布。
+在自己的工作副本中建立一次以下链接；已有链接时直接复用对应资产：
+
 ```bash
-# 资产根目录 /var/tmp/lanjianyu-issue19-20261011，权重只读复用 Issue #9 的 runs/
+ln -s /var/tmp/deepfake-audio-generalization-20261011 data/audio-generalization-20261011
+ln -s /var/tmp/deepfake-audio-generalization-20261011/outputs outputs/audio-generalization-20261011
+```
+
+```bash
+# 以下准备命令供新目录重建；已发布资产直接使用后面的推理/评测命令。
 scripts/devctl run -- python tools/prepare_robustness.py \
-  --manifest data/dev/manifest.jsonl --data-root data/issue9-asv/LA \
-  --output-dir data/robustness-aac64k --condition audio_aac64k
+  --manifest data/audio-generalization-20261011/data/dev/manifest.jsonl --data-root data/audio-generalization-20261011/data/issue9-asv/LA \
+  --output-dir outputs/asv-aac64k-new --condition audio_aac64k
 scripts/devctl run -- python tools/prepare_asv_eval.py \
-  --parquet data/eval-parquet/test-00000-of-00001.parquet \
-  --protocol data/eval-official/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt \
-  --attribution-root /var/tmp/lanjianyu-issue9-20261011/protocols --output-root data/eval
-scripts/devctl run -- python -m deepfake_detection_archive infer \
-  --config docs/experiments/audio-generalization-20261011/dev-logmel-seed42-clean.json
+  --parquet data/audio-generalization-20261011/data/eval-parquet/test-00000-of-00001.parquet \
+  --protocol data/audio-generalization-20261011/data/eval-official/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt \
+  --attribution-root /var/tmp/lanjianyu-issue9-20261011/protocols --output-root outputs/asv-eval-new
 scripts/devctl run -- python -m deepfake_detection_archive evaluate \
   --scores outputs/audio-generalization-20261011/dev-logmel-seed42-clean/scores.jsonl \
-  --manifest data/dev/manifest.jsonl \
-  --output outputs/audio-generalization-20261011/dev-logmel-seed42-clean/evaluation.json
+  --manifest data/audio-generalization-20261011/data/dev/manifest.jsonl \
+  --output outputs/audio-generalization-replay/dev-logmel-seed42-clean-evaluation.json
 scripts/devctl run -- python tools/compare_scores.py \
   --baseline-scores outputs/audio-generalization-20261011/dev-logmel-seed42-clean/scores.jsonl \
   --candidate-scores outputs/audio-generalization-20261011/dev-logmel-seed42-aac64k/scores.jsonl \
-  --output outputs/audio-generalization-20261011/comparison-logmel-seed42-aac64k-vs-clean.json
+  --output outputs/audio-generalization-replay/comparison-logmel-seed42-aac64k-vs-clean.json
 ```
 
-eval 子集由 `data/eval/manifest.jsonl` 按“每攻击在 48 个同时含真假样本的说话人间轮转取
-800 假，再用同样轮转取 1,600 真”确定，选择结果与清单哈希记录在 `data/eval-subset/selection.json`；
+共享发布目录只用于读取已有分数与评测结果，不向它写入新推理产物。
+重新推理时，在原配置目录复制一份 `.local.json`，将 `output_dir` 改为新目录
+（例如 `../../../outputs/audio-generalization-replay/dev-logmel-seed42-clean`），再运行：
+
+```bash
+scripts/devctl run python -m deepfake_detection_archive infer \
+  --config docs/experiments/audio-generalization-20261011/dev-logmel-seed42-clean.local.json
+```
+
+原任务的私有metadata没有复制，不能把发布目录当作可续跑的原始运行目录。
+上面的 evaluate/compare 使用已有只读分数，结果写入自己的 replay 目录。
+
+eval 子集由 `data/audio-generalization-20261011/data/eval/manifest.jsonl` 按“每攻击在 48 个同时含真假样本的说话人间轮转取
+800 假，再用同样轮转取 1,600 真”确定，选择结果与清单哈希记录在 `data/audio-generalization-20261011/data/eval-subset/selection.json`；
 该规则不参与任何调参，本轮也没有用 eval 结果选择候选。
 
 ## 限制
