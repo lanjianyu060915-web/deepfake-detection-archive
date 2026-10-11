@@ -1,0 +1,154 @@
+{
+  "logmel": {
+    "schema_version": 1,
+    "purpose": "synthetic_cuda_engineering_profile_only",
+    "detection_performance": "not_evaluated",
+    "weights": "random_initialization",
+    "timestamp_utc": "2026-10-11T02:50:05.836957+00:00",
+    "gpu": "NVIDIA GeForce RTX 4090",
+    "gpu_total_bytes": 25252724736,
+    "allocator_limit_bytes": 7516192768,
+    "torch": "2.14.1+cu132",
+    "cuda_runtime": "13.2",
+    "device_before": {
+      "available": true,
+      "csv_name_used_mib_temperature_c_utilization": "NVIDIA GeForce RTX 4090, 404, 31, 0"
+    },
+    "seed": 20261007,
+    "command_args": {
+      "output": "/var/tmp/lanjianyu-issue9-20261011/profile-logmel",
+      "max_seconds": 60,
+      "precision": "bfloat16",
+      "seed": 20261007,
+      "models": [
+        "logmel_cnn_v1"
+      ],
+      "batches": [
+        256
+      ],
+      "summary": "/var/tmp/lanjianyu-issue9-20261011/logmel-profile.json"
+    },
+    "code": {
+      "git_head": "acea8f5d5ebe19458c8e15bd80e86c42df9e9d66",
+      "source_sha256": {
+        "tools/profile_models.py": "23d06ed191846ed3dc39329544dc287a1bb8d876070720a3fbcc6cc43d904da5",
+        "src/deepfake_detection_archive/models/__init__.py": "d078e26eff1521e5eee286a110a6b2ae5c13e674780644287c3d6aa3f42f8627",
+        "src/deepfake_detection_archive/models/_vendor/__init__.py": "7da5c86416140aff2c04a23d1cebf984f6ed7c47d6b5ca0c8bc0c0da6c6a45c4",
+        "src/deepfake_detection_archive/models/_vendor/aasist.py": "d1e8fb702be2e896f6030a9646533f2d47b8298e4ec53df9b9c670562970ac2d",
+        "src/deepfake_detection_archive/models/aasist.py": "4c4a3f0034916598972200c02fb6f2ac1a9972851de65f0eb7f0c817a59d5dc9",
+        "src/deepfake_detection_archive/models/checkpoint.py": "b95b6ed6a92dbf6c902f568c5222335dd888195e2c1f6e898b3796c316f107b0",
+        "src/deepfake_detection_archive/models/core.py": "61d353b4a86edab9c1f09555c7786438135acd4fe3083fb8986e63edffb25432",
+        "src/deepfake_detection_archive/models/encoders.py": "04f8a781deb9a5b5c997fb3935d0bb87743391213cafe31d1002c14206c0ca41"
+      }
+    },
+    "model_stops": {
+      "logmel_cnn_v1": "batch_search_bound"
+    },
+    "throughput_scope": "model resident synthetic tensors; includes numerical checks; excludes decoding/I/O",
+    "elapsed_seconds": 1.9782685032114387,
+    "device_after": {
+      "available": true,
+      "csv_name_used_mib_temperature_c_utilization": "NVIDIA GeForce RTX 4090, 774, 32, 16"
+    },
+    "final_allocated_bytes": 17039360,
+    "final_reserved_bytes": 283115520,
+    "interpretation": "随机输入/随机权重的 CUDA 工程实测；没有鉴伪 EER 或真实数据泛化证据。",
+    "model_summaries": {
+      "logmel_cnn_v1": {
+        "tested_batches": [
+          256
+        ],
+        "passed_batches": [
+          256
+        ],
+        "largest_passed_batch": {
+          "architecture": "logmel_cnn_v1",
+          "batch_size": 256,
+          "input_shape": [
+            256,
+            64600
+          ],
+          "output_shape": [
+            256
+          ],
+          "parameters": 18777,
+          "training": true,
+          "precision": "torch.bfloat16",
+          "seed": 20261007,
+          "status": "passed",
+          "measured_steps": 2,
+          "warmup_steps": 1,
+          "optimizer_steps_including_warmup": 3,
+          "parameter_update_verified": true,
+          "finite_outputs": true,
+          "finite_gradient_tensors": 14,
+          "measured_seconds_including_finiteness_checks": 0.11372194904834032,
+          "observations_per_second": 4502.209153857904,
+          "peak_allocated_bytes": 3426066432,
+          "peak_reserved_bytes": 5123342336,
+          "case_wall_seconds": 1.2397631434723735,
+          "device_after": {
+            "available": true,
+            "csv_name_used_mib_temperature_c_utilization": "NVIDIA GeForce RTX 4090, 5390, 32, 0"
+          }
+        },
+        "fastest_passed_batch": {
+          "architecture": "logmel_cnn_v1",
+          "batch_size": 256,
+          "input_shape": [
+            256,
+            64600
+          ],
+          "output_shape": [
+            256
+          ],
+          "parameters": 18777,
+          "training": true,
+          "precision": "torch.bfloat16",
+          "seed": 20261007,
+          "status": "passed",
+          "measured_steps": 2,
+          "warmup_steps": 1,
+          "optimizer_steps_including_warmup": 3,
+          "parameter_update_verified": true,
+          "finite_outputs": true,
+          "finite_gradient_tensors": 14,
+          "measured_seconds_including_finiteness_checks": 0.11372194904834032,
+          "observations_per_second": 4502.209153857904,
+          "peak_allocated_bytes": 3426066432,
+          "peak_reserved_bytes": 5123342336,
+          "case_wall_seconds": 1.2397631434723735,
+          "device_after": {
+            "available": true,
+            "csv_name_used_mib_temperature_c_utilization": "NVIDIA GeForce RTX 4090, 5390, 32, 0"
+          }
+        },
+        "failures": []
+      }
+    }
+  },
+  "hubert": {
+    "scope": "frozen local HuBERT synthetic encoding; excludes decode and IO; no EER",
+    "gpu": "NVIDIA GeForce RTX 4090",
+    "torch": "2.14.1+cu132",
+    "batch_size": 32,
+    "segment_samples": 64600,
+    "precision": "bfloat16",
+    "warmup_steps": 1,
+    "seconds_per_step": [
+      0.48566204216331244,
+      0.03229630831629038,
+      0.03183308523148298
+    ],
+    "samples_per_second": 997.9823051394214,
+    "peak_allocated_bytes": 2524076544,
+    "peak_reserved_bytes": 3049259008,
+    "finite_outputs": true,
+    "trainable_parameters": 0,
+    "expected_hashes": {
+      "config.json": "56be398848bbd9cbc720172b0d45b2f01cac7652f2968f0f31f5faf9f2986acc",
+      "model.safetensors": "411e8e7f967ba2a68bc6fba072e6374effc390225c7fdb75b8731edd95717e15",
+      "preprocessor_config.json": "4a93853b74278b7c769d07f5a861e5d12ceb5db2bced5620d335f87238cb9e86"
+    }
+  }
+}
