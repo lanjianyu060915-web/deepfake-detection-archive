@@ -200,4 +200,4 @@ def extract_video_frames(
     result: Tensor = (frames - mean) / std
     if result.ndim != 4 or not bool(torch.isfinite(result).all()):
         raise ValueError("decoded frames must be finite [frames, 3, height, width]")
-    return result
+    return result.contiguous()

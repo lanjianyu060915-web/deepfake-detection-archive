@@ -378,7 +378,7 @@ def _prepare_cache(  # noqa: C901, PLR0912, PLR0913, PLR0915, PLR0917 -- cache a
     if audio_preprocessor is not None:
         pipeline_files.append("models/ast.py")
     if frame_preprocessing is not None:
-        pipeline_files.extend(("features.py", "models/finetune.py"))
+        pipeline_files.append("features.py")
     pipeline_hash = object_hash(
         {name: file_sha256(Path(__file__).parent / name) for name in pipeline_files}
     )
@@ -589,6 +589,11 @@ def run_experiment(config_path: Path) -> TrainResult:  # noqa: PLR0915 -- experi
             model.initialize_pretrained(
                 (base / config.pretrained["checkpoint"]).resolve(),
                 config.pretrained["sha256"],
+            )
+        if isinstance(model, VideoFrameClassifier):
+            model.initialize_pretrained(
+                (base / model.config.encoder_checkpoint).resolve(),
+                model.config.expected_sha256,
             )
         initial = save_checkpoint(output / "initial.pt", model)
         report["initial_checkpoint"] = initial

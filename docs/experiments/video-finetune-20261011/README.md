@@ -40,19 +40,18 @@ checkpoint。第一轮不引入时序模块、新数据或复杂增强。
 
 ## 离线复算
 
-合并 `main` 后用独立进程、独立输出目录重新走 `config.py` 的 `video_frames`
-推理路径，对同一清单的 764 条媒体评分：0 失败、覆盖 1.0，其中 dev 146 条
-EER 仍为 16.4384%，与训练期 dev 分数的最大绝对差 0.0275、均值 0.0052
-（训练用 bfloat16 AMP，推理为 FP32）。输入只有本地清单、媒体和 hash 校验过的
-  `best.pt`，没有隐式下载；全程约 0.22 秒/条（T10k 投影口径），逐条解码是主要
-  开销（未单独计时）。
-产物：`/var/tmp/lanjianyu-issue21-20261011/e2e-rehearsal/seed42/`
-（`scores.jsonl`、`report.json`、`metadata.json`）。
+`video_frames` 直接解码并使用完整 `best.pt`，无需读取训练时的原始 encoder。
+恢复回归删除原 encoder、移动 checkpoint 并禁止网络访问；真实双种子权重均成功独立加载。
 
-合并后的训练入口同样验证过：用同一配置、复用原帧缓存跑 1 个 epoch
-（`e2e-rehearsal/train-1epoch-merged/`），`train_loss` 0.6036988273021858、
-`dev_loss` 0.4648769383561121、`dev_eer` 19.178082% 与原始 seed42 第 1 个 epoch
-逐位相同，0 解码失败，说明合并没有改变训练行为。
+2026-10-12 将直接解码帧统一为与训练缓存相同的连续内存布局后，seed42 的 146 条 dev
+端到端 EER 仍为 **16.4384%**、覆盖率 1.0、零失败。相对原训练期 dev 分数，最大绝对差
+0.003553、均值 0.000636；配置、分数和评测在团队可读
+`/var/tmp/deepfake-video-review-20261012/normalized-seed42-dev.json` 与
+`normalized-seed42-dev/`。
+
+此前独立推理的最大分数差为 0.0275。对最大差异样本检查，缓存与重解码帧逐元素相等，
+但原始内存布局不同；cuDNN TF32 和批量形状放大了数值差异。该单样本诊断解释了对应差值，
+不代表所有样本误差都已归因。训练 dev 与推理均为 FP32，不能把差异归因于训练反传使用 AMP。
 
 ## 产物位置
 
@@ -62,9 +61,11 @@ EER 仍为 16.4384%，与训练期 dev 分数的最大绝对差 0.0275、均值 
   （含微调主干与头，`best.pt.json` 记录架构、配置与 sha256）
 - 帧缓存：`cache/video-frames-20261011`、`cache/video-frames-seed43-20261011`
 
+上述输出相对于 `/var/tmp/lanjianyu-issue21-20261011/`，已开放 `dlteam` 只读访问。
+完整 checkpoint 恢复只加载 `best.pt` 内的主干和头，不读取原始 encoder 文件；
+原始 encoder 只在新训练初始化时使用，其相对路径以训练配置目录为基准。
+
 ## 未完成与限制
 
-- 训练会话只跑了改动相关的行为测试 `tests/test_video_finetune.py`（2 项通过）；
-  合并 `main` 时补齐 `tools/check_project.sh` 的本地与 CI 检查。
 - 独立进程只验证了本地加载与无隐式下载，没有做真正切断网络的整机演练。
 - dev 只有 146 条，EER 分辨率有限；结论只适用于当前受控划分。

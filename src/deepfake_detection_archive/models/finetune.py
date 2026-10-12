@@ -69,24 +69,9 @@ class VideoFrameClassifier(nn.Module):
         import timm  # noqa: PLC0415
         from timm.data.config import resolve_model_data_config  # noqa: PLC0415
 
-        # Imported lazily: checkpoint registers this architecture, so a
-        # module-level import would close a cycle.
-        from .checkpoint import verify_sha256  # noqa: PLC0415
-
-        checkpoint = Path(config.encoder_checkpoint)
-        verify_sha256(checkpoint, config.expected_sha256)
         self.backbone = timm.create_model(
             config.architecture, pretrained=False, num_classes=0
         )
-        state = torch.load(checkpoint, map_location="cpu", weights_only=True)
-        if not isinstance(state, dict) or any(
-            not isinstance(key, str) or not isinstance(value, Tensor)
-            for key, value in state.items()
-        ):
-            raise ValueError("vision checkpoint must contain a bare tensor state_dict")
-        if any(not bool(torch.isfinite(tensor).all()) for tensor in state.values()):
-            raise ValueError("vision checkpoint contains non-finite tensors")
-        self.backbone.load_state_dict(state, strict=True)
         if not hasattr(self.backbone, config.trainable_prefix):
             raise ValueError("trainable_prefix is not a backbone submodule")
         self.head = FeatureHead(
@@ -101,6 +86,22 @@ class VideoFrameClassifier(nn.Module):
         )
         self.config = config
         self.apply_trainable_policy()
+
+    def initialize_pretrained(self, path: Path, expected_sha256: str) -> None:
+        """Initialize training from local weights; full checkpoints restore directly."""
+        # Imported lazily because checkpoint registers this architecture.
+        from .checkpoint import verify_sha256  # noqa: PLC0415
+
+        verify_sha256(path, expected_sha256)
+        state = torch.load(path, map_location="cpu", weights_only=True)
+        if not isinstance(state, dict) or any(
+            not isinstance(key, str) or not isinstance(value, Tensor)
+            for key, value in state.items()
+        ):
+            raise ValueError("vision checkpoint must contain a bare tensor state_dict")
+        if any(not bool(torch.isfinite(tensor).all()) for tensor in state.values()):
+            raise ValueError("vision checkpoint contains non-finite tensors")
+        self.backbone.load_state_dict(state, strict=True)
 
     def _is_trainable(self, qualified_name: str) -> bool:
         root = f"backbone.{self.config.trainable_prefix}"

@@ -1,0 +1,318 @@
+{
+  "schema_version": 1,
+  "experiment": "video-generalization-20261011",
+  "issue": 20,
+  "created_at": "2026-10-11",
+  "candidate": {
+    "architecture": "media_feature_head_v1",
+    "checkpoint": "seed42/training/best.pt",
+    "checkpoint_sha256": "279167fafeeb55ae7c9c8f903834a5489dc92e31918875b08257a7fed62da86d",
+    "encoder": "resnet18-a1/encoder.pt",
+    "encoder_sha256": "db6fd0c5cfb2b712d1904bb8b7edcf41a850491bdf42729e4ab485e89f1b6889",
+    "aggregation": "mean",
+    "n_frames": 4,
+    "resize_mode": "center_crop",
+    "code_commit": "4661f4ce42a7d171084103eca15e8f4228d445c9"
+  },
+  "dev146_manifest_sha256": "4f644f7fbc68187e14a31dd14d7ecd939197c4faefe39adf4104317aaaf19772",
+  "dev146": {
+    "real": 73,
+    "fake": 73,
+    "generator": "HunyuanVideo",
+    "holdout_accessed": false
+  },
+  "compression": {
+    "ffmpeg_version": "N-127271-gba987fe24d-20261010",
+    "conditions": {
+      "clean": {
+        "sample_count": 146,
+        "success_count": 146,
+        "failure_count": 0,
+        "eer": 0.2054794520547945,
+        "delta_eer": 0.0
+      },
+      "video_h264_crf23": {
+        "sample_count": 146,
+        "success_count": 146,
+        "failure_count": 0,
+        "eer": 0.2054794520547945,
+        "delta_eer": 0.0,
+        "manifest_sha256": "25bd2022f58d782deb19ada59d9a0d2422c47816043098a848b3917611f64737",
+        "transcode_seconds": 70.14187996089458
+      },
+      "video_h264_crf35": {
+        "sample_count": 146,
+        "success_count": 146,
+        "failure_count": 0,
+        "eer": 0.2465753424657534,
+        "delta_eer": 0.0410958904109589,
+        "manifest_sha256": "180c68f0ac15758eee1b9dc2ab25a8ed99447527f6f39f9ef3e180f7b74137d3",
+        "transcode_seconds": 51.18328210711479
+      }
+    },
+    "common_coverage": 1.0
+  },
+  "cross_generator": {
+    "archive": {
+      "repository": "JoeLeelyf/ViF-Bench",
+      "revision": "67e11331e26dbf732e0b8c7d4dc52f4442d174dd",
+      "bytes": 607734233,
+      "sha256": "41e79dff9f8ff16f7bcddd99eb18e4019b52f5ed9fe26a6a0fa0739b085907a8",
+      "verified": true,
+      "index_declared_count": 3160,
+      "index_matches_media": true,
+      "media_decoded_at_audit": false
+    },
+    "pairing_rule": "vifbench_identical_filename_pair_v1",
+    "component_rule": "suspected_filename_component:v1",
+    "exclusions": {
+      "panda_full_manifest_sha256": "3e36cfcacdeeb41f724a3ef2beacc24159396f8462aa8edf6bdb2fafbb5bc273",
+      "vif_pilot_manifest_sha256": "f3b004bb94174d02899b9a8763c3619da121f90f53f919e5884e171c716d6638",
+      "excluded_real_count": 61,
+      "excluded_fake_count": 1134,
+      "unpaired_fake_count": 16
+    },
+    "diagnostic": {
+      "manifest_sha256": "38918ed862074b8dca2d28bc0760fe8081ce58c90568a2f410a186aa5793221d",
+      "sample_count": 1949,
+      "real_count": 104,
+      "fake_count": 1845,
+      "component_count": 103,
+      "generator_count": 19,
+      "eer_clean": 0.33279132791327914,
+      "eer_crf35": 0.36538461538461536,
+      "delta_eer_crf35": 0.03259328747133622,
+      "median_generator_eer_clean": 0.3,
+      "median_generator_delta_crf35": 0.01923,
+      "success_count": 1949,
+      "failure_count": 0,
+      "coverage": 1.0,
+      "crf35_manifest_sha256": "12e9365d629fd6c02860e1209dde9399cd126bcbe8e6f8e885ce68dfe560d311",
+      "crf35_transcode_seconds": 855.7448230469599
+    },
+    "metadata": {
+      "probed": 1949,
+      "probe_failures": 0,
+      "real_width_median": 456,
+      "fake_width_median": 452,
+      "width_eer": {
+        "decreasing": 0.30416288097794664,
+        "increasing": 0.6958371190220534,
+        "oracle": 0.30416288097794664
+      },
+      "width_eer_protocol": "eer_interpolated_v1; oracle=min(EER(width),EER(-width)), direction selected on same rows",
+      "recomputed_metadata": "/var/tmp/deepfake-video-review-20261012/metadata/width-summary.json"
+    },
+    "per_generator": {
+      "CogVideoX1.5-5B-T": {
+        "real": 104,
+        "fake": 104,
+        "eer_clean": 0.31731,
+        "eer_crf35": 0.30769,
+        "width_eer": {
+          "decreasing": 0.019230769230769273,
+          "increasing": 0.9807692307692307,
+          "oracle": 0.019230769230769273
+        }
+      },
+      "HunyuanVideo": {
+        "real": 103,
+        "fake": 103,
+        "eer_clean": 0.23301,
+        "eer_crf35": 0.24272,
+        "width_eer": {
+          "decreasing": 0.01941747572815533,
+          "increasing": 0.9805825242718447,
+          "oracle": 0.01941747572815533
+        }
+      },
+      "HunyuanVideo-I2V": {
+        "real": 104,
+        "fake": 104,
+        "eer_clean": 0.39423,
+        "eer_crf35": 0.33654,
+        "width_eer": {
+          "decreasing": 1.0,
+          "increasing": 0.0,
+          "oracle": 0.0
+        }
+      },
+      "LTX-Video-13B-I": {
+        "real": 102,
+        "fake": 102,
+        "eer_clean": 0.44118,
+        "eer_crf35": 0.48039,
+        "width_eer": {
+          "decreasing": 0.019607843137254943,
+          "increasing": 0.9803921568627451,
+          "oracle": 0.019607843137254943
+        }
+      },
+      "LTX-Video-13B-T": {
+        "real": 100,
+        "fake": 100,
+        "eer_clean": 0.27,
+        "eer_crf35": 0.24,
+        "width_eer": {
+          "decreasing": 0.01999999999999999,
+          "increasing": 0.98,
+          "oracle": 0.01999999999999999
+        }
+      },
+      "SkyReels-V2": {
+        "real": 104,
+        "fake": 104,
+        "eer_clean": 0.21154,
+        "eer_crf35": 0.21154,
+        "width_eer": {
+          "decreasing": 0.019230769230769273,
+          "increasing": 0.9807692307692307,
+          "oracle": 0.019230769230769273
+        }
+      },
+      "SkyReels-V2-I2V-14B-540P": {
+        "real": 103,
+        "fake": 103,
+        "eer_clean": 0.47573,
+        "eer_crf35": 0.46602,
+        "width_eer": {
+          "decreasing": 0.01941747572815533,
+          "increasing": 0.9805825242718447,
+          "oracle": 0.01941747572815533
+        }
+      },
+      "Wan2.1-T2V-1.3B": {
+        "real": 104,
+        "fake": 104,
+        "eer_clean": 0.23077,
+        "eer_crf35": 0.25,
+        "width_eer": {
+          "decreasing": 0.019230769230769273,
+          "increasing": 0.9807692307692307,
+          "oracle": 0.019230769230769273
+        }
+      },
+      "Wan2.1-VACE-1.3B-T": {
+        "real": 104,
+        "fake": 104,
+        "eer_clean": 0.39423,
+        "eer_crf35": 0.39423,
+        "width_eer": {
+          "decreasing": 0.21153846153846154,
+          "increasing": 0.7884615384615384,
+          "oracle": 0.21153846153846154
+        }
+      },
+      "Wan2.2-I2V-14B": {
+        "real": 104,
+        "fake": 104,
+        "eer_clean": 0.44231,
+        "eer_crf35": 0.49038,
+        "width_eer": {
+          "decreasing": 0.8397796024200519,
+          "increasing": 0.1602203975799481,
+          "oracle": 0.1602203975799481
+        }
+      },
+      "Wan2.2-T2V-14B": {
+        "real": 104,
+        "fake": 104,
+        "eer_clean": 0.29808,
+        "eer_crf35": 0.31731,
+        "width_eer": {
+          "decreasing": 0.019230769230769273,
+          "increasing": 0.9807692307692307,
+          "oracle": 0.019230769230769273
+        }
+      },
+      "Wan2.2-TI2V-5B-I": {
+        "real": 104,
+        "fake": 104,
+        "eer_clean": 0.48077,
+        "eer_crf35": 0.5,
+        "width_eer": {
+          "decreasing": 0.019230769230769232,
+          "increasing": 0.9807692307692307,
+          "oracle": 0.019230769230769232
+        }
+      },
+      "Wan2.2-TI2V-5B-T": {
+        "real": 104,
+        "fake": 104,
+        "eer_clean": 0.28846,
+        "eer_crf35": 0.29808,
+        "width_eer": {
+          "decreasing": 0.019230769230769273,
+          "increasing": 0.9807692307692307,
+          "oracle": 0.019230769230769273
+        }
+      },
+      "gen4-turbo": {
+        "real": 64,
+        "fake": 64,
+        "eer_clean": 0.4375,
+        "eer_crf35": 0.46875,
+        "width_eer": {
+          "decreasing": 0.4901960784313726,
+          "increasing": 0.5098039215686274,
+          "oracle": 0.4901960784313726
+        }
+      },
+      "hailuo": {
+        "real": 81,
+        "fake": 81,
+        "eer_clean": 0.2716,
+        "eer_crf35": 0.32099,
+        "width_eer": {
+          "decreasing": 0.48529411764705876,
+          "increasing": 0.5147058823529411,
+          "oracle": 0.48529411764705876
+        }
+      },
+      "kling-v1": {
+        "real": 80,
+        "fake": 80,
+        "eer_clean": 0.3,
+        "eer_crf35": 0.3,
+        "width_eer": {
+          "decreasing": 0.48461538461538456,
+          "increasing": 0.5153846153846153,
+          "oracle": 0.48461538461538456
+        }
+      },
+      "pika-v2": {
+        "real": 90,
+        "fake": 90,
+        "eer_clean": 0.24444,
+        "eer_crf35": 0.32222,
+        "width_eer": {
+          "decreasing": 0.0,
+          "increasing": 1.0,
+          "oracle": 0.0
+        }
+      },
+      "pixverse-v4-5": {
+        "real": 92,
+        "fake": 92,
+        "eer_clean": 0.27174,
+        "eer_crf35": 0.29348,
+        "width_eer": {
+          "decreasing": 0.487012987012987,
+          "increasing": 0.512987012987013,
+          "oracle": 0.487012987012987
+        }
+      },
+      "sora-2": {
+        "real": 94,
+        "fake": 94,
+        "eer_clean": 0.32979,
+        "eer_crf35": 0.38298,
+        "width_eer": {
+          "decreasing": 0.9574468085106383,
+          "increasing": 0.04255319148936165,
+          "oracle": 0.04255319148936165
+        }
+      }
+    }
+  }
+}
