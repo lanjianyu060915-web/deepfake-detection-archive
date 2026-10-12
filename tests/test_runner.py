@@ -109,7 +109,15 @@ def test_resume_rejects_identity_or_input_mutation(tmp_path: Path, change: str) 
 
 @pytest.mark.parametrize(
     "corruption",
-    ["wrong_id", "wrong_metadata", "duplicate", "malformed", "duplicate_key"],
+    [
+        "wrong_id",
+        "wrong_metadata",
+        "duplicate",
+        "malformed",
+        "duplicate_key",
+        "non_object",
+        "nonfinite",
+    ],
 )
 def test_complete_invalid_rows_are_rejected_before_tail_truncation(
     tmp_path: Path, corruption: str
@@ -128,6 +136,11 @@ def test_complete_invalid_rows_are_rejected_before_tail_truncation(
         lines[1] = lines[0]
     elif corruption == "malformed":
         lines[0] = '{"bad":'
+    elif corruption == "non_object":
+        lines[0] = "[]"
+    elif corruption == "nonfinite":
+        row["score"] = float("nan")
+        lines[0] = json.dumps(row)
     else:
         lines[0] = lines[0][:-1] + ',"status":"ok"}'
     corrupt = ("\n".join(lines) + '\n{"unfinished":').encode()
@@ -135,6 +148,13 @@ def test_complete_invalid_rows_are_rejected_before_tail_truncation(
     with pytest.raises(ValueError, match=r"."):
         run_inference(inputs(), infer, tmp_path, identity=IDENTITY, resume=True)
     assert path.read_bytes() == corrupt
+
+
+def test_unserializable_identity_is_rejected_before_output(tmp_path: Path) -> None:
+    output = tmp_path / "run"
+    with pytest.raises(TypeError, match="not JSON serializable"):
+        run_inference(inputs(), infer, output, identity={"model": object()})
+    assert not output.exists()
 
 
 def test_failures_count_in_full_denominator_and_keep_custom_code(
