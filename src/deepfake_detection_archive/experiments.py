@@ -16,6 +16,7 @@ import torch
 from torch import Tensor
 from torch.utils.data import DataLoader, Dataset, WeightedRandomSampler
 
+from .augmentation import BandwidthSpec, bandlimit_roundtrip
 from .config import load_object
 from .contracts import ScoreRecord
 from .data.audit import audit_manifest
@@ -67,6 +68,7 @@ class ExperimentConfig:
     video: dict[str, Any] = field(default_factory=dict)
     encoder: dict[str, Any] = field(default_factory=dict)
     pretrained: dict[str, Any] = field(default_factory=dict)
+    augmentation: dict[str, Any] = field(default_factory=dict)
     feature_cache: str | None = None
     cache_max_bytes: int = 20 * 1024**3
     schema_version: int = 1
@@ -106,6 +108,7 @@ class ExperimentConfig:
             "video",
             "encoder",
             "pretrained",
+            "augmentation",
         ):
             if not isinstance(getattr(self, name), dict):
                 raise TypeError(f"{name} must be an object")
@@ -146,6 +149,7 @@ class ExperimentConfig:
             or set(self.pretrained) != {"checkpoint", "sha256"}
         ):
             raise ValueError("pretrained requires AST checkpoint and sha256")
+        _ = self.bandwidth_spec
         _ = self.train_config
         audio, _ = self.media_configs
         if self.architecture == "aasist_l_v1" and (
@@ -157,6 +161,35 @@ class ExperimentConfig:
             "audio_ast_v1",
         ) and audio.sample_rate != self.model_config.get("sample_rate", 16000):
             raise ValueError("audio and model sample rates must agree")
+
+    @cached_property
+    def bandwidth_spec(self) -> BandwidthSpec | None:
+        """Return the configured train-only bandwidth augmentation, if any."""
+        if not self.augmentation:
+            return None
+        unknown = set(self.augmentation) - {"bandwidth"}
+        if unknown:
+            raise ValueError(f"invalid augmentation options: {sorted(unknown)}")
+        options = self.augmentation["bandwidth"]
+        expected = {"probability", "target_sample_rate"}
+        if not isinstance(options, dict) or set(options) != expected:
+            raise ValueError(
+                "bandwidth augmentation requires exactly probability and "
+                "target_sample_rate"
+            )
+        if any(type(value) is bool for value in options.values()):
+            raise ValueError("augmentation parameters cannot be boolean")
+        spec = BandwidthSpec(**options)
+        audio, _ = self.media_configs
+        if self.architecture not in ("logmel_cnn_v1", "aasist_l_v1"):
+            raise ValueError(
+                "bandwidth augmentation requires LogMel or AASIST waveform training"
+            )
+        if spec.target_sample_rate >= audio.sample_rate:
+            raise ValueError(
+                "bandwidth augmentation target rate must be below the audio rate"
+            )
+        return spec
 
     @cached_property
     def train_config(self) -> TrainConfig:
@@ -238,8 +271,22 @@ def _load_tensor(path: Path, digest: str) -> Tensor:
 
 
 class _CachedDataset(Dataset[tuple[Tensor, Tensor]]):
-    def __init__(self, entries: list[tuple[Path, str, int]]) -> None:
+    """Verified cached tensors with optional train-only waveform augmentation.
+
+    Augmentation runs after the cache lookup, so cached bytes stay identical to
+    an unaugmented run and existing tensor caches remain reusable. The dev copy
+    of this dataset is always built without a spec.
+    """
+
+    def __init__(
+        self,
+        entries: list[tuple[Path, str, int]],
+        bandwidth: BandwidthSpec | None = None,
+        sample_rate: int = 16_000,
+    ) -> None:
         self.entries = entries
+        self.bandwidth = bandwidth
+        self.sample_rate = sample_rate
 
     def __len__(self) -> int:
         return len(self.entries)
@@ -248,7 +295,15 @@ class _CachedDataset(Dataset[tuple[Tensor, Tensor]]):
         # Cache preparation validates bytes and tensors once before training.
         path, _, label = self.entries[index]
         value = torch.load(path, map_location="cpu", weights_only=True)
+        bandwidth = self.bandwidth
+        if bandwidth is not None and _bandwidth_draw(bandwidth):
+            value = bandlimit_roundtrip(value, bandwidth, self.sample_rate)
         return value, torch.tensor(label, dtype=torch.float32)
+
+
+def _bandwidth_draw(spec: BandwidthSpec) -> bool:
+    """Draw one augmentation decision from the seeded worker-local stream."""
+    return random.random() < spec.probability  # noqa: S311
 
 
 def _worker_seed(_worker_id: int) -> None:
@@ -644,7 +699,11 @@ def run_experiment(config_path: Path) -> TrainResult:  # noqa: PLR0915 -- experi
             else None
         )
         train_loader = DataLoader(
-            _CachedDataset(entries["train"]),
+            _CachedDataset(
+                entries["train"],
+                bandwidth=config.bandwidth_spec,
+                sample_rate=config.media_configs[0].sample_rate,
+            ),
             shuffle=sampler is None,
             sampler=sampler,
             generator=generator,
@@ -660,6 +719,7 @@ def run_experiment(config_path: Path) -> TrainResult:  # noqa: PLR0915 -- experi
             "manifest_sha256": manifest_hash(records),
             "sources_sha256": file_sha256(source_path),
             "encoder_sha256": object_hash(config.encoder),
+            "augmentation": config.augmentation,
         }
         report.update(
             status="training",
