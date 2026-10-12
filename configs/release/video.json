@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "manifest": "../manifests/input-video.jsonl",
+  "data_root": "../media/video",
+  "output_dir": "../runs/video",
+  "modality": "video",
+  "model_kind": "video_frames",
+  "checkpoint": "../weights/video-resnet18.pt",
+  "checkpoint_sha256": "16abc4e9828f73545d60da874a0da16b2a394c63c465896c9ab7e5c5bf465669",
+  "device": "cuda",
+  "video": {"n_frames": 4, "height": 224, "width": 224, "resize_mode": "center_crop"},
+  "batch_size": 8,
+  "aggregation": "mean",
+  "seed": 42
+}

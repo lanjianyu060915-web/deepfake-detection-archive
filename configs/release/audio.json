@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "manifest": "../manifests/input-audio.jsonl",
+  "data_root": "../media/audio",
+  "output_dir": "../runs/audio",
+  "modality": "audio",
+  "model_kind": "audio_waveform",
+  "checkpoint": "../weights/audio-ast-urban.pt",
+  "checkpoint_sha256": "8fa61daf42054b29fd61906c8c2fcf679ba4558e80472806197958b013c6e95c",
+  "device": "cuda",
+  "audio": {"sample_rate": 16000, "backend": "ffmpeg"},
+  "segment_samples": 64000,
+  "segments": 1,
+  "batch_size": 4,
+  "aggregation": "mean",
+  "seed": 42
+}

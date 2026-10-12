@@ -1,7 +1,9 @@
 # 项目状态
 
-更新：2026-10-12。训练、推理、EER评测和打包入口已具备，当前在改进候选泛化，
-**研究双分支已接通，尚未完成可交付的比赛系统**。后续顺序见[路线图](roadmap.md)，
+更新：2026-10-12。**v0.1.0 已提供可运行的双分支离线研究基线**：
+带本地权重、CPython 与依赖，无标签目录→推理→连续分数导出，支持失败记账与恢复。
+这是系统交付起点，官方格式与最终参赛资产仍待确认。[下载与使用](release.md)。
+后续顺序见[路线图](roadmap.md)，
 全部实验见[实验索引](experiments/README.md)，资产位置见[数据说明](data.md)。
 
 ## 当前候选与缺口
@@ -13,7 +15,7 @@
 | 音乐/通用音频 | 扩展AIME无增强候选未训练音乐18.75%；事后等权分数融合14.58% | 融合尚未接离线推理，跨来源和真实混合内容仍弱；[实验](experiments/audio-ast-regularization-20261012/README.md) |
 | 音乐/语音混合 | 匹配对照中未训练路径合成混合32.55%→26.89%；真实广播混合仍50%，环境音退化 | 只保留研究结果，不替换主候选；优先独立来源与真实混合数据；[实验](experiments/audio-speech-mix-20261012/README.md) |
 | 视频 | layer4+头同域dev16.44%；H.264增强clean15.07%/CRF35 17.81%，尺寸匹配跨生成器30.77%→32.58% | 保留原微调候选；增强仅保留同域压缩用途，尺寸/时长混杂仍有限制；[实验](experiments/video-size-control-20261012/README.md) |
-| 离线系统 | AST/微调视频496/336条批量0失败；源码与依赖随包，30条真实样例隔离迁移启动 | 研究包已接通；最终候选、独立验收、许可与官方I/O仍未完成；[使用](experiments/offline-dual-branch-20261012/README.md) |
+| 离线系统 | 既有研究包496/336条批量0失败；v0.1.0含解释器/依赖/冻结权重，新入口GPU实测18音频+12视频0失败，CPU演示已跑通 | 泛化继续优化；官方I/O、最终赛用资源及万级真实容量验收仍未完成；[使用](release.md) |
 
 以上不是比赛成绩。合成混合仅单种子、音乐原曲/artist关系未知，广播片段标签纯度及底层许可有限；
 多轮使用的dev不能充当独立验收。正式交付资产仍须满足[比赛要求](competition/requirements.md)。
@@ -22,10 +24,9 @@
 
 | 任务 | 本次已知状态 | 下一交付 |
 | --- | --- | --- |
-| [语音带宽增强 #29](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/29) | 已交付单种子增强训练与未知攻击诊断 | 第二种子及独立跨来源泛化 |
-| [视频尺寸控制与压缩增强 #30](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/30) | 已交付尺寸匹配与压缩增强；跨生成器未改善 | 更丰富训练来源，继续控制尺寸/时长捷径 |
-| [双分支离线运行包 #31](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/31) | 已交付可搬移研究包及双分支批量结果 | 随最终候选更新；官方I/O仍待适配 |
-| [通用音频 #32](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/32) | 扩展、时频遮挡及匹配混合训练结束；真实混合仍弱 | 独立音乐来源与真实混合内容，保留环境音能力 |
+| [语音稳健训练 #39](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/39) | 已发布，lanjianyu060915-web负责 | 第二种子、编码/噪声训练与独立跨来源诊断 |
+| [多生成器视频训练 #40](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/40) | 已发布，rrx59负责 | 扩展训练来源，保留固定跨生成器诊断与原候选对照 |
+| [三域通用音频 #41](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/41) | 已发布，zhl-zx负责；承接已完成#32 | 语音/音乐/环境音联合训练，改善整域失效 |
 
 具体认领和进程状态在Issue更新。本页不逐轮追加运行日志或历史结果。
 RTX4090按实际负载共享；数据、权重与分数按dlteam读取，任务输出各自独立。

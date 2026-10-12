@@ -10,7 +10,7 @@ from dataclasses import asdict, replace
 from pathlib import Path
 from typing import Any
 
-from .config import load_inference_config, load_object, reject_unknown
+from .config import InferenceConfig, load_inference_config, load_object, reject_unknown
 from .contracts import ScoreRecord, load_scores
 from .data.audit import audit_manifest
 from .data.manifest import (
@@ -152,22 +152,42 @@ def _evaluate(args: argparse.Namespace) -> dict[str, object]:
 
 
 def _infer(args: argparse.Namespace) -> dict[str, object]:
-    from .scoring import OfflineScorer  # noqa: PLC0415
-    from .submission.runner import run_inference  # noqa: PLC0415
-
-    preflight_started = time.perf_counter()
+    started = time.perf_counter()
     config = load_inference_config(args.config)
     base = args.config.parent
     records = load_manifest(base / config.manifest)
+    return _infer_records(
+        config,
+        base,
+        records,
+        snapshot=media_snapshot(records, base / config.data_root),
+        preflight_started=started,
+        resume=args.resume,
+        frozen_audit=args.frozen_audit,
+    )
+
+
+def _infer_records(  # noqa: PLR0913 -- parsed inputs and explicit run controls
+    config: InferenceConfig,
+    base: Path,
+    records: list[SampleRecord],
+    *,
+    snapshot: list[dict[str, object]],
+    preflight_started: float,
+    resume: bool,
+    frozen_audit: bool,
+) -> dict[str, object]:
+    from .scoring import OfflineScorer  # noqa: PLC0415
+    from .submission.runner import run_inference  # noqa: PLC0415
+
     if any(record.modality != config.modality for record in records):
         raise ValueError("input manifest has a different modality")
-    if any(record.split == "holdout" for record in records) and not args.frozen_audit:
+    if any(record.split == "holdout" for record in records) and not frozen_audit:
         raise ValueError(
             "holdout inference requires --frozen-audit after candidate freeze"
         )
     groups = statistical_groups(records)
     records = [replace(record, group_id=groups[record.sample_id]) for record in records]
-    snapshot = media_snapshot(records, base / config.data_root)
     preflight = time.perf_counter() - preflight_started
     started = time.perf_counter()
     scorer = OfflineScorer(config, base)
@@ -180,11 +200,9 @@ def _infer(args: argparse.Namespace) -> dict[str, object]:
         "media_snapshot_sha256": object_hash(snapshot),
         "code": code_identity(),
         "official_adapter": "unconfirmed",
-        "frozen_audit": args.frozen_audit,
+        "frozen_audit": frozen_audit,
     }
-    scores = run_inference(
-        records, scorer, output, identity=identity, resume=args.resume
-    )
+    scores = run_inference(records, scorer, output, identity=identity, resume=resume)
     summary = load_object(output / "report.json")
     timing = summary["timing"]
     if not isinstance(timing, dict):
@@ -210,6 +228,53 @@ def _infer(args: argparse.Namespace) -> dict[str, object]:
         "failures": summary["failure_count"],
         "fullset_eer": summary["fullset_eer"],
         "output": str(output),
+    }
+
+
+def _predict(args: argparse.Namespace) -> dict[str, object]:
+    from .submission.adapter import export_scores  # noqa: PLC0415
+
+    started = time.perf_counter()
+    template = load_inference_config(args.config)
+    base = args.config.resolve().parent
+    root, output = args.input.resolve(), args.output.resolve()
+    records = index_media(root, template.modality, "unlabeled-input")
+    config = replace(
+        template,
+        manifest=str(output / "manifest.jsonl"),
+        data_root=str(root),
+        output_dir=str(output),
+        checkpoint=str((base / template.checkpoint).resolve()),
+        device=args.device or template.device,
+    )
+    # Indexing already hashed every input; reuse those bytes in the resume identity.
+    snapshot: list[dict[str, object]] = [
+        {
+            "sample_id": row.sample_id,
+            "path": row.path,
+            "sha256": row.sha256,
+            "state": "present",
+        }
+        for row in records
+    ]
+    csv_path = output / "scores.csv"
+    result = _infer_records(
+        config,
+        base,
+        records,
+        snapshot=snapshot,
+        preflight_started=started,
+        resume=args.resume,
+        frozen_audit=False,
+    )
+    write_manifest(records, output / "manifest.jsonl")
+    atomic_json(output / "inference.json", config.to_dict())
+    if not result["failures"]:
+        export_scores(load_scores(output / "scores.jsonl"), csv_path)
+    return {
+        **result,
+        "official": False,
+        "scores_csv": str(csv_path) if not result["failures"] else None,
     }
 
 
@@ -291,6 +356,12 @@ def parser() -> argparse.ArgumentParser:
         if name == "infer":
             command.add_argument("--resume", action="store_true")
             command.add_argument("--frozen-audit", action="store_true")
+    command = commands.add_parser("predict")
+    command.add_argument("--config", type=Path, required=True)
+    command.add_argument("--input", type=Path, required=True)
+    command.add_argument("--output", type=Path, required=True)
+    command.add_argument("--device", choices=("cpu", "cuda"))
+    command.add_argument("--resume", action="store_true")
     command = commands.add_parser("index")
     command.add_argument("--root", type=Path, required=True)
     command.add_argument("--modality", choices=("audio", "video"), required=True)
@@ -330,6 +401,7 @@ def main(argv: list[str] | None = None) -> int:
         "split": _split,
         "evaluate": _evaluate,
         "infer": _infer,
+        "predict": _predict,
         "train": _train,
         "duplicates": _duplicates,
         "export": _export,
@@ -340,6 +412,8 @@ def main(argv: list[str] | None = None) -> int:
         result = actions[args.command](args)
         print(canonical_json(result))
         if args.command == "audit" and not result["passed"]:
+            return 2
+        if args.command == "predict" and result["failures"]:
             return 2
     except (ValueError, TypeError, OSError, RuntimeError, ImportError) as exc:
         print(
