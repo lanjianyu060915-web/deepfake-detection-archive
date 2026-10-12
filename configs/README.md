@@ -30,6 +30,13 @@ CPU 调试需同时设置 `device="cpu"` 和 `amp=false`。
 时按实际特征维度调整，并登记本地权重。编码器和预处理必须与推理配置一致。训练当前不支持
 optimizer/RNG 恢复；中断后在新输出目录重启。
 
+AudioSet AST部分主干微调的实值配置见[环境音AST实验](../docs/experiments/audio-ast-20261011/README.md)。
+它复用波形推理模板，checkpoint自包含前端配置和全部权重；预训练来源只在初始化时加载。
+
+`balanced_sampling=true` 按 real/fake 平衡训练抽样。多来源规模差异较大时，同时设置
+`balance_sources=true`，使已存在的来源与类别组合等权；只影响 train，不改变 dev/holdout。
+音乐与环境音的实际对照配置见[音乐混合训练](../docs/experiments/audio-music-20261011/README.md)。
+
 `adapter.example.json` 只描述本地连续分数导出，官方格式公布后再更新。`package.example.json`
 需要显式列出最终代码、配置、权重、依赖和许可，不会自动收集资产。
 

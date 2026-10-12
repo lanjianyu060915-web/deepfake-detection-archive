@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "manifest": "../../../data/audio-generalization-20261011/data/dev/manifest.jsonl",
+  "data_root": "../../../data/audio-generalization-20261011/data/issue9-asv/LA",
+  "output_dir": "../../../outputs/audio-generalization-20261011/dev-hubert-seed43-clean",
+  "modality": "audio",
+  "model_kind": "audio_features",
+  "checkpoint": "../../../data/audio-generalization-20261011/data/issue9-runs/hubert-seed43/training/best.pt",
+  "checkpoint_sha256": "2da67f370830cf0a7825497d4399635b797dfc6ccd0ab4b13adb19f53e138557",
+  "device": "cuda",
+  "batch_size": 32,
+  "segment_samples": 64600,
+  "segments": 1,
+  "aggregation": "mean",
+  "audio": {
+    "sample_rate": 16000,
+    "max_duration_seconds": 60,
+    "max_samples": 960000,
+    "backend": "soundfile"
+  },
+  "encoder": {
+    "kind": "audio",
+    "model_dir": "../../../data/audio-generalization-20261011/hubert-base-ls960",
+    "expected_hashes": {
+      "config.json": "56be398848bbd9cbc720172b0d45b2f01cac7652f2968f0f31f5faf9f2986acc",
+      "model.safetensors": "411e8e7f967ba2a68bc6fba072e6374effc390225c7fdb75b8731edd95717e15",
+      "preprocessor_config.json": "4a93853b74278b7c769d07f5a861e5d12ceb5db2bced5620d335f87238cb9e86"
+    }
+  },
+  "seed": 43
+}

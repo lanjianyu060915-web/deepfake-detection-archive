@@ -13,7 +13,7 @@ USE CODEX NATIVE SUBAGENTS FOR INDEPENDENT PARALLEL SUBTASKS WHEN THAT IMPROVES 
 ## 目标与授权
 
 - 同时参加第七届中国人工智能大赛 AIGC 音视频伪造识别音频、视频两项，主指标 EER，最终离线交付。
-- 已授权自主管理本地 Git、依赖、公开数据、现有云端 GPU、Issue、任务分支、提交与推送；不代替负责人合并、购买/扩容或正式参赛提交。
+- 已授权自主管理本地 Git、依赖、公开数据、现有云端 GPU、Issue、任务分支、提交与推送；所需公开数据自行下载使用；不代替负责人合并、购买/扩容或正式参赛提交。
 - 训练在当前 RTX4090 云端实例执行，原电脑不启动新训练。队友按 Issue 独立分支交付 PR。
 - 用户已报名且确认官方无额外资料，不再索取；未知规范集中在 `docs/competition/requirements.md`，平台样例到来后适配。
 - 项目入口为 `README.md`；事实看 `docs/status.md`，计划看 `docs/roadmap.md`，资产看 `docs/data.md`。
@@ -58,7 +58,7 @@ USE CODEX NATIVE SUBAGENTS FOR INDEPENDENT PARALLEL SUBTASKS WHEN THAT IMPROVES 
 ## 协作
 
 - Git提交保持Logical、Observable、Reversible、Atomic，不改写历史或夹带他人工作。任务状态在Issue维护，不在仓库复制任务正文。
-- 共享媒体/权重只读，outputs/cache按任务独立，单GPU在Issue协调。运行中的任务不切换源码或配置。
+- 共享媒体/权重只读，outputs/cache按任务独立。RTX4090按实际显存、利用率和吞吐共享，空闲容量可供多人并发；Issue记录任务占用，不设个人独占。各任务固定工作副本，运行中不切换其源码或配置。
 - 有实质收益时使用原生子代理并显式角色；主代理整合、独立评审、统一最终检查。不暗启Team或使用worker角色。
 - 显式 `$name` 先读对应SKILL，不伪造OMX状态/权限；没有运行时支持使用普通工作流。
 - 最终报告实际改动、必要验证和剩余主线任务，已授权步骤自主完成。

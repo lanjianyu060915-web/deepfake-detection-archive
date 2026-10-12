@@ -1,0 +1,743 @@
+{
+  "experiment": "audio-envsdd-20261011",
+  "scope": "Urban environment research; dev-selected multi-generator adaptation and unseen-generator diagnostics, then one frozen candidate holdout evaluation",
+  "assets_root": "/var/tmp/deepfake-audio-expand-20261011",
+  "score_direction": "higher_is_fake",
+  "eer_protocol": "eer_interpolated_v1",
+  "competition_approved": false,
+  "dataset": {
+    "source": "envsdd-urbansound8k-research",
+    "revision": "b0832726deb55484dbce869c6f09c41f7e9e5fbb",
+    "manifest_sha256": "eebe2feb8b9fe424ee03eedd7286a434d01b6420b6068667b23306240e0e3a22",
+    "inventory_sha256": "28909b6ca75f7576b93ab63653c1652e87b40f9041d585ecf4fbf9bd4a7fc069",
+    "urban_samples": 20355,
+    "urban_families": 4071,
+    "eligible_samples": 19215,
+    "groups": 238,
+    "split_label_counts": {
+      "dev/0": 577,
+      "dev/1": 2308,
+      "holdout/0": 576,
+      "holdout/1": 2304,
+      "train/0": 2690,
+      "train/1": 10760
+    },
+    "generator_method_counts": {
+      "audiogen/tta": 3843,
+      "audioldm1/ata": 3843,
+      "audioldm1/tta": 3843,
+      "audioldm2/tta": 3843,
+      "real/real": 3843
+    },
+    "failure_reasons": {
+      "overlap_with_previous_dataset": 1140
+    },
+    "decode_failed": 0,
+    "preprocessing": "mono, polyphase 16kHz, center crop/pad 64000 samples, peak 0.95, PCM16"
+  },
+  "pretrained": {
+    "repository": "MIT/ast-finetuned-audioset-10-10-0.4593",
+    "revision": "f826b80d28226b62986cc218e5cec390b1096902",
+    "weights_sha256": "ae0c1e2ad4e1381d851fa9bf298ba13ebc9c5a914cdee2dbe427a6583869924d"
+  },
+  "unseen_dev": {
+    "samples": 1731,
+    "real_samples": 577,
+    "generator_counts": {
+      "audiolcm": 577,
+      "tangoflux": 577
+    },
+    "decode_failed": 0,
+    "manifest_sha256": "5e005e1a9d737a1eaf892b484dbad8739cce4ac5e332125fb44a9e78518466cb"
+  },
+  "short_window": {
+    "source_frames": 1024,
+    "target_frames": 512,
+    "source_tokens": 1214,
+    "target_tokens": 602,
+    "position_operation": "center crop per-frequency time positions; retain both special tokens",
+    "full12_1024_batch32_step_seconds": 0.3595001,
+    "profiles": [
+      {
+        "run": "last4-512-lr1e-5-seed42",
+        "batch_size": 64,
+        "tokens": 602,
+        "step_seconds": 0.13871471832195917,
+        "peak_cuda_allocated_bytes": 5931706880,
+        "peak_cuda_reserved_bytes": 6165626880
+      },
+      {
+        "run": "full12-512-lr1e-5-seed42",
+        "batch_size": 32,
+        "tokens": 602,
+        "step_seconds": 0.13385265537848076,
+        "peak_cuda_allocated_bytes": 8676741632,
+        "peak_cuda_reserved_bytes": 9080668160
+      }
+    ],
+    "cache": {
+      "source_cache": "/var/tmp/deepfake-audio-expand-20261011/fbanks",
+      "source_max_length": 1024,
+      "max_length": 512,
+      "operation": "first 512 normalized filterbank frames; no backbone features reused",
+      "frontend_equivalence_samples": 8,
+      "frontend_equivalence_rtol": 0,
+      "frontend_equivalence_atol": 0,
+      "tensor_count": 16335,
+      "bytes": 4320362475,
+      "seconds": 31.859453567303717,
+      "pipeline_sha256": "47a961aab7f28c98de85a864975e79bd119b7fb5f958e548f9b8c7b449e55737",
+      "storage": "cloned contiguous 512-frame tensor; parent storage discarded",
+      "compaction_seconds": 29.046610167250037
+    }
+  },
+  "old_candidate_transfer": {
+    "seen_dev": {
+      "sample_count": 2885,
+      "real_count": 577,
+      "fake_count": 2308,
+      "group_count": 36,
+      "failure_count": 0,
+      "coverage": 1.0,
+      "eer": 0.3362218370883882,
+      "eer_reason": null,
+      "scores": "old-ast-transfer-dev/scores.jsonl",
+      "scores_sha256": "8bc58498b61988514a6b5cd5b1b5ccfe024e6c8e2cf53a20b319704bffb43518",
+      "inference_timing": {
+        "sample_call_seconds": 75.97006218973547,
+        "samples_per_second": 37.975485564230596,
+        "startup_seconds": 6.593744439072907,
+        "preflight_seconds": 0.8786085927858949,
+        "representative": false
+      },
+      "per_method": {
+        "audiogen/tta": {
+          "sample_count": 1154,
+          "eer": 0.39168110918544197,
+          "failure_count": 0
+        },
+        "audioldm1/ata": {
+          "sample_count": 1154,
+          "eer": 0.38128249566724437,
+          "failure_count": 0
+        },
+        "audioldm1/tta": {
+          "sample_count": 1154,
+          "eer": 0.292894280762565,
+          "failure_count": 0
+        },
+        "audioldm2/tta": {
+          "sample_count": 1154,
+          "eer": 0.29462738301559793,
+          "failure_count": 0
+        }
+      }
+    },
+    "unseen_dev": {
+      "sample_count": 1731,
+      "real_count": 577,
+      "fake_count": 1154,
+      "group_count": 36,
+      "failure_count": 0,
+      "coverage": 1.0,
+      "eer": 0.32322357019064124,
+      "eer_reason": null,
+      "scores": "old-ast-unseen-dev/scores.jsonl",
+      "scores_sha256": "b5b07204ed579a6280599672ba7049b1f8b0303d16a14f9d2418925354206f6f",
+      "inference_timing": {
+        "sample_call_seconds": 86.71650723274797,
+        "samples_per_second": 19.961597338716363,
+        "startup_seconds": 6.888458582572639,
+        "preflight_seconds": 0.5431366274133325,
+        "representative": false
+      },
+      "per_method": {
+        "audiolcm/tta": {
+          "sample_count": 1154,
+          "eer": 0.3882149046793761,
+          "failure_count": 0
+        },
+        "tangoflux/tta": {
+          "sample_count": 1154,
+          "eer": 0.2772963604852686,
+          "failure_count": 0
+        }
+      }
+    }
+  },
+  "runs": [
+    {
+      "run": "last4-512-lr1e-5-seed42",
+      "config": "last4-512-lr1e-5-seed42.json",
+      "code": {
+        "code_sha256": "04de8a6fc0e3c9d767c167c561728ed0dc0560435a06e0de4a71d242fb08b4f8",
+        "commit": "ae5308b99aaf11dcad99db5baf1671e56b2e3f80",
+        "dirty": false
+      },
+      "learning_rate": 1e-05,
+      "seed": 42,
+      "trainable_layers": 4,
+      "best_epoch": 4,
+      "epochs_completed": 9,
+      "training_dev_eer": 0.05545927209705372,
+      "training_seconds": 854.6922250967473,
+      "experiment_seconds": 901.0384736061096,
+      "peak_training_cuda_allocated_bytes": 5981383680,
+      "peak_training_cuda_reserved_bytes": 7147094016,
+      "checkpoint": "last4-512-lr1e-5-seed42/training/best.pt",
+      "checkpoint_sha256": "162d56e70092fa6f2f185cf318f7bbfe39c0c2668f88443fb517ba2e91f1cc95",
+      "seen_dev": {
+        "sample_count": 2885,
+        "real_count": 577,
+        "fake_count": 2308,
+        "group_count": 36,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "eer": 0.05545927209705372,
+        "eer_reason": null,
+        "scores": "last4-512-lr1e-5-seed42-offline-dev/scores.jsonl",
+        "scores_sha256": "088706244462a2e6f249c68694950232ffcb395a41ccddba6a8ec544a102e7d9",
+        "inference_timing": {
+          "sample_call_seconds": 109.72598060779274,
+          "samples_per_second": 26.29277026297186,
+          "startup_seconds": 7.546680301427841,
+          "preflight_seconds": 0.8687145747244358,
+          "representative": false
+        },
+        "per_method": {
+          "audiogen/tta": {
+            "sample_count": 1154,
+            "eer": 0.07625649913344887,
+            "failure_count": 0
+          },
+          "audioldm1/ata": {
+            "sample_count": 1154,
+            "eer": 0.06239168110918544,
+            "failure_count": 0
+          },
+          "audioldm1/tta": {
+            "sample_count": 1154,
+            "eer": 0.02772963604852686,
+            "failure_count": 0
+          },
+          "audioldm2/tta": {
+            "sample_count": 1154,
+            "eer": 0.038128249566724434,
+            "failure_count": 0
+          }
+        }
+      },
+      "unseen_dev": {
+        "sample_count": 1731,
+        "real_count": 577,
+        "fake_count": 1154,
+        "group_count": 36,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "eer": 0.11611785095320624,
+        "eer_reason": null,
+        "scores": "last4-512-lr1e-5-seed42-unseen-dev/scores.jsonl",
+        "scores_sha256": "a4a679cb2186a7b30c1e5a767c4318cf4e1b50a0fc9ee6e0341d061ab4d34757",
+        "inference_timing": {
+          "sample_call_seconds": 73.50338886212558,
+          "samples_per_second": 23.549934592089812,
+          "startup_seconds": 7.111962820403278,
+          "preflight_seconds": 0.7068123435601592,
+          "representative": false
+        },
+        "per_method": {
+          "audiolcm/tta": {
+            "sample_count": 1154,
+            "eer": 0.12824956672443674,
+            "failure_count": 0
+          },
+          "tangoflux/tta": {
+            "sample_count": 1154,
+            "eer": 0.09705372616984402,
+            "failure_count": 0
+          }
+        }
+      },
+      "fsd_external_dev": {
+        "sample_count": 70,
+        "real_count": 35,
+        "fake_count": 35,
+        "group_count": 24,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "eer": 0.17142857142857143,
+        "eer_reason": null,
+        "scores": "last4-512-lr1e-5-seed42-fsd-external-dev/scores.jsonl",
+        "scores_sha256": "5a878df9867204587db332da7c05ac2a7c49d55eaddb4d84e69afaf54dfcce13",
+        "inference_timing": {
+          "sample_call_seconds": 1.5554166669026017,
+          "samples_per_second": 45.00401820908565,
+          "startup_seconds": 6.481546680442989,
+          "preflight_seconds": 0.05376557074487209,
+          "representative": false
+        }
+      }
+    },
+    {
+      "run": "last4-512-lr1e-5-seed43",
+      "config": "last4-512-lr1e-5-seed43.json",
+      "code": {
+        "code_sha256": "04de8a6fc0e3c9d767c167c561728ed0dc0560435a06e0de4a71d242fb08b4f8",
+        "commit": "ae5308b99aaf11dcad99db5baf1671e56b2e3f80",
+        "dirty": true
+      },
+      "learning_rate": 1e-05,
+      "seed": 43,
+      "trainable_layers": 4,
+      "best_epoch": 5,
+      "epochs_completed": 10,
+      "training_dev_eer": 0.06239168110918544,
+      "training_seconds": 1058.1904374295846,
+      "experiment_seconds": 1124.6768766185269,
+      "peak_training_cuda_allocated_bytes": 5981383680,
+      "peak_training_cuda_reserved_bytes": 7147094016,
+      "checkpoint": "last4-512-lr1e-5-seed43/training/best.pt",
+      "checkpoint_sha256": "546b0c17a773857850924cfa4e54912620930b2e1f1b1cc85b2474efcccf94e0",
+      "seen_dev": {
+        "sample_count": 2885,
+        "real_count": 577,
+        "fake_count": 2308,
+        "group_count": 36,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "eer": 0.06239168110918544,
+        "eer_reason": null,
+        "scores": "last4-512-lr1e-5-seed43-offline-dev/scores.jsonl",
+        "scores_sha256": "b8642b52e031adc87ead8d5cade5e72feec02b627a8004c40ad75fdf8d83d945",
+        "inference_timing": {
+          "sample_call_seconds": 102.55975976027548,
+          "samples_per_second": 28.12994108745415,
+          "startup_seconds": 6.469679482281208,
+          "preflight_seconds": 0.8568779025226831,
+          "representative": false
+        },
+        "per_method": {
+          "audiogen/tta": {
+            "sample_count": 1154,
+            "eer": 0.07279029462738301,
+            "failure_count": 0
+          },
+          "audioldm1/ata": {
+            "sample_count": 1154,
+            "eer": 0.09012131715771231,
+            "failure_count": 0
+          },
+          "audioldm1/tta": {
+            "sample_count": 1154,
+            "eer": 0.036395147313691506,
+            "failure_count": 0
+          },
+          "audioldm2/tta": {
+            "sample_count": 1154,
+            "eer": 0.03292894280762565,
+            "failure_count": 0
+          }
+        }
+      },
+      "unseen_dev": {
+        "sample_count": 1731,
+        "real_count": 577,
+        "fake_count": 1154,
+        "group_count": 36,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "eer": 0.1265164644714038,
+        "eer_reason": null,
+        "scores": "last4-512-lr1e-5-seed43-unseen-dev/scores.jsonl",
+        "scores_sha256": "ee23b35b0bed1c746ea9dba1e721aa5df7da5e40c01eaa184656e5f991a123dd",
+        "inference_timing": {
+          "sample_call_seconds": 61.60965757910162,
+          "samples_per_second": 28.096244452869122,
+          "startup_seconds": 7.032585293054581,
+          "preflight_seconds": 0.5115506686270237,
+          "representative": false
+        },
+        "per_method": {
+          "audiolcm/tta": {
+            "sample_count": 1154,
+            "eer": 0.15771230502599654,
+            "failure_count": 0
+          },
+          "tangoflux/tta": {
+            "sample_count": 1154,
+            "eer": 0.0831889081455806,
+            "failure_count": 0
+          }
+        }
+      },
+      "fsd_external_dev": {
+        "sample_count": 70,
+        "real_count": 35,
+        "fake_count": 35,
+        "group_count": 24,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "eer": 0.17142857142857143,
+        "eer_reason": null,
+        "scores": "last4-512-lr1e-5-seed43-fsd-external-dev/scores.jsonl",
+        "scores_sha256": "9d876ccd2ad7ecb0175a5579fdf596efd8d1e337564eb394c21dec8aea1406ce",
+        "inference_timing": {
+          "sample_call_seconds": 1.5666093733161688,
+          "samples_per_second": 44.6824851123068,
+          "startup_seconds": 6.446862961165607,
+          "preflight_seconds": 0.022213916294276714,
+          "representative": false
+        }
+      }
+    },
+    {
+      "run": "full12-512-lr1e-5-seed42",
+      "config": "full12-512-lr1e-5-seed42.json",
+      "code": {
+        "code_sha256": "04de8a6fc0e3c9d767c167c561728ed0dc0560435a06e0de4a71d242fb08b4f8",
+        "commit": "ae5308b99aaf11dcad99db5baf1671e56b2e3f80",
+        "dirty": false
+      },
+      "learning_rate": 1e-05,
+      "seed": 42,
+      "trainable_layers": 12,
+      "best_epoch": 1,
+      "epochs_completed": 6,
+      "training_dev_eer": 0.01386481802426343,
+      "training_seconds": 1073.9177024699748,
+      "experiment_seconds": 1123.0239998353645,
+      "peak_training_cuda_allocated_bytes": 9072094208,
+      "peak_training_cuda_reserved_bytes": 9890168832,
+      "checkpoint": "full12-512-lr1e-5-seed42/training/best.pt",
+      "checkpoint_sha256": "8fa61daf42054b29fd61906c8c2fcf679ba4558e80472806197958b013c6e95c",
+      "seen_dev": {
+        "sample_count": 2885,
+        "real_count": 577,
+        "fake_count": 2308,
+        "group_count": 36,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "eer": 0.01386481802426343,
+        "eer_reason": null,
+        "scores": "full12-512-lr1e-5-seed42-offline-dev/scores.jsonl",
+        "scores_sha256": "58ac775a768847c6b7523bb89f80df71be3905df8c78d5a9018761a702f7b604",
+        "inference_timing": {
+          "sample_call_seconds": 122.15429480094463,
+          "samples_per_second": 23.617671443326856,
+          "startup_seconds": 7.371943061240017,
+          "preflight_seconds": 0.9095683647319674,
+          "representative": false
+        },
+        "per_method": {
+          "audiogen/tta": {
+            "sample_count": 1154,
+            "eer": 0.025996533795493933,
+            "failure_count": 0
+          },
+          "audioldm1/ata": {
+            "sample_count": 1154,
+            "eer": 0.010398613518197574,
+            "failure_count": 0
+          },
+          "audioldm1/tta": {
+            "sample_count": 1154,
+            "eer": 0.006932409012131715,
+            "failure_count": 0
+          },
+          "audioldm2/tta": {
+            "sample_count": 1154,
+            "eer": 0.008665511265164644,
+            "failure_count": 0
+          }
+        }
+      },
+      "unseen_dev": {
+        "sample_count": 1731,
+        "real_count": 577,
+        "fake_count": 1154,
+        "group_count": 36,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "eer": 0.05025996533795494,
+        "eer_reason": null,
+        "scores": "full12-512-lr1e-5-seed42-unseen-dev/scores.jsonl",
+        "scores_sha256": "7c3d0b003a33e80daefc727812b6f29f3c59a1690a2c07f62488d51186a5ac0e",
+        "inference_timing": {
+          "sample_call_seconds": 78.7303350912407,
+          "samples_per_second": 21.986442684308933,
+          "startup_seconds": 7.500780863687396,
+          "preflight_seconds": 0.5570836868137121,
+          "representative": false
+        },
+        "per_method": {
+          "audiolcm/tta": {
+            "sample_count": 1154,
+            "eer": 0.04852686308492201,
+            "failure_count": 0
+          },
+          "tangoflux/tta": {
+            "sample_count": 1154,
+            "eer": 0.05199306759098787,
+            "failure_count": 0
+          }
+        }
+      },
+      "fsd_external_dev": {
+        "sample_count": 70,
+        "real_count": 35,
+        "fake_count": 35,
+        "group_count": 24,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "eer": 0.08571428571428572,
+        "eer_reason": null,
+        "scores": "full12-512-lr1e-5-seed42-fsd-external-dev/scores.jsonl",
+        "scores_sha256": "cf2b3705f20d1a700164f4424624daee9951dc93075a3f0803bb5ed0136b0b56",
+        "inference_timing": {
+          "sample_call_seconds": 1.6350639685988426,
+          "samples_per_second": 42.811780666897114,
+          "startup_seconds": 6.614790674299002,
+          "preflight_seconds": 0.022164824418723583,
+          "representative": false
+        }
+      }
+    },
+    {
+      "run": "full12-512-lr3e-6-seed42",
+      "config": "full12-512-lr3e-6-seed42.json",
+      "code": {
+        "code_sha256": "04de8a6fc0e3c9d767c167c561728ed0dc0560435a06e0de4a71d242fb08b4f8",
+        "commit": "ae5308b99aaf11dcad99db5baf1671e56b2e3f80",
+        "dirty": true
+      },
+      "learning_rate": 3e-06,
+      "seed": 42,
+      "trainable_layers": 12,
+      "best_epoch": 7,
+      "epochs_completed": 12,
+      "training_dev_eer": 0.022097053726169845,
+      "training_seconds": 1720.2304732464254,
+      "experiment_seconds": 1813.7047832505777,
+      "peak_training_cuda_allocated_bytes": 9072094208,
+      "peak_training_cuda_reserved_bytes": 9890168832,
+      "checkpoint": "full12-512-lr3e-6-seed42/training/best.pt",
+      "checkpoint_sha256": "5ba6cda017254e8841f8dcedb431a98c64a00d48d8fe0e08e9b1a68f4faadb40",
+      "seen_dev": {
+        "sample_count": 2885,
+        "real_count": 577,
+        "fake_count": 2308,
+        "group_count": 36,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "eer": 0.022097053726169845,
+        "eer_reason": null,
+        "scores": "full12-512-lr3e-6-seed42-offline-dev/scores.jsonl",
+        "scores_sha256": "e5978256240569f64804abe043c5fb11ddee7a3472375907322333850bccaae1",
+        "inference_timing": {
+          "sample_call_seconds": 54.36883757635951,
+          "samples_per_second": 53.06348505148925,
+          "startup_seconds": 6.677640847861767,
+          "preflight_seconds": 0.8632933162152767,
+          "representative": false
+        },
+        "per_method": {
+          "audiogen/tta": {
+            "sample_count": 1154,
+            "eer": 0.043327556325823226,
+            "failure_count": 0
+          },
+          "audioldm1/ata": {
+            "sample_count": 1154,
+            "eer": 0.02079722703639515,
+            "failure_count": 0
+          },
+          "audioldm1/tta": {
+            "sample_count": 1154,
+            "eer": 0.012131715771230503,
+            "failure_count": 0
+          },
+          "audioldm2/tta": {
+            "sample_count": 1154,
+            "eer": 0.01386481802426343,
+            "failure_count": 0
+          }
+        }
+      },
+      "unseen_dev": {
+        "sample_count": 1731,
+        "real_count": 577,
+        "fake_count": 1154,
+        "group_count": 36,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "eer": 0.05979202772963605,
+        "eer_reason": null,
+        "scores": "full12-512-lr3e-6-seed42-unseen-dev/scores.jsonl",
+        "scores_sha256": "7607e90eba153552d9da2a5ec6b7a5d185350ee93d2afa1aa490c5cca30968f1",
+        "inference_timing": {
+          "sample_call_seconds": 31.52814315445721,
+          "samples_per_second": 54.90332848083647,
+          "startup_seconds": 6.520001956261694,
+          "preflight_seconds": 0.5175748020410538,
+          "representative": false
+        },
+        "per_method": {
+          "audiolcm/tta": {
+            "sample_count": 1154,
+            "eer": 0.06759098786828423,
+            "failure_count": 0
+          },
+          "tangoflux/tta": {
+            "sample_count": 1154,
+            "eer": 0.0415944540727903,
+            "failure_count": 0
+          }
+        }
+      },
+      "fsd_external_dev": {
+        "sample_count": 70,
+        "real_count": 35,
+        "fake_count": 35,
+        "group_count": 24,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "eer": 0.08571428571428572,
+        "eer_reason": null,
+        "scores": "full12-512-lr3e-6-seed42-fsd-external-dev/scores.jsonl",
+        "scores_sha256": "e1ecf1daff34140edcaf498b548b81f1449f03616663527c6d51953a4a1c6e51",
+        "inference_timing": {
+          "sample_call_seconds": 1.5718576218932867,
+          "samples_per_second": 44.53329552563781,
+          "startup_seconds": 6.4756030179560184,
+          "preflight_seconds": 0.022060398012399673,
+          "representative": false
+        }
+      }
+    }
+  ],
+  "interrupted_1024_pilot": {
+    "run": "last4-lr1e-5-seed42",
+    "config": "last4-lr1e-5-seed42.json",
+    "status": "interrupted",
+    "epochs_completed": 1,
+    "dev_eer": 0.07625649913344887,
+    "epoch_seconds": 209.22049484867603,
+    "checkpoint_sha256": "4e23d5b2a72e33e1f18aa6d8ecb98859f040b6e1e5fd715dd9d86c2bbd821ffa",
+    "reason": "replace excessive padding with 512-frame input; new experiments in separate directories"
+  },
+  "selection": {
+    "run": "full12-512-lr1e-5-seed42",
+    "checkpoint": "full12-512-lr1e-5-seed42/training/best.pt",
+    "checkpoint_sha256": "8fa61daf42054b29fd61906c8c2fcf679ba4558e80472806197958b013c6e95c",
+    "config": "full12-512-lr1e-5-seed42.json",
+    "config_sha256": "efc2183f297e5ee16199c62fb73fa96a3936e9a2d790857325306ca61a3caf13",
+    "frozen_at": "2026-10-11T08:02:10.905418+00:00",
+    "scope": "Urban research candidate; seen and unseen generator holdout once; no subsequent tuning in this round",
+    "basis": "minimum FP32 seen-generator dev EER among four completed candidates; ties prefer fewer trainable layers then lower learning rate; unseen-generator and FSD external dev diagnostic only",
+    "dev_eer": 0.01386481802426343,
+    "holdout_accessed_before_freeze": false
+  },
+  "holdout_manifest_sha256": "c5a19fe842ff1e150b4782968770e8d61e5a2cb0fc5db208ffc83cf14a067283",
+  "unseen_holdout_dataset": {
+    "samples": 1728,
+    "real_samples": 576,
+    "generator_counts": {
+      "audiolcm": 576,
+      "tangoflux": 576
+    },
+    "decode_failed": 0,
+    "manifest_sha256": "f47b4c7fab318377c770f3d5ef659ee0bb659a9c419e66fff912f9830ae4fcd5"
+  },
+  "seen_holdout": {
+    "sample_count": 2880,
+    "real_count": 576,
+    "fake_count": 2304,
+    "group_count": 36,
+    "failure_count": 0,
+    "coverage": 1.0,
+    "eer": 0.014322916666666666,
+    "eer_reason": null,
+    "scores": "full12-512-lr1e-5-seed42-seen-holdout/scores.jsonl",
+    "scores_sha256": "9920f75b56bd5d8057ba9de7347a1dd071dd5c8d5bc43d5eb424035df30ff680",
+    "inference_timing": {
+      "sample_call_seconds": 53.83197184745222,
+      "samples_per_second": 53.49980506308177,
+      "startup_seconds": 6.603675394318998,
+      "preflight_seconds": 2.480223669670522,
+      "representative": false
+    },
+    "per_method": {
+      "audiogen/tta": {
+        "sample_count": 1152,
+        "eer": 0.026041666666666668,
+        "failure_count": 0
+      },
+      "audioldm1/ata": {
+        "sample_count": 1152,
+        "eer": 0.010416666666666666,
+        "failure_count": 0
+      },
+      "audioldm1/tta": {
+        "sample_count": 1152,
+        "eer": 0.006944444444444444,
+        "failure_count": 0
+      },
+      "audioldm2/tta": {
+        "sample_count": 1152,
+        "eer": 0.006944444444444444,
+        "failure_count": 0
+      }
+    }
+  },
+  "unseen_holdout": {
+    "sample_count": 1728,
+    "real_count": 576,
+    "fake_count": 1152,
+    "group_count": 36,
+    "failure_count": 0,
+    "coverage": 1.0,
+    "eer": 0.06510416666666667,
+    "eer_reason": null,
+    "scores": "full12-512-lr1e-5-seed42-unseen-holdout/scores.jsonl",
+    "scores_sha256": "8b7e40c2999b112d5b32437e8ba68f5998c0d764fece84ad8cced10b683ada2e",
+    "inference_timing": {
+      "sample_call_seconds": 33.48108488507569,
+      "samples_per_second": 51.61123081678462,
+      "startup_seconds": 6.617209081538022,
+      "preflight_seconds": 0.5342375952750444,
+      "representative": false
+    },
+    "per_method": {
+      "audiolcm/tta": {
+        "sample_count": 1152,
+        "eer": 0.06076388888888889,
+        "failure_count": 0
+      },
+      "tangoflux/tta": {
+        "sample_count": 1152,
+        "eer": 0.06597222222222222,
+        "failure_count": 0
+      }
+    }
+  },
+  "fsd_external_dev_dataset": {
+    "samples": 70,
+    "real": 35,
+    "fake": 35,
+    "generator": "Stable Audio Open",
+    "manifest_sha256": "ecc49937d207dd24c178de3235114afaa078c64a5a86200f38e6c87e3108ab04",
+    "scope": "FSD50K/Stable Audio Open dev only; all old-source associations excluded from Urban training; center 64000 samples of existing symmetric media; old holdout not used"
+  },
+  "gpu_concurrency_snapshot": {
+    "captured_at": "2026-10-11T07:36:44.488804+00:00",
+    "utilization_percent": 100.0,
+    "device_memory_used_mib": 21211.0,
+    "power_watts": 362.88,
+    "own_training_runs": [
+      "last4-512-lr1e-5-seed43",
+      "full12-512-lr3e-6-seed42"
+    ],
+    "scope": "whole-device snapshot including other GPU processes; not an average or per-task attribution"
+  },
+  "resource_scope": "training-loop peaks including dev, excluding input preparation; AMP/BF16 training, FP32 dev and offline inference; step profiles isolated, completed experiment times with concurrent GPU workloads"
+}

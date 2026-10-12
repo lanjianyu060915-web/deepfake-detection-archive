@@ -1,0 +1,260 @@
+{
+  "experiment": "audio-ast-20261011",
+  "scope": "single-generator environment research pilot; dev-selected, one frozen-candidate holdout evaluation",
+  "assets_root": "/var/tmp/deepfake-audio-ast-20261011",
+  "data_root": "/var/tmp/lanjianyu-issue11-20261011/doppelganger-v2",
+  "manifest_sha256": "18e30516a73959cca46c55000617b73065f1141d5c7b08d097eba95c7d51ce4b",
+  "sources_sha256": "15db7bf3933a6877f8323cbcc8edbe3745309b5503c423aa814c5e0a91376998",
+  "code": {
+    "code_sha256": "a28c913edce5055b4a41045c072a41cb43d2b72575e1db70b0465ccb344cf17d",
+    "commit": "0fee0fda5222ba6c23ae239a1fe46882ea6e7b55",
+    "dirty": true
+  },
+  "counts": {
+    "train": 322,
+    "dev": 70,
+    "holdout": 70
+  },
+  "score_direction": "higher_is_fake",
+  "eer_protocol": "eer_interpolated_v1",
+  "pretrained": {
+    "repository": "MIT/ast-finetuned-audioset-10-10-0.4593",
+    "revision": "f826b80d28226b62986cc218e5cec390b1096902",
+    "weights_sha256": "ae0c1e2ad4e1381d851fa9bf298ba13ebc9c5a914cdee2dbe427a6583869924d",
+    "license": "BSD-3-Clause",
+    "source_registry": "../../research/pretrained-resources/upstream-resources.json"
+  },
+  "training_scope": "BF16 forward/backward; FP32 dev; cached AudioSet input filterbanks, unfrozen final AST blocks",
+  "training_memory_scope": "training only; input filterbank preparation excluded",
+  "selection": {
+    "run": "last4-lr1e-5-seed42",
+    "checkpoint": "../../../outputs/audio-ast-20261011/last4-lr1e-5-seed42/training/best.pt",
+    "checkpoint_sha256": "fef784ab65f4bf8e9285e1b69d1df39ac3e064dc9368d4f386298719e31000d4",
+    "frozen_at": "2026-10-11T05:59:01.577245+00:00",
+    "scope": "environment research pilot; one holdout evaluation, no subsequent tuning in this round",
+    "basis": "minimum dev EER; lr1e-5 preferred to lr1e-4 on tied seed42 EER; seed42 preferred to seed43 on dev EER",
+    "dev_eer": 0.02857142857142857
+  },
+  "runs": [
+    {
+      "run": "last4-lr1e-5-seed42",
+      "config": "last4-lr1e-5-seed42.json",
+      "dev_eer": 0.02857142857142857,
+      "trainable_layers": 4,
+      "sample_count": 70,
+      "failure_count": 0,
+      "coverage": 1.0,
+      "best_epoch": 7,
+      "epochs_completed": 15,
+      "experiment_seconds": 62.49895951896906,
+      "training_seconds": 49.51577288005501,
+      "peak_training_cuda_allocated_bytes": 6152322048,
+      "peak_training_cuda_reserved_bytes": 7400849408,
+      "checkpoint": "last4-lr1e-5-seed42/training/best.pt",
+      "checkpoint_sha256": "fef784ab65f4bf8e9285e1b69d1df39ac3e064dc9368d4f386298719e31000d4",
+      "scores": "last4-lr1e-5-seed42/dev-scores.jsonl",
+      "scores_sha256": "567abfc638d7ec2078e87013429c1a9a8725cf48f51d3073c9cfdc0b01479296"
+    },
+    {
+      "run": "last4-lr1e-4-seed42",
+      "config": "last4-lr1e-4-seed42.json",
+      "dev_eer": 0.02857142857142857,
+      "trainable_layers": 4,
+      "sample_count": 70,
+      "failure_count": 0,
+      "coverage": 1.0,
+      "best_epoch": 4,
+      "epochs_completed": 12,
+      "experiment_seconds": 48.72276574000716,
+      "training_seconds": 39.90731107443571,
+      "peak_training_cuda_allocated_bytes": 6152322048,
+      "peak_training_cuda_reserved_bytes": 7400849408,
+      "checkpoint": "last4-lr1e-4-seed42/training/best.pt",
+      "checkpoint_sha256": "9dc67b008b8c0d5d7527699ccefe184c4a7631e2f639f6bc81a9b451c966784e",
+      "scores": "last4-lr1e-4-seed42/dev-scores.jsonl",
+      "scores_sha256": "2dbb1e8cee87ce20697e52251adcabbf0094ce5fafc0c12468a1327b9d142114"
+    },
+    {
+      "run": "last4-lr1e-5-seed43",
+      "config": "last4-lr1e-5-seed43.json",
+      "dev_eer": 0.05714285714285714,
+      "trainable_layers": 4,
+      "sample_count": 70,
+      "failure_count": 0,
+      "coverage": 1.0,
+      "best_epoch": 11,
+      "epochs_completed": 19,
+      "experiment_seconds": 109.69060272257775,
+      "training_seconds": 101.03678600490093,
+      "peak_training_cuda_allocated_bytes": 6152322048,
+      "peak_training_cuda_reserved_bytes": 7400849408,
+      "checkpoint": "last4-lr1e-5-seed43/training/best.pt",
+      "checkpoint_sha256": "9ae532a0852a6c7a950e3474072b6f307f8144bfcb22d233e03792468d5841ff",
+      "scores": "last4-lr1e-5-seed43/dev-scores.jsonl",
+      "scores_sha256": "9d51fffd9af76ab5e29149e9ee5f4f1c7c071db504fc03668921ff75ae55dc8e"
+    },
+    {
+      "run": "head-norm-lr1e-4-seed42",
+      "config": "head-norm-lr1e-4-seed42.json",
+      "dev_eer": 0.17142857142857143,
+      "trainable_layers": 0,
+      "sample_count": 70,
+      "failure_count": 0,
+      "coverage": 1.0,
+      "best_epoch": 18,
+      "epochs_completed": 26,
+      "experiment_seconds": 106.81044588144869,
+      "training_seconds": 98.07535541057587,
+      "peak_training_cuda_allocated_bytes": 1863641600,
+      "peak_training_cuda_reserved_bytes": 2789212160,
+      "checkpoint": "head-norm-lr1e-4-seed42/training/best.pt",
+      "checkpoint_sha256": "60ac53e8e49f1bc5ef297e2cb2c9cd80da09525fda7c9120cd6eed202dd9e976",
+      "scores": "head-norm-lr1e-4-seed42/dev-scores.jsonl",
+      "scores_sha256": "41edc3fe11908dc4e8d2558b73b068ad8ccd21340fe32a91beb44a34e924099c"
+    }
+  ],
+  "offline_scope": "FP32 local media decoding and AST frontend/backbone; self-contained checkpoints, HF offline mode",
+  "offline": [
+    {
+      "run": "last4-lr1e-5-seed42-offline-dev",
+      "config": "infer-last4-seed42.json",
+      "split": "dev",
+      "eer": 0.02857142857142857,
+      "sample_count": 70,
+      "failure_count": 0,
+      "coverage": 1.0,
+      "startup_seconds": 6.324137710034847,
+      "sample_call_seconds": 1.728736306540668,
+      "scores": "last4-lr1e-5-seed42-offline-dev/scores.jsonl",
+      "scores_sha256": "a9bb05a9871c9d577802e2935aeceb3ab86330c749e886bd5763b3e5d8f3585d",
+      "per_event": {
+        "ANML": {
+          "pairs": 3,
+          "eer": 0.0
+        },
+        "BIRD": {
+          "pairs": 3,
+          "eer": 0.3333333333333333
+        },
+        "FIRE": {
+          "pairs": 6,
+          "eer": 0.16666666666666666
+        },
+        "FOOT": {
+          "pairs": 3,
+          "eer": 0.0
+        },
+        "RAIN": {
+          "pairs": 6,
+          "eer": 0.0
+        },
+        "WATR": {
+          "pairs": 8,
+          "eer": 0.0
+        },
+        "WIND": {
+          "pairs": 1,
+          "eer": 0.0
+        },
+        "WTHR": {
+          "pairs": 5,
+          "eer": 0.0
+        }
+      }
+    },
+    {
+      "run": "last4-lr1e-5-seed43-offline-dev",
+      "config": "infer-last4-seed43.json",
+      "split": "dev",
+      "eer": 0.05714285714285714,
+      "sample_count": 70,
+      "failure_count": 0,
+      "coverage": 1.0,
+      "startup_seconds": 6.4518596129491925,
+      "sample_call_seconds": 1.7525071715936065,
+      "scores": "last4-lr1e-5-seed43-offline-dev/scores.jsonl",
+      "scores_sha256": "199f64d24b795691c1b4532d593ad46c062fc89e9291c8cf9b0ae20db1a7fccc",
+      "per_event": {
+        "ANML": {
+          "pairs": 3,
+          "eer": 0.0
+        },
+        "BIRD": {
+          "pairs": 3,
+          "eer": 0.3333333333333333
+        },
+        "FIRE": {
+          "pairs": 6,
+          "eer": 0.16666666666666666
+        },
+        "FOOT": {
+          "pairs": 3,
+          "eer": 0.0
+        },
+        "RAIN": {
+          "pairs": 6,
+          "eer": 0.0
+        },
+        "WATR": {
+          "pairs": 8,
+          "eer": 0.0
+        },
+        "WIND": {
+          "pairs": 1,
+          "eer": 0.0
+        },
+        "WTHR": {
+          "pairs": 5,
+          "eer": 0.0
+        }
+      }
+    },
+    {
+      "run": "last4-lr1e-5-seed42-offline-holdout",
+      "config": "infer-last4-seed42-holdout.json",
+      "split": "holdout",
+      "eer": 0.11428571428571428,
+      "sample_count": 70,
+      "failure_count": 0,
+      "coverage": 1.0,
+      "startup_seconds": 6.4091912638396025,
+      "sample_call_seconds": 1.7205023625865579,
+      "scores": "last4-lr1e-5-seed42-offline-holdout/scores.jsonl",
+      "scores_sha256": "eceb4640b9cc131a979f06506173de5489dc864731bc422f1869fb69caee2286",
+      "per_event": {
+        "ANML": {
+          "pairs": 2,
+          "eer": 0.0
+        },
+        "BIRD": {
+          "pairs": 3,
+          "eer": 0.0
+        },
+        "FIRE": {
+          "pairs": 6,
+          "eer": 0.16666666666666666
+        },
+        "FOOT": {
+          "pairs": 8,
+          "eer": 0.25
+        },
+        "RAIN": {
+          "pairs": 2,
+          "eer": 0.0
+        },
+        "WATR": {
+          "pairs": 3,
+          "eer": 0.0
+        },
+        "WIND": {
+          "pairs": 4,
+          "eer": 0.0
+        },
+        "WTHR": {
+          "pairs": 7,
+          "eer": 0.0
+        }
+      }
+    }
+  ]
+}
