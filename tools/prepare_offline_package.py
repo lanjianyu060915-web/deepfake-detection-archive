@@ -2,8 +2,8 @@
 
 The package is the movable research bundle: portable configs, batch/sample
 manifests, a few tiny sample media files, the two research checkpoints
-(sha256-verified) and the dependency lock. Shared media stays in the read-only
-shared asset tree and is only reached through the package-local
+(sha256-verified), project code, installed dependencies and the dependency lock.
+Shared media stays in the read-only shared asset tree and is only reached through the package-local
 ``shared-data`` mount point, so nothing inside the package hard-codes an
 absolute source path.
 
@@ -19,29 +19,34 @@ import json
 import os
 import shutil
 from collections import Counter
+from dataclasses import replace
 from pathlib import Path
+
+from deepfake_detection_archive.data.manifest import (
+    SampleRecord,
+    load_manifest,
+    write_manifest,
+)
 
 
 AUDIO_BUCKETS = ("audio-env", "audio-music", "audio-speech")
 VIDEO_BUCKETS = ("video-control", "video-vifbench")
-Row = dict[str, object]
+Row = SampleRecord
 
 
 def read_manifest(path: Path) -> list[Row]:
-    return [
-        json.loads(line)
-        for line in path.read_text(encoding="utf-8").splitlines()
-        if line
-    ]
+    rows = load_manifest(path)
+    check_no_holdout(rows)
+    return rows
 
 
 def sort_key(row: Row) -> str:
-    return str(row["sample_id"])
+    return str(row.sample_id)
 
 
 def split_labels(rows: list[Row]) -> tuple[list[Row], list[Row]]:
-    real = sorted((r for r in rows if r["label"] == 0), key=sort_key)
-    fake = sorted((r for r in rows if r["label"] == 1), key=sort_key)
+    real = sorted((r for r in rows if r.label == 0), key=sort_key)
+    fake = sorted((r for r in rows if r.label == 1), key=sort_key)
     return real, fake
 
 
@@ -54,7 +59,7 @@ def select(rows: list[Row], rule: str) -> list[Row]:
     if rule == "balanced100-attack":
         by_attack: dict[str, list[Row]] = {}
         for row in fake:
-            by_attack.setdefault(str(row["generator"]), []).append(row)
+            by_attack.setdefault(str(row.generator), []).append(row)
         queues = [by_attack[key] for key in sorted(by_attack)]
         chosen: list[Row] = []
         while len(chosen) < 100 and any(queues):
@@ -65,20 +70,9 @@ def select(rows: list[Row], rule: str) -> list[Row]:
     raise ValueError(rule)
 
 
-def write_manifest(path: Path, rows: list[Row]) -> None:
-    ordered = sorted(rows, key=sort_key)
-    path.write_text(
-        "".join(
-            json.dumps(row, sort_keys=True, ensure_ascii=False) + "\n"
-            for row in ordered
-        ),
-        encoding="utf-8",
-    )
-
-
 def check_no_holdout(rows: list[Row]) -> None:
-    if any(row["split"] == "holdout" for row in rows):
-        raise ValueError("refusing to select holdout rows")
+    if any(row.split != "dev" for row in rows):
+        raise ValueError("refusing to publish non-dev rows (including holdout)")
 
 
 def sha256_of(path: Path) -> str:
@@ -90,15 +84,15 @@ def sha256_of(path: Path) -> str:
 
 
 def vifbench_subset(manifest: Path, diagnostics: Path) -> list[Row]:
-    by_id = {str(r["sample_id"]): r for r in read_manifest(manifest)}
+    by_id = {str(r.sample_id): r for r in read_manifest(manifest)}
     used_real: set[str] = set()
     selected: list[Row] = []
     for diagnostic in sorted(diagnostics.glob("*.jsonl")):
         rows = read_manifest(diagnostic)
         real, fake = split_labels(rows)
-        picked = [r for r in real if str(r["sample_id"]) not in used_real][:5]
-        used_real.update(str(r["sample_id"]) for r in picked)
-        selected.extend(by_id[str(r["sample_id"])] for r in fake[:5] + picked)
+        picked = [r for r in real if str(r.sample_id) not in used_real][:5]
+        used_real.update(str(r.sample_id) for r in picked)
+        selected.extend(by_id[str(r.sample_id)] for r in fake[:5] + picked)
     return selected
 
 
@@ -120,44 +114,38 @@ class Builder:
     def publish(self, bucket: str, rows: list[Row], root: Path) -> None:
         """Write one shared-media manifest and copy a tiny sample into the package."""
         check_no_holdout(rows)
-        readable = [r for r in rows if (root / str(r["path"])).is_file()]
+        readable = [r for r in rows if (root / str(r.path)).is_file()]
         if len(readable) != len(rows):
             raise FileNotFoundError(
                 f"{bucket}: {len(rows) - len(readable)} media missing"
             )
         write_manifest(
+            [replace(r, path=self.relative(root / r.path)) for r in readable],
             self.manifests / f"batch-{bucket}.jsonl",
-            [{**r, "path": self.relative(root / str(r["path"]))} for r in readable],
         )
-        self.summary[f"batch-{bucket}"] = dict(
-            Counter(str(r["label"]) for r in readable)
-        )
+        self.summary[f"batch-{bucket}"] = dict(Counter(str(r.label) for r in readable))
         real, fake = split_labels(readable)
         chosen = real[: self.sample_per_class] + fake[: self.sample_per_class]
         copied = []
         for row in chosen:
-            relative = str(row["path"])
+            relative = str(row.path)
             target = self.media / bucket / relative
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(root / relative, target)
-            copied.append({**row, "path": f"{bucket}/{relative}"})
-        write_manifest(self.manifests / f"sample-{bucket}.jsonl", copied)
-        self.summary[f"sample-{bucket}"] = dict(
-            Counter(str(r["label"]) for r in copied)
-        )
+            copied.append(replace(row, path=f"{bucket}/{relative}"))
+        write_manifest(copied, self.manifests / f"sample-{bucket}.jsonl")
+        self.summary[f"sample-{bucket}"] = dict(Counter(str(r.label) for r in copied))
 
     def dev_rows(self, manifest: Path, rule: str) -> list[Row]:
-        rows = [r for r in read_manifest(manifest) if r["split"] == "dev"]
+        rows = [r for r in load_manifest(manifest) if r.split == "dev"]
         return select(rows, rule)
 
     def combine(self, name: str, buckets: tuple[str, ...], family: str) -> None:
         merged: list[Row] = []
         for bucket in buckets:
             merged.extend(read_manifest(self.manifests / f"{family}-{bucket}.jsonl"))
-        write_manifest(self.manifests / f"{family}-{name}.jsonl", merged)
-        self.summary[f"{family}-{name}"] = dict(
-            Counter(str(r["label"]) for r in merged)
-        )
+        write_manifest(merged, self.manifests / f"{family}-{name}.jsonl")
+        self.summary[f"{family}-{name}"] = dict(Counter(str(r.label) for r in merged))
 
     def copy_configs(self, config_dir: Path) -> None:
         target = self.package / "configs"
@@ -197,20 +185,68 @@ class Builder:
             encoding="utf-8",
         )
 
-    def copy_dependencies(self, lock: Path) -> None:
+    def copy_dependencies(self, lock: Path, site_packages: Path, source: Path) -> None:
+        """Snapshot installed wheels and project code, without venv path hooks."""
         target = self.package / "deps"
         target.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(lock, target / "uv.lock")
+        runtime = self.package / "runtime" / "site-packages"
+
+        def ignore(directory: str, names: list[str]) -> set[str]:
+            excluded = {
+                name
+                for name in names
+                if name == "__pycache__" or name.endswith((".pyc", ".pyo"))
+            }
+            if Path(directory) == site_packages:
+                excluded.update(
+                    name
+                    for name in names
+                    if name.endswith(".pth")
+                    or name.startswith("__editable__")
+                    or name == "deepfake_detection_archive"
+                )
+            return excluded
+
+        shutil.copytree(site_packages, runtime, ignore=ignore)
+        shutil.copytree(
+            source,
+            self.package / "src",
+            ignore=shutil.ignore_patterns("__pycache__", "*.pyc", "*.pyo"),
+        )
+        (self.package / "run.py").write_text(LAUNCHER, encoding="utf-8")
         (target / "README.md").write_text(
-            "# deps\n\n"
-            "`uv.lock` 是本包对应的依赖锁定文件。运行时使用仓库根共享虚拟环境\n"
-            "（Python 3.12 + CUDA 13.2 wheel），不自动安装或下载任何依赖。\n\n"
-            "```bash\n"
-            "scripts/devctl run python -m deepfake_detection_archive infer \\\n"
-            "  --config configs/sample-audio-dev.json\n"
-            "```\n",
+            "# 运行环境\n\n"
+            "包内 runtime/site-packages 为构建环境已安装依赖的实体快照，"
+            "src 为项目代码；不依赖原仓库或共享虚拟环境，不自动安装或下载。\n"
+            "目标机需兼容构建机的 Linux 架构/系统动态库、CPython 3.12、"
+            "ffmpeg/ffprobe（PATH 可用）；CUDA 配置另需兼容的 NVIDIA 驱动。"
+            "解释器、系统动态库及驱动不在包内；该包不是跨平台发行版。\n\n"
+            "从包目录运行：`python3.12 -I -S run.py infer "
+            "--config configs/sample-audio-dev.json`。"
+            "依赖许可保留在各 dist-info，uv.lock 仅用于追溯；"
+            "快照包含构建环境已有工具，不能视为最小依赖清单。\n",
             encoding="utf-8",
         )
+
+
+LAUNCHER = '''"""Run only bundled project code and installed dependencies."""
+import os
+from pathlib import Path
+import runpy
+import sys
+
+if (sys.version_info[:2] != (3, 12) or sys.implementation.name != "cpython"
+        or not sys.platform.startswith("linux")):
+    raise SystemExit("requires Linux CPython 3.12")
+if not sys.flags.isolated or not sys.flags.no_site:
+    raise SystemExit("run with python3.12 -I -S run.py ...")
+root = Path(__file__).resolve().parent
+sys.path[:0] = [str(root / "src"), str(root / "runtime" / "site-packages")]
+for name in ("HF_HUB_OFFLINE", "TRANSFORMERS_OFFLINE", "HF_DATASETS_OFFLINE"):
+    os.environ[name] = "1"
+runpy.run_module("deepfake_detection_archive", run_name="__main__")
+'''
 
 
 def main() -> None:
@@ -225,6 +261,10 @@ def main() -> None:
     parser.add_argument("--video-weight", type=Path, required=True)
     parser.add_argument("--video-weight-name", default="video-l4head-seed42")
     parser.add_argument("--lock", type=Path, required=True)
+    parser.add_argument("--site-packages", type=Path, required=True)
+    parser.add_argument(
+        "--source", type=Path, default=Path(__file__).resolve().parents[1] / "src"
+    )
     parser.add_argument("--env-manifest", type=Path, required=True)
     parser.add_argument("--env-root", type=Path, required=True)
     parser.add_argument("--music-manifest", type=Path, required=True)
@@ -239,6 +279,10 @@ def main() -> None:
     parser.add_argument("--sample-per-class", type=int, default=3)
     args = parser.parse_args()
 
+    if args.package.exists():
+        parser.error("--package must be a new directory")
+    if args.sample_per_class < 1:
+        parser.error("--sample-per-class must be positive")
     builder = Builder(args.package, args.shared_root, args.sample_per_class)
     selections = [
         (
@@ -277,7 +321,7 @@ def main() -> None:
     builder.summary["video_weight_sha256"] = builder.copy_weight(
         args.video_weight, args.video_weight_name
     )
-    builder.copy_dependencies(args.lock)
+    builder.copy_dependencies(args.lock, args.site_packages, args.source)
     builder.link_shared_data()
     print(json.dumps(builder.summary, indent=2, sort_keys=True))
 

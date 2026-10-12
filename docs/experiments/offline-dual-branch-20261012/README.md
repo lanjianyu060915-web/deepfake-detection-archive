@@ -23,8 +23,7 @@ EnvSDD 城市环境音，13888 train / 96 dev，`balanced_sampling=true`、seed 
 `tests/test_offline_dual_branch.py::test_video_branch_relocates_and_ignores_training_encoder_path`
 固化，因此迁移后无需该训练期文件。
 
-两个权重的包内 sidecar（`*.pt.json`）与 `weights/ast-experiment.json`
-一并随包，用于核对来源与哈希；`configs/*.json` 的 `checkpoint_sha256`
+两个权重的包内 sidecar（`*.pt.json`）一并随包，用于核对来源与哈希；`configs/*.json` 的 `checkpoint_sha256`
 与上表一致，权重被替换或损坏时运行直接失败。
 
 身份澄清：视频分支要的是 `layer4+头` 微调权重（44.9 MB，
@@ -41,7 +40,10 @@ offline-package/
   manifests/      # batch/sample × audio-{env,music,speech} / video-{control,vifbench} / *-dev
   media/          # 自带极小样例媒体（约 3.0 MB / 30 个文件），完全离线可跑
   weights/        # 两个真实权重文件 + sidecar（非软链接）
-  deps/           # uv.lock + 依赖说明
+  src/            # 项目代码实体副本
+  runtime/site-packages/ # 构建环境已安装依赖快照（不含 .pth/editable 映射）
+  run.py          # 隔离 Python 启动入口
+  deps/           # uv.lock + 依赖和目标机前置说明
   shared-data ->  # 相对软链接，指向团队只读素材根；批量配置经它读取共享媒体
   SHARED-DATA.md  # 迁移后如何重挂 shared-data
 ```
@@ -52,22 +54,28 @@ offline-package/
 
 ## 3. 使用（中文）
 
+目标机需与构建环境兼容的 Linux 架构/系统动态库、CPython 3.12、PATH 中的
+`ffmpeg`/`ffprobe`，CUDA 配置另需兼容的 NVIDIA 驱动。包不携带解释器、
+系统动态库或驱动，不是跨平台发行版；无需原仓库或原共享虚拟环境。
+依赖快照保留各发行包许可，包含构建环境已有工具，不声称是最小依赖集合。
+
 ```bash
 # 自带样例，完全离线（无需 shared-data）
-scripts/devctl run python -m deepfake_detection_archive infer \
+python3.12 -I -S offline-package/run.py infer \
   --config offline-package/configs/sample-audio-dev.json
-scripts/devctl run python -m deepfake_detection_archive infer \
+python3.12 -I -S offline-package/run.py infer \
   --config offline-package/configs/sample-video-dev.json
 
 # 批量（需先挂好 shared-data）
-scripts/devctl run python -m deepfake_detection_archive infer \
+python3.12 -I -S offline-package/run.py infer \
   --config offline-package/configs/batch-audio-dev.json
-scripts/devctl run python -m deepfake_detection_archive infer \
+python3.12 -I -S offline-package/run.py infer \
   --config offline-package/configs/batch-video-dev.json
 ```
 
 长任务在 tmux 中运行；中断后用同一配置追加 `--resume` 续跑（见第 6 节）。
-包内不放权重/大媒体/日志等大产物；`runs/`、`shared-data` 的实体均在包外。
+运行包内包含权重、运行依赖和小样例；推理默认写入包内 `runs/`。
+大批量媒体经 `shared-data` 读取；运行包和产物不提交 Git。
 
 ## 4. 数据与选取规则（仅 dev，未触碰 holdout）
 
@@ -84,7 +92,8 @@ scripts/devctl run python -m deepfake_detection_archive infer \
 | sample-video-dev | 12 | 6/6 | 每桶 real/fake 各 3 |
 
 所有清单行 `split == "dev"`；生成工具 `tools/prepare_offline_package.py`
-中的 `check_no_holdout` 在选取阶段显式拒绝任何 `split == "holdout"` 行。
+复用 `load_manifest`/`SampleRecord` 的 schema、重复 ID 和路径校验；
+混合源清单仅选 dev，诊断清单与发布入口拒绝任何非 dev 行（含 holdout）。
 
 新生成器泛化按 `docs/experiments/video-generalization-20261011/` 的
 ViF-Bench 清单与诊断配对补充评测（第 5.3 节）。
@@ -172,7 +181,8 @@ resume 依赖 `.runner.lock` 与逐行追加的 `scores.jsonl`，已完成的样
 
 ## 7. 离线/禁用隐式下载的验证方法
 
-本机 `unshare -n` 不可用，改用等价手段：
+以下为原实验的应用层断网验证，未使用网络命名空间隔离；其迁移测试仍使用
+仓库 CLI 与共享环境，不能单凭这些历史结果证明依赖快照可独立运行：
 
 1. 将包整目录复制到独立位置，运行目录无关（`cwd=/`），只用仓库内 CLI 与共享虚拟环境；
 2. 进程内安装 CPython audit hook，拦截 `socket.connect`、`socket.getaddrinfo`、
@@ -185,6 +195,11 @@ resume 依赖 `.runner.lock` 与逐行追加的 `scores.jsonl`，已完成的样
 `offline guard blocked network event` 拒绝；在同样条件下四条样例/批量推理
 均 `exit=0`、coverage 1.0、failure_count 0。权重随包为真实文件，
 `checkpoint_sha256` 固定，保证不隐式回退到预训练下载。
+
+修复后的打包器增加隔离子进程回归：生成依赖与源码快照、移动包并删除
+构建源目录，以 `-I -S` 从 `/` 启动小模型 fixture，再验证真实包内 CLI
+可加载。原有小型 AST/视频模型的断网与迁移测试继续保留；真实 GPU 依赖
+快照与真实权重组合尚需按本节启动方式实测，不能以 fixture 代替。
 
 ## 8. 局限
 
@@ -207,6 +222,7 @@ scripts/devctl run python -u tools/prepare_offline_package.py \
   --audio-weight "$SHARED_ROOT/deepfake-audio-music-20261011/mixed12-class-balanced-seed42/training/best.pt" \
   --video-weight "$SHARED_ROOT/lanjianyu-issue21-20261011/outputs/video-finetune-20261011/seed42/training/best.pt" \
   --lock uv.lock \
+  --site-packages /opt/venvs/deepfake-cu132/lib/python3.12/site-packages \
   --env-manifest "$SHARED_ROOT/deepfake-audio-expand-20261011/envsdd-urban/manifest.jsonl" \
   --env-root "$SHARED_ROOT/deepfake-audio-expand-20261011/envsdd-urban" \
   --music-manifest "$SHARED_ROOT/deepfake-audio-music-20261011/aime/manifest.jsonl" \
@@ -220,10 +236,13 @@ scripts/devctl run python -u tools/prepare_offline_package.py \
   --vifbench-diagnostics "$SHARED_ROOT/lanjianyu-issue20-20261011/outputs/experiments/video-generalization-20261011/vifbench/diagnostics"
 ```
 
-重建后 `manifests/` 14 份、`configs/` 4 份与样例媒体与本包逐字节一致。
+目标目录必须尚不存在；只生成一份运行包，迁移时移动目录，不重复复制运行时。
+清单经统一 schema 序列化，可能补齐默认字段；选取样本和媒体保持原规则。
+最小实测为移动目录后从 `/` 运行上述两个 sample 配置，检查报告 coverage=1、
+failure_count=0，再与原样例分数比较。批量配置需重新挂载 shared-data。
 
 行为回归：
 
 ```bash
-PYTHONPATH=src scripts/devctl run python -m pytest -q tests/test_offline_dual_branch.py
+PYTHONPATH=src scripts/devctl run python -m pytest -q tests/test_offline_dual_branch.py tests/test_prepare_offline_package.py
 ```
