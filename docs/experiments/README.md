@@ -10,6 +10,7 @@
 | --- | --- | --- |
 | [ASV 云端双种子](asv-cloud-20261011/README.md) | LogMel EER0.7849%/0.9419%；冻结HuBERT未改善同域dev | 未知攻击、跨来源及压缩评分 |
 | [语音压缩与未知攻击](audio-generalization-20261011/README.md) | LogMel42未知攻击EER2.97%；AAC退化较小，8kHz采样率带限EER13.10% | 带宽增强、跨来源及未知攻击叠加退化 |
+| [语音带宽增强](bandwidth-augmentation-20261012/README.md) | 训练期8kHz增强：带限EER13.10%→1.39%，clean+0.12点，AAC与未知子集亦改善 | seed43复现与更宽目标率/编码增强 |
 | [ViF 云端受控视频](vif-cloud-20261011/README.md) | Hunyuan train618/dev146；视觉EER20.55%/21.92%，优于同集元数据 | 跨来源/生成器与压缩评分，再决定微调/时序 |
 | [ViF 帧微调](video-finetune-20261011/README.md) | 同划分解冻layer4与头，双种子dev EER16.44%（冻结头对照20.55%/21.92%），覆盖率1.0 | 尺寸受控后的跨生成器验收见下一行 |
 | [视频尺寸控制与 H.264 增强](video-size-control-20261012/README.md) | 受控匹配310条（假221/真89，宽度配对加权oracle50.000%）；受控后微调跨生成器优势消失，H.264增强仅改善同域压缩（dev clean15.07%/CRF35 17.81%） | 保留增强作同域压缩候选，停止其跨生成器外推 |
