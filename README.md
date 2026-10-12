@@ -4,18 +4,22 @@
 输入本地媒体，输出逐样本连续伪造分数；以 EER 选择模型，最终离线运行。
 内部约定 `real=0`、`fake=1`，分数越高越倾向伪造。
 
-**当前阶段：候选训练与泛化评测，尚未完成双分支比赛系统。**
+**v0.1.0 提供带权重与运行时的双分支离线基线。**
+下载 [Release](https://github.com/lanjianyu060915-web/deepfake-detection-archive/releases/tag/v0.1.0)，
+按[运行说明](docs/release.md)解压后，对无标签目录直接评分：
 
-| 方向 | 已完成 | 当前缺口 |
-| --- | --- | --- |
-| 语音 | 云端 LogMel 双种子 EER **0.7849% / 0.9419%**；冻结 HuBERT 对照已完成 | A07–A19与压缩诊断已完成；带宽弱点及跨来源待改进 |
-| 非语音 | 多生成器 AST；19,215条共享数据；dev EER **1.39%**；冻结 holdout 已见 **1.43%** / 未见生成器 **6.51%** | 跨来源覆盖有限；详见[环境音实验卡](docs/experiments/audio-envsdd-20261011/README.md) |
-| 音乐/混合 | 1,914条AIME；前轮等权分数融合未训练音乐 **14.58%**；新混合训练相对匹配对照，将未训练路径合成混合 **32.55%→26.89%**；[对称混合实验](docs/experiments/audio-speech-mix-20261012/README.md) | 真实广播混合仍50%、环境音有退化，不替换主候选；独立来源、原曲/artist关系与离线融合待解决 |
-| 视频 | 受控 train618/dev146；部分微调双种子 EER **16.44% / 16.44%** | 跨生成器诊断有尺寸混杂，压缩增强和时序模型待做 |
-| 离线系统 | 音视频研究权重、训练/推理/评测及打包入口；24 条语音离线演练 | 候选选择、双分支代表性批量验收和正式平台适配未完成 |
+```bash
+./run.sh predict --config configs/audio.json --input /data/audio --output /results/audio
+./run.sh predict --config configs/video.json --input /data/video --output /results/video
+```
 
-以上是已知攻击语音、城市环境音、音乐小样本和小型视频开发集结果，不能代表本届比赛或通用音视频效果。
-[项目状态](docs/status.md)记录交付事实，[路线图](docs/roadmap.md)列出执行顺序与完成条件。
+输出完整 `scores.csv`、逐样本 `scores.jsonl` 和 `report.json`；支持 `--resume`，
+失败逐项记账。包内包含 CPython 3.12、依赖、环境音 AST 和视频 ResNet18 微调权重，
+系统需 FFmpeg/ffprobe；可用 CUDA 或 `--device cpu`。
+
+本版是非商业研究基线，音频默认主要覆盖环境音，语音/音乐与视频跨生成器效果继续优化。
+正式比赛I/O和外部资源适用性尚未确认，详见[发布资产说明](docs/release-licenses.md)。
+[项目状态](docs/status.md)记录算法结果与缺口，[路线图](docs/roadmap.md)列出后续任务。
 
 ## 环境
 
@@ -48,7 +52,7 @@ scripts/devctl run python -m deepfake_detection_archive evaluate \
   --manifest data/audio-dev.jsonl --output outputs/audio-dev/evaluation.json
 ```
 
-视频训练使用 `train-video-head.example.json`，推理使用 `infer-video-head.example.json`。
+视频可训练冻结头或 ResNet18 末端主干，见[开发指南](docs/development.md#训练)。
 推理读取本地权重，不联网下载；有标签时再计算 EER。
 完整参数、训练输出、推理恢复及离线打包见[开发指南](docs/development.md)。
 
@@ -68,6 +72,7 @@ archive/                        冻结的旧项目，独立于比赛代码
 | --- | --- |
 | [状态](docs/status.md) / [路线图](docs/roadmap.md) | 做了什么、缺什么、下一步交付什么 |
 | [数据](docs/data.md) / [开发指南](docs/development.md) | 准备数据、训练、评分、离线运行 |
+| [发布版运行](docs/release.md) / [资产条款](docs/release-licenses.md) | 下载、无标签评分、恢复与重建 |
 | [实验结果](docs/experiments/README.md) | 配置、结果和算法结论 |
 | [比赛要求](docs/competition/requirements.md) | 已知规则及待适配的官方接口 |
 | [方法参考](docs/research/literature.md) | 音频、视频候选与采用依据 |

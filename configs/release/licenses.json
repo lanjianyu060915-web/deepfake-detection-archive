@@ -1,0 +1,14 @@
+{
+  "AST-BSD-3-Clause.txt": "docs/research/pretrained-resources/AST-BSD-3-Clause.txt",
+  "AST-model-card.md": "docs/research/pretrained-resources/ast-audioset-model-card.md",
+  "Apache-2.0.txt": "docs/research/pretrained-resources/Apache-2.0.txt",
+  "ResNet18-model-card.md": "docs/research/pretrained-resources/resnet18-a1-model-card.md",
+  "EnvSDD-README.md": "docs/research/source/envsdd/README.md",
+  "EnvSDD-resources.json": "docs/research/source/envsdd/resources.json",
+  "FREESOUNDCREDITS.txt": "docs/research/source/envsdd/FREESOUNDCREDITS.txt",
+  "CC-BY-4.0.html": "docs/research/source/envsdd/CC-BY-4.0.html",
+  "CC-BY-NC-3.0.html": "docs/research/source/envsdd/CC-BY-NC-3.0.html",
+  "HD-VILA-LICENSE.txt": "docs/research/source/vif-panda/hd-vila-LICENSE.txt",
+  "Panda-LICENSE.txt": "docs/research/source/vif-panda/panda-LICENSE.txt",
+  "ViF-provenance.json": "docs/research/source/vif-panda/provenance.json"
+}

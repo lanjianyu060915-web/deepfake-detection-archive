@@ -59,9 +59,10 @@ scripts/devctl run python -m deepfake_detection_archive train \
 | 语音 SSL | 冻结本地 HuBERT ＋轻量头：`train-audio-ssl-head.example.json` |
 | 环境音 | LogMel：`train-logmel-doppelganger.example.json`；[多生成器 AST 微调配置](experiments/audio-envsdd-20261011/README.md) |
 | 视频 | 冻结逐帧视觉编码器＋共享头/聚合：`train-video-head.example.json` |
+| 视频主干微调 | ResNet18 layer4+头：[实际训练配置](experiments/video-finetune-20261011/seed42.json) |
 
 训练只消费 train/dev，dev 早停并选择最佳 checkpoint；holdout 不进入模型选择。
-当前视频实现没有主干微调或时序模型，不能把帧均值当作时序学习。
+当前视频支持末端主干微调，尚无时序模型，帧均值不能当作时序学习。
 CUDA 支持 BF16/FP16 AMP、梯度累积；新方法先用一次小 profile 确定 batch 和输入规模。
 `balanced_sampling` 仅用于 train 的类别平衡；同时开启 `balance_sources` 后，
 已存在的来源与类别组合等权抽样，避免小来源被淹没。它不改变 dev 选模指标；
@@ -86,6 +87,10 @@ AST 使用 `architecture="audio_ast_v1"`，`model_config.trainable_layers` 指�
 算法试验需要长时间运行时再补恢复功能；`infer --resume` 不恢复训练。
 
 ## 推理与 EER
+
+无标签媒体可直接 `predict --config MODEL_CONFIG --input DIR --output DIR`，
+音频/视频发布配置和完整启动方式见[发布版运行](release.md)。
+该入口复用下面的推理与导出逻辑，无需先手写 manifest。
 
 准备与 checkpoint 对应的实值配置；以下示例使用 `data/audio-dev.jsonl`，
 推理配置的 `output_dir` 设为 `../outputs/audio-dev`：
