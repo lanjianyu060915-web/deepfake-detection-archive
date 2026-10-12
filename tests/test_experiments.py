@@ -212,6 +212,27 @@ def test_waveform_experiment_caches_only_train_dev_and_records_provenance(
     )
 
 
+def test_bandwidth_augmentation_trains_without_changing_the_cache(
+    experiment: Path,
+) -> None:
+    run_experiment(experiment)
+    root = experiment.parent
+    cached = {path.name: file_sha256(path) for path in (root / "cache").glob("*.pt")}
+    assert len(cached) == 4
+    augmentation = {"bandwidth": {"probability": 0.5, "target_sample_rate": 8000}}
+    _change(experiment, output_dir="augmented", augmentation=augmentation)
+    result = run_experiment(experiment)
+    report = json.loads((root / "augmented" / "experiment.json").read_text())
+    assert result.best_checkpoint.is_file()
+    assert report["status"] == "complete"
+    assert report["provenance"]["augmentation"] == augmentation
+    assert report["holdout_accessed"] is False
+    assert len(load_scores(root / "augmented" / "dev-scores.jsonl")) == 2
+    assert {
+        path.name: file_sha256(path) for path in (root / "cache").glob("*.pt")
+    } == cached
+
+
 def test_spawned_loader_worker_can_read_prepared_tensors(experiment: Path) -> None:
     try:
         with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as probe:
@@ -549,6 +570,23 @@ def test_orphan_sidecar_is_subtracted_from_cache_budget(tmp_path: Path) -> None:
         {"unexpected": 1},
         {"audio": {"sample_rate": 8000}},
         {"training": {"max_epochs": 0}},
+        {"augmentation": {"bandwidth": {"probability": 0.5}}},
+        {
+            "augmentation": {
+                "bandwidth": {"probability": True, "target_sample_rate": 8000}
+            }
+        },
+        {
+            "augmentation": {
+                "bandwidth": {"probability": 1.5, "target_sample_rate": 8000}
+            }
+        },
+        {
+            "augmentation": {
+                "bandwidth": {"probability": 0.5, "target_sample_rate": 16000}
+            }
+        },
+        {"augmentation": {"cutout": {"probability": 0.5}}},
     ],
 )
 def test_invalid_experiment_config(experiment: Path, change: dict[str, Any]) -> None:
