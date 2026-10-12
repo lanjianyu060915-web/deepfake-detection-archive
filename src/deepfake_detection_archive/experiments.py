@@ -450,7 +450,7 @@ def _prepare_cache(  # noqa: C901, PLR0912, PLR0913, PLR0915, PLR0917 -- cache a
         preprocessing["ast"] = audio_preprocessor.preprocessing
     if frame_preprocessing is not None:
         preprocessing["frame_preprocessing"] = {
-            key: frame_preprocessing[key] for key in ("input_size", "mean", "std")
+            key: list(frame_preprocessing[key]) for key in ("input_size", "mean", "std")
         }
     cache.mkdir(parents=True, exist_ok=True)
     cache_bytes = sum(path.stat().st_size for path in cache.iterdir() if path.is_file())

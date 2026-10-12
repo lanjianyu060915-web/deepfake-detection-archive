@@ -22,12 +22,92 @@ from deepfake_detection_archive.data.manifest import (
     write_manifest,
 )
 from deepfake_detection_archive.experiments import (
+    ExperimentConfig,
     _balanced_sampler,
+    _prepare_cache,
     _save_tensor,
     load_experiment_config,
     run_experiment,
 )
 from deepfake_detection_archive.scoring import OfflineScorer
+
+
+def test_video_frame_cache_reuses_tuple_preprocessing(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    config = ExperimentConfig(
+        manifest="manifest.jsonl",
+        data_root=".",
+        sources="sources.jsonl",
+        output_dir="run",
+        modality="video",
+        architecture="video_frame_finetune_v1",
+        model_config={},
+        training={},
+    )
+    record = SampleRecord(
+        sample_id="video",
+        path="video.mp4",
+        modality="video",
+        label=0,
+        source="synthetic",
+        license_id="self-generated",
+        sha256="a" * 64,
+        split="train",
+    )
+    preprocessing = {
+        "input_size": (3, 4, 4),
+        "mean": (0.5, 0.5, 0.5),
+        "std": (0.25, 0.25, 0.25),
+    }
+    monkeypatch.setattr(
+        "deepfake_detection_archive.experiments.extract_video_frames",
+        lambda *args: torch.ones(2, 3, 4, 4),
+    )
+    cache = tmp_path / "cache"
+    first = _prepare_cache(
+        [record],
+        config,
+        tmp_path,
+        cache,
+        None,
+        tmp_path,
+        frame_preprocessing=preprocessing,
+    )
+    cached = {path: path.stat().st_mtime_ns for path in cache.iterdir()}
+
+    def unexpected_decode(*args: Any) -> torch.Tensor:
+        raise AssertionError("existing frame tensors must be reused")
+
+    monkeypatch.setattr(
+        "deepfake_detection_archive.experiments.extract_video_frames",
+        unexpected_decode,
+    )
+    second = _prepare_cache(
+        [record],
+        config,
+        tmp_path,
+        cache,
+        None,
+        tmp_path,
+        frame_preprocessing=preprocessing,
+    )
+    assert second == first
+    assert {path: path.stat().st_mtime_ns for path in cache.iterdir()} == cached
+    changed = {**preprocessing, "mean": (0.4, 0.5, 0.5)}
+    with pytest.raises(ValueError, match="sample preparation failed"):
+        _prepare_cache(
+            [record],
+            config,
+            tmp_path,
+            cache,
+            None,
+            tmp_path,
+            frame_preprocessing=changed,
+        )
+    failures = json.loads((tmp_path / "decode_failures.json").read_text())
+    assert failures[0]["error_type"] == "AssertionError"
+    assert failures[0]["error"] == "existing frame tensors must be reused"
 
 
 def test_balanced_sampling_corrects_class_imbalance_and_repeats_by_seed() -> None:
