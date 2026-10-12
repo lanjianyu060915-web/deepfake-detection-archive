@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "modality": "audio",
+  "model_kind": "audio_waveform",
+  "checkpoint": "../weights/ast-mixed12-class-balanced-seed42.pt",
+  "checkpoint_sha256": "4b1da5d98caebd7d47eb86033c312a4c9699a7e6f8ec13e7ddca72efbcc884f7",
+  "device": "cuda",
+  "batch_size": 4,
+  "segment_samples": 64000,
+  "segments": 1,
+  "aggregation": "mean",
+  "audio": {
+    "sample_rate": 16000,
+    "backend": "soundfile"
+  },
+  "seed": 42,
+  "manifest": "../manifests/batch-audio-dev.jsonl",
+  "data_root": "../shared-data",
+  "output_dir": "../runs/batch-audio-dev"
+}
