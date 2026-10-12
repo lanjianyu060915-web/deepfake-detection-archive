@@ -20,6 +20,8 @@
 | AST预训练、环境音微调与分数 | `/var/tmp/deepfake-audio-ast-20261011/` | `pretrained/ast-audioset/`固定预训练资源；四次训练、双种子dev及冻结候选holdout推理；团队可读 |
 | EnvSDD 城市环境音扩展 | `/var/tmp/deepfake-audio-expand-20261011/` | `envsdd-urban/` 19,215条；`unseen-dev/`、`unseen-holdout/` 为未训练生成器评测；四组AST、冻结候选和分数团队可读 |
 | AIME音乐与混合训练 | `/var/tmp/deepfake-audio-music-20261011/` | `aime/`主清单630条、105个描述组合；`mixed/`保留Urban train并加入音乐；固定原包、模型与分数团队可读 |
+| AIME扩展与混合候选 | `/var/tmp/deepfake-audio-music-20261012/` | 119个固定分片；主清单1,914条、319个描述组合；旧混合seed43及扩展seed42的权重与分数 |
+| AST时频遮挡与广播外部诊断 | `/var/tmp/deepfake-audio-regularize-20261012/` | 扩展模型第二种子、两档遮挡训练及分数；`ai-openbmat/`含246段外部探索dev；原始子集在`upstream/ai-openbmat/` |
 | FakeSound 诊断清单 | `/var/tmp/lanjianyu-issue11-20261011/fakesound-v1/` | data_root 为其 `media/`，含缺失 real 记录 |
 
 共享原媒体和模型只读；`outputs/`、`cache/` 使用各自任务目录。
@@ -41,6 +43,7 @@
 | `tools/prepare_fakesound.py` | 固定 FakeSound ZIP → 诊断清单和失败记账 |
 | `tools/prepare_envsdd.py` | `import`：五成员配对环境音，排除旧研究集关联并重划分；`eval`：同一已划分原录音上的 AudioLCM/TangoFlux 诊断 |
 | `tools/prepare_aime.py` | 固定 AIME Parquet → 描述匹配音乐、prompt隔离与未训练生成路径诊断；不推断原曲/artist关系 |
+| `tools/prepare_ai_openbmat.py` | 配对广播WAV/JSON → 共同纯音乐及音乐/语音区间的4秒外部dev；按交叉淡化修正时轴，保留来源和失败 |
 
 参数见各工具 `--help`，已有输入直接复用，不重复下载或物化。
 通用 `index` 只列媒体；标签、许可和已知组需来源证据，不能从目录猜测。
@@ -112,6 +115,20 @@ MusicGen Small/Medium、AudioLDM 2 Large、Riffusion、Mustango参与训练。
 这些真实音乐已包含在主清单，不能相加当作独立媒体数量。
 按三标签描述组合和已确认重复隔离；未知原曲、artist与album不当成已确认独立实体。
 
+扩展轮复用旧90个分片，新增29个，主清单train1,338/dev288/holdout288，
+预留音乐路径dev154条（48real/106fake）；旧697条已分配记录保持split，0冲突。
+扩展导入传入 `--previous-manifest`，命令与结果见
+[音乐扩展实验](experiments/audio-music-expand-20261012/README.md)。
+联合Urban训练14,788条，新候选已见/未训练音乐dev EER0.4167%/18.75%；
+FSD迁移退化，本轮未评估holdout。数据和逐曲许可限制没有因扩容而解除。
+
+AI-OpenBMAT固定128对原始成品，按共同区间准备混合152段、纯音乐94段，0准备失败。
+均为外部探索dev，不加入训练；标签沿用上游，Suno Extend真人提示前缀是否移除未知，
+不能保证每条AI侧4秒窗口均含生成音乐。重复音乐/广播素材须在未来训练前连接分组。
+底层BAF素材许可衔接未解决，正式交付未批准。
+准备命令及来源见[AI-OpenBMAT登记](research/source/ai-openbmat/README.md)，
+实际模型评分见[广播内容实验](experiments/audio-ast-regularization-20261012/README.md)。
+
 ## 划分与许可
 
 内部 `real=0`、`fake=1`；train 训练，dev 早停/选择，holdout 在候选冻结后验收。
@@ -126,6 +143,7 @@ MusicGen Small/Medium、AudioLDM 2 Large、Riffusion、Mustango参与训练。
 | FakeSound | 媒体权利 unresolved；不批准训练/正式交付 | [诊断结论](experiments/nonspeech-20261011/README.md) |
 | EnvSDD/UrbanSound8K | 已取得原录音署名；CC BY 4.0 集合与 CC BY-NC 3.0 原媒体下的内部非商业研究，正式赛用未确认 | [来源与原始 credits](research/source/envsdd/README.md) |
 | AIME/MTG-Jamendo | 生成音乐CC BY 4.0、标签CC BY-NC-SA 4.0；真实音乐逐曲CC许可未映射，仅内部非商业研究，正式交付未批准 | [来源与用途](research/source/aime/README.md) |
+| AI-OpenBMAT/BAF | 发布CC BY 4.0与BAF底层素材限制衔接未解决；仅外部探索诊断，正式交付未批准 | [来源、标签与许可限制](research/source/ai-openbmat/README.md) |
 
 代码、权重、数据许可分别处理。公开可下载不代表正式比赛使用已获批；
 比赛外部资源要求集中在[比赛要求](competition/requirements.md)。

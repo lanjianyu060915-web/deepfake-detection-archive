@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "manifest": "../../../data/audio-music-20261012/aime/unseen-dev-manifest.jsonl",
+  "data_root": "../../../data/audio-music-20261012/aime",
+  "output_dir": "../../../outputs/audio-music-20261012/expanded12-class-balanced-seed42-music-untrained-dev",
+  "modality": "audio",
+  "model_kind": "audio_waveform",
+  "checkpoint": "../../../outputs/audio-music-20261012/expanded12-class-balanced-seed42/training/best.pt",
+  "checkpoint_sha256": "07b0b24dd94a850198d946902298fddae1d6a87d52f9c9654ce20fff233d32c7",
+  "device": "cuda",
+  "batch_size": 8,
+  "segment_samples": 64000,
+  "segments": 1,
+  "aggregation": "mean",
+  "audio": {
+    "sample_rate": 16000,
+    "backend": "soundfile"
+  },
+  "seed": 42
+}
