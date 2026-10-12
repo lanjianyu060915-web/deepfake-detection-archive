@@ -2,7 +2,7 @@
 
 Matching rule: keep a fake only when its registered paired real has exactly the
 same probed width and height; inside every (generator, width, height) bucket take
-min(fake, real) rows in a seeded order. The view keeps original media paths so the
+one fake per real parent in a seeded order. The view keeps original media paths so the
 original-size condition can be scored without duplicating bytes, and both labels
 are then re-encoded with identical output size and codec settings.
 """
@@ -16,7 +16,6 @@ import subprocess
 import time
 from collections import Counter, defaultdict
 from concurrent.futures import ThreadPoolExecutor
-from dataclasses import replace
 from fractions import Fraction
 from pathlib import Path
 from typing import Any
@@ -92,9 +91,7 @@ def select_pairs(
         if "error" not in metadata.get(row.sample_id, {"error": "missing"})
     }
     reasons: Counter[str] = Counter()
-    buckets: dict[tuple[str, int, int], dict[str, dict[str, SampleRecord]]] = (
-        defaultdict(lambda: {"fake": {}, "real": {}})
-    )
+    buckets: dict[tuple[str, int, int], list[SampleRecord]] = defaultdict(list)
     for row in rows:
         if row.label != 1:
             continue
@@ -103,7 +100,7 @@ def select_pairs(
             reasons["fake_probe_failed"] += 1
             continue
         partner = usable.get(row.parent_id)
-        if partner is None:
+        if partner is None or partner.label != 0:
             reasons["no_paired_real"] += 1
             continue
         key = (row.generator, int(meta["width"]), int(meta["height"]))
@@ -111,30 +108,26 @@ def select_pairs(
         if (partner_meta["width"], partner_meta["height"]) != key[1:]:
             reasons["paired_real_size_differs"] += 1
             continue
-        buckets[key]["fake"][row.sample_id] = row
-        buckets[key]["real"][partner.sample_id] = partner
+        buckets[key].append(row)
     pairs: list[dict[str, Any]] = []
     geometry: dict[str, list[tuple[int, int, int]]] = {}
     for (generator, width, height), group in sorted(buckets.items()):
-        fakes = sorted(
-            group["fake"].values(), key=lambda row: rank(row.sample_id, seed)
-        )
-        reals = sorted(
-            group["real"].values(), key=lambda row: rank(row.sample_id, seed)
-        )
-        count = min(len(fakes), len(reals))
-        if len(fakes) > len(reals):
-            reasons["paired_real_supply_exhausted"] += len(fakes) - len(reals)
+        fakes = sorted(group, key=lambda row: rank(row.sample_id, seed))
+        by_parent: dict[str, SampleRecord] = {}
+        for fake in fakes:
+            by_parent.setdefault(fake.parent_id, fake)
+        count = len(by_parent)
+        reasons["paired_real_supply_exhausted"] += len(fakes) - count
         geometry.setdefault(generator, []).append((width, height, count))
         pairs.extend(
             {
                 "fake_sample_id": fake.sample_id,
-                "real_sample_id": real.sample_id,
+                "real_sample_id": fake.parent_id,
                 "generator": generator,
                 "width": width,
                 "height": height,
             }
-            for fake, real in zip(fakes[:count], reals[:count], strict=True)
+            for fake in by_parent.values()
         )
     return pairs, geometry, reasons
 
@@ -271,8 +264,13 @@ def main() -> None:
     parser.add_argument("--timeout-seconds", type=float, default=30.0)
     args = parser.parse_args()
     started = time.monotonic()
-    args.output_dir.mkdir(parents=True, exist_ok=True)
     rows = load_manifest(args.manifest)
+    if any(
+        row.split != "dev" or row.modality != "video" or row.label not in (0, 1)
+        for row in rows
+    ):
+        raise ValueError("size control requires labeled video dev rows only")
+    args.output_dir.mkdir(parents=True, exist_ok=True)
     cache = args.output_dir / "metadata.jsonl"
     metadata: dict[str, dict[str, Any]] = {
         row["sample_id"]: row
@@ -300,7 +298,7 @@ def main() -> None:
                 print(f"Probed {index}/{len(missing)}", flush=True)
     pairs, geometry, reasons = select_pairs(rows, metadata, args.seed)
     selected = {
-        row.sample_id: replace(row, split="dev")
+        row.sample_id: row
         for row in rows
         if row.sample_id in {pair["fake_sample_id"] for pair in pairs}
         or row.sample_id in {pair["real_sample_id"] for pair in pairs}
@@ -322,7 +320,7 @@ def main() -> None:
         "matching_rule": (
             "fake kept only when its registered paired real has identical probed "
             "width and height; per (generator, width, height) bucket take "
-            "min(fake, real) by seeded rank(sample_id)"
+            "one fake per registered real parent by seeded rank(sample_id)"
         ),
         "matched_manifest": str((args.output_dir / "matched.jsonl").resolve()),
         "matched_manifest_sha256": matched_sha,

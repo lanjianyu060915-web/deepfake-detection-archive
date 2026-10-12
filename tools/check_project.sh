@@ -26,6 +26,7 @@ model_tools=(
   tools/prepare_ai_openbmat.py
   tools/prepare_video_control.py
   tools/prepare_video_size_control.py
+  tools/report_video_pairs.py
   tools/prepare_video_augmentation.py
   tools/prepare_robustness.py
   tools/compare_scores.py
