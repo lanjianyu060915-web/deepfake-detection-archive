@@ -1,0 +1,902 @@
+{
+  "schema_version": 1,
+  "issue": 32,
+  "task_root": "/var/tmp/deepfake-audio-regularize-20261012",
+  "holdout_evaluated": false,
+  "training_source_commits": {
+    "baseline": "d4985a1",
+    "masking": "01b627deafe2de37e310d93cd3a05d87e6f57db6"
+  },
+  "inference_source_commit": "d4985a1",
+  "importer_source_commit": "b80e9e9865cb2bd48962ea7303838400dc16e2a5",
+  "data": {
+    "mixed_manifest_sha256": "25a410b84cd4da689e25a74fce974e5a542151b41dd6e48590787acf7b7695b1",
+    "train_count": 14788,
+    "music_selection_dev_count": 288,
+    "aime_music_expected_sampling_fraction": 0.08522405911792871,
+    "external": {
+      "pair_count": 128,
+      "sample_count": 246,
+      "bucket_counts": {
+        "mixed": 152,
+        "music": 94
+      },
+      "status": {
+        "available": 246
+      },
+      "exclusions": {
+        "mixed:no_eligible_common_segment": 52,
+        "music:no_eligible_common_segment": 81
+      },
+      "processing": {
+        "channels": "mean",
+        "fade_margin_seconds": 0.1,
+        "peak": 0.95,
+        "resampling": "scipy.signal.resample_poly",
+        "sample_rate": 16000,
+        "seconds": 4.0,
+        "subtype": "PCM_16"
+      },
+      "labeling_limit": "Labels from upstream; Suno Extend human prompt prefix removal unverified; cannot certify generated content in every selected 4-second AI clip. External exploration only, not training or a formal gold standard.",
+      "grouping_limit": "Pair groups do not prove artist or material independence. Before training, connect pairs through reused music, speech and reference materials.",
+      "source_relation": "Human BAF/Epidemic Sound, AIME MTG-Jamendo; track/artist overlap unverified.",
+      "license_status": "unresolved",
+      "competition_approved": false,
+      "archive_verification": "range-extracted subset; whole archive not verified",
+      "manifests_sha256": {
+        "mixed": "e76b5daddfba8404038e16b6381d7d01ecac56317ef2c844bd27604c5fa149d1",
+        "music": "89cfde3e9ae35000de4b34d2bced3c557bea330948e0f102aa9fc56c4cf3a55c"
+      },
+      "compressed_subset_bytes": 565628157,
+      "raw_subset_bytes": 679302820,
+      "common_bucket_pair_count": 28
+    }
+  },
+  "runs": {
+    "previous-expanded-seed42": {
+      "status": "complete",
+      "best_dev_eer": 0.004166666666666667,
+      "best_epoch": 5,
+      "epochs_completed": 10,
+      "seconds": 764.0039444807917,
+      "peak_cuda_allocated_bytes": 9072094208,
+      "peak_cuda_reserved_bytes": 9890168832,
+      "config": {
+        "accumulation_steps": 2,
+        "amp": true,
+        "amp_dtype": "bfloat16",
+        "backbone_lr_scale": 1.0,
+        "deterministic": true,
+        "device": "cuda",
+        "learning_rate": 1e-05,
+        "max_epochs": 20,
+        "max_grad_norm": 1.0,
+        "max_seconds": null,
+        "min_delta": 0.0,
+        "patience": 5,
+        "seed": 42,
+        "weight_decay": 0.0001
+      },
+      "checkpoint_sha256": "07b0b24dd94a850198d946902298fddae1d6a87d52f9c9654ce20fff233d32c7",
+      "config_sha256": "e1f0bf3b1385afcc36a12c6f8a1e4ca80beb02a351d675ca26b9c33bd3b3e154",
+      "code": {
+        "code_sha256": "df3be3d66eb468dd0d98242bc6231dd314a96ade67d773c5e032ecce4f10db0a",
+        "commit": "unavailable",
+        "dirty": null
+      }
+    },
+    "expanded12-baseline-seed43": {
+      "status": "complete",
+      "best_dev_eer": 0.004166666666666667,
+      "best_epoch": 8,
+      "epochs_completed": 13,
+      "seconds": 1744.3294072700664,
+      "peak_cuda_allocated_bytes": 9072094208,
+      "peak_cuda_reserved_bytes": 9890168832,
+      "config": {
+        "accumulation_steps": 2,
+        "amp": true,
+        "amp_dtype": "bfloat16",
+        "backbone_lr_scale": 1.0,
+        "deterministic": true,
+        "device": "cuda",
+        "learning_rate": 1e-05,
+        "max_epochs": 20,
+        "max_grad_norm": 1.0,
+        "max_seconds": null,
+        "min_delta": 0.0,
+        "patience": 5,
+        "seed": 43,
+        "weight_decay": 0.0001
+      },
+      "checkpoint_sha256": "0f72c168a5f030812d0da14fb89c0235a62a8f8be9228bdd6a5eb35af8a03992",
+      "config_sha256": "156e42652e7cf154c1983a1751cdf63bc4842554aee160f5ede74ef68ab1fe2f",
+      "code": {
+        "code_sha256": "df3be3d66eb468dd0d98242bc6231dd314a96ade67d773c5e032ecce4f10db0a",
+        "commit": "unavailable",
+        "dirty": null
+      }
+    },
+    "expanded12-mask16-64-seed42": {
+      "status": "complete",
+      "best_dev_eer": 0.004166666666666667,
+      "best_epoch": 2,
+      "epochs_completed": 7,
+      "seconds": 1141.1438006954268,
+      "peak_cuda_allocated_bytes": 9073306624,
+      "peak_cuda_reserved_bytes": 9906946048,
+      "config": {
+        "accumulation_steps": 2,
+        "amp": true,
+        "amp_dtype": "bfloat16",
+        "backbone_lr_scale": 1.0,
+        "deterministic": true,
+        "device": "cuda",
+        "frequency_mask_width": 16,
+        "learning_rate": 1e-05,
+        "max_epochs": 20,
+        "max_grad_norm": 1.0,
+        "max_seconds": null,
+        "min_delta": 0.0,
+        "patience": 5,
+        "seed": 42,
+        "time_mask_width": 64,
+        "weight_decay": 0.0001
+      },
+      "checkpoint_sha256": "2eae9217d79e3790fd9b55eac2bb0d5c81bee500ff6aacf525f6f59dfe4cdcfe",
+      "config_sha256": "0a055d99198760564df0a0cd12682ce2fe6f0cdd065e48266a563e514d665fa1",
+      "code": {
+        "code_sha256": "fa849dd9c6d9e6079a1e2ace6a9ea447673922c7e2512e67c142e18c9559a9e7",
+        "commit": "unavailable",
+        "dirty": null
+      }
+    },
+    "expanded12-mask32-96-seed42": {
+      "status": "complete",
+      "best_dev_eer": 0.0,
+      "best_epoch": 3,
+      "epochs_completed": 8,
+      "seconds": 802.5241584088653,
+      "peak_cuda_allocated_bytes": 9073306624,
+      "peak_cuda_reserved_bytes": 9906946048,
+      "config": {
+        "accumulation_steps": 2,
+        "amp": true,
+        "amp_dtype": "bfloat16",
+        "backbone_lr_scale": 1.0,
+        "deterministic": true,
+        "device": "cuda",
+        "frequency_mask_width": 32,
+        "learning_rate": 1e-05,
+        "max_epochs": 20,
+        "max_grad_norm": 1.0,
+        "max_seconds": null,
+        "min_delta": 0.0,
+        "patience": 5,
+        "seed": 42,
+        "time_mask_width": 96,
+        "weight_decay": 0.0001
+      },
+      "checkpoint_sha256": "55bb8b7964c2df82cadcf7103bf1419429d4bd8702fa3009c12b572c05ea2702",
+      "config_sha256": "4da180de89e535bc834f34743bb6d18c5ff9dcd2f9a95bd930bb2a6ae1e23b72",
+      "code": {
+        "code_sha256": "fa849dd9c6d9e6079a1e2ace6a9ea447673922c7e2512e67c142e18c9559a9e7",
+        "commit": "unavailable",
+        "dirty": null
+      }
+    }
+  },
+  "evaluations": {
+    "previous-expanded-seed42": {
+      "music-dev": {
+        "fullset_eer": 0.004166666666666667,
+        "fullset_reason": null,
+        "sample_count": 288,
+        "real_count": 48,
+        "fake_count": 240,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "music-untrained-dev": {
+        "fullset_eer": 0.1875,
+        "fullset_reason": null,
+        "sample_count": 154,
+        "real_count": 48,
+        "fake_count": 106,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "urban-dev": {
+        "fullset_eer": 0.006932409012131715,
+        "fullset_reason": null,
+        "sample_count": 2885,
+        "real_count": 577,
+        "fake_count": 2308,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "env-unseen-dev": {
+        "fullset_eer": 0.033795493934142114,
+        "fullset_reason": null,
+        "sample_count": 1731,
+        "real_count": 577,
+        "fake_count": 1154,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "fsd-external-dev": {
+        "fullset_eer": 0.11428571428571428,
+        "fullset_reason": null,
+        "sample_count": 70,
+        "real_count": 35,
+        "fake_count": 35,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "ai-openbmat-mixed-dev": {
+        "fullset_eer": 0.5789473684210527,
+        "fullset_reason": null,
+        "sample_count": 152,
+        "real_count": 76,
+        "fake_count": 76,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "ai-openbmat-music-dev": {
+        "fullset_eer": 0.3829787234042553,
+        "fullset_reason": null,
+        "sample_count": 94,
+        "real_count": 47,
+        "fake_count": 47,
+        "failure_count": 0,
+        "coverage": 1.0
+      }
+    },
+    "expanded12-baseline-seed43": {
+      "music-dev": {
+        "fullset_eer": 0.004166666666666667,
+        "fullset_reason": null,
+        "sample_count": 288,
+        "real_count": 48,
+        "fake_count": 240,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "music-untrained-dev": {
+        "fullset_eer": 0.22916666666666666,
+        "fullset_reason": null,
+        "sample_count": 154,
+        "real_count": 48,
+        "fake_count": 106,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "urban-dev": {
+        "fullset_eer": 0.016897746967071057,
+        "fullset_reason": null,
+        "sample_count": 2885,
+        "real_count": 577,
+        "fake_count": 2308,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "env-unseen-dev": {
+        "fullset_eer": 0.04419410745233969,
+        "fullset_reason": null,
+        "sample_count": 1731,
+        "real_count": 577,
+        "fake_count": 1154,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "fsd-external-dev": {
+        "fullset_eer": 0.05714285714285714,
+        "fullset_reason": null,
+        "sample_count": 70,
+        "real_count": 35,
+        "fake_count": 35,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "ai-openbmat-mixed-dev": {
+        "fullset_eer": 0.5394736842105263,
+        "fullset_reason": null,
+        "sample_count": 152,
+        "real_count": 76,
+        "fake_count": 76,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "ai-openbmat-music-dev": {
+        "fullset_eer": 0.3404255319148936,
+        "fullset_reason": null,
+        "sample_count": 94,
+        "real_count": 47,
+        "fake_count": 47,
+        "failure_count": 0,
+        "coverage": 1.0
+      }
+    },
+    "expanded12-mask16-64-seed42": {
+      "music-dev": {
+        "fullset_eer": 0.004166666666666667,
+        "fullset_reason": null,
+        "sample_count": 288,
+        "real_count": 48,
+        "fake_count": 240,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "music-untrained-dev": {
+        "fullset_eer": 0.25,
+        "fullset_reason": null,
+        "sample_count": 154,
+        "real_count": 48,
+        "fake_count": 106,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "urban-dev": {
+        "fullset_eer": 0.025996533795493933,
+        "fullset_reason": null,
+        "sample_count": 2885,
+        "real_count": 577,
+        "fake_count": 2308,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "env-unseen-dev": {
+        "fullset_eer": 0.06239168110918544,
+        "fullset_reason": null,
+        "sample_count": 1731,
+        "real_count": 577,
+        "fake_count": 1154,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "fsd-external-dev": {
+        "fullset_eer": 0.08571428571428572,
+        "fullset_reason": null,
+        "sample_count": 70,
+        "real_count": 35,
+        "fake_count": 35,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "ai-openbmat-mixed-dev": {
+        "fullset_eer": 0.5263157894736842,
+        "fullset_reason": null,
+        "sample_count": 152,
+        "real_count": 76,
+        "fake_count": 76,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "ai-openbmat-music-dev": {
+        "fullset_eer": 0.2978723404255319,
+        "fullset_reason": null,
+        "sample_count": 94,
+        "real_count": 47,
+        "fake_count": 47,
+        "failure_count": 0,
+        "coverage": 1.0
+      }
+    },
+    "expanded12-mask32-96-seed42": {
+      "music-dev": {
+        "fullset_eer": 0.0,
+        "fullset_reason": null,
+        "sample_count": 288,
+        "real_count": 48,
+        "fake_count": 240,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "music-untrained-dev": {
+        "fullset_eer": 0.1875,
+        "fullset_reason": null,
+        "sample_count": 154,
+        "real_count": 48,
+        "fake_count": 106,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "urban-dev": {
+        "fullset_eer": 0.02902946273830156,
+        "fullset_reason": null,
+        "sample_count": 2885,
+        "real_count": 577,
+        "fake_count": 2308,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "env-unseen-dev": {
+        "fullset_eer": 0.09012131715771231,
+        "fullset_reason": null,
+        "sample_count": 1731,
+        "real_count": 577,
+        "fake_count": 1154,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "fsd-external-dev": {
+        "fullset_eer": 0.08571428571428572,
+        "fullset_reason": null,
+        "sample_count": 70,
+        "real_count": 35,
+        "fake_count": 35,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "ai-openbmat-mixed-dev": {
+        "fullset_eer": 0.5789473684210527,
+        "fullset_reason": null,
+        "sample_count": 152,
+        "real_count": 76,
+        "fake_count": 76,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "ai-openbmat-music-dev": {
+        "fullset_eer": 0.3191489361702128,
+        "fullset_reason": null,
+        "sample_count": 94,
+        "real_count": 47,
+        "fake_count": 47,
+        "failure_count": 0,
+        "coverage": 1.0
+      }
+    }
+  },
+  "untrained_generators": {
+    "previous-expanded-seed42": {
+      "AudioLDM 2 Music": {
+        "fullset_eer": 0.0,
+        "fullset_reason": null,
+        "real_count": 48,
+        "fake_count": 1,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "MusicGen Large": {
+        "fullset_eer": 0.0,
+        "fullset_reason": null,
+        "real_count": 48,
+        "fake_count": 1,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "Stable Audio v1": {
+        "fullset_eer": 0.16666666666666666,
+        "fullset_reason": null,
+        "real_count": 48,
+        "fake_count": 23,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "Stable Audio v2": {
+        "fullset_eer": 0.16666666666666666,
+        "fullset_reason": null,
+        "real_count": 48,
+        "fake_count": 20,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "Suno v3": {
+        "fullset_eer": 0.125,
+        "fullset_reason": null,
+        "real_count": 48,
+        "fake_count": 24,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "Suno v3.5": {
+        "fullset_eer": 0.2916666666666667,
+        "fullset_reason": null,
+        "real_count": 48,
+        "fake_count": 14,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "Udio": {
+        "fullset_eer": 0.21739130434782608,
+        "fullset_reason": null,
+        "real_count": 48,
+        "fake_count": 23,
+        "failure_count": 0,
+        "coverage": 1.0
+      }
+    },
+    "expanded12-baseline-seed43": {
+      "AudioLDM 2 Music": {
+        "fullset_eer": 0.0,
+        "fullset_reason": null,
+        "real_count": 48,
+        "fake_count": 1,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "MusicGen Large": {
+        "fullset_eer": 0.0,
+        "fullset_reason": null,
+        "real_count": 48,
+        "fake_count": 1,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "Stable Audio v1": {
+        "fullset_eer": 0.13043478260869565,
+        "fullset_reason": null,
+        "real_count": 48,
+        "fake_count": 23,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "Stable Audio v2": {
+        "fullset_eer": 0.15,
+        "fullset_reason": null,
+        "real_count": 48,
+        "fake_count": 20,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "Suno v3": {
+        "fullset_eer": 0.16666666666666666,
+        "fullset_reason": null,
+        "real_count": 48,
+        "fake_count": 24,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "Suno v3.5": {
+        "fullset_eer": 0.2857142857142857,
+        "fullset_reason": null,
+        "real_count": 48,
+        "fake_count": 14,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "Udio": {
+        "fullset_eer": 0.3125,
+        "fullset_reason": null,
+        "real_count": 48,
+        "fake_count": 23,
+        "failure_count": 0,
+        "coverage": 1.0
+      }
+    },
+    "expanded12-mask16-64-seed42": {
+      "AudioLDM 2 Music": {
+        "fullset_eer": 0.0,
+        "fullset_reason": null,
+        "real_count": 48,
+        "fake_count": 1,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "MusicGen Large": {
+        "fullset_eer": 0.0,
+        "fullset_reason": null,
+        "real_count": 48,
+        "fake_count": 1,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "Stable Audio v1": {
+        "fullset_eer": 0.20833333333333334,
+        "fullset_reason": null,
+        "real_count": 48,
+        "fake_count": 23,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "Stable Audio v2": {
+        "fullset_eer": 0.25,
+        "fullset_reason": null,
+        "real_count": 48,
+        "fake_count": 20,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "Suno v3": {
+        "fullset_eer": 0.16666666666666666,
+        "fullset_reason": null,
+        "real_count": 48,
+        "fake_count": 24,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "Suno v3.5": {
+        "fullset_eer": 0.2708333333333333,
+        "fullset_reason": null,
+        "real_count": 48,
+        "fake_count": 14,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "Udio": {
+        "fullset_eer": 0.3333333333333333,
+        "fullset_reason": null,
+        "real_count": 48,
+        "fake_count": 23,
+        "failure_count": 0,
+        "coverage": 1.0
+      }
+    },
+    "expanded12-mask32-96-seed42": {
+      "AudioLDM 2 Music": {
+        "fullset_eer": 0.0,
+        "fullset_reason": null,
+        "real_count": 48,
+        "fake_count": 1,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "MusicGen Large": {
+        "fullset_eer": 0.0,
+        "fullset_reason": null,
+        "real_count": 48,
+        "fake_count": 1,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "Stable Audio v1": {
+        "fullset_eer": 0.16666666666666666,
+        "fullset_reason": null,
+        "real_count": 48,
+        "fake_count": 23,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "Stable Audio v2": {
+        "fullset_eer": 0.20833333333333334,
+        "fullset_reason": null,
+        "real_count": 48,
+        "fake_count": 20,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "Suno v3": {
+        "fullset_eer": 0.16666666666666666,
+        "fullset_reason": null,
+        "real_count": 48,
+        "fake_count": 24,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "Suno v3.5": {
+        "fullset_eer": 0.10416666666666667,
+        "fullset_reason": null,
+        "real_count": 48,
+        "fake_count": 14,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "Udio": {
+        "fullset_eer": 0.30434782608695654,
+        "fullset_reason": null,
+        "real_count": 48,
+        "fake_count": 23,
+        "failure_count": 0,
+        "coverage": 1.0
+      }
+    }
+  },
+  "external_common_pairs": {
+    "previous-expanded-seed42": {
+      "mixed": {
+        "fullset_eer": 0.5,
+        "fullset_reason": null,
+        "sample_count": 56,
+        "real_count": 28,
+        "fake_count": 28,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "music": {
+        "fullset_eer": 0.39285714285714285,
+        "fullset_reason": null,
+        "sample_count": 56,
+        "real_count": 28,
+        "fake_count": 28,
+        "failure_count": 0,
+        "coverage": 1.0
+      }
+    },
+    "expanded12-baseline-seed43": {
+      "mixed": {
+        "fullset_eer": 0.5357142857142857,
+        "fullset_reason": null,
+        "sample_count": 56,
+        "real_count": 28,
+        "fake_count": 28,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "music": {
+        "fullset_eer": 0.32142857142857145,
+        "fullset_reason": null,
+        "sample_count": 56,
+        "real_count": 28,
+        "fake_count": 28,
+        "failure_count": 0,
+        "coverage": 1.0
+      }
+    },
+    "expanded12-mask16-64-seed42": {
+      "mixed": {
+        "fullset_eer": 0.5,
+        "fullset_reason": null,
+        "sample_count": 56,
+        "real_count": 28,
+        "fake_count": 28,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "music": {
+        "fullset_eer": 0.2857142857142857,
+        "fullset_reason": null,
+        "sample_count": 56,
+        "real_count": 28,
+        "fake_count": 28,
+        "failure_count": 0,
+        "coverage": 1.0
+      }
+    },
+    "expanded12-mask32-96-seed42": {
+      "mixed": {
+        "fullset_eer": 0.4642857142857143,
+        "fullset_reason": null,
+        "sample_count": 56,
+        "real_count": 28,
+        "fake_count": 28,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "music": {
+        "fullset_eer": 0.2857142857142857,
+        "fullset_reason": null,
+        "sample_count": 56,
+        "real_count": 28,
+        "fake_count": 28,
+        "failure_count": 0,
+        "coverage": 1.0
+      }
+    }
+  },
+  "fusion": {
+    "method": "arithmetic mean of continuous raw logits, equal weights fixed without tuning",
+    "models": [
+      "previous-expanded-seed42",
+      "expanded12-mask32-96-seed42"
+    ],
+    "weights": [
+      0.5,
+      0.5
+    ],
+    "holdout_evaluated": false,
+    "requires_two_model_inference": true,
+    "results": {
+      "music-dev": {
+        "fullset_eer": 0.0,
+        "fullset_reason": null,
+        "sample_count": 288,
+        "real_count": 48,
+        "fake_count": 240,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "music-untrained-dev": {
+        "fullset_eer": 0.14583333333333334,
+        "fullset_reason": null,
+        "sample_count": 154,
+        "real_count": 48,
+        "fake_count": 106,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "untrained_generators": {
+        "AudioLDM 2 Music": {
+          "fullset_eer": 0.0,
+          "real_count": 48,
+          "fake_count": 1,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "MusicGen Large": {
+          "fullset_eer": 0.0,
+          "real_count": 48,
+          "fake_count": 1,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "Stable Audio v1": {
+          "fullset_eer": 0.125,
+          "real_count": 48,
+          "fake_count": 23,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "Stable Audio v2": {
+          "fullset_eer": 0.15,
+          "real_count": 48,
+          "fake_count": 20,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "Suno v3": {
+          "fullset_eer": 0.125,
+          "real_count": 48,
+          "fake_count": 24,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "Suno v3.5": {
+          "fullset_eer": 0.14285714285714285,
+          "real_count": 48,
+          "fake_count": 14,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "Udio": {
+          "fullset_eer": 0.21739130434782608,
+          "real_count": 48,
+          "fake_count": 23,
+          "failure_count": 0,
+          "coverage": 1.0
+        }
+      },
+      "urban-dev": {
+        "fullset_eer": 0.00779896013864818,
+        "fullset_reason": null,
+        "sample_count": 2885,
+        "real_count": 577,
+        "fake_count": 2308,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "env-unseen-dev": {
+        "fullset_eer": 0.0415944540727903,
+        "fullset_reason": null,
+        "sample_count": 1731,
+        "real_count": 577,
+        "fake_count": 1154,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "fsd-external-dev": {
+        "fullset_eer": 0.05714285714285714,
+        "fullset_reason": null,
+        "sample_count": 70,
+        "real_count": 35,
+        "fake_count": 35,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "ai-openbmat-mixed-dev": {
+        "fullset_eer": 0.5789473684210527,
+        "fullset_reason": null,
+        "sample_count": 152,
+        "real_count": 76,
+        "fake_count": 76,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "ai-openbmat-music-dev": {
+        "fullset_eer": 0.3191489361702128,
+        "fullset_reason": null,
+        "sample_count": 94,
+        "real_count": 47,
+        "fake_count": 47,
+        "failure_count": 0,
+        "coverage": 1.0
+      }
+    },
+    "model_checkpoint_sha256": {
+      "previous-expanded-seed42": "07b0b24dd94a850198d946902298fddae1d6a87d52f9c9654ce20fff233d32c7",
+      "expanded12-mask32-96-seed42": "55bb8b7964c2df82cadcf7103bf1419429d4bd8702fa3009c12b572c05ea2702"
+    },
+    "selection": "post-hoc dev exploration motivated by complementary Suno v3.5 results; equal weights not tuned",
+    "offline_inference_implemented": false
+  }
+}

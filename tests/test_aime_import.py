@@ -3,6 +3,7 @@
 import io
 import json
 import runpy
+from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
@@ -186,3 +187,111 @@ def test_reserved_generator_duplicate_links_prompts(inputs: dict[str, Path]) -> 
         == 1
     )
     assert validate_splits(inventory) == []
+
+
+@pytest.mark.parametrize("previous_name", ["inventory", "manifest"])
+def test_expansion_preserves_splits_and_assigns_new_prompts(
+    inputs: dict[str, Path], previous_name: str
+) -> None:
+    MODULE["prepare"](**inputs)
+    previous = inputs["output"] / f"{previous_name}.jsonl"
+    old = load_manifest(previous)
+    parquet = inputs["parquet_dir"] / "data/input.parquet"
+    rows = pq.read_table(parquet).to_pylist()
+    for ordinal, model in enumerate(("MTG-Jamendo", "MusicGen Small")):
+        rows.append(
+            {
+                "id": f"new-{ordinal}",
+                "model": model,
+                "description": "new, music, prompt",
+                "audio": {"bytes": _audio(600 + ordinal), "path": "new.wav"},
+            }
+        )
+    held = next(r for r in old if r.split == "holdout" and r.label == 0)
+    rows.append(
+        {
+            "id": "added-to-held-prompt",
+            "model": "MusicGen Small",
+            "description": next(
+                r["description"] for r in rows if f"aime:{r['id']}" == held.sample_id
+            ),
+            "audio": {"bytes": _audio(720), "path": "held.wav"},
+        }
+    )
+    pq.write_table(pa.Table.from_pylist(rows), parquet)
+    resources = json.loads(inputs["resources"].read_text())
+    resources["files"][0].update(
+        size=parquet.stat().st_size, sha256=file_sha256(parquet)
+    )
+    inputs["resources"].write_text(json.dumps(resources))
+    inputs["output"] = inputs["output"].with_name("expanded")
+    MODULE["prepare"](**inputs, previous_manifest=previous, seed=99)
+    inventory = load_manifest(inputs["output"] / "inventory.jsonl")
+    current = {r.sample_id: r for r in inventory}
+    assert all(current[r.sample_id].split == r.split for r in old)
+    assert current["aime:added-to-held-prompt"].split == "holdout"
+    new = [r for r in inventory if r.sample_id.startswith("aime:new-")]
+    assert len(new) == 2
+    assert len({r.split for r in new}) == 1
+    assert new[0].split in {"train", "dev", "holdout"}
+    assert validate_splits(inventory) == []
+
+
+def test_new_duplicate_conflict_excludes_whole_component(
+    inputs: dict[str, Path],
+) -> None:
+    MODULE["prepare"](**inputs)
+    previous = inputs["output"] / "inventory.jsonl"
+    old = load_manifest(previous)
+    train = next(r for r in old if r.split == "train" and r.label == 0)
+    dev = next(r for r in old if r.split == "dev" and r.label == 0)
+    # The new row bridges old groups by prompt and exact processed waveform.
+    bridge = replace(
+        train, sample_id="aime:bridge", original_id="aime-row:bridge", sha256=dev.sha256
+    )
+    candidates = [replace(r, split="unassigned") for r in old] + [bridge]
+    selected, conflicts = MODULE["_preserve_splits"](candidates, old)
+    conflicted_groups = {train.group_id, dev.group_id}
+    excluded = [r for r in selected if r.group_id in conflicted_groups]
+    assert excluded
+    assert all(r.status == "excluded" for r in excluded)
+    assert all(r.split == "unassigned" for r in excluded)
+    assert all(r.failure_reason == "previous_split_conflict" for r in excluded)
+    assert conflicts == 1
+    assert validate_splits(selected, require_class_coverage=False) == []
+    repeated, repeated_conflicts = MODULE["_preserve_splits"](candidates, selected)
+    assert repeated_conflicts == 1
+    assert all(
+        r.failure_reason == "previous_split_conflict"
+        for r in repeated
+        if r.group_id in conflicted_groups
+    )
+
+    parquet = inputs["parquet_dir"] / "data/input.parquet"
+    rows = pq.read_table(parquet).to_pylist()
+    by_id = {f"aime:{row['id']}": row for row in rows}
+    rows.append(
+        {
+            "id": "bridge",
+            "model": "MusicGen Small",
+            "description": by_id[train.sample_id]["description"],
+            "audio": by_id[dev.sample_id]["audio"],
+        }
+    )
+    pq.write_table(pa.Table.from_pylist(rows), parquet)
+    resources = json.loads(inputs["resources"].read_text())
+    resources["files"][0].update(
+        size=parquet.stat().st_size, sha256=file_sha256(parquet)
+    )
+    inputs["resources"].write_text(json.dumps(resources))
+    inputs["output"] = inputs["output"].with_name("expanded")
+    summary = MODULE["prepare"](**inputs, previous_manifest=previous)
+    inventory = load_manifest(inputs["output"] / "inventory.jsonl")
+    assert summary["previous_split_conflicts"] == 1
+    assert summary["exclusions"]["previous_split_conflict"] == len(excluded)
+    assert validate_splits(inventory) == []
+    for name in ("manifest", "unseen"):
+        assert not any(
+            r.group_id in conflicted_groups
+            for r in load_manifest(inputs["output"] / f"{name}.jsonl")
+        )

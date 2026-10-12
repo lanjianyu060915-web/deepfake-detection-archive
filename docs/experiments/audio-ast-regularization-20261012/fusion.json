@@ -1,0 +1,17 @@
+{
+  "method": "arithmetic mean of continuous raw logits, equal weights fixed without tuning",
+  "models": [
+    "previous-expanded-seed42",
+    "expanded12-mask32-96-seed42"
+  ],
+  "weights": [
+    0.5,
+    0.5
+  ],
+  "model_checkpoint_sha256": {
+    "previous-expanded-seed42": "07b0b24dd94a850198d946902298fddae1d6a87d52f9c9654ce20fff233d32c7",
+    "expanded12-mask32-96-seed42": "55bb8b7964c2df82cadcf7103bf1419429d4bd8702fa3009c12b572c05ea2702"
+  },
+  "selection": "post-hoc dev exploration motivated by complementary Suno v3.5 results; equal weights not tuned",
+  "offline_inference_implemented": false
+}

@@ -7,7 +7,7 @@ import hashlib
 import io
 import json
 import math
-from collections import Counter
+from collections import Counter, defaultdict
 from dataclasses import asdict, replace
 from datetime import UTC, datetime
 from pathlib import Path
@@ -22,6 +22,7 @@ from deepfake_detection_archive.data.manifest import (
     SampleRecord,
     SourceRecord,
     file_sha256,
+    load_manifest,
     write_manifest,
 )
 from deepfake_detection_archive.data.split import assign_splits, connected_groups
@@ -214,9 +215,56 @@ def _counts(records: list[SampleRecord]) -> dict[str, Any]:
     }
 
 
+def _preserve_splits(
+    records: list[SampleRecord], previous: list[SampleRecord]
+) -> tuple[list[SampleRecord], int]:
+    # Separate IDs keep historical hashes/groups even when a current row overlaps.
+    # Parent edges connect each historical anchor to its original sample ID.
+    anchors = [
+        replace(r, sample_id=f"previous:{r.sample_id}", parent_id=r.sample_id)
+        for r in previous
+    ]
+    groups = connected_groups(records + anchors)
+    fixed: dict[str, set[str]] = defaultdict(set)
+    for anchor in anchors:
+        if anchor.split != "unassigned":
+            fixed[groups[anchor.sample_id]].add(anchor.split)
+    conflicts = {group for group, splits in fixed.items() if len(splits) > 1}
+    conflicts.update(
+        groups[r.sample_id]
+        for r in anchors
+        if r.failure_reason == "previous_split_conflict"
+    )
+    result = []
+    for record in records:
+        group = groups[record.sample_id]
+        if group in conflicts:
+            result.append(
+                replace(
+                    record,
+                    split="unassigned",
+                    status="excluded",
+                    failure_reason="previous_split_conflict",
+                )
+            )
+        elif splits := fixed.get(group):
+            result.append(replace(record, split=next(iter(splits))))
+        else:
+            result.append(record)
+    return result, len(conflicts & {groups[r.sample_id] for r in records})
+
+
 def prepare(
-    parquet_dir: Path, resources: Path, output: Path, *, seed: int = 42
+    parquet_dir: Path,
+    resources: Path,
+    output: Path,
+    *,
+    seed: int = 42,
+    previous_manifest: Path | None = None,
 ) -> dict[str, Any]:
+    previous = load_manifest(previous_manifest) if previous_manifest else []
+    if any(r.source != SOURCE or r.split == "test" for r in previous):
+        raise ValueError("previous manifest must contain AIME research splits")
     specification, paths = _inputs(parquet_dir, resources)
     descriptions = _real_descriptions(paths)
     output.mkdir(parents=True, exist_ok=False)
@@ -229,6 +277,9 @@ def prepare(
                 records.append(record)
                 provenance["parquet"] = path.relative_to(parquet_dir).as_posix()
                 stream.write(json.dumps(provenance, ensure_ascii=False) + "\n")
+    conflicts = 0
+    if previous:
+        records, conflicts = _preserve_splits(records, previous)
     # Failed media keeps its prompt relation; the splitter counts only available
     # records. Include reserved generators here so duplicate hashes cannot leak.
     selected = assign_splits([r for r in records if r.status != "excluded"], seed=seed)
@@ -280,6 +331,8 @@ def prepare(
         "repo": REPO,
         "revision": REVISION,
         "seed": seed,
+        "previous_manifest": str(previous_manifest) if previous_manifest else None,
+        "previous_split_conflicts": conflicts,
         "resources": specification["files"],
         "processing": PROCESSING,
         "train_models": sorted(TRAIN_MODELS),
@@ -310,6 +363,11 @@ def main() -> None:
     parser.add_argument("--resources", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument(
+        "--previous-manifest",
+        type=Path,
+        help="Preserve prior AIME splits; prefer the complete inventory.jsonl",
+    )
     arguments = parser.parse_args()
     print(json.dumps(prepare(**vars(arguments)), ensure_ascii=False, indent=2))
 

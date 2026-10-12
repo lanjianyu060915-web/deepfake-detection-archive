@@ -23,6 +23,7 @@ model_tools=(
   tools/prepare_fakesound.py
   tools/prepare_envsdd.py
   tools/prepare_aime.py
+  tools/prepare_ai_openbmat.py
   tools/prepare_video_control.py
   tools/prepare_video_size_control.py
   tools/prepare_video_augmentation.py
