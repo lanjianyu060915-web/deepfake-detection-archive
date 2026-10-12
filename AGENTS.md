@@ -61,6 +61,7 @@ USE CODEX NATIVE SUBAGENTS FOR INDEPENDENT PARALLEL SUBTASKS WHEN THAT IMPROVES 
 - 共享媒体/权重只读，outputs/cache按任务独立。RTX4090按实际显存、利用率和吞吐共享，空闲容量可供多人并发；Issue记录任务占用，不设个人独占。各任务固定工作副本，运行中不切换其源码或配置。
 - 有实质收益时使用原生子代理并显式角色；主代理整合、独立评审、统一最终检查。不暗启Team或使用worker角色。
 - 显式 `$name` 先读对应SKILL，不伪造OMX状态/权限；没有运行时支持使用普通工作流。
+- 最终报告实际改动、必要验证和剩余主线任务，已授权步骤自主完成。
 
 ## Claude 与 DeepSeek 协作
 
@@ -71,4 +72,3 @@ USE CODEX NATIVE SUBAGENTS FOR INDEPENDENT PARALLEL SUBTASKS WHEN THAT IMPROVES 
 - 密钥只从环境变量 `DEEPSEEK_API_KEY` 读取，不写入仓库、配置、日志或产物；云端环境需放行 `api.deepseek.com`。
 - 指令附带所需材料原文（代码、配置、运行记录），不让 DeepSeek 自行联网取数；其输出视为待核数据：无证据或不能复现的结论不采信，不直接提交其代码。
 - 只发送仓库与公开资产内容；凭据、个人信息和未登记许可的私有数据不外发。DeepSeek 不可用时说明原因，由 Claude 独立完成并在报告中注明。
-- 最终报告实际改动、必要验证和剩余主线任务，已授权步骤自主完成。
