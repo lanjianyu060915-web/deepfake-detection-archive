@@ -1,0 +1,52 @@
+{
+  "architecture": "video_frame_finetune_v1",
+  "batch_size": 8,
+  "cache_max_bytes": 8589934592,
+  "data_root": "/var/tmp/lanjianyu-issue10-20261011/vif-panda-research/media",
+  "feature_batch_size": 8,
+  "feature_cache": "/var/tmp/deepfake-video-temporal-20261012/frames",
+  "manifest": "/var/tmp/lanjianyu-issue10-20261011/control/hunyuan_geometry_duration.jsonl",
+  "modality": "video",
+  "model_config": {
+    "aggregation": "mean",
+    "architecture": "resnet18",
+    "dropout": 0.1,
+    "encoder_checkpoint": "/var/tmp/lanjianyu-issue10-20261011/resnet18-a1/encoder.pt",
+    "expected_sha256": "db6fd0c5cfb2b712d1904bb8b7edcf41a850491bdf42729e4ab485e89f1b6889",
+    "hidden_dim": 64,
+    "temporal_kernel_size": 3,
+    "trainable_prefix": "layer4",
+    "trim_fraction": 0.1
+  },
+  "num_workers": 0,
+  "output_dir": "/var/tmp/deepfake-video-temporal-20261012/seed42",
+  "schema_version": 1,
+  "segments": 1,
+  "sources": "/var/tmp/lanjianyu-issue10-20261011/vif-panda-research/sources.jsonl",
+  "training": {
+    "accumulation_steps": 1,
+    "amp": true,
+    "amp_dtype": "bfloat16",
+    "backbone_lr_scale": 0.1,
+    "deterministic": true,
+    "device": "cuda",
+    "learning_rate": 0.001,
+    "max_epochs": 20,
+    "max_grad_norm": 1.0,
+    "min_delta": 0.0,
+    "patience": 5,
+    "seed": 42,
+    "weight_decay": 0.0001
+  },
+  "video": {
+    "height": 224,
+    "max_duration_seconds": 600.0,
+    "max_output_bytes": 536870912,
+    "max_source_frames": 100000,
+    "max_source_pixels": 40000000,
+    "n_frames": 4,
+    "resize_mode": "center_crop",
+    "timeout_seconds": 60.0,
+    "width": 224
+  }
+}

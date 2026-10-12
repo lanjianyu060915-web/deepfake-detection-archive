@@ -1,0 +1,26 @@
+{
+  "aggregation": "mean",
+  "batch_size": 8,
+  "checkpoint": "/var/tmp/deepfake-video-temporal-20261012/seed43-retry/training/best.pt",
+  "checkpoint_sha256": "977721c2edd496c6e790ea56df41a34b1402399ebd8f414f754b0dfd4ea1cef1",
+  "data_root": "/var/tmp/deepfake-video-temporal-20261012/diagnostic/size-control/canonical/video_h264_crf35_448x256",
+  "device": "cuda",
+  "manifest": "/var/tmp/deepfake-video-temporal-20261012/diagnostic/size-control/canonical/video_h264_crf35_448x256/manifest.jsonl",
+  "modality": "video",
+  "model_kind": "video_frames",
+  "output_dir": "/var/tmp/deepfake-video-temporal-20261012/scores-matched-crf35",
+  "schema_version": 1,
+  "seed": 43,
+  "segments": 1,
+  "video": {
+    "height": 224,
+    "max_duration_seconds": 600.0,
+    "max_output_bytes": 536870912,
+    "max_source_frames": 100000,
+    "max_source_pixels": 40000000,
+    "n_frames": 4,
+    "resize_mode": "center_crop",
+    "timeout_seconds": 60.0,
+    "width": 224
+  }
+}
