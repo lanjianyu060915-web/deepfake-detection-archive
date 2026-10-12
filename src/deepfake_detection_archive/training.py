@@ -15,13 +15,14 @@ import time
 from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any, Literal, cast
 
 import torch
 from torch import Tensor, nn
 from torch.nn import functional
 
 from .evaluation.metrics import evaluate_binary
+from .models.ast import ASTClassifier
 from .models.checkpoint import load_checkpoint, model_spec, save_checkpoint
 
 
@@ -44,11 +45,16 @@ class TrainConfig:
     max_grad_norm: float | None = None
     deterministic: bool = True
     backbone_lr_scale: float = 1.0
+    time_mask_width: int = 0
+    frequency_mask_width: int = 0
 
     def __post_init__(self) -> None:  # noqa: C901, PLR0912
         for name in ("max_epochs", "accumulation_steps", "patience"):
             if type(getattr(self, name)) is not int or getattr(self, name) <= 0:
                 raise ValueError(f"{name} must be a positive integer")
+        for name in ("time_mask_width", "frequency_mask_width"):
+            if type(getattr(self, name)) is not int or getattr(self, name) < 0:
+                raise ValueError(f"{name} must be a nonnegative integer")
         if type(self.seed) is not int or not 0 <= self.seed < 2**32:
             raise ValueError("seed must be an integer in [0, 2**32)")
         for name in ("amp", "deterministic"):
@@ -252,6 +258,24 @@ def _evaluate(
     return loss_sum / len(labels_all), metrics.eer, len(labels_all)
 
 
+def _mask_fbank(
+    inputs: Tensor, time_width: int, frequency_width: int, fill: float
+) -> Tensor:
+    """Mask each sample independently; widths exclude the configured upper bound."""
+    for axis, width in ((1, time_width), (2, frequency_width)):
+        if width == 0:
+            continue
+        size = inputs.shape[axis]
+        widths = torch.randint(width, (inputs.shape[0],), device=inputs.device)
+        starts = (
+            torch.rand(inputs.shape[0], device=inputs.device) * (size - widths + 1)
+        ).long()
+        positions = torch.arange(size, device=inputs.device)[None, :]
+        mask = (positions >= starts[:, None]) & (positions < (starts + widths)[:, None])
+        inputs = inputs.masked_fill(mask.unsqueeze(2 if axis == 1 else 1), fill)
+    return inputs
+
+
 def _train_epoch(  # noqa: PLR0913, PLR0917
     model: nn.Module,
     loader: Iterable[Batch],
@@ -259,6 +283,7 @@ def _train_epoch(  # noqa: PLR0913, PLR0917
     optimizer: torch.optim.Optimizer,
     scaler: torch.amp.GradScaler,
     config: TrainConfig,
+    mask_fill: float,
 ) -> tuple[float, int, int, int]:
     model.train()
     optimizer.zero_grad(set_to_none=True)
@@ -266,6 +291,9 @@ def _train_epoch(  # noqa: PLR0913, PLR0917
     loss_sum = 0.0
     for batches, batch in enumerate(loader, start=1):
         inputs, labels, lengths = _prepare_batch(batch, device)
+        inputs = _mask_fbank(
+            inputs, config.time_mask_width, config.frequency_mask_width, mask_fill
+        )
         with torch.autocast(
             device_type=device.type,
             enabled=config.amp,
@@ -310,7 +338,7 @@ def _training_device(config: TrainConfig) -> torch.device:
     return device
 
 
-def train_model(  # noqa: PLR0913, PLR0912, PLR0915
+def train_model(  # noqa: C901, PLR0913, PLR0912, PLR0915
     model: nn.Module,
     train_loader: Iterable[Batch],
     dev_loader: Iterable[Batch],
@@ -335,6 +363,16 @@ def train_model(  # noqa: PLR0913, PLR0912, PLR0915
         raise ValueError("architecture differs from model")
     if model_config is not None and model_config != actual_config:
         raise ValueError("model_config differs from model")
+    mask_fill = 0.0
+    if config.time_mask_width or config.frequency_mask_width:
+        if actual_architecture != "audio_ast_v1":
+            raise ValueError("fbank masking is supported only with audio_ast_v1")
+        backbone_config = cast(ASTClassifier, model).backbone.config
+        if config.time_mask_width > backbone_config.max_length:
+            raise ValueError("time_mask_width must not exceed AST max_length")
+        if config.frequency_mask_width > backbone_config.num_mel_bins:
+            raise ValueError("frequency_mask_width must not exceed AST num_mel_bins")
+        mask_fill = -actual_config["feature_mean"] / (2 * actual_config["feature_std"])
     for name in ("data_sha256", "code_sha256", "weights_sha256"):
         value = provenance.get(name)
         if (
@@ -402,7 +440,7 @@ def train_model(  # noqa: PLR0913, PLR0912, PLR0915
         for epoch in range(1, config.max_epochs + 1):
             epoch_started = time.monotonic()
             train_loss, samples, updates, skipped = _train_epoch(
-                model, train_loader, device, optimizer, scaler, config
+                model, train_loader, device, optimizer, scaler, config, mask_fill
             )
             train_seconds = time.monotonic() - epoch_started
             dev_loss, dev_eer, dev_count = _evaluate(model, dev_loader, device)

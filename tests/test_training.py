@@ -347,3 +347,92 @@ def test_nonfinite_cpu_gradients_fail_and_restore_deterministic_state(
     handle.remove()
     assert torch.are_deterministic_algorithms_enabled() == previous
     assert json.loads((tmp_path / "run.json").read_text())["status"] == "failed"
+
+
+@pytest.mark.parametrize(("time_width", "frequency_width"), [(8, 0), (0, 6), (8, 6)])
+def test_fbank_masking_is_independent_repeatable_and_nonmutating(
+    time_width: int, frequency_width: int
+) -> None:
+    from deepfake_detection_archive.training import _mask_fbank  # noqa: PLC0415
+
+    inputs = torch.ones(16, 12, 10)
+    torch.manual_seed(12)
+    actual = _mask_fbank(inputs, time_width, frequency_width, 0.4669)
+    torch.manual_seed(12)
+    repeated = _mask_fbank(inputs, time_width, frequency_width, 0.4669)
+    assert torch.equal(actual, repeated)
+    assert torch.equal(inputs, torch.ones_like(inputs))
+    masked = actual == 0.4669
+    assert masked.any()
+    assert not all(torch.equal(masked[0], row) for row in masked[1:])
+    if not frequency_width:
+        assert torch.equal(masked, masked[:, :, :1].expand_as(masked))
+        counts = masked[:, :, 0].sum(dim=1)
+        assert (counts < time_width).all()
+    if not time_width:
+        assert torch.equal(masked, masked[:, :1, :].expand_as(masked))
+        counts = masked[:, 0, :].sum(dim=1)
+        assert (counts < frequency_width).all()
+
+
+def test_disabled_fbank_masking_does_not_consume_rng() -> None:
+    from deepfake_detection_archive.training import _mask_fbank  # noqa: PLC0415
+
+    inputs = torch.ones(2, 12, 10)
+    before = torch.get_rng_state().clone()
+    assert _mask_fbank(inputs, 0, 0, 0.0) is inputs
+    assert torch.equal(before, torch.get_rng_state())
+
+
+@pytest.mark.parametrize("name", ["time_mask_width", "frequency_mask_width"])
+@pytest.mark.parametrize("value", [-1, True, 1.5])
+def test_invalid_mask_width_is_rejected(name: str, value: object) -> None:
+    with pytest.raises(ValueError, match="nonnegative integer"):
+        TrainConfig(**{name: value})  # type: ignore[arg-type]
+
+
+def test_fbank_masking_rejects_other_models_before_output(tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match="only with audio_ast_v1"):
+        train_model(
+            model(),
+            [batches()],
+            [batches()],
+            config=TrainConfig(time_mask_width=1),
+            output_dir=tmp_path / "unsupported",
+            provenance=PROVENANCE,
+        )
+    assert not (tmp_path / "unsupported").exists()
+
+
+@pytest.mark.parametrize("name", ["time_mask_width", "frequency_mask_width"])
+def test_fbank_masking_rejects_oversize_width_before_output(
+    tmp_path: Path, name: str
+) -> None:
+    from deepfake_detection_archive.models.ast import (  # noqa: PLC0415
+        ASTClassifier,
+        ASTConfig,
+    )
+
+    candidate = ASTClassifier(
+        ASTConfig(
+            backbone_config={
+                "hidden_size": 16,
+                "num_hidden_layers": 1,
+                "num_attention_heads": 2,
+                "intermediate_size": 24,
+                "max_length": 32,
+                "num_mel_bins": 32,
+            },
+            trainable_layers=1,
+        )
+    )
+    with pytest.raises(ValueError, match="must not exceed AST"):
+        train_model(
+            candidate,
+            [],
+            [],
+            config=TrainConfig(**{name: 33}),  # type: ignore[arg-type]
+            output_dir=tmp_path / "oversize",
+            provenance=PROVENANCE,
+        )
+    assert not (tmp_path / "oversize").exists()
