@@ -25,10 +25,15 @@ model_tools=(
   tools/prepare_aime.py
   tools/prepare_ai_openbmat.py
   tools/prepare_video_control.py
+  tools/prepare_video_size_control.py
+  tools/report_video_pairs.py
+  tools/prepare_video_augmentation.py
   tools/prepare_robustness.py
   tools/compare_scores.py
   tools/test_prepare_asv_eval.py
   tools/test_prepare_video_control.py
+  tools/test_prepare_video_size_control.py
+  tools/test_prepare_video_augmentation.py
 )
 
 uv run --no-sync ruff check src tests tools/check_environment.py "${model_tools[@]}"
