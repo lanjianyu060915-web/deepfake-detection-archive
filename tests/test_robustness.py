@@ -104,6 +104,7 @@ def test_rejects_non_dev_before_any_media_or_output(
     [
         ("audio", ["audio_aac64k", "audio_bandlimit8k"]),
         ("video", ["video_h264_crf23", "video_h264_crf35"]),
+        ("video", ["video_h264_crf18_448x256", "video_h264_crf35_448x256"]),
     ],
 )
 def test_real_transformations_are_paired_and_decodable(
@@ -157,6 +158,56 @@ def test_real_transformations_are_paired_and_decodable(
     assert summary["baseline"]["data_root"] == str(tmp_path)
     with pytest.raises(FileExistsError):
         prepare(manifest, tmp_path, output, conditions, 60)
+
+
+@pytest.mark.parametrize(
+    "condition",
+    ["video_h264_crf18_448x256", "video_h264_crf35_448x256"],
+)
+def test_size_canonical_condition_shares_one_output_geometry(
+    prepare: Any,
+    tmp_path: Path,
+    media: dict[str, Path],
+    condition: str,
+) -> None:
+    """Both labels must land on one size, pixel format and codec in the view."""
+    manifest = tmp_path / "input.jsonl"
+    write_manifest(rows("video", media["video"].name), manifest)
+    output = tmp_path / "output"
+    prepare(manifest, tmp_path, output, [condition], 60)
+    derived = load_manifest(output / condition / "manifest.jsonl")
+    shapes = []
+    for row in derived:
+        target = output / condition / row.path
+        frames = decode_video(
+            target,
+            VideoConfig(n_frames=2, height=256, width=448, resize_mode="center_crop"),
+        )
+        shapes.append(frames.frames.shape)
+        probed = json.loads(
+            subprocess.run(
+                [
+                    "ffprobe",
+                    "-v",
+                    "error",
+                    "-select_streams",
+                    "v:0",
+                    "-show_entries",
+                    "stream=width,height,pix_fmt,codec_name",
+                    "-of",
+                    "json",
+                    str(target),
+                ],
+                check=True,
+                capture_output=True,
+                text=True,
+                timeout=20,
+            ).stdout
+        )["streams"][0]
+        assert (probed["width"], probed["height"]) == (448, 256)
+        assert probed["pix_fmt"] == "yuv420p"
+        assert probed["codec_name"] == "h264"
+    assert shapes[0] == shapes[1] == (2, 256, 448, 3)
 
 
 def test_bandlimit_removes_high_frequency_without_muting_low_frequency(

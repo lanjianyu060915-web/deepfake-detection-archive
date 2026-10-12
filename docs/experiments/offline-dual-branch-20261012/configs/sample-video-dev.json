@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "modality": "video",
+  "model_kind": "video_frames",
+  "checkpoint": "../weights/video-l4head-seed42.pt",
+  "checkpoint_sha256": "16abc4e9828f73545d60da874a0da16b2a394c63c465896c9ab7e5c5bf465669",
+  "device": "cuda",
+  "batch_size": 8,
+  "aggregation": "mean",
+  "video": {
+    "n_frames": 4,
+    "height": 224,
+    "width": 224,
+    "resize_mode": "center_crop"
+  },
+  "seed": 42,
+  "manifest": "../manifests/sample-video-dev.jsonl",
+  "data_root": "../media",
+  "output_dir": "../runs/sample-video-dev"
+}
