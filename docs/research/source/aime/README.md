@@ -16,6 +16,20 @@
 即使未训练，也不能当成未知家族。真实和生成音频统一下混、16kHz、居中4秒、
 峰值0.95及PCM16处理；原始长度、采样率、声道仅记录，不输入模型。
 
+扩展分片时，资源清单包含本次全部分片，并传入旧 `inventory.jsonl`：
+
+```bash
+scripts/devctl run python tools/prepare_aime.py \
+  --parquet-dir /path/to/parquet --resources /path/to/expanded-resources.json \
+  --previous-manifest /path/to/previous/inventory.jsonl --output /path/to/expanded
+```
+
+旧 prompt、样本 ID 和处理后精确重复关联的连通分量保留原 split，新分量沿用现有
+划分算法。新增精确重复若连接旧的不同 split，整个冲突分量从训练和评测清单排除，
+在 inventory 标记 `previous_split_conflict`，摘要记录冲突分量数和排除样本数。
+也可输入旧 `manifest.jsonl`，但它不包含全部保留生成器，优先使用完整 inventory。
+未传入该参数时维持首次导入的划分行为；输出目录须为新目录。
+
 ## 许可与用途
 
 [AIME 数据卡](https://huggingface.co/datasets/disco-eth/AIME/blob/b84d4be5eda830b6eb714998569dba73530f2601/README.md)
