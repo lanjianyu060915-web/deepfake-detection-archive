@@ -56,6 +56,17 @@ def test_resampling_preserves_amplitude_and_length() -> None:
     assert restored.shape == tone.shape
 
 
+@pytest.mark.parametrize("samples", [64600, 64601])
+@pytest.mark.parametrize("target_rate", [8000, 11025])
+def test_roundtrip_keeps_exact_length_for_mixed_batches(
+    samples: int, target_rate: int
+) -> None:
+    tone = _tone(1000.0, samples=samples)
+    augmented = bandlimit_roundtrip(tone, BandwidthSpec(1.0, target_rate), 16000)
+    batch = torch.stack([tone, augmented])
+    assert batch.shape == (2, samples)
+
+
 def test_spec_and_inputs_reject_invalid_values() -> None:
     with pytest.raises(ValueError, match="probability"):
         BandwidthSpec(probability=0.0, target_sample_rate=8000)

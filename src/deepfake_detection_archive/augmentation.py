@@ -57,6 +57,11 @@ def bandlimited_resample(
             raise ValueError(f"{name} must be a positive integer")
     length = int(waveform.shape[0])
     target_length = max(2, round(length * target_rate / sample_rate))
+    return _resample_length(waveform, target_length)
+
+
+def _resample_length(waveform: Tensor, target_length: int) -> Tensor:
+    length = int(waveform.shape[0])
     if target_length == length:
         return waveform
     spectrum = torch.fft.rfft(waveform.to(torch.float64))
@@ -76,4 +81,4 @@ def bandlimit_roundtrip(
     if spec.target_sample_rate >= sample_rate:
         raise ValueError("bandwidth augmentation target rate must be below the rate")
     reduced = bandlimited_resample(waveform, spec.target_sample_rate, sample_rate)
-    return bandlimited_resample(reduced, sample_rate, spec.target_sample_rate)
+    return _resample_length(reduced, waveform.numel())

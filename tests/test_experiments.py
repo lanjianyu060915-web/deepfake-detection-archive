@@ -617,6 +617,12 @@ def test_orphan_sidecar_is_subtracted_from_cache_budget(tmp_path: Path) -> None:
             }
         },
         {"augmentation": {"cutout": {"probability": 0.5}}},
+        {
+            "architecture": "audio_ast_v1",
+            "augmentation": {
+                "bandwidth": {"probability": 0.5, "target_sample_rate": 8000}
+            },
+        },
     ],
 )
 def test_invalid_experiment_config(experiment: Path, change: dict[str, Any]) -> None:

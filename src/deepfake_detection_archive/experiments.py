@@ -181,10 +181,9 @@ class ExperimentConfig:
             raise ValueError("augmentation parameters cannot be boolean")
         spec = BandwidthSpec(**options)
         audio, _ = self.media_configs
-        if self.modality != "audio" or self.encoder or self.segments != 1:
+        if self.architecture not in ("logmel_cnn_v1", "aasist_l_v1"):
             raise ValueError(
-                "bandwidth augmentation requires single-segment waveform "
-                "training without an encoder"
+                "bandwidth augmentation requires LogMel or AASIST waveform training"
             )
         if spec.target_sample_rate >= audio.sample_rate:
             raise ValueError(
