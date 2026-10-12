@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "manifest": "../../../data/audio-speech-mix-20261012/mixtures/mixed-untrained-dev-manifest.jsonl",
+  "data_root": "../../../data/audio-speech-mix-20261012/mixtures",
+  "output_dir": "../../../outputs/audio-speech-mix-20261012/reproduce-speech-mix-untrained-dev",
+  "modality": "audio",
+  "model_kind": "audio_waveform",
+  "checkpoint": "../../../outputs/audio-speech-mix-20261012/speech-mix-seed42/training/best.pt",
+  "checkpoint_sha256": "b167e3cb07ed175f5441fdfc05de2323918092faca5b5b0aec53ff036b2d0af7",
+  "device": "cuda",
+  "batch_size": 8,
+  "segment_samples": 64000,
+  "segments": 1,
+  "aggregation": "mean",
+  "audio": {
+    "sample_rate": 16000,
+    "backend": "soundfile"
+  },
+  "seed": 42
+}
