@@ -98,7 +98,7 @@ def test_identical_names_pair_and_unmatched_fake_is_dropped(
     assert fake_a.generator == "Model-A"
     assert fake_a.parent_id == "vifbench:source_videos/Real/AAAAAAAAAAA-0.mp4"
     assert by_id[fake_a.parent_id].label == 0
-    assert "CCCCCCCCCCC" not in {row.sample_id for row in rows}, (
+    assert not any("CCCCCCCCCCC" in row.sample_id for row in rows), (
         "unmatched fake has no real counterpart"
     )
     assert summary["unpaired_fake_count"] == 1
@@ -138,6 +138,7 @@ def test_exclusion_removes_the_whole_component(
 
     assert summary["excluded_real_count"] == 1
     assert summary["excluded_fake_count"] == 1
+    assert summary["unpaired_fake_count"] == 1
     assert len(rows) == 2
     assert all("AAAAAAAAAAA" not in row.path for row in rows)
     assert {row.label for row in rows} == {0, 1}
@@ -193,3 +194,32 @@ def test_audit_reports_layout_without_copying_media(
     assert summary["index_matches_media"] is True
     assert summary["media_decoded"] is False
     assert list(tmp_path.glob("**/media")) == []
+
+
+@pytest.mark.parametrize(
+    ("widths", "expected"),
+    [
+        ([100, 200, 300, 400], {"increasing": 0.0, "decreasing": 1.0, "oracle": 0.0}),
+        ([300, 400, 100, 200], {"increasing": 1.0, "decreasing": 0.0, "oracle": 0.0}),
+        ([100, 100, 100, 100], {"increasing": 0.5, "decreasing": 0.5, "oracle": 0.5}),
+        (
+            [100, 200, 100, 100],
+            {"increasing": 2 / 3, "decreasing": 1 / 3, "oracle": 1 / 3},
+        ),
+    ],
+)
+def test_width_baseline_uses_both_directions_and_interpolated_ties(
+    widths: list[int], expected: dict[str, float]
+) -> None:
+    probe_module = runpy.run_path(
+        str(
+            TOOLS.parent
+            / "docs/experiments/video-generalization-20261011/metadata-probe.py"
+        )
+    )
+    rows = [
+        {"width": width, "label": label}
+        for width, label in zip(widths, [0, 0, 1, 1], strict=True)
+    ]
+    assert probe_module["width_eers"](rows) == pytest.approx(expected)
+    assert probe_module["width_eers"]([{"width": 100, "label": 0}]) is None

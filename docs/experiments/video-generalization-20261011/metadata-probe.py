@@ -15,14 +15,24 @@ import statistics
 import subprocess
 from pathlib import Path
 
+from deepfake_detection_archive.evaluation.metrics import evaluate_binary
+
 
 def probe(path: Path) -> dict[str, object]:
     done = subprocess.run(
         [
-            "ffprobe", "-v", "error", "-select_streams", "v:0",
-            "-show_entries", "stream=width,height,avg_frame_rate,codec_name,duration",
-            "-show_entries", "format=format_name,duration",
-            "-of", "json", str(path),
+            "ffprobe",
+            "-v",
+            "error",
+            "-select_streams",
+            "v:0",
+            "-show_entries",
+            "stream=width,height,avg_frame_rate,codec_name,duration",
+            "-show_entries",
+            "format=format_name,duration",
+            "-of",
+            "json",
+            str(path),
         ],
         capture_output=True,
         text=True,
@@ -48,23 +58,20 @@ def probe(path: Path) -> dict[str, object]:
     }
 
 
-def oracle_width_eer(rows: list[dict[str, object]]) -> float | None:
-    """Optimistic width-only bound with the threshold chosen on the same rows."""
-    reals = sorted(
-        (row["width"], row["label"]) for row in rows if row["width"] is not None
-    )
-    if {label for _, label in reals} != {0, 1}:
+def width_eers(rows: list[dict[str, object]]) -> dict[str, float] | None:
+    """Interpolated EER in both directions; oracle selection uses the same rows."""
+    valid = [row for row in rows if row["width"] is not None]
+    if {row["label"] for row in valid} != {0, 1}:
         return None
-    best = 1.0
-    candidates = sorted({width for width, _ in reals})
-    for threshold in candidates:
-        false_positive = sum(1 for w, label in reals if label == 0 and w >= threshold)
-        false_negative = sum(1 for w, label in reals if label == 1 and w < threshold)
-        real_total = sum(1 for _, label in reals if label == 0)
-        fake_total = sum(1 for _, label in reals if label == 1)
-        rate = max(false_positive / real_total, false_negative / fake_total)
-        best = min(best, rate)
-    return best
+    labels = [row["label"] for row in valid]
+    widths = [row["width"] for row in valid]
+    increasing = evaluate_binary(labels, widths).eer
+    decreasing = evaluate_binary(labels, [-width for width in widths]).eer
+    return {
+        "increasing": increasing,
+        "decreasing": decreasing,
+        "oracle": min(increasing, decreasing),
+    }
 
 
 def summarise(name: str, rows: list[dict[str, object]]) -> dict[str, object]:
@@ -99,7 +106,7 @@ def summarise(name: str, rows: list[dict[str, object]]) -> dict[str, object]:
             "real": dict(collections.Counter(row["codec"] for row in real)),
             "fake": dict(collections.Counter(row["codec"] for row in fake)),
         },
-        "oracle_width_eer": oracle_width_eer(rows),
+        "width_eer": width_eers(rows),
     }
 
 
@@ -154,7 +161,9 @@ def main() -> int:
         },
     }
     args.output.write_text(
-        json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True, allow_nan=False)
+        json.dumps(
+            summary, ensure_ascii=False, indent=2, sort_keys=True, allow_nan=False
+        )
         + "\n",
         encoding="utf-8",
     )

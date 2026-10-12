@@ -217,7 +217,7 @@ def selection(
             "excluded_fake_count": sum(dropped.values()),
             "excluded_fake_by_generator": dict(sorted(dropped.items())),
             "unpaired_fake_count": sum(
-                len(group) - len(kept_fakes[generator])
+                len(group) - dropped[generator] - len(kept_fakes[generator])
                 for generator, group in fakes.items()
             ),
             "kept_component_count": len(matched_components),
