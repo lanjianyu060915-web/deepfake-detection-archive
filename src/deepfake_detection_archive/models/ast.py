@@ -5,7 +5,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Self, cast
 
-from torch import Tensor, cat, nn
+import numpy as np
+from numpy.typing import NDArray
+from torch import Tensor, cat, from_numpy, nn
+
+from deepfake_detection_archive.media import MediaError, sample_audio_segments
 
 
 @dataclass(frozen=True)
@@ -16,6 +20,7 @@ class ASTConfig:
     feature_mean: float = -4.2677393
     feature_std: float = 4.5689974
     dropout: float = 0.1
+    waveform_preparation: str = "legacy"
 
     def __post_init__(self) -> None:
         if type(self.trainable_layers) is not int or self.trainable_layers < 0:
@@ -28,6 +33,8 @@ class ASTConfig:
             raise ValueError("feature mean/std must be finite, with std > 0")
         if not 0 <= self.dropout < 1:
             raise ValueError("dropout must lie in [0, 1)")
+        if self.waveform_preparation not in {"legacy", "center_pad_64000_peak095_v1"}:
+            raise ValueError("unsupported AST waveform_preparation")
 
 
 class ASTClassifier(nn.Module):
@@ -70,7 +77,7 @@ class ASTClassifier(nn.Module):
     @property
     def preprocessing(self) -> dict[str, Any]:
         """Effective frontend configuration, suitable for a JSON cache identity."""
-        return {
+        result = {
             "feature_extractor_type": "ASTFeatureExtractor",
             "sampling_rate": self._extractor.sampling_rate,
             "num_mel_bins": self._extractor.num_mel_bins,
@@ -81,6 +88,50 @@ class ASTClassifier(nn.Module):
             "padding_value": self._extractor.padding_value,
             "return_attention_mask": self._extractor.return_attention_mask,
         }
+        if self.config.waveform_preparation != "legacy":
+            result["waveform_preparation"] = self.config.waveform_preparation
+        return result
+
+    def validate_audio_sampling(self, sample_count: int, n_segments: int) -> None:
+        if self.config.waveform_preparation != "legacy" and (
+            sample_count != 64000 or n_segments != 1
+        ):
+            raise ValueError(
+                "AST center_pad_64000_peak095_v1 requires "
+                "segment_samples=64000 and segments=1"
+            )
+
+    def prepare_audio(
+        self, waveform: NDArray[np.float32], sample_count: int, n_segments: int
+    ) -> Tensor:
+        """Shared decoded-mono preparation for training caches and inference.
+
+        The versioned policy mirrors the offline training-media crop/pad/peak
+        operations, without an extra lossy PCM16 roundtrip. Silence stays zero.
+        Sampling compatibility is checked by the training/scoring entry point.
+        """
+        if self.config.waveform_preparation == "legacy":
+            segments = sample_audio_segments(waveform, sample_count, n_segments)
+        else:
+            if (
+                waveform.ndim != 1
+                or not waveform.size
+                or not np.isfinite(waveform).all()
+            ):
+                raise MediaError(
+                    "invalid_audio", "expected nonempty finite mono waveform"
+                )
+            samples = np.asarray(waveform, dtype=np.float32)
+            if len(samples) < 64000:
+                missing = 64000 - len(samples)
+                samples = np.pad(samples, (missing // 2, missing - missing // 2))
+            start = (len(samples) - 64000) // 2
+            samples = samples[start : start + 64000]
+            peak = float(np.max(np.abs(samples)))
+            if peak > 0:
+                samples = samples * (0.95 / peak)
+            segments = samples[None, :]
+        return self.prepare_waveforms(from_numpy(segments))
 
     def train(self, mode: bool = True) -> Self:
         super().train(mode)

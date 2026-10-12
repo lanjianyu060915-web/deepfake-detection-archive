@@ -119,7 +119,7 @@ def test_predict_resume_preserves_scores_without_rescoring(
     assert (output / "scores.csv").read_bytes() == csv_bytes
 
 
-def test_predict_failure_keeps_accounting_without_export(
+def test_predict_failure_keeps_accounting_and_exports_successes(
     prediction: list[str], tmp_path: Path
 ) -> None:
     (tmp_path / "输入" / "broken.wav").write_bytes(b"invalid media")
@@ -134,9 +134,24 @@ def test_predict_failure_keeps_accounting_without_export(
     assert report["sample_count"] == 3
     assert report["failure_count"] == 1
     assert report["coverage"] == pytest.approx(2 / 3)
-    assert not (output / "scores.csv").exists()
+    csv_path = output / "scores.csv"
+    with csv_path.open(newline="") as stream:
+        exported = list(csv.DictReader(stream))
+    successful = [row for row in scores if row.status == "ok"]
+    assert [row["sample_id"] for row in exported] == [
+        row.sample_id for row in successful
+    ]
+    assert [float(row["score"]) for row in exported] == [
+        row.score for row in successful
+    ]
+    metadata = json.loads((output / "scores.csv.metadata.json").read_text())
+    assert metadata["total_count"] == 3
+    assert metadata["exported_count"] == 2
+    assert metadata["failed_sample_ids"] == ["broken.wav"]
+    assert metadata["coverage"] == pytest.approx(2 / 3)
+    csv_bytes = csv_path.read_bytes()
     assert cli.main([*prediction, "--resume"]) == 2
-    assert not (output / "scores.csv").exists()
+    assert csv_path.read_bytes() == csv_bytes
 
 
 def test_predict_resume_changed_media_preserves_original_run(

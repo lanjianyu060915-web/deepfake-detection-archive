@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.metadata
 import json
 import os
 import shutil
@@ -94,6 +95,76 @@ def vifbench_subset(manifest: Path, diagnostics: Path) -> list[Row]:
         used_real.update(str(r.sample_id) for r in picked)
         selected.extend(by_id[str(r.sample_id)] for r in fake[:5] + picked)
     return selected
+
+
+def runtime_dependencies(
+    site_packages: Path, roots: tuple[str, ...]
+) -> dict[str, importlib.metadata.Distribution]:
+    """Resolve the installed runtime closure, including requested extras and markers."""
+    from packaging.requirements import Requirement  # noqa: PLC0415 -- release only
+    from packaging.utils import canonicalize_name  # noqa: PLC0415 -- release only
+
+    installed = {
+        canonicalize_name(dist.metadata["Name"]): dist
+        for dist in importlib.metadata.distributions(path=[str(site_packages)])
+    }
+    selected: dict[str, importlib.metadata.Distribution] = {}
+    visited: set[tuple[str, frozenset[str]]] = set()
+    pending = [Requirement(root) for root in roots]
+    while pending:
+        requirement = pending.pop()
+        name = canonicalize_name(requirement.name)
+        state = (name, frozenset(requirement.extras))
+        if name not in installed:
+            raise ValueError(f"missing installed runtime dependency: {requirement}")
+        dist = installed[name]
+        if requirement.specifier and not requirement.specifier.contains(
+            dist.version, prereleases=True
+        ):
+            raise ValueError(f"installed {name}=={dist.version} violates {requirement}")
+        if state in visited:
+            continue
+        visited.add(state)
+        selected[name] = dist
+        for raw in dist.requires or ():
+            dependency = Requirement(raw)
+            if dependency.marker is None or any(
+                dependency.marker.evaluate({"extra": extra})
+                for extra in ("", *requirement.extras)
+            ):
+                pending.append(dependency)
+    return selected
+
+
+def copy_runtime_dependencies(
+    site_packages: Path, target: Path, roots: tuple[str, ...]
+) -> None:
+    """Copy wheel-owned runtime files and metadata; omit venv scripts and hooks."""
+    site_packages = site_packages.resolve()
+    selected = runtime_dependencies(site_packages, roots)
+    target.mkdir(parents=True)
+    for name, dist in sorted(selected.items()):
+        files = dist.files
+        if files is None:
+            raise ValueError(f"runtime dependency {name} has no installed RECORD")
+        for entry in files:
+            relative = Path(entry)
+            # RECORD also lists executable scripts outside site-packages. The
+            # release calls library APIs and supplies its own launchers.
+            if relative.is_absolute() or ".." in relative.parts:
+                continue
+            if "__pycache__" in relative.parts or relative.suffix in (
+                ".pyc",
+                ".pyo",
+                ".pth",
+            ):
+                continue
+            original = site_packages / relative
+            if not original.resolve().is_relative_to(site_packages):
+                raise ValueError(f"runtime file escapes site-packages: {original}")
+            destination = target / relative
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(original, destination)
 
 
 class Builder:
@@ -185,7 +256,14 @@ class Builder:
             encoding="utf-8",
         )
 
-    def copy_dependencies(self, lock: Path, site_packages: Path, source: Path) -> None:
+    def copy_dependencies(
+        self,
+        lock: Path,
+        site_packages: Path,
+        source: Path,
+        *,
+        runtime_roots: tuple[str, ...] | None = None,
+    ) -> None:
         """Snapshot installed wheels and project code, without venv path hooks."""
         target = self.package / "deps"
         target.mkdir(parents=True, exist_ok=True)
@@ -208,7 +286,10 @@ class Builder:
                 )
             return excluded
 
-        shutil.copytree(site_packages, runtime, ignore=ignore)
+        if runtime_roots is None:
+            shutil.copytree(site_packages, runtime, ignore=ignore)
+        else:
+            copy_runtime_dependencies(site_packages, runtime, runtime_roots)
         shutil.copytree(
             source,
             self.package / "src",

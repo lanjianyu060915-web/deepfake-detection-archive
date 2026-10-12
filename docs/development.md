@@ -78,6 +78,13 @@ AST 使用 `architecture="audio_ast_v1"`，`model_config.trainable_layers` 指�
 预训练时间位置编码，两个特殊 token 和频率位置保持原序，减少无用 padding。
 这会改变注意力序列，需重新训练，不能当成旧1024帧模型的无损推理开关。
 
+对使用4秒居中裁剪、短音频对称补零及峰值0.95的数据，设置
+`model_config.waveform_preparation="center_pad_64000_peak095_v1"`、
+`segment_samples=64000`、`segments=1`。训练缓存和推理共享该策略；静音保持零。
+旧 checkpoint 缺少该字段时保留 `legacy` 行为，迁移已有候选后重新评测再选用。
+上游 AST NumPy 前端默认配置会出现一列全零 mel 滤波器告警，项目保持预训练前端，
+没有通过修改 FFT/mel 参数或压制告警改变旧模型输入，详见[发布说明](release.md)。
+
 每次新实验使用新输出目录。输出包含 `experiment.json`、配置和资产标识、失败记录、
 `training/history.json`、`training/best.pt`、`dev-scores.jsonl` 与 `dev-evaluation.json`。
 缓存准备时检查内容，训练 epoch 内直接读取；运行期间缓存作为只读输入。

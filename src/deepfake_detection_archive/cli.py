@@ -177,6 +177,8 @@ def _infer_records(  # noqa: PLR0913 -- parsed inputs and explicit run controls
     resume: bool,
     frozen_audit: bool,
 ) -> dict[str, object]:
+    import torch  # noqa: PLC0415 -- optional inference backend
+
     from .scoring import OfflineScorer  # noqa: PLC0415
     from .submission.runner import run_inference  # noqa: PLC0415
 
@@ -202,7 +204,14 @@ def _infer_records(  # noqa: PLR0913 -- parsed inputs and explicit run controls
         "official_adapter": "unconfirmed",
         "frozen_audit": frozen_audit,
     }
-    scores = run_inference(records, scorer, output, identity=identity, resume=resume)
+    scores = run_inference(
+        records,
+        scorer,
+        output,
+        identity=identity,
+        resume=resume,
+        fatal_exceptions=(torch.OutOfMemoryError,),
+    )
     summary = load_object(output / "report.json")
     timing = summary["timing"]
     if not isinstance(timing, dict):
@@ -269,12 +278,11 @@ def _predict(args: argparse.Namespace) -> dict[str, object]:
     )
     write_manifest(records, output / "manifest.jsonl")
     atomic_json(output / "inference.json", config.to_dict())
-    if not result["failures"]:
-        export_scores(load_scores(output / "scores.jsonl"), csv_path)
+    export_scores(load_scores(output / "scores.jsonl"), csv_path, allow_partial=True)
     return {
         **result,
         "official": False,
-        "scores_csv": str(csv_path) if not result["failures"] else None,
+        "scores_csv": str(csv_path),
     }
 
 
@@ -415,7 +423,14 @@ def main(argv: list[str] | None = None) -> int:
             return 2
         if args.command == "predict" and result["failures"]:
             return 2
-    except (ValueError, TypeError, OSError, RuntimeError, ImportError) as exc:
+    except (
+        ValueError,
+        TypeError,
+        OSError,
+        RuntimeError,
+        ImportError,
+        MemoryError,
+    ) as exc:
         print(
             json.dumps(
                 {"error": type(exc).__name__, "message": str(exc)}, ensure_ascii=False

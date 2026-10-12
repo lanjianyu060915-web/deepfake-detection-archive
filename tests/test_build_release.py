@@ -12,6 +12,8 @@ from types import ModuleType
 
 import pytest
 
+from deepfake_detection_archive.data.manifest import load_manifest
+
 
 @pytest.fixture
 def release_module(monkeypatch: pytest.MonkeyPatch) -> ModuleType:
@@ -48,6 +50,12 @@ def test_build_layout_and_launcher_after_relocation(
     (runtime / "torch-2.0.dist-info").mkdir(parents=True)
     (runtime / "torch-2.0.dist-info/METADATA").write_text("Name: torch\nVersion: 2.0\n")
     (runtime / "torch-2.0.dist-info/LICENSE").write_text("license")
+    (runtime / "torch-2.0.dist-info/RECORD").write_text(
+        "torch-2.0.dist-info/METADATA,,\n"
+        "torch-2.0.dist-info/LICENSE,,\n"
+        "torch-2.0.dist-info/RECORD,,\n"
+    )
+    monkeypatch.setattr(release_module, "RUNTIME_ROOTS", ("torch",))
     python_home = tmp_path / "python"
     (python_home / "bin").mkdir(parents=True)
     interpreter = python_home / "bin/python3.12"
@@ -62,25 +70,34 @@ def test_build_layout_and_launcher_after_relocation(
     weights.write_bytes(b"fixture weights")
     digest = hashlib.sha256(weights.read_bytes()).hexdigest()
     weights.with_suffix(".pt.json").write_text(json.dumps({"sha256": digest}))
-    for modality in ("audio", "video"):
-        (repo / f"configs/release/{modality}.json").write_text(
+    for modality, filename in (("audio", "audio-environment"), ("video", "video")):
+        (repo / f"configs/release/{filename}.json").write_text(
             json.dumps({"modality": modality, "checkpoint_sha256": digest})
         )
     monkeypatch.setattr(release_module, "REPOSITORY", repo)
     monkeypatch.setattr(release_module, "generate_examples", lambda output: None)
     output = tmp_path / "build"
     args = (output, runtime, python_home, weights, weights, repo / "src")
-    release_module.build_release(*args)
+    release_module.build_release(*args, version="0.1.1")
     with pytest.raises(FileExistsError):
-        release_module.build_release(*args)
+        release_module.build_release(*args, version="0.1.1")
     assert (output / "licenses/upstream/license.txt").read_text() == "docs/license.txt"
     assert (output / "runtime/site-packages/torch-2.0.dist-info/LICENSE").is_file()
     assert (output / "runtime/python/bin/python").readlink() == Path("python3.12")
     metadata = json.loads((output / "release.json").read_text())
     assert metadata["torch"] == "2.0"
+    assert metadata["version"] == "0.1.1"
+    assert metadata["runtime_dependencies"] == {"torch": "2.0"}
+    assert metadata["model_scope"]["audio"] == "environmental_audio_research"
+    assert metadata["general_audio_ready"] is False
+    assert metadata["competition_use"] == "unconfirmed"
+    assert not (output / "configs/audio.json").exists()
+    assert (output / "configs/video.json").is_file()
     assert metadata["checkpoint_sha256"] == {"audio": digest, "video": digest}
     assert (
-        json.loads((output / "configs/audio.json").read_text())["checkpoint_sha256"]
+        json.loads((output / "configs/audio-environment.json").read_text())[
+            "checkpoint_sha256"
+        ]
         == digest
     )
     moved = tmp_path / "moved package"
@@ -113,6 +130,11 @@ def test_generated_examples_decode_with_expected_media_properties(
     if not shutil.which("ffmpeg") or not shutil.which("ffprobe"):
         pytest.skip("FFmpeg required for generated release examples")
     release_module.generate_examples(tmp_path)
+    for modality in ("audio", "video"):
+        rows = load_manifest(tmp_path / f"manifests/input-{modality}.jsonl")
+        assert len(rows) == 2
+        assert all(row.label is None and row.modality == modality for row in rows)
+        assert all((tmp_path / "media" / modality / row.path).is_file() for row in rows)
     expected = {
         "audio/stereo-44100.wav": ("audio", "44100", 2),
         "audio/mono-16000.flac": ("audio", "16000", 1),

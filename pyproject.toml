@@ -1,6 +1,6 @@
 [project]
 name = "deepfake-detection-archive"
-version = "0.1.0"
+version = "0.1.1"
 description = "Reproducible offline AIGC audio and video forgery detection competition project"
 readme = "README.md"
 authors = [

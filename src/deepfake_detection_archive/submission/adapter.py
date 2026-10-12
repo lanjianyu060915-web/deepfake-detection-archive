@@ -37,18 +37,20 @@ class AdapterConfig:
 
 
 def _export_rows(
-    scores: Sequence[ScoreRecord], config: AdapterConfig
+    scores: Sequence[ScoreRecord], config: AdapterConfig, *, allow_partial: bool
 ) -> list[dict[str, str | float]]:
     ids = [score.sample_id for score in scores]
     if not scores or len(set(ids)) != len(ids):
         raise ValueError("export requires nonempty scores with unique sample IDs")
     failed = [score.sample_id for score in scores if score.status != "ok"]
-    if failed:
+    if failed and not allow_partial:
         raise ValueError(
             f"cannot export failed samples without an approved fallback: {failed}"
         )
     rows: list[dict[str, str | float]] = []
     for score in scores:
+        if score.status != "ok":
+            continue
         if score.score is None:
             raise ValueError("successful row has no score")
         # Scores are unconstrained real-valued detector outputs, not probabilities.
@@ -65,8 +67,9 @@ def export_scores(
     config: AdapterConfig | None = None,
     *,
     official: bool = False,
+    allow_partial: bool = False,
 ) -> Path:
-    """Export complete scores with metadata sidecar; label never affects conversion.
+    """Export scores with explicit failure accounting; strict unless allow_partial.
 
     real_high negates the raw detector score, preserving reverse ranking without
     assuming scores are calibrated probabilities. This does not certify the
@@ -77,7 +80,9 @@ def export_scores(
         raise ValueError(
             "official export requires an explicitly confirmed platform contract"
         )
-    rows = _export_rows(scores, config)
+    if official and allow_partial:
+        raise ValueError("official export cannot allow partial results")
+    rows = _export_rows(scores, config, allow_partial=allow_partial)
     buffer = io.StringIO(newline="")
     if config.format == "csv":
         writer = csv.DictWriter(
@@ -109,6 +114,13 @@ def export_scores(
             if config.score_direction == "fake_high"
             else "negate",
             "sample_count": len(scores),
+            "total_count": len(scores),
+            "exported_count": len(rows),
+            "failed_count": len(scores) - len(rows),
+            "failed_sample_ids": [
+                score.sample_id for score in scores if score.status != "ok"
+            ],
+            "coverage": len(rows) / len(scores),
             "ordered_score_hash": object_hash([score.to_dict() for score in scores]),
         },
     )

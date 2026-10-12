@@ -1,0 +1,100 @@
+"""Torch allocation failures abort inference without swallowing model errors."""
+
+import json
+from pathlib import Path
+from unittest.mock import Mock
+
+import pytest
+import torch
+
+from deepfake_detection_archive.config import InferenceConfig
+from deepfake_detection_archive.data.manifest import SampleRecord
+from deepfake_detection_archive.media import VideoConfig
+from deepfake_detection_archive.scoring import OfflineScorer
+from deepfake_detection_archive.submission.runner import run_inference
+
+
+CPU_ALLOCATION_FAILURE = (
+    "[enforce fail at alloc_cpu.cpp:127] err == 0. "
+    "DefaultCPUAllocator: can't allocate memory: you tried to allocate 4000000000 "
+    "bytes. Error code 12 (Cannot allocate memory)"
+)
+
+
+def make_scorer(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> OfflineScorer:
+    scorer = object.__new__(OfflineScorer)
+    scorer.config = InferenceConfig(
+        manifest="manifest.jsonl",
+        data_root=str(tmp_path),
+        output_dir=str(tmp_path / "output"),
+        modality="video",
+        model_kind="video_frames",
+        checkpoint="model.pt",
+        checkpoint_sha256="0" * 64,
+        device="cpu",
+    )
+    scorer.root = tmp_path
+    scorer.device = torch.device("cpu")
+    scorer.frame_preprocessing = {}
+    scorer.video = VideoConfig()
+    monkeypatch.setattr(
+        "deepfake_detection_archive.scoring.extract_video_frames",
+        Mock(return_value=torch.zeros(1, 3, 2, 2)),
+    )
+    return scorer
+
+
+def records() -> list[SampleRecord]:
+    return [SampleRecord(str(i), f"{i}.mp4", "video", i % 2, "test") for i in range(3)]
+
+
+def test_cpu_allocator_failure_aborts_and_preserves_prefix(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    scorer = make_scorer(monkeypatch, tmp_path)
+    error = RuntimeError(CPU_ALLOCATION_FAILURE)
+    model = Mock(side_effect=[torch.tensor([0.25]), error, torch.tensor([0.75])])
+    monkeypatch.setattr(scorer, "model", model, raising=False)
+    output = tmp_path / "output"
+    with pytest.raises(MemoryError, match="DefaultCPUAllocator") as caught:
+        run_inference(records(), scorer, output, identity={"model": "mock"})
+    assert caught.value.__cause__ is error
+    assert model.call_count == 2
+    assert not (output / "report.json").exists()
+    path = output / "scores.jsonl"
+    prefix = path.read_bytes()
+    saved = [json.loads(line) for line in prefix.splitlines()]
+    assert len(saved) == 1
+    assert saved[0]["sample_id"] == "0"
+    assert saved[0]["status"] == "ok"
+    assert saved[0]["score"] == 0.25
+
+    model.side_effect = [torch.tensor([0.5]), torch.tensor([0.75])]
+    result = run_inference(
+        records(), scorer, output, identity={"model": "mock"}, resume=True
+    )
+    assert model.call_count == 4
+    assert [row.score for row in result] == [0.25, 0.5, 0.75]
+    assert path.read_bytes().startswith(prefix)
+
+
+@pytest.mark.parametrize(
+    "message", ["model shape mismatch", "can't allocate memory for this sample"]
+)
+def test_ordinary_runtime_error_remains_a_sample_failure(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, message: str
+) -> None:
+    scorer = make_scorer(monkeypatch, tmp_path)
+    model = Mock(
+        side_effect=[torch.tensor([0.25]), RuntimeError(message), torch.tensor([0.75])]
+    )
+    monkeypatch.setattr(scorer, "model", model, raising=False)
+    result = run_inference(
+        records(), scorer, tmp_path / "output", identity={"model": "mock"}
+    )
+    assert model.call_count == 3
+    assert [row.status for row in result] == ["ok", "error", "ok"]
+    assert result[1].score is None
+    assert result[1].error_code == "inference_error"
+    assert result[1].error_message == message
+    assert (tmp_path / "output" / "report.json").exists()

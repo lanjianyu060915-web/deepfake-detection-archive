@@ -20,7 +20,34 @@ from deepfake_detection_archive.data.manifest import (
 )
 
 
+TEMPORAL_CANONICAL = "video_h264_crf23_448x256_16fps_3p5s"
+
+
 CONDITIONS = {
+    TEMPORAL_CANONICAL: (
+        "video",
+        "mp4",
+        "h264",
+        (
+            "-map",
+            "0:v:0",
+            "-an",
+            "-t",
+            "3.5",
+            "-vf",
+            "setpts=PTS-STARTPTS,scale=448:256:flags=bicubic,setsar=1,fps=16",
+            "-pix_fmt",
+            "yuv420p",
+            "-c:v",
+            "libx264",
+            "-preset",
+            "medium",
+            "-crf",
+            "23",
+            "-fps_mode",
+            "passthrough",
+        ),
+    ),
     "audio_aac64k": (
         "audio",
         "m4a",
@@ -138,6 +165,35 @@ CONDITIONS = {
 }
 
 
+def video_timing(path: Path, timeout: float) -> tuple[float, int | None]:
+    """Probe actual video duration; frame count also verifies canonical output."""
+    completed = subprocess.run(  # noqa: S603
+        [  # noqa: S607 -- configured local media executable
+            "ffprobe",
+            "-v",
+            "error",
+            "-select_streams",
+            "v:0",
+            "-show_entries",
+            "stream=duration,nb_frames:format=duration",
+            "-of",
+            "json",
+            str(path),
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=timeout,
+    )
+    data = json.loads(completed.stdout)
+    stream = data["streams"][0]
+    duration = float(stream.get("duration", data.get("format", {}).get("duration")))
+    if not math.isfinite(duration) or duration <= 0:
+        raise ValueError("video duration must be finite and positive")
+    frames = stream.get("nb_frames")
+    return duration, int(frames) if frames is not None and frames != "N/A" else None
+
+
 def transform(
     row: SampleRecord,
     data_root: Path,
@@ -168,6 +224,12 @@ def transform(
             failure_reason=row.failure_reason,
         )
     try:
+        if condition == TEMPORAL_CANONICAL:
+            duration, _ = video_timing(data_root / row.path, timeout)
+            if duration < 3.5:
+                raise ValueError(  # noqa: TRY301 -- persist per-sample failure
+                    f"video is shorter than 3.5 seconds: {duration}"
+                )
         subprocess.run(  # noqa: S603 - media paths are separate arguments
             [  # noqa: S607 - use the configured local FFmpeg
                 "ffmpeg",
@@ -194,13 +256,27 @@ def transform(
             check=True,
             timeout=timeout,
         )
+        if condition == TEMPORAL_CANONICAL:
+            duration, frames = video_timing(target, timeout)
+            if duration != 3.5 or frames != 56:
+                raise ValueError(  # noqa: TRY301 -- remove invalid output and persist failure
+                    "canonical video must contain exactly 56 frames / 3.5s"
+                )
+            derived = replace(derived, duration_seconds=3.5, frame_rate=16)
         return replace(
             derived,
             sha256=file_sha256(target),
             status="available",
             failure_reason="unknown",
         )
-    except (OSError, subprocess.SubprocessError) as exc:
+    except (
+        OSError,
+        subprocess.SubprocessError,
+        ValueError,
+        TypeError,
+        KeyError,
+        IndexError,
+    ) as exc:
         target.unlink(missing_ok=True)
         reason = str(exc)
         if isinstance(exc, subprocess.CalledProcessError) and exc.stderr:

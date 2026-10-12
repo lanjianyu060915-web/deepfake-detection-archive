@@ -11,8 +11,20 @@ from pathlib import Path
 
 from prepare_offline_package import Builder
 
+from deepfake_detection_archive.data.manifest import SampleRecord, write_manifest
+
 
 REPOSITORY = Path(__file__).resolve().parents[1]
+RUNTIME_ROOTS = (
+    "torch",
+    "torchvision",
+    "timm",
+    "transformers",
+    "numpy",
+    "scipy",
+    "soundfile",
+    "safetensors",
+)
 RUN_SH = """#!/usr/bin/env bash
 set -euo pipefail
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
@@ -70,6 +82,20 @@ def generate_examples(output: Path) -> None:
             timeout=60,
         )
 
+    for modality in ("audio", "video"):
+        rows = [
+            SampleRecord(
+                sample_id=f"example-{modality}-{path.stem}",
+                path=path.name,
+                modality=modality,
+                label=None,
+                source="self-generated-decoding-example",
+                split="test",
+            )
+            for path in sorted((output / "media" / modality).iterdir())
+        ]
+        write_manifest(rows, output / "manifests" / f"input-{modality}.jsonl")
+
 
 def source_identity(source: Path) -> dict[str, object]:
     head = subprocess.run(  # noqa: S603 -- local assets passed as separate arguments
@@ -96,10 +122,24 @@ def build_release(  # noqa: PLR0913, PLR0917 -- explicit local build inputs
     audio_weight: Path,
     video_weight: Path,
     source: Path,
+    *,
+    version: str,
 ) -> None:
+    if not version.strip():
+        raise ValueError("release version must not be empty")
     output.mkdir(parents=True, exist_ok=False)
     builder = Builder(output, output, 1)
-    builder.copy_dependencies(REPOSITORY / "uv.lock", site_packages.resolve(), source)
+    roots: tuple[str, ...] = RUNTIME_ROOTS
+    installed = {
+        dist.metadata["Name"].lower()
+        for dist in importlib.metadata.distributions(path=[str(site_packages)])
+    }
+    # AST uses Kaldi features when torchaudio is available: preserve that choice.
+    if "torchaudio" in installed:
+        roots += ("torchaudio",)
+    builder.copy_dependencies(
+        REPOSITORY / "uv.lock", site_packages.resolve(), source, runtime_roots=roots
+    )
     hashes = {
         "audio": builder.copy_weight(audio_weight, "audio-ast-urban"),
         "video": builder.copy_weight(video_weight, "video-resnet18"),
@@ -108,8 +148,11 @@ def build_release(  # noqa: PLR0913, PLR0917 -- explicit local build inputs
     (output / "run.sh").write_text(RUN_SH, encoding="utf-8")
     (output / "run.sh").chmod(0o755)
     (output / "configs").mkdir()
-    for name in ("audio", "video"):
-        path = REPOSITORY / "configs/release" / f"{name}.json"
+    for name, filename in (
+        ("audio", "audio-environment.json"),
+        ("video", "video.json"),
+    ):
+        path = REPOSITORY / "configs/release" / filename
         config = json.loads(path.read_text(encoding="utf-8"))
         if config["checkpoint_sha256"] != hashes[name]:
             raise ValueError(
@@ -131,10 +174,11 @@ def build_release(  # noqa: PLR0913, PLR0917 -- explicit local build inputs
         shutil.copyfile(REPOSITORY / original, target)
     # Override the reused research-package note: this release includes CPython.
     (output / "deps/README.md").write_text(
-        "运行依赖为本地 site-packages 实体快照，许可证保留在 dist-info。\n"
+        "运行依赖按已安装 wheel 的 Requires-Dist 闭包和 RECORD 复制，\n"
+        "许可证保留在 dist-info。\n"
         "CPython 位于 runtime/python，使用根目录 run.sh 启动；"
-        "系统动态库、FFmpeg/ffprobe 与 NVIDIA 驱动仍由目标机提供。\n"
-        "uv.lock 记录依赖来源；此快照包含构建环境工具，不是最小运行环境。\n",
+        "FFmpeg/ffprobe、系统动态库与 NVIDIA 驱动由目标机提供。\n"
+        "uv.lock 记录构建环境来源，实际运行依赖见 release.json。\n",
         encoding="utf-8",
     )
     generate_examples(output)
@@ -154,15 +198,21 @@ def build_release(  # noqa: PLR0913, PLR0917 -- explicit local build inputs
     )
     distributions = {
         dist.metadata["Name"].lower(): dist.version
-        for dist in importlib.metadata.distributions(path=[str(site_packages)])
+        for dist in importlib.metadata.distributions(
+            path=[str(output / "runtime/site-packages")]
+        )
     }
     metadata = {
-        "version": "0.1.0",
+        "version": version,
+        "runtime_dependencies": distributions,
         "python": json.loads(python_info.stdout),
         "torch": distributions["torch"],
         "checkpoint_sha256": hashes,
         "source": source_identity(source),
         "official_adapter_confirmed": False,
+        "model_scope": {"audio": "environmental_audio_research"},
+        "general_audio_ready": False,
+        "competition_use": "unconfirmed",
         "examples": "self-generated decoding demonstrations, no authenticity labels",
     }
     (output / "release.json").write_text(
@@ -172,6 +222,7 @@ def build_release(  # noqa: PLR0913, PLR0917 -- explicit local build inputs
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--version", required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--site-packages", type=Path, required=True)
     parser.add_argument("--python-home", type=Path, required=True)
@@ -186,6 +237,7 @@ def main() -> None:
         args.audio_weight,
         args.video_weight,
         args.source,
+        version=args.version,
     )
     print(args.output)
 

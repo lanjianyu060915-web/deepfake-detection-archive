@@ -1,0 +1,298 @@
+{
+  "date": "2026-10-12",
+  "asset_root": "/var/tmp/deepfake-release-review-20261012",
+  "holdout_accessed": false,
+  "checkpoint_sha256": {
+    "audio-ast-urban": {
+      "source_sha256": "8fa61daf42054b29fd61906c8c2fcf679ba4558e80472806197958b013c6e95c",
+      "sha256": "62584d52533fc4204df9c8c37e4f78fd2b5299e5cded13869c23faf4399c3efb",
+      "tensors_unchanged": true,
+      "config": {
+        "backbone_config": {
+          "attention_probs_dropout_prob": 0.0,
+          "frequency_stride": 10,
+          "hidden_act": "gelu",
+          "hidden_dropout_prob": 0.0,
+          "hidden_size": 768,
+          "initializer_range": 0.02,
+          "intermediate_size": 3072,
+          "layer_norm_eps": 1e-12,
+          "max_length": 512,
+          "model_type": "audio-spectrogram-transformer",
+          "num_attention_heads": 12,
+          "num_hidden_layers": 12,
+          "num_mel_bins": 128,
+          "patch_size": 16,
+          "qkv_bias": true,
+          "time_stride": 10,
+          "torch_dtype": "float32"
+        },
+        "trainable_layers": 12,
+        "sample_rate": 16000,
+        "feature_mean": -4.2677393,
+        "feature_std": 4.5689974,
+        "dropout": 0.1,
+        "waveform_preparation": "center_pad_64000_peak095_v1"
+      }
+    },
+    "video-resnet18": {
+      "source_sha256": "16abc4e9828f73545d60da874a0da16b2a394c63c465896c9ab7e5c5bf465669",
+      "sha256": "21fdd4e547a5ae7c7a24162eaf2cb526379b7d152e36aa4546891657ae48f115",
+      "tensors_unchanged": true,
+      "config": {
+        "architecture": "resnet18",
+        "encoder_checkpoint": "pretrained/resnet18-a1/encoder.pt",
+        "expected_sha256": "db6fd0c5cfb2b712d1904bb8b7edcf41a850491bdf42729e4ab485e89f1b6889",
+        "hidden_dim": 64,
+        "dropout": 0.1,
+        "aggregation": "mean",
+        "trim_fraction": 0.0,
+        "trainable_prefix": "layer4"
+      }
+    }
+  },
+  "audio": {
+    "urban": {
+      "sample_count": 2885,
+      "real_count": 577,
+      "fake_count": 2308,
+      "fullset_eer": 0.01386481802426343,
+      "coverage": 1.0,
+      "failure_count": 0,
+      "config": "/var/tmp/deepfake-release-review-20261012/configs/audio-urban.json",
+      "scores": "/var/tmp/deepfake-release-review-20261012/audio-urban/scores.jsonl",
+      "scores_sha256": "af8b0eefce3e2621db43b808e3bfc30938fbd444aad01ab637ebfb12776abf86"
+    },
+    "fsd": {
+      "sample_count": 70,
+      "real_count": 35,
+      "fake_count": 35,
+      "fullset_eer": 0.08571428571428572,
+      "coverage": 1.0,
+      "failure_count": 0,
+      "config": "/var/tmp/deepfake-release-review-20261012/configs/audio-fsd.json",
+      "scores": "/var/tmp/deepfake-release-review-20261012/audio-fsd/scores.jsonl",
+      "scores_sha256": "29159877147f1bcc4fa5edd123747972488bcfd5466153c878618bfcfb279fac"
+    },
+    "unseen": {
+      "sample_count": 1731,
+      "real_count": 577,
+      "fake_count": 1154,
+      "fullset_eer": 0.05025996533795494,
+      "coverage": 1.0,
+      "failure_count": 0,
+      "config": "/var/tmp/deepfake-release-review-20261012/configs/audio-unseen.json",
+      "scores": "/var/tmp/deepfake-release-review-20261012/audio-unseen/scores.jsonl",
+      "scores_sha256": "b499ceb3a14f17068c333abeb1449bc248fbbcd6b142c1ab647e02cd17584122"
+    },
+    "music": {
+      "sample_count": 96,
+      "real_count": 16,
+      "fake_count": 80,
+      "fullset_eer": 0.225,
+      "coverage": 1.0,
+      "failure_count": 0,
+      "config": "/var/tmp/deepfake-release-review-20261012/configs/audio-music.json",
+      "scores": "/var/tmp/deepfake-release-review-20261012/audio-music/scores.jsonl",
+      "scores_sha256": "444c3c50a93768dd7cd9c2dca0a68a78d9d31e7850205f30e8337d239d528619"
+    },
+    "speech": {
+      "sample_count": 200,
+      "real_count": 100,
+      "fake_count": 100,
+      "fullset_eer": 0.44,
+      "coverage": 1.0,
+      "failure_count": 0,
+      "config": "/var/tmp/deepfake-release-review-20261012/configs/audio-speech.json",
+      "scores": "/var/tmp/deepfake-release-review-20261012/audio-speech/scores.jsonl",
+      "scores_sha256": "84acf8cddf20107775a40d0d84fb06d7b468439a6ee3befebe691997de5fc13d"
+    }
+  },
+  "video_original": {
+    "sample_count": 1949,
+    "real_count": 104,
+    "fake_count": 1845,
+    "fullset_eer": 0.3132791327913279,
+    "coverage": 1.0,
+    "failure_count": 0,
+    "checkpoint_sha256": "16abc4e9828f73545d60da874a0da16b2a394c63c465896c9ab7e5c5bf465669",
+    "scores": "/var/tmp/deepfake-release-review-20261012/video-original/scores.jsonl",
+    "scores_sha256": "876638cc33b3eb0b2f6243cf502074611be097c552a4fd403699ef27e7a63a0a"
+  },
+  "video_canonical": {
+    "condition": "video_h264_crf23_448x256_16fps_3p5s",
+    "manifest_sha256": "317036f351d24ba8cda44f6332c73b1a42576e141fee1b846d4113efbc9c07fb",
+    "preparation_seconds": 1117.67,
+    "models": {
+      "finetuned_original": {
+        "sample_count": 1949,
+        "real_count": 104,
+        "fake_count": 1845,
+        "fullset_eer": 0.3132791327913279,
+        "coverage": 1.0,
+        "failure_count": 0,
+        "scores": "/var/tmp/deepfake-release-review-20261012/video-original/scores.jsonl",
+        "scores_sha256": "876638cc33b3eb0b2f6243cf502074611be097c552a4fd403699ef27e7a63a0a"
+      },
+      "finetuned_canonical": {
+        "sample_count": 1949,
+        "real_count": 104,
+        "fake_count": 1845,
+        "fullset_eer": 0.3311653116531165,
+        "coverage": 1.0,
+        "failure_count": 0,
+        "scores": "/var/tmp/deepfake-release-review-20261012/video-canonical-scores/scores.jsonl",
+        "scores_sha256": "836e20e790f1a8260f27eeaf02c82be359446d89bc8468be7003a1abb242e199",
+        "config": "/var/tmp/deepfake-release-review-20261012/configs/video-canonical.json",
+        "sample_call_seconds": 521.4149530865252
+      },
+      "frozen_canonical": {
+        "sample_count": 1949,
+        "real_count": 104,
+        "fake_count": 1845,
+        "fullset_eer": 0.33653846153846156,
+        "coverage": 1.0,
+        "failure_count": 0,
+        "scores": "/var/tmp/deepfake-release-review-20261012/video-canonical-frozen/scores.jsonl",
+        "scores_sha256": "772539b2b36ceffd4b8134eb4a6d566dbae7e2c355831ac5e16cb6b2a481a81a",
+        "config": "/var/tmp/deepfake-release-review-20261012/configs/video-canonical-frozen.json",
+        "sample_call_seconds": 474.7282962789759
+      }
+    },
+    "by_generator": {
+      "CogVideoX1.5-5B-T": {
+        "real_count": 104,
+        "fake_count": 104,
+        "finetuned_original_eer": 0.33653846153846156,
+        "finetuned_canonical_eer": 0.3173076923076923,
+        "frozen_canonical_eer": 0.2980769230769231
+      },
+      "HunyuanVideo-I2V": {
+        "real_count": 104,
+        "fake_count": 104,
+        "finetuned_original_eer": 0.3557692307692308,
+        "finetuned_canonical_eer": 0.4230769230769231,
+        "frozen_canonical_eer": 0.4230769230769231
+      },
+      "HunyuanVideo": {
+        "real_count": 103,
+        "fake_count": 103,
+        "finetuned_original_eer": 0.1650485436893204,
+        "finetuned_canonical_eer": 0.1941747572815534,
+        "frozen_canonical_eer": 0.21359223300970873
+      },
+      "LTX-Video-13B-I": {
+        "real_count": 102,
+        "fake_count": 102,
+        "finetuned_original_eer": 0.4215686274509804,
+        "finetuned_canonical_eer": 0.46078431372549017,
+        "frozen_canonical_eer": 0.45098039215686275
+      },
+      "LTX-Video-13B-T": {
+        "real_count": 100,
+        "fake_count": 100,
+        "finetuned_original_eer": 0.2,
+        "finetuned_canonical_eer": 0.22,
+        "frozen_canonical_eer": 0.27
+      },
+      "SkyReels-V2-I2V-14B-540P": {
+        "real_count": 103,
+        "fake_count": 103,
+        "finetuned_original_eer": 0.49514563106796117,
+        "finetuned_canonical_eer": 0.46601941747572817,
+        "frozen_canonical_eer": 0.4563106796116505
+      },
+      "SkyReels-V2": {
+        "real_count": 104,
+        "fake_count": 104,
+        "finetuned_original_eer": 0.16346153846153846,
+        "finetuned_canonical_eer": 0.19230769230769232,
+        "frozen_canonical_eer": 0.21153846153846154
+      },
+      "Wan2.1-T2V-1.3B": {
+        "real_count": 104,
+        "fake_count": 104,
+        "finetuned_original_eer": 0.20192307692307693,
+        "finetuned_canonical_eer": 0.22115384615384615,
+        "frozen_canonical_eer": 0.22115384615384615
+      },
+      "Wan2.1-VACE-1.3B-T": {
+        "real_count": 104,
+        "fake_count": 104,
+        "finetuned_original_eer": 0.36538461538461536,
+        "finetuned_canonical_eer": 0.34615384615384615,
+        "frozen_canonical_eer": 0.36538461538461536
+      },
+      "Wan2.2-I2V-14B": {
+        "real_count": 104,
+        "fake_count": 104,
+        "finetuned_original_eer": 0.4807692307692308,
+        "finetuned_canonical_eer": 0.47115384615384615,
+        "frozen_canonical_eer": 0.4519230769230769
+      },
+      "Wan2.2-T2V-14B": {
+        "real_count": 104,
+        "fake_count": 104,
+        "finetuned_original_eer": 0.27884615384615385,
+        "finetuned_canonical_eer": 0.2403846153846154,
+        "frozen_canonical_eer": 0.28846153846153844
+      },
+      "Wan2.2-TI2V-5B-I": {
+        "real_count": 104,
+        "fake_count": 104,
+        "finetuned_original_eer": 0.5384615384615384,
+        "finetuned_canonical_eer": 0.5576923076923077,
+        "frozen_canonical_eer": 0.4807692307692308
+      },
+      "Wan2.2-TI2V-5B-T": {
+        "real_count": 104,
+        "fake_count": 104,
+        "finetuned_original_eer": 0.27884615384615385,
+        "finetuned_canonical_eer": 0.28846153846153844,
+        "frozen_canonical_eer": 0.27884615384615385
+      },
+      "gen4-turbo": {
+        "real_count": 64,
+        "fake_count": 64,
+        "finetuned_original_eer": 0.453125,
+        "finetuned_canonical_eer": 0.46875,
+        "frozen_canonical_eer": 0.453125
+      },
+      "hailuo": {
+        "real_count": 81,
+        "fake_count": 81,
+        "finetuned_original_eer": 0.2345679012345679,
+        "finetuned_canonical_eer": 0.2345679012345679,
+        "frozen_canonical_eer": 0.2345679012345679
+      },
+      "kling-v1": {
+        "real_count": 80,
+        "fake_count": 80,
+        "finetuned_original_eer": 0.275,
+        "finetuned_canonical_eer": 0.2875,
+        "frozen_canonical_eer": 0.2625
+      },
+      "pika-v2": {
+        "real_count": 90,
+        "fake_count": 90,
+        "finetuned_original_eer": 0.16666666666666666,
+        "finetuned_canonical_eer": 0.25555555555555554,
+        "frozen_canonical_eer": 0.25555555555555554
+      },
+      "pixverse-v4-5": {
+        "real_count": 92,
+        "fake_count": 92,
+        "finetuned_original_eer": 0.1956521739130435,
+        "finetuned_canonical_eer": 0.22826086956521738,
+        "frozen_canonical_eer": 0.2717391304347826
+      },
+      "sora-2": {
+        "real_count": 94,
+        "fake_count": 94,
+        "finetuned_original_eer": 0.35106382978723405,
+        "finetuned_canonical_eer": 0.3723404255319149,
+        "frozen_canonical_eer": 0.35106382978723405
+      }
+    }
+  }
+}

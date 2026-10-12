@@ -132,3 +132,68 @@ def test_builder_relocates_isolated_runtime_and_source(
         timeout=30,
     )
     assert "infer" in result.stdout
+
+
+def _distribution(site: Path, name: str, requirements: tuple[str, ...] = ()) -> None:
+    info = site / f"{name}-1.0.dist-info"
+    info.mkdir(parents=True)
+    (info / "METADATA").write_text(
+        f"Name: {name}\nVersion: 1.0\n"
+        + "".join(f"Requires-Dist: {value}\n" for value in requirements)
+    )
+    (info / "LICENSE").write_text(f"{name} license")
+    (site / f"{name}.py").write_text(f"# {name}\n")
+    files = [
+        f"{name}.py",
+        f"{info.name}/METADATA",
+        f"{info.name}/LICENSE",
+        f"{info.name}/RECORD",
+    ]
+    (info / "RECORD").write_text("".join(f"{file},,\n" for file in files))
+
+
+def test_runtime_closure_markers_extras_and_wheel_files(
+    tmp_path: Path, builder_module: ModuleType
+) -> None:
+    site = tmp_path / "installed"
+    _distribution(
+        site,
+        "model",
+        (
+            "backend[fast]>=1",
+            "native; sys_platform == 'linux'",
+            "missing; python_version < '3'",
+            "devtools; extra == 'dev'",
+        ),
+    )
+    _distribution(site, "backend", ("accelerator; extra == 'fast'", "model"))
+    for name in ("native", "accelerator", "devtools", "unrelated"):
+        _distribution(site, name)
+    native_lib = site / "native.libs/libnative.so"
+    native_lib.parent.mkdir()
+    native_lib.write_bytes(b"native binary")
+    record = site / "native-1.0.dist-info/RECORD"
+    with record.open("a") as stream:
+        stream.write("native.libs/libnative.so,,\n../../../bin/native-cli,,\n")
+    (site / "poison.pth").write_text("raise Exception()")
+    target = tmp_path / "runtime"
+    builder_module.copy_runtime_dependencies(site, target, ("model",))
+    assert {path.stem for path in target.glob("*.py")} == {
+        "model",
+        "backend",
+        "accelerator",
+        "native",
+    }
+    assert (target / "native.libs/libnative.so").read_bytes() == b"native binary"
+    assert (target / "backend-1.0.dist-info/LICENSE").read_text() == "backend license"
+    assert not (target / "poison.pth").exists()
+    assert "devtools" in builder_module.runtime_dependencies(site, ("model[dev]",))
+
+
+@pytest.mark.parametrize("requirement", ["missing", "model>=2"])
+def test_runtime_closure_rejects_incomplete_environment(
+    tmp_path: Path, builder_module: ModuleType, requirement: str
+) -> None:
+    _distribution(tmp_path, "model")
+    with pytest.raises(ValueError, match=r"missing installed|violates"):
+        builder_module.runtime_dependencies(tmp_path, (requirement,))
