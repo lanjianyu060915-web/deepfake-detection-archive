@@ -95,10 +95,8 @@ batch64小profile峰值allocated14.90/reserved15.19GiB；复用35,922个已有fb
 
 本轮训练和评分使用固定源码 `0b6b1d5`，任务根为
 `/var/tmp/deepfake-audio-speech-mix-20261012/`。
-审查后入口许可修复为 `7039158`：在输出创建前验证实际父来源训练权及许可一致性，
-派生用途取交集。原工具曾额外登记evaluation；实际AIME/ASV均已允许本轮研究训练。
-三份当前来源登记已收窄为research/training，原登记保存在各目录的 `sources-run.jsonl`；
-摘要记录前后SHA。媒体、清单、配对、标签、权重及原运行provenance均未改写，不需重训。
+派生用途取实际父来源的许可交集。来源登记随后收窄为research/training，
+原登记保存在各目录的 `sources-run.jsonl`；原训练权限、媒体、权重及运行provenance未改变。
 原资源与研究许可见[AIME](../../research/source/aime/README.md)及
 [ASV来源](../../research/source/asvspoof2019/provenance.json)。
 派生使用两者许可交集；AIME逐曲权利、artist独立性及正式赛用仍未确认，不进入正式交付。

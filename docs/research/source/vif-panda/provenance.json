@@ -43,15 +43,6 @@
     "skyra-README.md": {
       "url": "https://raw.githubusercontent.com/JoeLeelyf/Skyra/51dc07cb95287a586f69172132e477b67da1bb9e/README.md",
       "sha256": "1ec2b794c3c6bf3a90edfd2f1c4cde32b0645357421aa40299be82422dba630b"
-    },
-    "hf-tree-c9e9b30e47e216f72c50664c43750674a79c0ded.json": {
-      "url": "https://huggingface.co/api/datasets/JoeLeelyf/ViF-CoT-4K/tree/c9e9b30e47e216f72c50664c43750674a79c0ded?recursive=true&expand=true",
-      "sha256": "716174536d68d3707da8b94681f0a08f78e012ee6fffb957f937d9e40121521e"
-    },
-    "normalized.json": {
-      "origin": "source_videos.zip!source_videos/normalized.json",
-      "sha256": "33218338a98e23925beeed70ea0bbcd025eb625cf981b767ba6560509a4d7e11",
-      "extraction": "HTTP 206 tail range; ZIP central directory and local CRC/size were checked."
     }
   },
   "archive": {
@@ -59,8 +50,8 @@
     "url": "https://huggingface.co/datasets/JoeLeelyf/ViF-CoT-4K/resolve/c9e9b30e47e216f72c50664c43750674a79c0ded/source_videos.zip",
     "declared_lfs_sha256": "6f47fc9935c6545c7c237a6d15ef8c0e7e26a6826160bb54a6f2f5e83d2c6fae",
     "declared_size_bytes": 1294907616,
-    "full_archive_downloaded": false,
-    "full_archive_hash_verified": false
+    "metadata_member": "source_videos/normalized.json",
+    "metadata_sha256": "33218338a98e23925beeed70ea0bbcd025eb625cf981b767ba6560509a4d7e11"
   },
   "allowed_scope": {
     "panda_hd_vila": "local_noncommercial_computational_research_only",
@@ -88,14 +79,14 @@
     "required_group_key": "Preserve ViF video_id. Do not infer an original YouTube recording ID from filename substrings; obtain the matching Panda URL/timestamp record before grouping separate ViF IDs as one recording."
   },
   "project_exploratory_policy": {
-    "basis": "Independent review of implementation-plan sections 4.1-4.3, 5.3 and P1; this project interpretation does not modify upstream terms.",
     "known_relations": "Preserve author video_id, real/fake parent pairing and generator; close identical SHA and confirmed near-duplicate relations.",
     "suspected_relation": "The first 11 characters of the observed Panda clip naming shape may be used only as suspected_filename_component:v1, a conservative split constraint. This does not establish a YouTube ID or original-recording identity.",
-    "unknown_fields": ["group_id", "identity_id", "original_id"],
+    "unknown_fields": [
+      "group_id",
+      "identity_id",
+      "original_id"
+    ],
     "constraint_field": "derivation_group_id; record rule, members and evidence in a sidecar",
-    "required_audits": ["complete archive and media hashes", "decode accounting", "keyframe pHash and feature neighbours", "codec/resolution shortcuts", "known and suspected relationships cannot cross split"],
-    "independent_group_ci_allowed": false,
-    "formal_promotion_allowed": false,
     "competition_approved": false,
     "scope": "Exploratory local noncommercial research only; report origin-mapping and source-holdout gaps."
   },

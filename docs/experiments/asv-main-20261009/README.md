@@ -92,5 +92,5 @@ OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 OPENBLAS_NUM_THREADS=1 \
 
 原run记录源码commit `9eb78ee`、`dirty=true`及源码哈希，保留该事实；
 后续提交包含批量缓存和入口修正，不能把本次运行改写为使用后续commit完成。
-小型结果与完整30轮曲线数据纳入Git：`summary.json`、`training-history.json`。
+核心结果保留在 `summary.json`；完整30轮曲线通过Git历史追溯。
 原模型和连续分数仍在Git外，迁移成员及SHA见[资源说明](../../data.md#旧实验资源恢复)。

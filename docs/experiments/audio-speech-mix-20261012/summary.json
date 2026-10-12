@@ -3,7 +3,6 @@
   "issue": 32,
   "task_root": "/var/tmp/deepfake-audio-speech-mix-20261012",
   "source_commit": "0b6b1d5c7836557c7b89b0e8bf56c7496209b4cd",
-  "source_registry_fix_commit": "7039158",
   "holdout_evaluated": false,
   "training": {
     "seed": 42,
@@ -88,30 +87,6 @@
         "asvspoof2019-la-official:speaker:LA_0097",
         "asvspoof2019-la-official:speaker:LA_0098"
       ]
-    }
-  },
-  "source_registry_correction": {
-    "reason": "Derived source previously added evaluation beyond parent registration; correction only restricts metadata. Actual training was permitted by both parents; media, manifests, splits, checkpoints and recorded run provenance remain unchanged.",
-    "derived_allowed_uses": [
-      "research",
-      "training"
-    ],
-    "registries": {
-      "mixtures": {
-        "recorded_sources_sha256": "25975053f6ce50fc7f8da36b18694701d6971440d8a6531564e256b204c52136",
-        "corrected_sources_sha256": "1e47a2bbb4788da86d9818d8e55982fef3289288cf8281da17bfe6131ec58876",
-        "original_snapshot": "mixtures/sources-run.jsonl"
-      },
-      "pure-replay": {
-        "recorded_sources_sha256": "8389be39ec7f4df06fe6df4522068b9d6b43134516e70d37a3be7e2bf741b65f",
-        "corrected_sources_sha256": "4749aac0ca8c6918d8b72934831c71339d00438d774fa485f0778eab1ef062e2",
-        "original_snapshot": "pure-replay/sources-run.jsonl"
-      },
-      "speech-mix": {
-        "recorded_sources_sha256": "8389be39ec7f4df06fe6df4522068b9d6b43134516e70d37a3be7e2bf741b65f",
-        "corrected_sources_sha256": "4749aac0ca8c6918d8b72934831c71339d00438d774fa485f0778eab1ef062e2",
-        "original_snapshot": "speech-mix/sources-run.jsonl"
-      }
     }
   },
   "bucket_counts": {
@@ -777,5 +752,17 @@
     "AIME artist/track independence and per-track rights remain unconfirmed.",
     "AI-OpenBMAT label purity and underlying rights unresolved; external diagnosis only.",
     "Formal competition use not approved; no new holdout read or evaluation."
-  ]
+  ],
+  "source_permissions": {
+    "allowed_uses": [
+      "research",
+      "training"
+    ],
+    "original_registry_snapshots": [
+      "mixtures/sources-run.jsonl",
+      "pure-replay/sources-run.jsonl",
+      "speech-mix/sources-run.jsonl"
+    ],
+    "note": "Source permissions narrowed after training; original run provenance, media and weights remain unchanged."
+  }
 }
