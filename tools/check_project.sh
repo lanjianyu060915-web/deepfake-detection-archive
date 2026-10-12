@@ -17,6 +17,7 @@ model_tools=(
   tools/prepare_asv_eval.py
   tools/finalize_asvspoof2019.py
   tools/prepare_vif_panda.py
+  tools/prepare_vif_bench.py
   tools/prepare_asv_main.py
   tools/prepare_doppelganger.py
   tools/prepare_fakesound.py
