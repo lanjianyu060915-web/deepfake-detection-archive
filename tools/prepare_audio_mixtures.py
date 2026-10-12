@@ -120,6 +120,37 @@ def _inputs(
     return selected, pools, {r.sample_id for r in main}, {r.sample_id for r in extra}
 
 
+def _allowed_uses(
+    music: list[SampleRecord],
+    speakers: dict[tuple[str, int], SampleRecord],
+    sources: dict[str, SourceRecord],
+) -> tuple[str, ...]:
+    if not music:
+        raise ValueError("no train/dev music selected")
+    used_sources: dict[str, SourceRecord] = {}
+    for row in [*music, *speakers.values()]:
+        source = sources.get(row.source)
+        if source is None:
+            raise ValueError(f"missing source metadata: {row.source}")
+        if row.license_id == "unknown" or row.license_id != source.license_id:
+            raise ValueError(f"sample/source license mismatch: {row.sample_id}")
+        if source.license_status != "approved" or "training" not in source.allowed_uses:
+            raise ValueError(f"source training permission not approved: {row.source}")
+        used_sources[row.source] = source
+    if (
+        len({row.license_id for row in music}) != 1
+        or len({row.license_id for row in speakers.values()}) != 1
+    ):
+        raise ValueError("mixtures require a single music/speech license pair")
+    return tuple(
+        sorted(
+            set.intersection(
+                *(set(source.allowed_uses) for source in used_sources.values())
+            )
+        )
+    )
+
+
 def prepare(  # noqa: PLR0913
     *,
     music_manifest: Path,
@@ -143,11 +174,15 @@ def prepare(  # noqa: PLR0913
         if name in sources and sources[name] != source:
             raise ValueError(f"conflicting source: {name}")
         sources[name] = source
-    if any(
-        row.source not in sources
-        for row in music + [row for pool in pools.values() for row in pool]
-    ):
-        raise ValueError("missing source metadata")
+    speakers: dict[tuple[str, int], SampleRecord] = {}
+    for row in music:
+        for index, snr in enumerate(snr_db):
+            digest = hashlib.sha256(f"{seed}:{row.group_id}:{snr:g}".encode()).digest()
+            pool = pools[row.split]
+            speakers[row.sample_id, index] = pool[
+                int.from_bytes(digest, "big") % len(pool)
+            ]
+    allowed_uses = _allowed_uses(music, speakers, sources)
     output.mkdir(parents=True, exist_ok=True)
     if any(output.iterdir()):
         raise ValueError("output must be empty")
@@ -158,9 +193,7 @@ def prepare(  # noqa: PLR0913
     provenance: list[dict[str, Any]] = []
     for row in sorted(music, key=lambda item: item.sample_id):
         for index, snr in enumerate(snr_db):
-            digest = hashlib.sha256(f"{seed}:{row.group_id}:{snr:g}".encode()).digest()
-            pool = pools[row.split]
-            speaker = pool[int.from_bytes(digest, "big") % len(pool)]
+            speaker = speakers[row.sample_id, index]
             sample_id = f"{row.sample_id}:speech-mix:{index}"
             filename = hashlib.sha256(sample_id.encode()).hexdigest() + ".wav"
             record = replace(
@@ -249,7 +282,7 @@ def prepare(  # noqa: PLR0913
         license_id=mixed[0].license_id,
         license_url=sources[music[0].source].license_url,
         downloaded_at="derived",
-        allowed_uses=("research", "training", "evaluation"),
+        allowed_uses=allowed_uses,
         license_status="approved",
     )
     (output / "sources.jsonl").write_text(

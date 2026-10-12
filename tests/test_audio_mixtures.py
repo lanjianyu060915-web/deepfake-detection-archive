@@ -284,3 +284,107 @@ def test_mixture_registry_passes_training_input_audit(tmp_path: Path) -> None:
     )
     assert report.passed, report.issues
     assert len(report.trainable_ids) == len(records)
+
+
+@pytest.mark.parametrize("parent", ["music", "speech"])
+@pytest.mark.parametrize(
+    ("status", "uses"),
+    [
+        ("denied", ("research", "training")),
+        ("unresolved", ("research", "training")),
+        ("approved", ("research", "evaluation")),
+    ],
+)
+def test_parent_training_permission_required_before_output(
+    tmp_path: Path, parent: str, status: str, uses: tuple[str, ...]
+) -> None:
+    args = _fixture(tmp_path)
+    path = args[f"{parent}_sources"]
+    source = replace(
+        load_sources(path)[parent], license_status=status, allowed_uses=uses
+    )
+    path.write_text(json.dumps(asdict(source)) + "\n")
+    with pytest.raises(ValueError, match="training permission not approved"):
+        MODULE["prepare"](**args)
+    assert not args["output"].exists()
+
+
+@pytest.mark.parametrize("parent", ["music", "speech"])
+def test_parent_license_mismatch_rejected_before_output(
+    tmp_path: Path, parent: str
+) -> None:
+    args = _fixture(tmp_path)
+    path = args[f"{parent}_manifest"]
+    write_manifest(
+        [replace(row, license_id="different") for row in load_manifest(path)], path
+    )
+    with pytest.raises(ValueError, match="sample/source license mismatch"):
+        MODULE["prepare"](**args)
+    assert not args["output"].exists()
+
+
+@pytest.mark.parametrize("music_uses", [("training", "research"), ("training",)])
+def test_real_parent_licenses_preserve_allowed_uses_intersection(
+    tmp_path: Path, music_uses: tuple[str, ...]
+) -> None:
+    args = _fixture(tmp_path)
+    licenses = {
+        "music": "CC-BY-4.0 AND CC-BY-NC-SA-4.0 AND LicenseRef-MTG-CC-per-track",
+        "speech": "ODC-By-1.0",
+    }
+    for parent, license_id in licenses.items():
+        manifest = args[f"{parent}_manifest"]
+        write_manifest(
+            [replace(row, license_id=license_id) for row in load_manifest(manifest)],
+            manifest,
+        )
+        path = args[f"{parent}_sources"]
+        source = replace(
+            load_sources(path)[parent],
+            license_id=license_id,
+            allowed_uses=(
+                music_uses
+                if parent == "music"
+                else ("research", "training", "evaluation")
+            ),
+        )
+        path.write_text(json.dumps(asdict(source)) + "\n")
+    MODULE["prepare"](**args)
+    derived = load_sources(args["output"] / "sources.jsonl")[MODULE["SOURCE"]]
+    assert set(derived.allowed_uses) == set(music_uses)
+    assert derived.license_id == f"{licenses['music']} AND {licenses['speech']}"
+    assert derived.license_status == "approved"
+    assert all(
+        row.license_id == derived.license_id
+        for row in load_manifest(args["output"] / "mixed-manifest.jsonl")
+    )
+
+
+def test_distinct_license_pairs_rejected_before_output(tmp_path: Path) -> None:
+    args = _fixture(tmp_path)
+    source = load_sources(args["music_sources"])["music"]
+    other = replace(source, source="other-music", license_id="other-license")
+    args["music_sources"].write_text(
+        "".join(json.dumps(asdict(item)) + "\n" for item in (source, other))
+    )
+    music = load_manifest(args["music_manifest"])
+    music[0] = replace(music[0], source=other.source, license_id=other.license_id)
+    write_manifest(music, args["music_manifest"])
+    with pytest.raises(ValueError, match="single music/speech license pair"):
+        MODULE["prepare"](**args)
+    assert not args["output"].exists()
+
+
+def test_unused_holdout_sources_do_not_restrict_mixtures(tmp_path: Path) -> None:
+    args = _fixture(tmp_path)
+    for parent in ("music", "speech"):
+        path = args[f"{parent}_manifest"]
+        write_manifest(
+            [
+                replace(row, source="unregistered") if row.split == "holdout" else row
+                for row in load_manifest(path)
+            ],
+            path,
+        )
+    result = MODULE["prepare"](**args)
+    assert result["status_counts"] == {"available": 8}
