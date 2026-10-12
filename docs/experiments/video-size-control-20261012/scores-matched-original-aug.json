@@ -1,0 +1,26 @@
+{
+  "aggregation": "mean",
+  "batch_size": 8,
+  "checkpoint": "/home/lanjianyu/worktrees/issue-30-video-size-control-h264/outputs/experiments/video-size-control-20261012/aug-h264-seed42/training/best.pt",
+  "checkpoint_sha256": "30d84c984de63ca68b86d0acc9e9fb3c0fa175bd55ab75ca84a85cd4f02e391a",
+  "data_root": "/var/tmp/lanjianyu-issue20-20261011/outputs/experiments/video-generalization-20261011/vifbench/media",
+  "device": "cuda",
+  "manifest": "../../../outputs/experiments/video-size-control-20261012/size-control/matched.jsonl",
+  "modality": "video",
+  "model_kind": "video_frames",
+  "output_dir": "../../../outputs/experiments/video-size-control-20261012/scores-matched-original-aug",
+  "schema_version": 1,
+  "seed": 42,
+  "segments": 1,
+  "video": {
+    "height": 224,
+    "max_duration_seconds": 600.0,
+    "max_output_bytes": 536870912,
+    "max_source_frames": 100000,
+    "max_source_pixels": 40000000,
+    "n_frames": 4,
+    "resize_mode": "center_crop",
+    "timeout_seconds": 60.0,
+    "width": 224
+  }
+}
