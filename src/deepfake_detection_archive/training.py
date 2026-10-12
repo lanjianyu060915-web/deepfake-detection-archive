@@ -8,9 +8,7 @@ limits are checked at epoch boundaries to preserve complete development reports.
 import hashlib
 import json
 import math
-import os
 import random
-import tempfile
 import time
 from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import asdict, dataclass
@@ -24,6 +22,7 @@ from torch.nn import functional
 from .evaluation.metrics import evaluate_binary
 from .models.ast import ASTClassifier
 from .models.checkpoint import load_checkpoint, model_spec, save_checkpoint
+from .tracking import atomic_json
 
 
 Batch = tuple[Tensor, Tensor] | Mapping[str, Tensor]
@@ -101,23 +100,6 @@ class TrainResult:
     stop_reason: Literal["max_epochs", "early_stopping", "time_limit"]
     history_path: Path
     run_path: Path
-
-
-def _write_json(path: Path, payload: Any) -> None:
-    encoded = json.dumps(payload, sort_keys=True, indent=2, allow_nan=False) + "\n"
-    temporary: Path | None = None
-    try:
-        with tempfile.NamedTemporaryFile(
-            dir=path.parent, mode="w", encoding="utf-8", delete=False
-        ) as stream:
-            temporary = Path(stream.name)
-            stream.write(encoded)
-            stream.flush()
-            os.fsync(stream.fileno())
-        temporary.replace(path)
-    finally:
-        if temporary is not None:
-            temporary.unlink(missing_ok=True)
 
 
 def _digest_json(value: Any) -> str:
@@ -381,7 +363,7 @@ def train_model(  # noqa: C901, PLR0913, PLR0912, PLR0915
             or any(char not in "0123456789abcdef" for char in value)
         ):
             raise ValueError(f"provenance requires a lowercase SHA-256: {name}")
-    _digest_json(provenance)
+    provenance_hash = _digest_json(provenance)
     if train_loader is dev_loader:
         raise ValueError("train and development loaders must be distinct")
     device = _training_device(config)
@@ -419,7 +401,7 @@ def train_model(  # noqa: C901, PLR0913, PLR0912, PLR0915
         "model_config": actual_config,
         "model_config_sha256": _digest_json(actual_config),
         "provenance": provenance,
-        "provenance_sha256": _digest_json(provenance),
+        "provenance_sha256": provenance_hash,
         "selection_split": "dev",
         "score_direction": "higher_is_fake",
         "torch_version": str(torch.__version__),
@@ -429,7 +411,7 @@ def train_model(  # noqa: C901, PLR0913, PLR0912, PLR0915
         "time_limit_scope": "epoch_boundary",
         "resume_supported": False,
     }
-    _write_json(run_path, run)
+    atomic_json(run_path, run)
     history: list[dict[str, Any]] = []
     best_eer, best_epoch, stale = math.inf, 0, 0
     checkpoint = output_dir / "best.pt"
@@ -465,7 +447,7 @@ def train_model(  # noqa: C901, PLR0913, PLR0912, PLR0915
                     "seconds": time.monotonic() - epoch_started,
                 }
             )
-            _write_json(history_path, history)
+            atomic_json(history_path, history)
             if stale >= config.patience:
                 stop_reason = "early_stopping"
                 break
@@ -501,7 +483,7 @@ def train_model(  # noqa: C901, PLR0913, PLR0912, PLR0915
         torch.use_deterministic_algorithms(
             previous_deterministic, warn_only=previous_warn_only
         )
-        _write_json(run_path, run)
+        atomic_json(run_path, run)
     return TrainResult(
         checkpoint,
         descriptor["sha256"],

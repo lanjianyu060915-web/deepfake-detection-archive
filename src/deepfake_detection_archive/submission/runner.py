@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import fcntl
-import json
 import os
 import time
 from collections.abc import Callable, Iterator, Sequence
@@ -18,7 +17,12 @@ from deepfake_detection_archive.evaluation.report import (
     evaluate_records,
     grouped_reports,
 )
-from deepfake_detection_archive.tracking import atomic_json, canonical_json, object_hash
+from deepfake_detection_archive.tracking import (
+    atomic_json,
+    canonical_json,
+    object_hash,
+    parse_json,
+)
 
 
 @contextmanager
@@ -39,17 +43,8 @@ def _run_lock(path: Path) -> Iterator[None]:
             fcntl.flock(stream.fileno(), fcntl.LOCK_UN)
 
 
-def _unique_object(pairs: list[tuple[str, object]]) -> dict[str, object]:
-    result: dict[str, object] = {}
-    for key, value in pairs:
-        if key in result:
-            raise ValueError(f"duplicate JSON key: {key}")
-        result[key] = value
-    return result
-
-
 def _read_object(data: bytes) -> dict[str, object]:
-    value: object = json.loads(data, object_pairs_hook=_unique_object)
+    value = parse_json(data)
     if not isinstance(value, dict):
         raise ValueError("expected JSON object")  # noqa: TRY004 -- persisted schema
     return cast(dict[str, object], value)
@@ -101,6 +96,7 @@ def _prepare_run(
     records: Sequence[SampleRecord],
     output_dir: Path,
     identity: dict[str, object],
+    identity_hash: str,
     resume: bool,
 ) -> list[ScoreRecord]:
     ordered = [record.to_dict() for record in records]
@@ -109,7 +105,7 @@ def _prepare_run(
         "ordered_samples": ordered,
         "input_hash": object_hash(ordered),
         "identity": identity,
-        "identity_hash": object_hash(identity),
+        "identity_hash": identity_hash,
         "score_direction": "fake_high",
     }
     metadata_path = output_dir / "metadata.json"
@@ -253,10 +249,11 @@ def run_inference(
         raise ValueError("inference requires nonempty input with unique sample IDs")
     if not identity:
         raise ValueError("a nonempty config/model/code identity is required")
-    object_hash(identity)  # Validate serializability before making run artifacts.
+    # Validate serializability before making run artifacts.
+    identity_hash = object_hash(identity)
     output_dir.mkdir(parents=True, exist_ok=True)
     with _run_lock(output_dir / ".runner.lock"):
-        scores = _prepare_run(records, output_dir, identity, resume)
+        scores = _prepare_run(records, output_dir, identity, identity_hash, resume)
         new_rows = len(records) - len(scores)
         write_seconds = 0.0
         with (output_dir / "scores.jsonl").open("ab") as stream:

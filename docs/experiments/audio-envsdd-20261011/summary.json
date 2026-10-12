@@ -80,15 +80,7 @@
       "source_max_length": 1024,
       "max_length": 512,
       "operation": "first 512 normalized filterbank frames; no backbone features reused",
-      "frontend_equivalence_samples": 8,
-      "frontend_equivalence_rtol": 0,
-      "frontend_equivalence_atol": 0,
-      "tensor_count": 16335,
-      "bytes": 4320362475,
-      "seconds": 31.859453567303717,
-      "pipeline_sha256": "47a961aab7f28c98de85a864975e79bd119b7fb5f958e548f9b8c7b449e55737",
-      "storage": "cloned contiguous 512-frame tensor; parent storage discarded",
-      "compaction_seconds": 29.046610167250037
+      "storage": "cloned contiguous 512-frame tensor; parent storage discarded"
     }
   },
   "old_candidate_transfer": {
@@ -727,17 +719,6 @@
     "generator": "Stable Audio Open",
     "manifest_sha256": "ecc49937d207dd24c178de3235114afaa078c64a5a86200f38e6c87e3108ab04",
     "scope": "FSD50K/Stable Audio Open dev only; all old-source associations excluded from Urban training; center 64000 samples of existing symmetric media; old holdout not used"
-  },
-  "gpu_concurrency_snapshot": {
-    "captured_at": "2026-10-11T07:36:44.488804+00:00",
-    "utilization_percent": 100.0,
-    "device_memory_used_mib": 21211.0,
-    "power_watts": 362.88,
-    "own_training_runs": [
-      "last4-512-lr1e-5-seed43",
-      "full12-512-lr3e-6-seed42"
-    ],
-    "scope": "whole-device snapshot including other GPU processes; not an average or per-task attribution"
   },
   "resource_scope": "training-loop peaks including dev, excluding input preparation; AMP/BF16 training, FP32 dev and offline inference; step profiles isolated, completed experiment times with concurrent GPU workloads"
 }

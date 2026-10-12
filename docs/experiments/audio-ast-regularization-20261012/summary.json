@@ -61,22 +61,6 @@
       "seconds": 764.0039444807917,
       "peak_cuda_allocated_bytes": 9072094208,
       "peak_cuda_reserved_bytes": 9890168832,
-      "config": {
-        "accumulation_steps": 2,
-        "amp": true,
-        "amp_dtype": "bfloat16",
-        "backbone_lr_scale": 1.0,
-        "deterministic": true,
-        "device": "cuda",
-        "learning_rate": 1e-05,
-        "max_epochs": 20,
-        "max_grad_norm": 1.0,
-        "max_seconds": null,
-        "min_delta": 0.0,
-        "patience": 5,
-        "seed": 42,
-        "weight_decay": 0.0001
-      },
       "checkpoint_sha256": "07b0b24dd94a850198d946902298fddae1d6a87d52f9c9654ce20fff233d32c7",
       "config_sha256": "e1f0bf3b1385afcc36a12c6f8a1e4ca80beb02a351d675ca26b9c33bd3b3e154",
       "code": {
@@ -93,22 +77,6 @@
       "seconds": 1744.3294072700664,
       "peak_cuda_allocated_bytes": 9072094208,
       "peak_cuda_reserved_bytes": 9890168832,
-      "config": {
-        "accumulation_steps": 2,
-        "amp": true,
-        "amp_dtype": "bfloat16",
-        "backbone_lr_scale": 1.0,
-        "deterministic": true,
-        "device": "cuda",
-        "learning_rate": 1e-05,
-        "max_epochs": 20,
-        "max_grad_norm": 1.0,
-        "max_seconds": null,
-        "min_delta": 0.0,
-        "patience": 5,
-        "seed": 43,
-        "weight_decay": 0.0001
-      },
       "checkpoint_sha256": "0f72c168a5f030812d0da14fb89c0235a62a8f8be9228bdd6a5eb35af8a03992",
       "config_sha256": "156e42652e7cf154c1983a1751cdf63bc4842554aee160f5ede74ef68ab1fe2f",
       "code": {
@@ -125,24 +93,6 @@
       "seconds": 1141.1438006954268,
       "peak_cuda_allocated_bytes": 9073306624,
       "peak_cuda_reserved_bytes": 9906946048,
-      "config": {
-        "accumulation_steps": 2,
-        "amp": true,
-        "amp_dtype": "bfloat16",
-        "backbone_lr_scale": 1.0,
-        "deterministic": true,
-        "device": "cuda",
-        "frequency_mask_width": 16,
-        "learning_rate": 1e-05,
-        "max_epochs": 20,
-        "max_grad_norm": 1.0,
-        "max_seconds": null,
-        "min_delta": 0.0,
-        "patience": 5,
-        "seed": 42,
-        "time_mask_width": 64,
-        "weight_decay": 0.0001
-      },
       "checkpoint_sha256": "2eae9217d79e3790fd9b55eac2bb0d5c81bee500ff6aacf525f6f59dfe4cdcfe",
       "config_sha256": "0a055d99198760564df0a0cd12682ce2fe6f0cdd065e48266a563e514d665fa1",
       "code": {
@@ -159,24 +109,6 @@
       "seconds": 802.5241584088653,
       "peak_cuda_allocated_bytes": 9073306624,
       "peak_cuda_reserved_bytes": 9906946048,
-      "config": {
-        "accumulation_steps": 2,
-        "amp": true,
-        "amp_dtype": "bfloat16",
-        "backbone_lr_scale": 1.0,
-        "deterministic": true,
-        "device": "cuda",
-        "frequency_mask_width": 32,
-        "learning_rate": 1e-05,
-        "max_epochs": 20,
-        "max_grad_norm": 1.0,
-        "max_seconds": null,
-        "min_delta": 0.0,
-        "patience": 5,
-        "seed": 42,
-        "time_mask_width": 96,
-        "weight_decay": 0.0001
-      },
       "checkpoint_sha256": "55bb8b7964c2df82cadcf7103bf1419429d4bd8702fa3009c12b572c05ea2702",
       "config_sha256": "4da180de89e535bc834f34743bb6d18c5ff9dcd2f9a95bd930bb2a6ae1e23b72",
       "code": {
@@ -191,63 +123,42 @@
       "music-dev": {
         "fullset_eer": 0.004166666666666667,
         "fullset_reason": null,
-        "sample_count": 288,
-        "real_count": 48,
-        "fake_count": 240,
         "failure_count": 0,
         "coverage": 1.0
       },
       "music-untrained-dev": {
         "fullset_eer": 0.1875,
         "fullset_reason": null,
-        "sample_count": 154,
-        "real_count": 48,
-        "fake_count": 106,
         "failure_count": 0,
         "coverage": 1.0
       },
       "urban-dev": {
         "fullset_eer": 0.006932409012131715,
         "fullset_reason": null,
-        "sample_count": 2885,
-        "real_count": 577,
-        "fake_count": 2308,
         "failure_count": 0,
         "coverage": 1.0
       },
       "env-unseen-dev": {
         "fullset_eer": 0.033795493934142114,
         "fullset_reason": null,
-        "sample_count": 1731,
-        "real_count": 577,
-        "fake_count": 1154,
         "failure_count": 0,
         "coverage": 1.0
       },
       "fsd-external-dev": {
         "fullset_eer": 0.11428571428571428,
         "fullset_reason": null,
-        "sample_count": 70,
-        "real_count": 35,
-        "fake_count": 35,
         "failure_count": 0,
         "coverage": 1.0
       },
       "ai-openbmat-mixed-dev": {
         "fullset_eer": 0.5789473684210527,
         "fullset_reason": null,
-        "sample_count": 152,
-        "real_count": 76,
-        "fake_count": 76,
         "failure_count": 0,
         "coverage": 1.0
       },
       "ai-openbmat-music-dev": {
         "fullset_eer": 0.3829787234042553,
         "fullset_reason": null,
-        "sample_count": 94,
-        "real_count": 47,
-        "fake_count": 47,
         "failure_count": 0,
         "coverage": 1.0
       }
@@ -256,63 +167,42 @@
       "music-dev": {
         "fullset_eer": 0.004166666666666667,
         "fullset_reason": null,
-        "sample_count": 288,
-        "real_count": 48,
-        "fake_count": 240,
         "failure_count": 0,
         "coverage": 1.0
       },
       "music-untrained-dev": {
         "fullset_eer": 0.22916666666666666,
         "fullset_reason": null,
-        "sample_count": 154,
-        "real_count": 48,
-        "fake_count": 106,
         "failure_count": 0,
         "coverage": 1.0
       },
       "urban-dev": {
         "fullset_eer": 0.016897746967071057,
         "fullset_reason": null,
-        "sample_count": 2885,
-        "real_count": 577,
-        "fake_count": 2308,
         "failure_count": 0,
         "coverage": 1.0
       },
       "env-unseen-dev": {
         "fullset_eer": 0.04419410745233969,
         "fullset_reason": null,
-        "sample_count": 1731,
-        "real_count": 577,
-        "fake_count": 1154,
         "failure_count": 0,
         "coverage": 1.0
       },
       "fsd-external-dev": {
         "fullset_eer": 0.05714285714285714,
         "fullset_reason": null,
-        "sample_count": 70,
-        "real_count": 35,
-        "fake_count": 35,
         "failure_count": 0,
         "coverage": 1.0
       },
       "ai-openbmat-mixed-dev": {
         "fullset_eer": 0.5394736842105263,
         "fullset_reason": null,
-        "sample_count": 152,
-        "real_count": 76,
-        "fake_count": 76,
         "failure_count": 0,
         "coverage": 1.0
       },
       "ai-openbmat-music-dev": {
         "fullset_eer": 0.3404255319148936,
         "fullset_reason": null,
-        "sample_count": 94,
-        "real_count": 47,
-        "fake_count": 47,
         "failure_count": 0,
         "coverage": 1.0
       }
@@ -321,63 +211,42 @@
       "music-dev": {
         "fullset_eer": 0.004166666666666667,
         "fullset_reason": null,
-        "sample_count": 288,
-        "real_count": 48,
-        "fake_count": 240,
         "failure_count": 0,
         "coverage": 1.0
       },
       "music-untrained-dev": {
         "fullset_eer": 0.25,
         "fullset_reason": null,
-        "sample_count": 154,
-        "real_count": 48,
-        "fake_count": 106,
         "failure_count": 0,
         "coverage": 1.0
       },
       "urban-dev": {
         "fullset_eer": 0.025996533795493933,
         "fullset_reason": null,
-        "sample_count": 2885,
-        "real_count": 577,
-        "fake_count": 2308,
         "failure_count": 0,
         "coverage": 1.0
       },
       "env-unseen-dev": {
         "fullset_eer": 0.06239168110918544,
         "fullset_reason": null,
-        "sample_count": 1731,
-        "real_count": 577,
-        "fake_count": 1154,
         "failure_count": 0,
         "coverage": 1.0
       },
       "fsd-external-dev": {
         "fullset_eer": 0.08571428571428572,
         "fullset_reason": null,
-        "sample_count": 70,
-        "real_count": 35,
-        "fake_count": 35,
         "failure_count": 0,
         "coverage": 1.0
       },
       "ai-openbmat-mixed-dev": {
         "fullset_eer": 0.5263157894736842,
         "fullset_reason": null,
-        "sample_count": 152,
-        "real_count": 76,
-        "fake_count": 76,
         "failure_count": 0,
         "coverage": 1.0
       },
       "ai-openbmat-music-dev": {
         "fullset_eer": 0.2978723404255319,
         "fullset_reason": null,
-        "sample_count": 94,
-        "real_count": 47,
-        "fake_count": 47,
         "failure_count": 0,
         "coverage": 1.0
       }
@@ -386,63 +255,42 @@
       "music-dev": {
         "fullset_eer": 0.0,
         "fullset_reason": null,
-        "sample_count": 288,
-        "real_count": 48,
-        "fake_count": 240,
         "failure_count": 0,
         "coverage": 1.0
       },
       "music-untrained-dev": {
         "fullset_eer": 0.1875,
         "fullset_reason": null,
-        "sample_count": 154,
-        "real_count": 48,
-        "fake_count": 106,
         "failure_count": 0,
         "coverage": 1.0
       },
       "urban-dev": {
         "fullset_eer": 0.02902946273830156,
         "fullset_reason": null,
-        "sample_count": 2885,
-        "real_count": 577,
-        "fake_count": 2308,
         "failure_count": 0,
         "coverage": 1.0
       },
       "env-unseen-dev": {
         "fullset_eer": 0.09012131715771231,
         "fullset_reason": null,
-        "sample_count": 1731,
-        "real_count": 577,
-        "fake_count": 1154,
         "failure_count": 0,
         "coverage": 1.0
       },
       "fsd-external-dev": {
         "fullset_eer": 0.08571428571428572,
         "fullset_reason": null,
-        "sample_count": 70,
-        "real_count": 35,
-        "fake_count": 35,
         "failure_count": 0,
         "coverage": 1.0
       },
       "ai-openbmat-mixed-dev": {
         "fullset_eer": 0.5789473684210527,
         "fullset_reason": null,
-        "sample_count": 152,
-        "real_count": 76,
-        "fake_count": 76,
         "failure_count": 0,
         "coverage": 1.0
       },
       "ai-openbmat-music-dev": {
         "fullset_eer": 0.3191489361702128,
         "fullset_reason": null,
-        "sample_count": 94,
-        "real_count": 47,
-        "fake_count": 47,
         "failure_count": 0,
         "coverage": 1.0
       }
@@ -780,18 +628,12 @@
       "music-dev": {
         "fullset_eer": 0.0,
         "fullset_reason": null,
-        "sample_count": 288,
-        "real_count": 48,
-        "fake_count": 240,
         "failure_count": 0,
         "coverage": 1.0
       },
       "music-untrained-dev": {
         "fullset_eer": 0.14583333333333334,
         "fullset_reason": null,
-        "sample_count": 154,
-        "real_count": 48,
-        "fake_count": 106,
         "failure_count": 0,
         "coverage": 1.0
       },
@@ -849,45 +691,30 @@
       "urban-dev": {
         "fullset_eer": 0.00779896013864818,
         "fullset_reason": null,
-        "sample_count": 2885,
-        "real_count": 577,
-        "fake_count": 2308,
         "failure_count": 0,
         "coverage": 1.0
       },
       "env-unseen-dev": {
         "fullset_eer": 0.0415944540727903,
         "fullset_reason": null,
-        "sample_count": 1731,
-        "real_count": 577,
-        "fake_count": 1154,
         "failure_count": 0,
         "coverage": 1.0
       },
       "fsd-external-dev": {
         "fullset_eer": 0.05714285714285714,
         "fullset_reason": null,
-        "sample_count": 70,
-        "real_count": 35,
-        "fake_count": 35,
         "failure_count": 0,
         "coverage": 1.0
       },
       "ai-openbmat-mixed-dev": {
         "fullset_eer": 0.5789473684210527,
         "fullset_reason": null,
-        "sample_count": 152,
-        "real_count": 76,
-        "fake_count": 76,
         "failure_count": 0,
         "coverage": 1.0
       },
       "ai-openbmat-music-dev": {
         "fullset_eer": 0.3191489361702128,
         "fullset_reason": null,
-        "sample_count": 94,
-        "real_count": 47,
-        "fake_count": 47,
         "failure_count": 0,
         "coverage": 1.0
       }
@@ -898,5 +725,42 @@
     },
     "selection": "post-hoc dev exploration motivated by complementary Suno v3.5 results; equal weights not tuned",
     "offline_inference_implemented": false
+  },
+  "bucket_counts": {
+    "music-dev": {
+      "sample_count": 288,
+      "real_count": 48,
+      "fake_count": 240
+    },
+    "music-untrained-dev": {
+      "sample_count": 154,
+      "real_count": 48,
+      "fake_count": 106
+    },
+    "urban-dev": {
+      "sample_count": 2885,
+      "real_count": 577,
+      "fake_count": 2308
+    },
+    "env-unseen-dev": {
+      "sample_count": 1731,
+      "real_count": 577,
+      "fake_count": 1154
+    },
+    "fsd-external-dev": {
+      "sample_count": 70,
+      "real_count": 35,
+      "fake_count": 35
+    },
+    "ai-openbmat-mixed-dev": {
+      "sample_count": 152,
+      "real_count": 76,
+      "fake_count": 76
+    },
+    "ai-openbmat-music-dev": {
+      "sample_count": 94,
+      "real_count": 47,
+      "fake_count": 47
+    }
   }
 }

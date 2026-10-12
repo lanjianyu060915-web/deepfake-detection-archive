@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "manifest": "../../../data/audio-speech-mix-20261012/pure-replay/manifest.jsonl",
+  "data_root": "../../../data/audio-shared",
+  "sources": "../../../data/audio-speech-mix-20261012/pure-replay/sources.jsonl",
+  "output_dir": "../../../outputs/audio-speech-mix-20261012/pure-replay-seed42",
+  "modality": "audio",
+  "architecture": "audio_ast_v1",
+  "model_config": {
+    "backbone_config": {
+      "attention_probs_dropout_prob": 0.0,
+      "frequency_stride": 10,
+      "hidden_act": "gelu",
+      "hidden_dropout_prob": 0.0,
+      "hidden_size": 768,
+      "initializer_range": 0.02,
+      "intermediate_size": 3072,
+      "layer_norm_eps": 1e-12,
+      "max_length": 512,
+      "model_type": "audio-spectrogram-transformer",
+      "num_attention_heads": 12,
+      "num_hidden_layers": 12,
+      "num_mel_bins": 128,
+      "patch_size": 16,
+      "qkv_bias": true,
+      "time_stride": 10,
+      "torch_dtype": "float32"
+    },
+    "trainable_layers": 12,
+    "sample_rate": 16000,
+    "feature_mean": -4.2677393,
+    "feature_std": 4.5689974,
+    "dropout": 0.1
+  },
+  "training": {
+    "device": "cuda",
+    "amp": true,
+    "amp_dtype": "bfloat16",
+    "max_epochs": 20,
+    "learning_rate": 1e-05,
+    "weight_decay": 0.0001,
+    "accumulation_steps": 1,
+    "patience": 5,
+    "min_delta": 0.0,
+    "max_grad_norm": 1.0,
+    "seed": 42,
+    "deterministic": true
+  },
+  "batch_size": 64,
+  "num_workers": 4,
+  "segment_samples": 64000,
+  "segments": 1,
+  "audio": {
+    "sample_rate": 16000,
+    "backend": "soundfile"
+  },
+  "feature_cache": "../../../outputs/audio-speech-mix-20261012/fbanks512",
+  "cache_max_bytes": 21474836480,
+  "balanced_sampling": true,
+  "pretrained": {
+    "checkpoint": "../../../models/pretrained/ast-audioset/model.safetensors",
+    "sha256": "ae0c1e2ad4e1381d851fa9bf298ba13ebc9c5a914cdee2dbe427a6583869924d"
+  },
+  "balance_sources": false
+}

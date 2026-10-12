@@ -1,0 +1,768 @@
+{
+  "schema_version": 1,
+  "issue": 32,
+  "task_root": "/var/tmp/deepfake-audio-speech-mix-20261012",
+  "source_commit": "0b6b1d5c7836557c7b89b0e8bf56c7496209b4cd",
+  "holdout_evaluated": false,
+  "training": {
+    "seed": 42,
+    "batch_size": 64,
+    "accumulation_steps": 1,
+    "amp_dtype": "bfloat16",
+    "selection_dev_count": 864,
+    "train_count": 17464,
+    "class_counts": {
+      "real": 3359,
+      "fake": 14105
+    },
+    "music_expected_sampling_fraction": 0.21815818,
+    "masking_enabled": false
+  },
+  "data": {
+    "competition_approved": false,
+    "control_count": 2676,
+    "counts": {
+      "dev:0": 96,
+      "dev:1": 692,
+      "train:0": 446,
+      "train:1": 2230
+    },
+    "input_manifest_sha256": {
+      "music": "4cfed92d4e31d33009154c192afb7250e8ca12be1beeeebd69e176b84a50f117",
+      "speech": "8b204f61a679a2789280a731aae1cefb63a29bd6fe009e66b0b34347aa148257",
+      "untrained": "60578d4047b9b97850176c0629f533dbeeee321412e0286b94fff718f4f9a887"
+    },
+    "license_limit": "Research training only; AIME per-track/artist rights remain unconfirmed; source license intersection applies.",
+    "processing": "4s centre crop; full-clip RMS music/speech SNR; symmetric peak 0.95; 16k mono PCM16",
+    "seed": 42,
+    "snr_db": [
+      -5,
+      5
+    ],
+    "speech_pool_counts": {
+      "dev": 768,
+      "train": 606
+    },
+    "status_counts": {
+      "available": 3464
+    },
+    "used_speakers": {
+      "dev": [
+        "asvspoof2019-la-official:speaker:LA_0069",
+        "asvspoof2019-la-official:speaker:LA_0070",
+        "asvspoof2019-la-official:speaker:LA_0071",
+        "asvspoof2019-la-official:speaker:LA_0072",
+        "asvspoof2019-la-official:speaker:LA_0073",
+        "asvspoof2019-la-official:speaker:LA_0074",
+        "asvspoof2019-la-official:speaker:LA_0075",
+        "asvspoof2019-la-official:speaker:LA_0076",
+        "asvspoof2019-la-official:speaker:LA_0078",
+        "asvspoof2019-la-official:speaker:LA_0100",
+        "asvspoof2019-la-official:speaker:LA_0101",
+        "asvspoof2019-la-official:speaker:LA_0102",
+        "asvspoof2019-la-official:speaker:LA_0104",
+        "asvspoof2019-la-official:speaker:LA_0105",
+        "asvspoof2019-la-official:speaker:LA_0106",
+        "asvspoof2019-la-official:speaker:LA_0107",
+        "asvspoof2019-la-official:speaker:LA_0108"
+      ],
+      "train": [
+        "asvspoof2019-la-official:speaker:LA_0079",
+        "asvspoof2019-la-official:speaker:LA_0080",
+        "asvspoof2019-la-official:speaker:LA_0081",
+        "asvspoof2019-la-official:speaker:LA_0082",
+        "asvspoof2019-la-official:speaker:LA_0083",
+        "asvspoof2019-la-official:speaker:LA_0084",
+        "asvspoof2019-la-official:speaker:LA_0085",
+        "asvspoof2019-la-official:speaker:LA_0086",
+        "asvspoof2019-la-official:speaker:LA_0088",
+        "asvspoof2019-la-official:speaker:LA_0089",
+        "asvspoof2019-la-official:speaker:LA_0090",
+        "asvspoof2019-la-official:speaker:LA_0091",
+        "asvspoof2019-la-official:speaker:LA_0092",
+        "asvspoof2019-la-official:speaker:LA_0093",
+        "asvspoof2019-la-official:speaker:LA_0094",
+        "asvspoof2019-la-official:speaker:LA_0095",
+        "asvspoof2019-la-official:speaker:LA_0096",
+        "asvspoof2019-la-official:speaker:LA_0097",
+        "asvspoof2019-la-official:speaker:LA_0098"
+      ]
+    }
+  },
+  "bucket_counts": {
+    "music-dev": {
+      "sample_count": 288,
+      "real_count": 48,
+      "fake_count": 240
+    },
+    "music-untrained-dev": {
+      "sample_count": 154,
+      "real_count": 48,
+      "fake_count": 106
+    },
+    "urban-dev": {
+      "sample_count": 2885,
+      "real_count": 577,
+      "fake_count": 2308
+    },
+    "env-unseen-dev": {
+      "sample_count": 1731,
+      "real_count": 577,
+      "fake_count": 1154
+    },
+    "fsd-external-dev": {
+      "sample_count": 70,
+      "real_count": 35,
+      "fake_count": 35
+    },
+    "ai-openbmat-mixed-dev": {
+      "sample_count": 152,
+      "real_count": 76,
+      "fake_count": 76
+    },
+    "ai-openbmat-music-dev": {
+      "sample_count": 94,
+      "real_count": 47,
+      "fake_count": 47
+    },
+    "synthetic-mixed-dev": {
+      "sample_count": 576,
+      "real_count": 96,
+      "fake_count": 480
+    },
+    "synthetic-untrained-mixed-dev": {
+      "sample_count": 308,
+      "real_count": 96,
+      "fake_count": 212
+    }
+  },
+  "runs": {
+    "pure-replay-seed42": {
+      "status": "complete",
+      "best_dev_eer": 0.04861111111111111,
+      "best_epoch": 3,
+      "epochs_completed": 8,
+      "seconds": 749.2483264682814,
+      "peak_cuda_allocated_bytes": 16049228800,
+      "peak_cuda_reserved_bytes": 17295212544,
+      "checkpoint_sha256": "7746e0f44d74e248b06e3e61eb669b5379119b3ea9683eab651c4588831a0c28",
+      "manifest_sha256": "d2264922cc909fb2b5c3fd7f424ed259cd52441e2093d328be4401b10a6b55c6",
+      "recorded_sources_sha256": "8389be39ec7f4df06fe6df4522068b9d6b43134516e70d37a3be7e2bf741b65f",
+      "config_sha256": "2c95fd90d874d0cab7af3e3fe6f6c2b2bbc0cb31f87fa28b31b51f25fb0e113a",
+      "code_sha256": "fa849dd9c6d9e6079a1e2ace6a9ea447673922c7e2512e67c142e18c9559a9e7",
+      "train_samples_per_second_range": [
+        176.11093245868264,
+        202.31051834484123
+      ]
+    },
+    "speech-mix-seed42": {
+      "status": "complete",
+      "best_dev_eer": 0.013888888888888888,
+      "best_epoch": 5,
+      "epochs_completed": 10,
+      "seconds": 991.0718834577128,
+      "peak_cuda_allocated_bytes": 16049228800,
+      "peak_cuda_reserved_bytes": 17295212544,
+      "checkpoint_sha256": "b167e3cb07ed175f5441fdfc05de2323918092faca5b5b0aec53ff036b2d0af7",
+      "manifest_sha256": "ba18eff398a5381dc58b147e6118b5f839ad52610709ef6df926809671abba3a",
+      "recorded_sources_sha256": "8389be39ec7f4df06fe6df4522068b9d6b43134516e70d37a3be7e2bf741b65f",
+      "config_sha256": "5202e41950f65ba1cfc4cd9ced98f738a3022b658450fdcca9c9886690f958a0",
+      "code_sha256": "fa849dd9c6d9e6079a1e2ace6a9ea447673922c7e2512e67c142e18c9559a9e7",
+      "train_samples_per_second_range": [
+        154.20636307070987,
+        201.68840676928014
+      ]
+    }
+  },
+  "evaluations": {
+    "previous-expanded-seed42": {
+      "music-dev": {
+        "fullset_eer": 0.004166666666666667,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "music-untrained-dev": {
+        "fullset_eer": 0.1875,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "urban-dev": {
+        "fullset_eer": 0.006932409012131715,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "env-unseen-dev": {
+        "fullset_eer": 0.033795493934142114,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "fsd-external-dev": {
+        "fullset_eer": 0.11428571428571428,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "ai-openbmat-mixed-dev": {
+        "fullset_eer": 0.5789473684210527,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "ai-openbmat-music-dev": {
+        "fullset_eer": 0.3829787234042553,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "synthetic-mixed-dev": {
+        "fullset_eer": 0.07291666666666667,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "synthetic-untrained-mixed-dev": {
+        "fullset_eer": 0.3584905660377358,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      }
+    },
+    "previous-equal-fusion": {
+      "music-dev": {
+        "fullset_eer": 0.0,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "music-untrained-dev": {
+        "fullset_eer": 0.14583333333333334,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "urban-dev": {
+        "fullset_eer": 0.00779896013864818,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "env-unseen-dev": {
+        "fullset_eer": 0.0415944540727903,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "fsd-external-dev": {
+        "fullset_eer": 0.05714285714285714,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "ai-openbmat-mixed-dev": {
+        "fullset_eer": 0.5789473684210527,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "ai-openbmat-music-dev": {
+        "fullset_eer": 0.3191489361702128,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "synthetic-mixed-dev": {
+        "fullset_eer": 0.06041666666666667,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "synthetic-untrained-mixed-dev": {
+        "fullset_eer": 0.32547169811320753,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      }
+    },
+    "pure-replay-seed42": {
+      "music-dev": {
+        "fullset_eer": 0.008333333333333333,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "music-untrained-dev": {
+        "fullset_eer": 0.2169811320754717,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "urban-dev": {
+        "fullset_eer": 0.016031195840554593,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "env-unseen-dev": {
+        "fullset_eer": 0.06412478336221837,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "fsd-external-dev": {
+        "fullset_eer": 0.11428571428571428,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "ai-openbmat-mixed-dev": {
+        "fullset_eer": 0.5394736842105263,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "ai-openbmat-music-dev": {
+        "fullset_eer": 0.3617021276595745,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "synthetic-mixed-dev": {
+        "fullset_eer": 0.06041666666666667,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "synthetic-untrained-mixed-dev": {
+        "fullset_eer": 0.32547169811320753,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      }
+    },
+    "speech-mix-seed42": {
+      "music-dev": {
+        "fullset_eer": 0.0125,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "music-untrained-dev": {
+        "fullset_eer": 0.20754716981132076,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "urban-dev": {
+        "fullset_eer": 0.024696707105719237,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "env-unseen-dev": {
+        "fullset_eer": 0.07105719237435008,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "fsd-external-dev": {
+        "fullset_eer": 0.05714285714285714,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "ai-openbmat-mixed-dev": {
+        "fullset_eer": 0.5,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "ai-openbmat-music-dev": {
+        "fullset_eer": 0.2978723404255319,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "synthetic-mixed-dev": {
+        "fullset_eer": 0.014583333333333334,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "synthetic-untrained-mixed-dev": {
+        "fullset_eer": 0.2688679245283019,
+        "fullset_reason": null,
+        "failure_count": 0,
+        "coverage": 1.0
+      }
+    }
+  },
+  "synthetic_by_music_speech_snr_db": {
+    "previous-expanded-seed42": {
+      "synthetic-mixed-dev": {
+        "-5": {
+          "fullset_eer": 0.07916666666666666,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "5": {
+          "fullset_eer": 0.05416666666666667,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0
+        }
+      },
+      "synthetic-untrained-mixed-dev": {
+        "-5": {
+          "fullset_eer": 0.37735849056603776,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "5": {
+          "fullset_eer": 0.33962264150943394,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0
+        }
+      }
+    },
+    "previous-equal-fusion": {
+      "synthetic-mixed-dev": {
+        "-5": {
+          "fullset_eer": 0.07083333333333333,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "5": {
+          "fullset_eer": 0.041666666666666664,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0
+        }
+      },
+      "synthetic-untrained-mixed-dev": {
+        "-5": {
+          "fullset_eer": 0.3113207547169811,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "5": {
+          "fullset_eer": 0.3333333333333333,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0
+        }
+      }
+    },
+    "pure-replay-seed42": {
+      "synthetic-mixed-dev": {
+        "-5": {
+          "fullset_eer": 0.0625,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "5": {
+          "fullset_eer": 0.05,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0
+        }
+      },
+      "synthetic-untrained-mixed-dev": {
+        "-5": {
+          "fullset_eer": 0.3113207547169811,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "5": {
+          "fullset_eer": 0.33962264150943394,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0
+        }
+      }
+    },
+    "speech-mix-seed42": {
+      "synthetic-mixed-dev": {
+        "-5": {
+          "fullset_eer": 0.020833333333333332,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "5": {
+          "fullset_eer": 0.0125,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0
+        }
+      },
+      "synthetic-untrained-mixed-dev": {
+        "-5": {
+          "fullset_eer": 0.2916666666666667,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "5": {
+          "fullset_eer": 0.25,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0
+        }
+      }
+    }
+  },
+  "untrained_generators": {
+    "pure-replay-seed42": {
+      "music-untrained-dev": {
+        "AudioLDM 2 Music": {
+          "fullset_eer": 0.0,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fake_count": 1
+        },
+        "MusicGen Large": {
+          "fullset_eer": 0.0,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fake_count": 1
+        },
+        "Stable Audio v1": {
+          "fullset_eer": 0.13043478260869565,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fake_count": 23
+        },
+        "Stable Audio v2": {
+          "fullset_eer": 0.15,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fake_count": 20
+        },
+        "Suno v3": {
+          "fullset_eer": 0.16666666666666666,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fake_count": 24
+        },
+        "Suno v3.5": {
+          "fullset_eer": 0.35714285714285715,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fake_count": 14
+        },
+        "Udio": {
+          "fullset_eer": 0.3125,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fake_count": 23
+        }
+      },
+      "synthetic-untrained-mixed-dev": {
+        "AudioLDM 2 Music": {
+          "fullset_eer": 0.010416666666666685,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fake_count": 2
+        },
+        "MusicGen Large": {
+          "fullset_eer": 0.0,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fake_count": 2
+        },
+        "Stable Audio v1": {
+          "fullset_eer": 0.2608695652173913,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fake_count": 46
+        },
+        "Stable Audio v2": {
+          "fullset_eer": 0.2604166666666667,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fake_count": 40
+        },
+        "Suno v3": {
+          "fullset_eer": 0.3333333333333333,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fake_count": 48
+        },
+        "Suno v3.5": {
+          "fullset_eer": 0.42857142857142855,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fake_count": 28
+        },
+        "Udio": {
+          "fullset_eer": 0.391304347826087,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fake_count": 46
+        }
+      }
+    },
+    "speech-mix-seed42": {
+      "music-untrained-dev": {
+        "AudioLDM 2 Music": {
+          "fullset_eer": 0.0,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fake_count": 1
+        },
+        "MusicGen Large": {
+          "fullset_eer": 0.0,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fake_count": 1
+        },
+        "Stable Audio v1": {
+          "fullset_eer": 0.14583333333333334,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fake_count": 23
+        },
+        "Stable Audio v2": {
+          "fullset_eer": 0.1875,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fake_count": 20
+        },
+        "Suno v3": {
+          "fullset_eer": 0.14583333333333334,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fake_count": 24
+        },
+        "Suno v3.5": {
+          "fullset_eer": 0.21428571428571427,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fake_count": 14
+        },
+        "Udio": {
+          "fullset_eer": 0.30434782608695654,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fake_count": 23
+        }
+      },
+      "synthetic-untrained-mixed-dev": {
+        "AudioLDM 2 Music": {
+          "fullset_eer": 0.010416666666666685,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fake_count": 2
+        },
+        "MusicGen Large": {
+          "fullset_eer": 0.0,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fake_count": 2
+        },
+        "Stable Audio v1": {
+          "fullset_eer": 0.2391304347826087,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fake_count": 46
+        },
+        "Stable Audio v2": {
+          "fullset_eer": 0.25,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fake_count": 40
+        },
+        "Suno v3": {
+          "fullset_eer": 0.21875,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fake_count": 48
+        },
+        "Suno v3.5": {
+          "fullset_eer": 0.2604166666666667,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fake_count": 28
+        },
+        "Udio": {
+          "fullset_eer": 0.391304347826087,
+          "fullset_reason": null,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fake_count": 46
+        }
+      }
+    }
+  },
+  "previous_fusion": {
+    "recipe": "arithmetic mean of continuous raw logits, equal weights fixed without tuning",
+    "weights": [
+      0.5,
+      0.5
+    ],
+    "checkpoints": {
+      "previous-expanded-seed42": "07b0b24dd94a850198d946902298fddae1d6a87d52f9c9654ce20fff233d32c7",
+      "expanded12-mask32-96-seed42": "55bb8b7964c2df82cadcf7103bf1419429d4bd8702fa3009c12b572c05ea2702"
+    },
+    "selection": "previous post-hoc dev recipe reused without retuning",
+    "offline_inference_implemented": false
+  },
+  "limitations": [
+    "Single seed; common selection dev includes known synthetic mixtures.",
+    "Diagnostic dev buckets have been reused across rounds; they are not untouched final tests.",
+    "Synthetic variants share parent music; known/untrained mixed dev share 96 real samples.",
+    "AIME artist/track independence and per-track rights remain unconfirmed.",
+    "AI-OpenBMAT label purity and underlying rights unresolved; external diagnosis only.",
+    "Formal competition use not approved; no new holdout read or evaluation."
+  ],
+  "source_permissions": {
+    "allowed_uses": [
+      "research",
+      "training"
+    ],
+    "original_registry_snapshots": [
+      "mixtures/sources-run.jsonl",
+      "pure-replay/sources-run.jsonl",
+      "speech-mix/sources-run.jsonl"
+    ],
+    "note": "Source permissions narrowed after training; original run provenance, media and weights remain unchanged."
+  }
+}

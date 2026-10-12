@@ -263,6 +263,20 @@ def test_split_identity_provenance_and_existing_output_are_rejected(
     assert (tmp_path / "existing").read_text() == "keep"
 
 
+def test_unserializable_provenance_is_rejected_before_output(tmp_path: Path) -> None:
+    output = tmp_path / "run"
+    with pytest.raises(TypeError, match="not JSON serializable"):
+        train_model(
+            model(),
+            [batches()],
+            [batches()],
+            config=TrainConfig(),
+            output_dir=output,
+            provenance={**PROVENANCE, "extra": object()},
+        )
+    assert not output.exists()
+
+
 def test_time_budget_and_missing_dev_class(tmp_path: Path) -> None:
     inputs, labels = batches()
     result = train_model(

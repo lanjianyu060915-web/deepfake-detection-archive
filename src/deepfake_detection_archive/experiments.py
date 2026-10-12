@@ -480,14 +480,13 @@ def _prepare_cache(  # noqa: C901, PLR0912, PLR0913, PLR0915, PLR0917 -- cache a
         else 1
     )
     for offset in range(0, len(records), chunk_size):
-        chunk = records[offset : offset + chunk_size]
+        chunk = []
+        for record in records[offset : offset + chunk_size]:
+            identity = cache_identity(record)
+            chunk.append((record, identity, cache / f"{object_hash(identity)}.pt"))
         prepared: dict[str, Tensor] = {}
         if isinstance(encoder, FrozenAudioEncoder):
-            missing = [
-                record
-                for record in chunk
-                if not (cache / f"{object_hash(cache_identity(record))}.pt").exists()
-            ]
+            missing = [record for record, _, path in chunk if not path.exists()]
             if missing:
                 try:
                     # Training AMP also applies to the frozen audio feature pass.
@@ -526,9 +525,7 @@ def _prepare_cache(  # noqa: C901, PLR0912, PLR0913, PLR0915, PLR0917 -- cache a
                     raise ValueError(
                         "sample preparation failed; inspect decode_failures.json"
                     ) from exc
-        for record in chunk:
-            identity = cache_identity(record)
-            path = cache / f"{object_hash(identity)}.pt"
+        for record, identity, path in chunk:
             try:
                 if path.exists():
                     sidecar = json.loads(path.with_suffix(".json").read_text())
