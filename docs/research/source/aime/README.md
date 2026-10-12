@@ -2,9 +2,14 @@
 
 使用 [disco-eth/AIME](https://huggingface.co/datasets/disco-eth/AIME)，固定 revision
 `b84d4be5eda830b6eb714998569dba73530f2601`。上游共有500条真实 MTG-Jamendo
-音乐和12个模型的6,000条生成音乐；本轮选取90个原始 Parquet 分片，
+音乐和12个模型的6,000条生成音乐；首轮选取90个原始 Parquet 分片，
 共9,087,224,372字节。固定路径、大小及官方 LFS SHA-256 在
 [resources.json](resources.json)，不是整个62.28GB数据集。
+
+2026-10-12扩展复用原90个，新增29个，共119个分片、29,012,183,201字节，
+固定文件及官方哈希见[扩展清单](expanded-resources-20261012.json)。
+真实音乐增加到319条，主清单1,914条；划分保持与训练结果见
+[扩展实验](../../../experiments/audio-music-expand-20261012/README.md)。
 
 输入字段仅有 `id/model/description/audio`。本轮以真实样本的三标签描述筛选生成音乐，
 按忽略顺序、大小写的标签组合保守分组，再连接已确认的处理后精确重复。

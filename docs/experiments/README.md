@@ -18,6 +18,7 @@
 | [环境音 AST 首轮微调](audio-ast-20261011/README.md) | 小型单生成器双种子dev EER2.86%/5.71%；冻结研究候选holdout EER11.43% | 后续扩展见下一行 |
 | [多生成器环境音 AST](audio-envsdd-20261011/README.md) | 19,215条配对媒体；12层dev EER1.39%；冻结holdout已见1.43%/未见AudioLCM/TangoFlux6.51% | 音乐联合训练见下一行；继续扩大来源 |
 | [音乐与环境音 AST 混合训练](audio-music-20261011/README.md) | 630条AIME音乐；单独/两种混合采样，五桶dev评分；补Urban12层seed43 | 扩大未训练音乐路径与真实原曲，补真正混合内容音频 |
+| [音乐扩展与 AST 联合训练](audio-music-expand-20261012/README.md) | 1,914条AIME，锁定旧划分；新音乐dev0.42%、未训练路径25%→18.75%；Urban0.69%、FSD11.43% | 跨来源音乐、困难生成路径与真正混合内容；环境音迁移仍有取舍 |
 | [鲁棒性媒体试跑](robustness-smoke-20261011/README.md) | 媒体条件工具可用，没有模型评分 | 使用已选择模型得到实际 ΔEER |
 
 ## 历史探索

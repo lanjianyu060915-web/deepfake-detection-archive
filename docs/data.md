@@ -20,6 +20,7 @@
 | AST预训练、环境音微调与分数 | `/var/tmp/deepfake-audio-ast-20261011/` | `pretrained/ast-audioset/`固定预训练资源；四次训练、双种子dev及冻结候选holdout推理；团队可读 |
 | EnvSDD 城市环境音扩展 | `/var/tmp/deepfake-audio-expand-20261011/` | `envsdd-urban/` 19,215条；`unseen-dev/`、`unseen-holdout/` 为未训练生成器评测；四组AST、冻结候选和分数团队可读 |
 | AIME音乐与混合训练 | `/var/tmp/deepfake-audio-music-20261011/` | `aime/`主清单630条、105个描述组合；`mixed/`保留Urban train并加入音乐；固定原包、模型与分数团队可读 |
+| AIME扩展与混合候选 | `/var/tmp/deepfake-audio-music-20261012/` | 119个固定分片；主清单1,914条、319个描述组合；旧混合seed43及扩展seed42的权重与分数 |
 | FakeSound 诊断清单 | `/var/tmp/lanjianyu-issue11-20261011/fakesound-v1/` | data_root 为其 `media/`，含缺失 real 记录 |
 
 共享原媒体和模型只读；`outputs/`、`cache/` 使用各自任务目录。
@@ -111,6 +112,13 @@ MusicGen Small/Medium、AudioLDM 2 Large、Riffusion、Mustango参与训练。
 `unseen.jsonl` 另保留dev/holdout各16条real和9条未训练路径fake；训练不读取该清单。
 这些真实音乐已包含在主清单，不能相加当作独立媒体数量。
 按三标签描述组合和已确认重复隔离；未知原曲、artist与album不当成已确认独立实体。
+
+扩展轮复用旧90个分片，新增29个，主清单train1,338/dev288/holdout288，
+预留音乐路径dev154条（48real/106fake）；旧697条已分配记录保持split，0冲突。
+扩展导入传入 `--previous-manifest`，命令与结果见
+[音乐扩展实验](experiments/audio-music-expand-20261012/README.md)。
+联合Urban训练14,788条，新候选已见/未训练音乐dev EER0.4167%/18.75%；
+FSD迁移退化，本轮未评估holdout。数据和逐曲许可限制没有因扩容而解除。
 
 ## 划分与许可
 

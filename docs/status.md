@@ -10,7 +10,7 @@
 | 数据/评测 | 标准 manifest、来源登记、组级划分、EER 与失败覆盖率 | 比赛数据及官方评测程序尚未提供 |
 | 语音模型 | 同一 ASV train/dev 上 LogMel/HuBERT 各双种子；每次24,844条评分0失败 | A07–A19研究子集与AAC/带宽诊断已完成；跨来源及最终离线验收待做 |
 | 环境音 | 19,215条Urban配对媒体；AST12层dev EER1.39%；冻结holdout已见1.43%/未见6.51%，分别2,880/1,728条0失败 | 跨来源和真正混合内容覆盖有限 |
-| 音乐/联合训练 | 630条AIME；混合研究候选音乐dev0%、Urban2.21%；五桶评分0失败 | 未训练音乐仍薄弱；音乐dev仅16条real；原曲/artist关系未知 |
+| 音乐/联合训练 | AIME扩展至1,914条；已见音乐dev0.42%、未训练音乐18.75%、Urban0.69%；五桶评分0失败 | Suno v3.5为29.17%、FSD退化至11.43%；原曲/artist关系未知，真正混合内容待补 |
 | 视频模型 | 冻结 ResNet18 帧头双种子 EER20.55%/21.92%；同划分解冻layer4与头为16.44%/16.44%，覆盖率1.0；Hunyuan train618/dev146 | 跨来源/生成器验收；轻量时序尚未实现 |
 | 鲁棒性 | 语音AAC退化+0.20/+0.99点、8kHz采样率带限约+12点；视频CRF35同域+4.11点、ViF-Bench+3.26点 | 带宽/压缩增强训练及跨来源验收 |
 | 离线交付 | 音视频研究权重、本地推理/恢复、导出打包；24条语音CPU断网演练 | 候选选择、双分支代表性批量验收、正式平台 I/O 适配 |
@@ -20,20 +20,19 @@
 
 ## 当前协作任务
 
-| 任务 | 状态 | 下一份交付 |
-| --- | --- | --- |
-| [音频泛化 #19](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/19) | #24交付AAC/带宽退化及A07–A19研究子集，原权重固定 | 针对带宽弱点训练；跨来源及未知攻击叠加退化待做 |
-| [视频泛化 #20](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/20) | #27交付1,949条ViF-Bench及H.264评分，尺寸混杂已定位 | 控制尺寸分布后比较模型与压缩增强 |
-| [视频微调 #21](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/21) | #28交付同划分部分主干微调与`video_frames`离线推理，双种子dev EER16.44% | 控制尺寸分布后的跨生成器验收；再决定轻量时序 |
-| 环境音 AST 扩展 | PR #22 已合并；#23完成多生成器调优和冻结holdout；本轮补12层seed43 dev | 向更多来源迁移 |
-| [音乐混合训练 #25](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/25) | 完成AIME小样本、单独/混合训练与五桶dev评分，独立PR交付 | 扩大真实音乐和未训练路径，补真正混合内容 |
+当前分工为[语音带宽增强 #29](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/29)、
+[视频受控泛化与压缩增强 #30](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/30)、
+[双分支离线运行包 #31](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/31)、
+[音乐数据扩展与联合训练 #32](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/32)。
+负责人及运行状态在对应Issue维护；已交付实验见下文与实验卡。
 
 音频产物在 `/var/tmp/lanjianyu-issue9-20261011/`，
 视频产物在 `/var/tmp/lanjianyu-issue10-20261011/`；两轮基线均已结束。
 大权重、逐样本分数及缓存留在团队可读任务目录。
 AST 预训练资源、微调权重及分数在 `/var/tmp/deepfake-audio-ast-20261011/`。
 多生成器数据、微调与分数在 `/var/tmp/deepfake-audio-expand-20261011/`。
-音乐、混合训练与本轮权重/分数在 `/var/tmp/deepfake-audio-music-20261011/`。
+首轮音乐、混合训练在 `/var/tmp/deepfake-audio-music-20261011/`；
+扩展音乐、两轮新训练与完整分数在 `/var/tmp/deepfake-audio-music-20261012/`。
 RTX4090按剩余显存与负载多人并发，任务在Issue记录占用，不设个人独占。
 
 ## 已有模型结论
@@ -50,6 +49,7 @@ RTX4090按剩余显存与负载多人并发，任务在Issue记录占用，不�
 | Urban 多生成器 AST 末四层，lr1e-5 | 5.545927% | 6.239168% |
 | Urban 多生成器 AST 12层，lr1e-5 | 1.386482% | 1.646447% |
 | Urban 多生成器 AST 12层，lr3e-6 | 2.209705% | 未运行 |
+| 扩展音乐/环境音 AST 12层（已见音乐dev） | 0.416667% | 未运行 |
 
 音频使用 train25,379/dev24,844，两种子 LogMel 均优于冻结 HuBERT，
 本轮保留 LogMel42 为较优研究候选。HuBERT 的 BF16 编码缓存评分不等于离线 FP32 编码评测。
@@ -86,11 +86,20 @@ FSD dev8.5714%，均0失败；未重复holdout。低学习率对照没有改善�
 
 音乐扩展扫描2,790条 AIME 输入，主清单630条、105个描述连通组，train438/dev96/holdout96。
 音乐单独训练已见音乐dev3.75%，但Urban退化到27.38%；两组混合训练均已见音乐dev0%。
-本轮保留仅类别平衡研究候选：未训练音乐路径11.11%，Urban2.2097%、未训练环境生成器5.3726%、
-FSD8.5714%，全部本地FP32、0失败。本轮四次新训练及五桶dev评分完成，没有新holdout评分。
+首轮保留仅类别平衡研究候选：未训练音乐路径11.11%，Urban2.2097%、未训练环境生成器5.3726%、
+FSD8.5714%，全部本地FP32、0失败。首轮四次新训练及五桶dev评分完成，没有新holdout评分。
 音乐dev仅16条real，未训练音乐仅7条Suno v3和2条Udio fake；artist/原曲关系未知。
 来源平衡50%音乐占比未改善本轮结果，不默认启用；真正混合内容仍未覆盖。
 详见[音乐混合实验](experiments/audio-music-20261011/README.md)。
+
+随后完成原混合方案seed43及扩展音乐seed42两轮GPU训练，分别578/764秒。
+AIME扩展至319条真实音乐、1,914条主清单；旧697条已分配记录保持split，0冲突。
+同一扩展dev上，旧/新模型已见音乐2.9167%→0.4167%（288条），
+未训练音乐25.00%→18.75%（154条）；Urban0.6932%、未训练环境生成器3.3795%，均0失败。
+FSD从8.5714%退化至11.4286%，Suno v3.5从25.00%退化至29.1667%，因此仅保留研究候选。
+新增数据也提高了类别平衡下的音乐采样占比，不能单独归因于覆盖数量；扩展模型尚无第二种子。
+没有新增holdout评分，AIME逐曲许可及artist关系仍未解决。
+详见[音乐扩展实验](experiments/audio-music-expand-20261012/README.md)。
 
 视频使用受控 train618/dev146，每次146条评分0失败，均最佳第4轮、第9轮早停；
 同集宽度/联合元数据 EER 为50.00%/53.42%。这是同来源 Hunyuan 单生成器小开发集，
@@ -123,7 +132,8 @@ FakeSound 缺少 real、许可 unresolved，保持单类诊断，不用于二分
 
 ## 下一步
 
-环境音和音乐已完成首轮联合训练；下一轮扩大音乐来源与未训练生成路径，补真正混合内容音频。
+环境音和音乐已完成扩展联合训练；下一轮补跨来源真实音乐与真正混合内容，
+优先改进Suno v3.5及FSD迁移，保留独立数据作冻结后验收。
 语音与视频泛化诊断已交付。视频 ViF-Bench 1,949条 EER33.28%，CRF35为36.54%，均0失败；
 同集双方向宽度oracle为30.42%，不能将当前数字视为内容级泛化证据。
 视频部分微调双种子dev16.44%；下一轮控制尺寸分布后验收泛化，语音优先带宽增强。
