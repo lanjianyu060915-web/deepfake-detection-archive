@@ -12,6 +12,7 @@ from .core import (
     pool_media_scores,
 )
 from .encoders import FrozenAudioEncoder, FrozenVisionEncoder
+from .finetune import VideoFrameClassifier, VideoFrameConfig
 
 
 __all__ = [
@@ -24,6 +25,8 @@ __all__ = [
     "LogMelConfig",
     "MediaFeatureClassifier",
     "MediaFeatureConfig",
+    "VideoFrameClassifier",
+    "VideoFrameConfig",
     "create_model",
     "load_checkpoint",
     "pool_media_scores",

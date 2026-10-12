@@ -4,14 +4,14 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
-from typing import cast
+from typing import Any, cast
 
 import torch
 from torch import Tensor
 
 from .config import InferenceConfig
 from .data.manifest import SampleRecord
-from .features import extract_features, load_encoder, media_path
+from .features import extract_features, extract_video_frames, load_encoder, media_path
 from .media import (
     AudioConfig,
     MediaError,
@@ -23,6 +23,7 @@ from .models import (
     AASISTLite,
     LogMelCNN,
     MediaFeatureClassifier,
+    VideoFrameClassifier,
     load_checkpoint,
     pool_media_scores,
 )
@@ -53,7 +54,19 @@ class OfflineScorer:
         self.model.to(self.device).eval()
         self.audio = AudioConfig(**config.audio)  # type: ignore[arg-type]
         self.video = VideoConfig(**config.video)  # type: ignore[arg-type]
-        if config.model_kind == "audio_waveform":
+        self.frame_preprocessing: dict[str, Any] | None = None
+        if config.model_kind == "video_frames":
+            if not isinstance(self.model, VideoFrameClassifier):
+                raise ValueError(
+                    "video_frames requires a video_frame_finetune_v1 checkpoint"
+                )
+            if self.model.config.aggregation != config.aggregation:
+                raise ValueError(
+                    "head aggregation and inference configuration disagree"
+                )
+            self.encoder = None
+            self.frame_preprocessing = self.model.preprocessing
+        elif config.model_kind == "audio_waveform":
             if not isinstance(self.model, (LogMelCNN, AASISTLite, ASTClassifier)):
                 raise ValueError("audio_waveform requires LogMel, AASIST-L or AST")
             if isinstance(self.model, (LogMelCNN, ASTClassifier)) and (
@@ -80,6 +93,12 @@ class OfflineScorer:
             raise MediaError(record.status, record.failure_reason)
         if record.modality != self.config.modality:
             raise MediaError("wrong_modality", "sample differs from run modality")
+        if self.frame_preprocessing is not None:
+            frames = extract_video_frames(
+                record, self.root, self.video, self.frame_preprocessing
+            )
+            frame_result: Tensor = self.model(frames[None, ...].to(self.device))
+            return float(frame_result[0].float().cpu())
         if self.encoder is not None:
             features = extract_features(
                 record,

@@ -190,6 +190,7 @@ def test_media_boundaries_preserve_scoring_errors(
         scorer.video = VideoConfig()
         scorer.device = torch.device("cpu")
         scorer.encoder = encoder if mode == "features" else None
+        scorer.frame_preprocessing = None
         with pytest.raises(MediaError) as raised:
             scorer(record)
     assert raised.value.code == failure
