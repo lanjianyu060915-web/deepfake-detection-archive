@@ -30,6 +30,7 @@ model_tools=(
   tools/prepare_video_augmentation.py
   tools/prepare_robustness.py
   tools/compare_scores.py
+  tools/prepare_offline_package.py
   tools/test_prepare_asv_eval.py
   tools/test_prepare_video_control.py
   tools/test_prepare_video_size_control.py
