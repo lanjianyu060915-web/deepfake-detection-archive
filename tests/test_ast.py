@@ -5,6 +5,7 @@ from dataclasses import replace
 from pathlib import Path
 from unittest.mock import patch
 
+import numpy as np
 import pytest
 
 
@@ -12,7 +13,11 @@ torch = pytest.importorskip("torch")
 transformers = pytest.importorskip("transformers")
 
 from deepfake_detection_archive.models.ast import ASTClassifier, ASTConfig  # noqa: E402
-from deepfake_detection_archive.models.checkpoint import sha256_file  # noqa: E402
+from deepfake_detection_archive.models.checkpoint import (  # noqa: E402
+    load_checkpoint,
+    save_checkpoint,
+    sha256_file,
+)
 
 
 @pytest.fixture(autouse=True)
@@ -74,6 +79,65 @@ def test_waveform_and_cached_features_are_equivalent(config):
     assert preprocessing["max_length"] == 32
     assert preprocessing["num_mel_bins"] == 32
     assert preprocessing["mean"] == config.feature_mean
+    assert "waveform_preparation" not in preprocessing
+
+
+@pytest.mark.parametrize("kind", ["long", "short", "silent"])
+def test_declared_waveform_policy_center_padding_peak_and_silence(
+    config, monkeypatch, kind
+):
+    model = ASTClassifier(
+        replace(config, waveform_preparation="center_pad_64000_peak095_v1")
+    )
+    monkeypatch.setattr(model, "prepare_waveforms", lambda inputs: inputs)
+    expected = torch.zeros(1, 64000)
+    if kind == "long":
+        waveform = np.zeros(64004, dtype=np.float32)
+        waveform[0] = 100  # Outside center crop: must not affect normalization.
+        waveform[2:4] = [2, -4]
+        expected[0, :2] = torch.tensor([0.475, -0.95])
+    elif kind == "short":
+        waveform = np.array([2, -4, 1], dtype=np.float32)
+        expected[0, 31998:32001] = torch.tensor([0.475, -0.95, 0.2375])
+    else:
+        waveform = np.zeros(123, dtype=np.float32)
+    original = waveform.copy()
+    actual = model.prepare_audio(waveform, 64000, 1)
+    torch.testing.assert_close(actual, expected)
+    np.testing.assert_array_equal(waveform, original)
+    assert model.preprocessing["waveform_preparation"] == "center_pad_64000_peak095_v1"
+
+
+def test_legacy_waveform_policy_keeps_start_and_loop_padding(config, monkeypatch):
+    model = ASTClassifier(config)
+    monkeypatch.setattr(model, "prepare_waveforms", lambda inputs: inputs)
+    torch.testing.assert_close(
+        model.prepare_audio(np.arange(8, dtype=np.float32), 4, 1),
+        torch.tensor([[0.0, 1.0, 2.0, 3.0]]),
+    )
+    torch.testing.assert_close(
+        model.prepare_audio(np.array([0.1, -0.2], dtype=np.float32), 5, 1),
+        torch.tensor([[0.1, -0.2, 0.1, -0.2, 0.1]]),
+    )
+
+
+def test_waveform_policy_validation_and_legacy_checkpoint(config, tmp_path):
+    with pytest.raises(ValueError, match="waveform_preparation"):
+        replace(config, waveform_preparation="unknown")
+    model = ASTClassifier(
+        replace(config, waveform_preparation="center_pad_64000_peak095_v1")
+    )
+    model.validate_audio_sampling(64000, 1)
+    for count, segments in [(64001, 1), (64000, 2)]:
+        with pytest.raises(ValueError, match="segment_samples=64000 and segments=1"):
+            model.validate_audio_sampling(count, segments)
+    path = tmp_path / "legacy.pt"
+    save_checkpoint(path, ASTClassifier(config))
+    payload = torch.load(path, weights_only=True)
+    del payload["config"]["waveform_preparation"]
+    torch.save(payload, path)
+    restored, _ = load_checkpoint(path, expected_sha256=sha256_file(path))
+    assert restored.config.waveform_preparation == "legacy"
 
 
 def test_train_keeps_frozen_blocks_in_eval(config):

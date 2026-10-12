@@ -4,20 +4,22 @@
 输入本地媒体，输出逐样本连续伪造分数；以 EER 选择模型，最终离线运行。
 内部约定 `real=0`、`fake=1`，分数越高越倾向伪造。
 
-**v0.1.0 提供带权重与运行时的双分支离线基线。**
-下载 [Release](https://github.com/lanjianyu060915-web/deepfake-detection-archive/releases/tag/v0.1.0)，
+**v0.1.1 提供带权重与运行时的环境音/视频离线研究基线。**
+下载 [Release](https://github.com/lanjianyu060915-web/deepfake-detection-archive/releases)，
 按[运行说明](docs/release.md)解压后，对无标签目录直接评分：
 
 ```bash
-./run.sh predict --config configs/audio.json --input /data/audio --output /results/audio
+./run.sh predict --config configs/audio-environment.json --input /data/audio --output /results/audio
 ./run.sh predict --config configs/video.json --input /data/video --output /results/video
 ```
 
-输出完整 `scores.csv`、逐样本 `scores.jsonl` 和 `report.json`；支持 `--resume`，
-失败逐项记账。包内包含 CPython 3.12、依赖、环境音 AST 和视频 ResNet18 微调权重，
+输出成功样本的 `scores.csv`、全部输入的 `scores.jsonl` 和 `report.json`；支持 `--resume`，
+失败逐项记账并返回退出码2，不填充虚构分数。包内包含 CPython 3.12、运行依赖、
+环境音 AST 和视频 ResNet18 微调权重，
 系统需 FFmpeg/ffprobe；可用 CUDA 或 `--device cpu`。
 
-本版是非商业研究基线，音频默认主要覆盖环境音，语音/音乐与视频跨生成器效果继续优化。
+本版音频仅作为环境音研究候选，尚无覆盖语音、音乐和混合内容的通用音频交付模型。
+视频跨生成器效果继续优化。
 正式比赛I/O和外部资源适用性尚未确认，详见[发布资产说明](docs/release-licenses.md)。
 [项目状态](docs/status.md)记录算法结果与缺口，[路线图](docs/roadmap.md)列出后续任务。
 

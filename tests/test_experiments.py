@@ -219,8 +219,14 @@ def _change(path: Path, **changes: Any) -> None:
 
 
 @pytest.mark.parametrize("mask_width", [0, 16])
+@pytest.mark.parametrize(
+    "waveform_preparation", ["legacy", "center_pad_64000_peak095_v1"]
+)
 def test_ast_cached_training_and_offline_checkpoint_roundtrip(
-    experiment: Path, monkeypatch: pytest.MonkeyPatch, mask_width: int
+    experiment: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    mask_width: int,
+    waveform_preparation: str,
 ) -> None:
     from transformers import ASTModel  # noqa: PLC0415 -- optional model dependency
 
@@ -241,9 +247,22 @@ def test_ast_cached_training_and_offline_checkpoint_roundtrip(
         raise AssertionError("checkpoint restore must be self-contained")
 
     monkeypatch.setattr(ASTModel, "from_pretrained", no_pretrained_download)
+    if waveform_preparation != "legacy":
+        records = load_manifest(experiment.parent / "manifest.jsonl")
+        for index in (0, 2):
+            path = experiment.parent / "media" / records[index].path
+            samples = (5000 * np.sin(np.arange(80000) * (index + 1) / 13)).astype("<i2")
+            with wave.open(str(path), "wb") as stream:
+                stream.setnchannels(1)
+                stream.setsampwidth(2)
+                stream.setframerate(16000)
+                stream.writeframes(samples.tobytes())
+            records[index] = replace(records[index], sha256=file_sha256(path))
+        write_manifest(records, experiment.parent / "manifest.jsonl")
     _change(
         experiment,
         architecture="audio_ast_v1",
+        segment_samples=400 if waveform_preparation == "legacy" else 64000,
         training={
             "max_epochs": 1,
             "seed": 23,
@@ -260,6 +279,7 @@ def test_ast_cached_training_and_offline_checkpoint_roundtrip(
                 "num_mel_bins": 32,
             },
             "trainable_layers": 1,
+            "waveform_preparation": waveform_preparation,
         },
     )
     result = run_experiment(experiment)
@@ -273,7 +293,7 @@ def test_ast_cached_training_and_offline_checkpoint_roundtrip(
             device="cpu",
             checkpoint=str(result.best_checkpoint),
             checkpoint_sha256=result.checkpoint_sha256,
-            segment_samples=400,
+            segment_samples=400 if waveform_preparation == "legacy" else 64000,
             audio={"sample_rate": 16000, "backend": "soundfile"},
         ),
         root,
@@ -296,6 +316,59 @@ def test_ast_cached_training_and_offline_checkpoint_roundtrip(
     report = json.loads((root / "run" / "experiment.json").read_text())
     assert report["train_count"] == report["dev_count"] == 2
     assert not report["holdout_accessed"]
+
+
+@pytest.mark.parametrize(
+    ("modality", "backend"), [("audio", "ffmpeg"), ("video", "soundfile")]
+)
+@pytest.mark.parametrize("missing", ["ffmpeg", "ffprobe"])
+def test_scorer_checks_media_executables_before_loading_model(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    modality: str,
+    backend: str,
+    missing: str,
+) -> None:
+    monkeypatch.setattr(
+        "deepfake_detection_archive.scoring.shutil.which",
+        lambda name: None if name == missing else f"/bin/{name}",
+    )
+    config = InferenceConfig(
+        manifest="manifest.jsonl",
+        data_root=".",
+        output_dir="out",
+        modality=modality,
+        model_kind="video_frames" if modality == "video" else "audio_waveform",
+        checkpoint="does-not-exist.pt",
+        checkpoint_sha256="0" * 64,
+        device="cpu",
+        audio={"backend": backend},
+    )
+    with pytest.raises(
+        RuntimeError, match=f"required media executables missing: {missing}"
+    ):
+        OfflineScorer(config, tmp_path)
+
+
+def test_soundfile_scorer_does_not_require_ffmpeg(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        "deepfake_detection_archive.scoring.shutil.which", lambda name: None
+    )
+    config = InferenceConfig(
+        manifest="manifest.jsonl",
+        data_root=".",
+        output_dir="out",
+        modality="audio",
+        checkpoint="does-not-exist.pt",
+        checkpoint_sha256="0" * 64,
+        device="cpu",
+        audio={"backend": "soundfile"},
+    )
+    with pytest.raises(FileNotFoundError):
+        OfflineScorer(config, tmp_path)
 
 
 def test_waveform_experiment_caches_only_train_dev_and_records_provenance(

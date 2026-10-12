@@ -366,3 +366,78 @@ def test_timeout_removes_partial_file_and_skips_unavailable_input(
     assert all(row.status == "decode_failed" for row in derived)
     assert "timed out" in derived[0].failure_reason
     assert derived[1].failure_reason == "not downloaded"
+
+
+def test_temporal_canonical_rejects_short_input_and_standardizes_long_input(
+    prepare: Any, tmp_path: Path, media: dict[str, Path]
+) -> None:
+    long = tmp_path / "long.mp4"
+    subprocess.run(
+        [
+            "ffmpeg",
+            "-v",
+            "error",
+            "-f",
+            "lavfi",
+            "-i",
+            "testsrc2=size=80x40:rate=24:duration=5",
+            "-f",
+            "lavfi",
+            "-i",
+            "sine=duration=5",
+            "-threads",
+            "1",
+            str(long),
+        ],
+        check=True,
+        capture_output=True,
+        timeout=20,
+    )
+    original = rows("video", long.name)
+    original.append(
+        replace(
+            original[0],
+            sample_id="short",
+            path=media["video"].name,
+            duration_seconds=10,
+        )
+    )
+    manifest = tmp_path / "input.jsonl"
+    write_manifest(original, manifest)
+    condition = "video_h264_crf23_448x256_16fps_3p5s"
+    output = tmp_path / "output"
+    summary = prepare(manifest, tmp_path, output, [condition], 60)
+    derived = load_manifest(output / condition / "manifest.jsonl")
+    assert len(derived) == 3
+    assert derived[2].status == "decode_failed"
+    assert "shorter than 3.5 seconds" in derived[2].failure_reason
+    assert not (output / condition / derived[2].path).exists()
+    assert summary["conditions"][condition]["failure_count"] == 1
+    for row in derived[:2]:
+        assert row.status == "available"
+        assert row.duration_seconds == 3.5
+        assert row.frame_rate == 16
+        probe = json.loads(
+            subprocess.run(
+                [
+                    "ffprobe",
+                    "-v",
+                    "error",
+                    "-show_streams",
+                    "-of",
+                    "json",
+                    str(output / condition / row.path),
+                ],
+                check=True,
+                capture_output=True,
+                text=True,
+                timeout=20,
+            ).stdout
+        )["streams"]
+        assert len(probe) == 1
+        assert probe[0]["codec_name"] == "h264"
+        assert (probe[0]["width"], probe[0]["height"]) == (448, 256)
+        assert probe[0]["avg_frame_rate"] == "16/1"
+        assert int(probe[0]["nb_frames"]) == 56
+        assert float(probe[0]["duration"]) == 3.5
+    assert derived[0].sha256 == derived[1].sha256

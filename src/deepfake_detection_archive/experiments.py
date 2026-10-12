@@ -542,15 +542,16 @@ def _prepare_cache(  # noqa: C901, PLR0912, PLR0913, PLR0915, PLR0917 -- cache a
                         )
                     elif encoder is None:
                         decoded = decode_audio(media_path(record, root), audio_config)
-                        tensor = torch.from_numpy(
-                            sample_audio_segments(
+                        if audio_preprocessor is not None:
+                            tensor = audio_preprocessor.prepare_audio(
                                 decoded.waveform, config.segment_samples, 1
                             )[0]
-                        )
-                        if audio_preprocessor is not None:
-                            tensor = audio_preprocessor.prepare_waveforms(
-                                tensor[None, :]
-                            )[0]
+                        else:
+                            tensor = torch.from_numpy(
+                                sample_audio_segments(
+                                    decoded.waveform, config.segment_samples, 1
+                                )[0]
+                            )
                     else:
                         tensor = extract_features(
                             record,
@@ -637,6 +638,8 @@ def run_experiment(config_path: Path) -> TrainResult:  # noqa: PLR0915 -- experi
         train_config = config.train_config
         torch.manual_seed(train_config.seed)
         model = create_model(config.architecture, config.model_config)
+        if isinstance(model, ASTClassifier):
+            model.validate_audio_sampling(config.segment_samples, config.segments)
         if isinstance(model, ASTClassifier) and config.pretrained:
             model.initialize_pretrained(
                 (base / config.pretrained["checkpoint"]).resolve(),

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import shutil
 from pathlib import Path
 from typing import Any, cast
 
@@ -36,6 +37,15 @@ def resolve_path(base: Path, value: str) -> Path:
     return path if path.is_absolute() else base / path
 
 
+def _validate_media_executables(config: InferenceConfig, audio: AudioConfig) -> None:
+    if config.modality == "video" or audio.backend == "ffmpeg":
+        missing = [name for name in ("ffmpeg", "ffprobe") if not shutil.which(name)]
+        if missing:
+            raise RuntimeError(
+                f"required media executables missing: {', '.join(missing)}"
+            )
+
+
 class OfflineScorer:
     """Load resources once; media errors are recorded by the outer runner."""
 
@@ -43,6 +53,9 @@ class OfflineScorer:
         os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
         self.config = config
         self.root = resolve_path(base_dir, config.data_root).resolve(strict=True)
+        self.audio = AudioConfig(**config.audio)  # type: ignore[arg-type]
+        self.video = VideoConfig(**config.video)  # type: ignore[arg-type]
+        _validate_media_executables(config, self.audio)
         self.device = torch.device(config.device)
         if config.device == "cuda" and not torch.cuda.is_available():
             raise RuntimeError("CUDA requested but unavailable; no silent CPU fallback")
@@ -52,8 +65,6 @@ class OfflineScorer:
             expected_sha256=config.checkpoint_sha256,
         )
         self.model.to(self.device).eval()
-        self.audio = AudioConfig(**config.audio)  # type: ignore[arg-type]
-        self.video = VideoConfig(**config.video)  # type: ignore[arg-type]
         self.frame_preprocessing: dict[str, Any] | None = None
         if config.model_kind == "video_frames":
             if not isinstance(self.model, VideoFrameClassifier):
@@ -77,6 +88,10 @@ class OfflineScorer:
                 self.audio.sample_rate != 16000 or config.segment_samples != 64600
             ):
                 raise ValueError("AASIST-L requires 16kHz and 64600-sample segments")
+            if isinstance(self.model, ASTClassifier):
+                self.model.validate_audio_sampling(
+                    config.segment_samples, config.segments
+                )
             self.encoder = None
         else:
             if not isinstance(self.model, MediaFeatureClassifier):
@@ -89,6 +104,15 @@ class OfflineScorer:
 
     @torch.inference_mode()
     def __call__(self, record: SampleRecord) -> float:
+        try:
+            return self._score(record)
+        except RuntimeError as exc:
+            # PyTorch's CPU allocator raises RuntimeError rather than OutOfMemoryError.
+            if "DefaultCPUAllocator: can't allocate memory" in str(exc):
+                raise MemoryError(str(exc)) from exc
+            raise
+
+    def _score(self, record: SampleRecord) -> float:
         if record.status != "available":
             raise MediaError(record.status, record.failure_reason)
         if record.modality != self.config.modality:
@@ -114,15 +138,20 @@ class OfflineScorer:
             result: Tensor = self.model(features[None, ...].to(self.device))
             return float(result[0].float().cpu())
         decoded = decode_audio(media_path(record, self.root), self.audio)
-        observations = torch.from_numpy(
-            sample_audio_segments(
+        if isinstance(self.model, ASTClassifier):
+            observations = self.model.prepare_audio(
                 decoded.waveform,
                 self.config.segment_samples,
                 self.config.segments,
             )
-        )
-        if isinstance(self.model, ASTClassifier):
-            observations = self.model.prepare_waveforms(observations)
+        else:
+            observations = torch.from_numpy(
+                sample_audio_segments(
+                    decoded.waveform,
+                    self.config.segment_samples,
+                    self.config.segments,
+                )
+            )
         scores = [
             self.model(
                 observations[start : start + self.config.batch_size].to(self.device)

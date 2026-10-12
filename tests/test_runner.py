@@ -244,3 +244,64 @@ def test_duplicate_inputs_empty_identity_and_orphan_artifacts_rejected(
     (tmp_path / "scores.jsonl").write_text("orphan\n")
     with pytest.raises(ValueError, match="without metadata"):
         run_inference(inputs(), infer, tmp_path, identity=IDENTITY)
+
+
+@pytest.mark.parametrize(
+    "exception", [MemoryError("exhausted"), ImportError("backend")]
+)
+def test_fatal_failure_aborts_and_preserves_resumable_prefix(
+    tmp_path: Path,
+    exception: Exception,
+) -> None:
+    called = []
+
+    def failing(record: SampleRecord) -> float:
+        called.append(record.sample_id)
+        if record.sample_id == "a":
+            raise exception
+        return infer(record)
+
+    with pytest.raises(type(exception)):
+        run_inference(inputs(), failing, tmp_path, identity=IDENTITY)
+    assert called == ["b", "a"]
+    assert not (tmp_path / "report.json").exists()
+    prefix = (tmp_path / "scores.jsonl").read_bytes()
+    assert prefix.count(b"\n") == 1
+    result = run_inference(inputs(), infer, tmp_path, identity=IDENTITY, resume=True)
+    assert len(result) == 2
+    assert (tmp_path / "scores.jsonl").read_bytes().startswith(prefix)
+
+
+def test_backend_fatal_exception_is_injected_without_torch(tmp_path: Path) -> None:
+    class BackendOutOfMemoryError(RuntimeError):
+        pass
+
+    def failing(record: SampleRecord) -> float:
+        raise BackendOutOfMemoryError("device exhausted")
+
+    with pytest.raises(BackendOutOfMemoryError):
+        run_inference(
+            inputs(),
+            failing,
+            tmp_path,
+            identity=IDENTITY,
+            fatal_exceptions=(BackendOutOfMemoryError,),
+        )
+    assert (tmp_path / "scores.jsonl").read_bytes() == b""
+    assert not (tmp_path / "report.json").exists()
+
+
+@pytest.mark.parametrize("code", ["missing_dependency", "process_error"])
+def test_environment_failure_is_not_a_media_failure(tmp_path: Path, code: str) -> None:
+    class EnvironmentFailureError(ValueError):
+        pass
+
+    error = EnvironmentFailureError("decoder cannot start")
+    error.code = code  # type: ignore[attr-defined]
+
+    def failing(record: SampleRecord) -> float:
+        raise error
+
+    with pytest.raises(EnvironmentFailureError):
+        run_inference(inputs(), failing, tmp_path, identity=IDENTITY)
+    assert not (tmp_path / "report.json").exists()

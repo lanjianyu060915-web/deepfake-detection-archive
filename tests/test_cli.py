@@ -294,3 +294,125 @@ def test_real_media_random_checkpoint_cli_end_to_end(
         assert report["manifest_metadata_verified"] is True
     finally:
         torch.set_num_threads(old_threads)
+
+
+@pytest.mark.parametrize("all_failed", [False, True])
+def test_predict_exports_successes_with_failure_accounting_and_resumes(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    mocked_scorer: list[str],
+    capsys: pytest.CaptureFixture[str],
+    all_failed: bool,
+) -> None:
+    import csv  # noqa: PLC0415
+
+    config = infer_config(tmp_path)
+    for name in ("正常.wav", "损坏.wav"):
+        (tmp_path / name).write_bytes(b"media")
+    called: list[str] = []
+
+    class MixedScorer:
+        def __init__(self, config: object, base: Path) -> None:
+            pass
+
+        def __call__(self, record: SampleRecord) -> float:
+            called.append(record.sample_id)
+            if all_failed or record.path == "损坏.wav":
+                raise ValueError("corrupt media")
+            return 0.25
+
+    monkeypatch.setattr(
+        sys.modules["deepfake_detection_archive.scoring"], "OfflineScorer", MixedScorer
+    )
+    output = tmp_path / "prediction"
+    command = [
+        "predict",
+        "--config",
+        str(config),
+        "--input",
+        str(tmp_path),
+        "--output",
+        str(output),
+    ]
+    assert cli.main(command) == 2
+    result = json.loads(capsys.readouterr().out)
+    assert result["scores_csv"] == str(output / "scores.csv")
+    with (output / "scores.csv").open(newline="") as stream:
+        rows = list(csv.DictReader(stream))
+    saved = [
+        json.loads(line) for line in (output / "scores.jsonl").read_text().splitlines()
+    ]
+    failed_ids = [row["sample_id"] for row in saved if row["status"] == "error"]
+    assert [row["sample_id"] for row in rows] == [
+        row["sample_id"] for row in saved if row["status"] == "ok"
+    ]
+    assert len(saved) == 2
+    assert len(rows) == (0 if all_failed else 1)
+    metadata = json.loads((output / "scores.csv.metadata.json").read_text())
+    assert metadata["failed_sample_ids"] == failed_ids
+    assert metadata["total_count"] == 2
+    assert metadata["exported_count"] == len(rows)
+    assert metadata["failed_count"] == len(failed_ids)
+    assert metadata["coverage"] == len(rows) / 2
+    assert json.loads((output / "report.json").read_text())["failure_count"] == len(
+        failed_ids
+    )
+    original_csv = (output / "scores.csv").read_bytes()
+    assert cli.main([*command, "--resume"]) == 2
+    assert len(called) == 2
+    assert (output / "scores.csv").read_bytes() == original_csv
+    (tmp_path / "正常.wav").write_bytes(b"changed")
+    assert cli.main([*command, "--resume"]) == 2
+    assert (output / "scores.csv").read_bytes() == original_csv
+    assert len(called) == 2
+
+
+@pytest.mark.parametrize("kind", ["memory", "cuda_oom"])
+def test_predict_fatal_failure_aborts_without_completed_artifacts(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    mocked_scorer: list[str],
+    capsys: pytest.CaptureFixture[str],
+    kind: str,
+) -> None:
+    torch = pytest.importorskip("torch")
+    config = infer_config(tmp_path)
+    for name in ("a.wav", "b.wav", "c.wav"):
+        (tmp_path / name).write_bytes(b"media")
+    called: list[str] = []
+
+    class FatalScorer:
+        def __init__(self, config: object, base: Path) -> None:
+            pass
+
+        def __call__(self, record: SampleRecord) -> float:
+            called.append(record.path)
+            if record.path == "b.wav":
+                if kind == "memory":
+                    raise MemoryError("exhausted")
+                raise torch.OutOfMemoryError("CUDA exhausted")
+            return 0.25
+
+    monkeypatch.setattr(
+        sys.modules["deepfake_detection_archive.scoring"], "OfflineScorer", FatalScorer
+    )
+    output = tmp_path / "prediction"
+    assert (
+        cli.main(
+            [
+                "predict",
+                "--config",
+                str(config),
+                "--input",
+                str(tmp_path),
+                "--output",
+                str(output),
+            ]
+        )
+        == 2
+    )
+    assert "exhausted" in capsys.readouterr().err
+    assert called == ["a.wav", "b.wav"]
+    assert len((output / "scores.jsonl").read_text().splitlines()) == 1
+    assert not (output / "report.json").exists()
+    assert not (output / "scores.csv").exists()

@@ -81,3 +81,39 @@ def test_adapter_config_and_duplicate_ids_are_rejected(tmp_path: Path) -> None:
         AdapterConfig(score_column="sample_id")
     with pytest.raises(ValueError, match="unique"):
         export_scores([scores()[0]] * 2, tmp_path / "s.csv")
+
+
+@pytest.mark.parametrize("all_failed", [False, True])
+def test_partial_export_accounts_for_every_id(tmp_path: Path, all_failed: bool) -> None:
+    failed = ScoreRecord(
+        "损坏.wav",
+        "audio",
+        None,
+        "error",
+        0.1,
+        error_code="decode_error",
+        error_message="broken",
+    )
+    rows = [failed] if all_failed else [scores()[0], failed, scores()[1]]
+    path = export_scores(rows, tmp_path / "s.csv", allow_partial=True)
+    with path.open(newline="") as stream:
+        exported = list(csv.DictReader(stream))
+    assert [row["sample_id"] for row in exported] == ([] if all_failed else ["b", "a"])
+    metadata = json.loads(path.with_suffix(".csv.metadata.json").read_text())
+    assert metadata["total_count"] == len(rows)
+    assert metadata["exported_count"] == len(exported)
+    assert metadata["failed_count"] == 1
+    assert metadata["failed_sample_ids"] == ["损坏.wav"]
+    assert metadata["coverage"] == len(exported) / len(rows)
+
+
+def test_official_partial_export_is_rejected(tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match="partial"):
+        export_scores(
+            scores(),
+            tmp_path / "s.csv",
+            AdapterConfig(official_confirmed=True),
+            official=True,
+            allow_partial=True,
+        )
+    assert not (tmp_path / "s.csv").exists()

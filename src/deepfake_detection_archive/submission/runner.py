@@ -130,7 +130,9 @@ def _prepare_run(
 
 
 def _infer_one(
-    record: SampleRecord, scorer: Callable[[SampleRecord], float]
+    record: SampleRecord,
+    scorer: Callable[[SampleRecord], float],
+    fatal_exceptions: tuple[type[Exception], ...],
 ) -> ScoreRecord:
     started = time.perf_counter()
     metadata = _sample_metadata(record)
@@ -156,7 +158,11 @@ def _infer_one(
             }
         )
     except Exception as exc:  # Each media failure remains a persisted row.
+        if isinstance(exc, (MemoryError, ImportError, *fatal_exceptions)):
+            raise
         code = getattr(exc, "code", "inference_error")
+        if code in ("missing_dependency", "process_error"):
+            raise
         return score_from_dict(
             {
                 **metadata,
@@ -229,18 +235,20 @@ def _report(
     }
 
 
-def run_inference(
+def run_inference(  # noqa: PLR0913 -- explicit backend failure boundary
     records: Sequence[SampleRecord],
     scorer: Callable[[SampleRecord], float],
     output_dir: Path,
     *,
     identity: dict[str, object],
     resume: bool = False,
+    fatal_exceptions: tuple[type[Exception], ...] = (),
 ) -> list[ScoreRecord]:
     """Persist one row per input, preserving order and never silently dropping errors.
 
     The caller supplies config/model/code hashes in identity and must use immutable
-    local model/media resources. KeyboardInterrupt propagates after committed rows.
+    local model/media resources. Interrupts, memory/dependency failures and injected
+    backend fatal exceptions propagate after committed rows, without a final report.
     An advisory OS flock guards every mutation; lock-file PID is only diagnostic.
     """
     records = tuple(records)
@@ -258,7 +266,7 @@ def run_inference(
         write_seconds = 0.0
         with (output_dir / "scores.jsonl").open("ab") as stream:
             for record in records[len(scores) :]:
-                score = _infer_one(record, scorer)
+                score = _infer_one(record, scorer, fatal_exceptions)
                 write_seconds += _append_score(stream, score)
                 scores.append(score)
         report_path = output_dir / "report.json"
