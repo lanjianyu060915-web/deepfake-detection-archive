@@ -138,10 +138,24 @@ def _change(path: Path, **changes: Any) -> None:
     path.write_text(json.dumps(config))
 
 
+@pytest.mark.parametrize("mask_width", [0, 16])
 def test_ast_cached_training_and_offline_checkpoint_roundtrip(
-    experiment: Path, monkeypatch: pytest.MonkeyPatch
+    experiment: Path, monkeypatch: pytest.MonkeyPatch, mask_width: int
 ) -> None:
     from transformers import ASTModel  # noqa: PLC0415 -- optional model dependency
+
+    from deepfake_detection_archive import training  # noqa: PLC0415
+
+    fills: list[float] = []
+    original_mask = training._mask_fbank
+
+    def observe_mask(
+        inputs: torch.Tensor, time_width: int, frequency_width: int, fill: float
+    ) -> torch.Tensor:
+        fills.append(fill)
+        return original_mask(inputs, time_width, frequency_width, fill)
+
+    monkeypatch.setattr(training, "_mask_fbank", observe_mask)
 
     def no_pretrained_download(*args: Any, **kwargs: Any) -> None:
         raise AssertionError("checkpoint restore must be self-contained")
@@ -150,6 +164,12 @@ def test_ast_cached_training_and_offline_checkpoint_roundtrip(
     _change(
         experiment,
         architecture="audio_ast_v1",
+        training={
+            "max_epochs": 1,
+            "seed": 23,
+            "time_mask_width": mask_width,
+            "frequency_mask_width": mask_width,
+        },
         model_config={
             "backbone_config": {
                 "hidden_size": 16,
@@ -183,6 +203,16 @@ def test_ast_cached_training_and_offline_checkpoint_roundtrip(
     assert len(scores) == 2
     for score in scores:
         assert scorer(records[score.sample_id]) == pytest.approx(score.score, abs=1e-6)
+    # One training batch is masked; checkpoint-selection dev uses clean inputs.
+    assert len(fills) == 1
+    if mask_width:
+        assert fills[0] == pytest.approx(4.2677393 / (2 * 4.5689974))
+    history = json.loads(result.history_path.read_text())
+    expected_loss = torch.nn.functional.binary_cross_entropy_with_logits(
+        torch.tensor([score.score for score in scores]),
+        torch.tensor([float(records[score.sample_id].label) for score in scores]),
+    )
+    assert history[0]["dev_loss"] == pytest.approx(float(expected_loss), abs=1e-6)
     report = json.loads((root / "run" / "experiment.json").read_text())
     assert report["train_count"] == report["dev_count"] == 2
     assert not report["holdout_accessed"]

@@ -2,9 +2,14 @@
 
 使用 [disco-eth/AIME](https://huggingface.co/datasets/disco-eth/AIME)，固定 revision
 `b84d4be5eda830b6eb714998569dba73530f2601`。上游共有500条真实 MTG-Jamendo
-音乐和12个模型的6,000条生成音乐；本轮选取90个原始 Parquet 分片，
+音乐和12个模型的6,000条生成音乐；首轮选取90个原始 Parquet 分片，
 共9,087,224,372字节。固定路径、大小及官方 LFS SHA-256 在
 [resources.json](resources.json)，不是整个62.28GB数据集。
+
+2026-10-12扩展复用原90个，新增29个，共119个分片、29,012,183,201字节，
+固定文件及官方哈希见[扩展清单](expanded-resources-20261012.json)。
+真实音乐增加到319条，主清单1,914条；划分保持与训练结果见
+[扩展实验](../../../experiments/audio-music-expand-20261012/README.md)。
 
 输入字段仅有 `id/model/description/audio`。本轮以真实样本的三标签描述筛选生成音乐，
 按忽略顺序、大小写的标签组合保守分组，再连接已确认的处理后精确重复。
@@ -15,6 +20,20 @@
 剩余选中生成器只作开发诊断。两个 MusicGen 尺寸属于同一家族；MusicGen Large
 即使未训练，也不能当成未知家族。真实和生成音频统一下混、16kHz、居中4秒、
 峰值0.95及PCM16处理；原始长度、采样率、声道仅记录，不输入模型。
+
+扩展分片时，资源清单包含本次全部分片，并传入旧 `inventory.jsonl`：
+
+```bash
+scripts/devctl run python tools/prepare_aime.py \
+  --parquet-dir /path/to/parquet --resources /path/to/expanded-resources.json \
+  --previous-manifest /path/to/previous/inventory.jsonl --output /path/to/expanded
+```
+
+旧 prompt、样本 ID 和处理后精确重复关联的连通分量保留原 split，新分量沿用现有
+划分算法。新增精确重复若连接旧的不同 split，整个冲突分量从训练和评测清单排除，
+在 inventory 标记 `previous_split_conflict`，摘要记录冲突分量数和排除样本数。
+也可输入旧 `manifest.jsonl`，但它不包含全部保留生成器，优先使用完整 inventory。
+未传入该参数时维持首次导入的划分行为；输出目录须为新目录。
 
 ## 许可与用途
 

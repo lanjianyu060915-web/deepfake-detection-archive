@@ -32,6 +32,9 @@ optimizer/RNG 恢复；中断后在新输出目录重启。
 
 AudioSet AST部分主干微调的实值配置见[环境音AST实验](../docs/experiments/audio-ast-20261011/README.md)。
 它复用波形推理模板，checkpoint自包含前端配置和全部权重；预训练来源只在初始化时加载。
+AST可设置 `training.frequency_mask_width` / `time_mask_width`，默认0关闭。
+各样本遮挡宽度从 `[0, 配置值)` 抽取，只作用于训练，不改变缓存或推理。
+两档实际对照见[AST时频遮挡实验](../docs/experiments/audio-ast-regularization-20261012/README.md)。
 
 `balanced_sampling=true` 按 real/fake 平衡训练抽样。多来源规模差异较大时，同时设置
 `balance_sources=true`，使已存在的来源与类别组合等权；只影响 train，不改变 dev/holdout。
