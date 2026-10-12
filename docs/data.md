@@ -22,6 +22,7 @@
 | AIME音乐与混合训练 | `/var/tmp/deepfake-audio-music-20261011/` | `aime/`主清单630条、105个描述组合；`mixed/`保留Urban train并加入音乐；固定原包、模型与分数团队可读 |
 | AIME扩展与混合候选 | `/var/tmp/deepfake-audio-music-20261012/` | 119个固定分片；主清单1,914条、319个描述组合；旧混合seed43及扩展seed42的权重与分数 |
 | AST时频遮挡与广播外部诊断 | `/var/tmp/deepfake-audio-regularize-20261012/` | 扩展模型第二种子、两档遮挡训练及分数；`ai-openbmat/`含246段外部探索dev；原始子集在`upstream/ai-openbmat/` |
+| 对称音乐/语音混合与匹配对照 | `/var/tmp/deepfake-audio-speech-mix-20261012/` | `mixtures/`含3,464个波形变体；`pure-replay/`、`speech-mix/`为同规模联合训练清单；固定源码、权重及九桶评分按任务保存 |
 | FakeSound 诊断清单 | `/var/tmp/lanjianyu-issue11-20261011/fakesound-v1/` | data_root 为其 `media/`，含缺失 real 记录 |
 
 共享原媒体和模型只读；`outputs/`、`cache/` 使用各自任务目录。
@@ -44,6 +45,7 @@
 | `tools/prepare_envsdd.py` | `import`：五成员配对环境音，排除旧研究集关联并重划分；`eval`：同一已划分原录音上的 AudioLCM/TangoFlux 诊断 |
 | `tools/prepare_aime.py` | 固定 AIME Parquet → 描述匹配音乐、prompt隔离与未训练生成路径诊断；不推断原曲/artist关系 |
 | `tools/prepare_ai_openbmat.py` | 配对广播WAV/JSON → 共同纯音乐及音乐/语音区间的4秒外部dev；按交叉淡化修正时轴，保留来源和失败 |
+| `tools/prepare_audio_mixtures.py` | 已划分AIME音乐 + 同split真实ASV语音 → 对称RMS混合与纯音乐重采样对照；保留父音乐、speaker、SNR、输入SHA与失败 |
 
 参数见各工具 `--help`，已有输入直接复用，不重复下载或物化。
 通用 `index` 只列媒体；标签、许可和已知组需来源证据，不能从目录猜测。
@@ -128,6 +130,15 @@ AI-OpenBMAT固定128对原始成品，按共同区间准备混合152段、纯音
 底层BAF素材许可衔接未解决，正式交付未批准。
 准备命令及来源见[AI-OpenBMAT登记](research/source/ai-openbmat/README.md)，
 实际模型评分见[广播内容实验](experiments/audio-ast-regularization-20261012/README.md)。
+
+音乐/语音混合轮复用AIME及ASV已发布train/dev；真实语音池为606/768条，
+原speaker、utterance及已知文件哈希不跨split。按音乐group与SNR共用同一语音，
+分别生成整段RMS music/speech -5、+5dB变体，3,464条均成功。
+混合train2,676条，已见混合dev576条，未训练路径混合dev308条；两dev桶共享96条real。
+纯音乐重采样对照引用原音乐两次，两组联合Urban/AIME均train17,464、共同选模dev864。
+未训练生成路径仅诊断，不读取holdout媒体。派生素材适用AIME和ASV许可交集，
+正式赛用及AIME原曲/artist关系仍未确认；合成混合不等同真实广播内容。
+准备规则、训练配置与结果见[对称混合实验](experiments/audio-speech-mix-20261012/README.md)。
 
 ## 划分与许可
 
