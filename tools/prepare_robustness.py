@@ -89,6 +89,52 @@ CONDITIONS = {
             "passthrough",
         ),
     ),
+    # Size-canonical conditions: both labels get one shared output size, codec and
+    # pixel format, so residual width/height differences cannot drive the score.
+    "video_h264_crf18_448x256": (
+        "video",
+        "mp4",
+        "h264",
+        (
+            "-map",
+            "0:v:0",
+            "-an",
+            "-vf",
+            "scale=448:256:flags=bicubic",
+            "-pix_fmt",
+            "yuv420p",
+            "-c:v",
+            "libx264",
+            "-preset",
+            "medium",
+            "-crf",
+            "18",
+            "-fps_mode",
+            "passthrough",
+        ),
+    ),
+    "video_h264_crf35_448x256": (
+        "video",
+        "mp4",
+        "h264",
+        (
+            "-map",
+            "0:v:0",
+            "-an",
+            "-vf",
+            "scale=448:256:flags=bicubic",
+            "-pix_fmt",
+            "yuv420p",
+            "-c:v",
+            "libx264",
+            "-preset",
+            "medium",
+            "-crf",
+            "35",
+            "-fps_mode",
+            "passthrough",
+        ),
+    ),
 }
 
 
