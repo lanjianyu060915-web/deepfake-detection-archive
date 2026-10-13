@@ -80,25 +80,13 @@ CUDA 支持 BF16/FP16 AMP、梯度累积；新方法先用一次小 profile 确�
 `balanced_sampling` 仅用于 train 的类别平衡；同时开启 `balance_sources` 后，
 已存在的来源与类别组合等权抽样，避免小来源被淹没。它不改变 dev 选模指标；
 多来源实验需明确选模使用哪个 dev，并分别报告其他来源。
-需要逐域摘要时，设置 `dev_domain_field="content_type"` 或 `"source"`，按 manifest
-原值输出每个 epoch 的 `dev_domains`，以及 `dev-evaluation.json` 中的 `domains`。
-不从来源名推断语音、音乐或环境音；`unknown` 单独保留，缺类域的 EER 为 null 并注明原因。
-可选 `training.domain_eer_constraints` 为指定域加入固定 dev 基线回退限制，例如：
-
-```json
-"dev_domain_field": "content_type",
-"training": {
-  "domain_eer_constraints": {
-    "speech": {"baseline_eer": 0.10, "max_regression": 0.02}
-  }
-}
-```
-
-此处数字仅演示语法，不是实测成绩；域名须与清单一致。基线需人工确认来自同一 dev
-样本、评分方向和评测协议，不能填入 holdout 结果。EER 使用 0–1 数值，0.02 表示
-2 个百分点。仅在所有受约束域 EER 不超过基线加容差时，按全 dev EER 选择 checkpoint；
-未通过的 epoch 及原因写入 `training/history.json`。缺域、缺类或所有 epoch 均未通过
-都会明确失败，不回退选用不合格模型。未配置时保持原来的全 dev EER 选模行为。
+三域训练使用 `selection.metric="domain_macro_eer"` 和
+`selection.max_bucket_eer`，域名来自清单的 `content_type`。
+每个受约束域必须有真假两类；先满足各域 EER 上限，再按各域宏平均选择 checkpoint。
+`best_dev_eer` 保留所选 epoch 的 pooled EER，另记 `best_selection_metric/value`。
+无合格 epoch 时保留最低 macro 的研究诊断权重，明确 `selection_gate_passed=false`；
+候选冻结时须据此判断资格。未配置selection时保持原 pooled EER选模。
+具体三域配置与结果边界见[联合训练实验](experiments/universal-audio-20261012/README.md)。
 `feature_batch_size` 控制冻结特征提取批量。
 `soundfile` 后端只用于原生目标采样率/单声道；通用媒体使用 FFmpeg。
 
@@ -177,15 +165,10 @@ runner 初始化、逐行持久写入和报告计算分别记录；runner 总耗
 成功调用包含现有阻塞 CPU 特征/分数回传，不新增 CUDA 同步，也不是纯 GPU kernel 耗时；
 CUDA 调用异常时尚未完成的异步工作可能落在后续调用中。
 阶段统计只覆盖本次新增样本（含失败），旧行仅保留原有总耗时；已完成的 resume 不覆盖旧计时。
-缓存与推理恢复同时绑定相关运行时及实际预处理后端。更换音频/视频解码工具、
-相关依赖版本或 AST 前端后，不得沿用旧环境分数；恢复身份不匹配时使用新输出目录。
-这避免同一配置在不同后端下静默混用缓存或分数，不证明两个环境数值完全相同。
-缓存身份升级为v3，旧缓存保留但不再复用，准备阶段重新生成；旧文件仍计入容量上限，
-空间不足时指定新的缓存目录，不要在其他任务运行时删除其输入。普通波形缓存不因训练
-设备或无关模型依赖变化而失效。AST记录实际NumPy或Kaldi前端，视频记录解码与归一化，
-冻结特征另记录所用编码器依赖和执行后端；身份在启动阶段计算，不在epoch内重复探测。
-旧推理目录缺少运行时身份，同样拒绝resume，不能手改identity元数据绕过。checkpoint和
-逐样本分数schema保持兼容，但迁移环境后应在新目录重评测再比较，不能假定旧分数等价。
+本轮不迁移运行时指纹，缓存仍为v2，避免让既有AST filterbank整体重提取。
+实际媒体、预处理配置或准备源码变化仍按现有身份规则失效；本轮修改features/encoder
+源码涉及的视觉与SSL缓存仍会重新生成。推理resume继续检查输入、配置、模型和代码身份；
+迁移运行环境后的数值等价性未获保证，应在新目录评分，不能手改身份元数据。
 
 ## 压缩与重采样对照
 

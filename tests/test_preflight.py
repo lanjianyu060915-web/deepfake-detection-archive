@@ -80,7 +80,6 @@ def config_path(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
                 "model_config": {},
                 "training": {"device": "cuda:77", "amp": True},
                 "feature_cache": "new/cache",
-                "dev_domain_field": "content_type",
             }
         )
     )
@@ -170,6 +169,7 @@ def test_preflight_requires_both_classes(config_path: Path, split: str) -> None:
     write_manifest(records, path)
     report = check_training_config(config_path)
     assert report["passed"] is False
+    assert isinstance(report["split_errors"], list)
     assert f"{split} requires both classes with known labels" in report["split_errors"]
 
 
@@ -183,15 +183,41 @@ def test_preflight_rejects_missing_or_one_class_constrained_domain(
     write_manifest(records, path)
     change_config(
         config_path,
-        training={
-            "domain_eer_constraints": {
-                domain: {"baseline_eer": 0.1, "max_regression": 0.02}
-            }
+        selection={
+            "metric": "domain_macro_eer",
+            "max_bucket_eer": {domain: 0.12},
         },
     )
     report = check_training_config(config_path)
     assert report["passed"] is False
+    assert isinstance(report["split_errors"], list)
     assert any(f"domain {domain!r}" in error for error in report["split_errors"])
+
+
+def test_preflight_accepts_capped_domain_with_both_classes(config_path: Path) -> None:
+    change_config(
+        config_path,
+        selection={
+            "metric": "domain_macro_eer",
+            "max_bucket_eer": {"speech": 0.12},
+        },
+    )
+    report = check_training_config(config_path)
+    assert report["passed"] is True
+    assert report["split_errors"] == []
+    assert not (config_path.parent / "new").exists()
+
+
+def test_preflight_without_selection_allows_one_class_content_types(
+    config_path: Path,
+) -> None:
+    path = config_path.parent / "manifest.jsonl"
+    records = load_manifest(path)
+    records[3] = replace(records[3], content_type="environment")
+    write_manifest(records, path)
+    report = check_training_config(config_path)
+    assert report["passed"] is True
+    assert report["split_errors"] == []
 
 
 def test_preflight_checks_full_metadata_for_holdout_leakage(config_path: Path) -> None:
@@ -201,6 +227,7 @@ def test_preflight_checks_full_metadata_for_holdout_leakage(config_path: Path) -
     write_manifest(records, path)
     report = check_training_config(config_path)
     assert report["passed"] is False
+    assert isinstance(report["split_errors"], list)
     assert any("leakage" in error for error in report["split_errors"])
     assert report["holdout_media_accessed"] is False
 
@@ -267,6 +294,7 @@ def test_preflight_checks_audio_bundle_bytes_without_loading_model(
     audio_bundle(config_path)
     report = check_training_config(config_path)
     assert report["passed"] is True
+    assert isinstance(report["local_assets"], list)
     assert len(report["local_assets"]) == 3
     (config_path.parent / "bundle" / "model.safetensors").write_bytes(b"changed")
     with pytest.raises(ValueError, match="SHA-256 mismatch"):
@@ -431,6 +459,9 @@ def test_train_without_check_flag_keeps_training_dispatch(
             "max_epochs",
             Path("history.json"),
             Path("run.json"),
+            True,
+            "dev_eer",
+            0.5,
         )
 
     monkeypatch.setattr("deepfake_detection_archive.experiments.run_experiment", train)

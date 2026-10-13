@@ -178,7 +178,6 @@ def _infer_records(  # noqa: PLR0913 -- parsed inputs and explicit run controls
 ) -> dict[str, object]:
     import torch  # noqa: PLC0415 -- optional inference backend
 
-    from .runtime import inference_runtime  # noqa: PLC0415
     from .scoring import OfflineScorer  # noqa: PLC0415
     from .submission.runner import run_inference  # noqa: PLC0415
 
@@ -193,13 +192,11 @@ def _infer_records(  # noqa: PLR0913 -- parsed inputs and explicit run controls
     preflight = time.perf_counter() - preflight_started
     started = time.perf_counter()
     scorer = OfflineScorer(config, base)
-    runtime = inference_runtime(scorer)
     startup = time.perf_counter() - started
     output = base / config.output_dir
     identity = {
         "config": config.to_dict(),
         "manifest_sha256": manifest_hash(records),
-        "runtime": runtime,
         "media_snapshot": snapshot,
         "media_snapshot_sha256": object_hash(snapshot),
         "code": code_identity(),

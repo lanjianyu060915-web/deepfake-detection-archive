@@ -5,6 +5,7 @@ import shutil
 import socket
 import wave
 from collections import Counter
+from collections.abc import Mapping
 from dataclasses import replace
 from pathlib import Path
 from typing import Any
@@ -31,6 +32,7 @@ from deepfake_detection_archive.experiments import (
     run_experiment,
 )
 from deepfake_detection_archive.scoring import OfflineScorer
+from deepfake_detection_archive.training import SelectionOptions
 
 
 def test_dev_scores_resolve_group_evidence_before_domain_reports(
@@ -66,9 +68,7 @@ def test_dev_scores_resolve_group_evidence_before_domain_reports(
         ),
         batch_size=2,
     )
-    _write_dev_scores(
-        torch.nn.Identity(), loader, records, "cpu", tmp_path, domain_field="source"
-    )
+    _write_dev_scores(torch.nn.Identity(), loader, records, "cpu", tmp_path)
     scores = load_scores(tmp_path / "dev-scores.jsonl")
     assert {row.sample_id: row.group_id for row in scores} == {
         "p0": "unknown",
@@ -81,8 +81,7 @@ def test_dev_scores_resolve_group_evidence_before_domain_reports(
     assert report["evaluation"]["group_count"] == 1
     assert report["evaluation"]["missing_group_count"] == 2
     assert report["evaluation"]["fullset_eer"] == 0
-    assert report["domains"]["prompt"]["group_count"] == 0
-    assert report["domains"]["registered"]["group_count"] == 1
+    assert report["by_content_type"]["unknown"]["group_count"] == 1
 
 
 def test_video_frame_cache_reuses_tuple_preprocessing(
@@ -189,6 +188,63 @@ def test_source_balancing_preserves_rare_music_and_both_classes() -> None:
     assert len(counts) == 4
 
 
+def test_content_type_weights_scale_domains_and_keep_classes_balanced() -> None:
+    buckets = [("speech", 0)] * 400 + [("speech", 1)] * 400
+    buckets += [("environment", 0)] * 200 + [("environment", 1)] * 200
+    buckets += [("music", 0)] * 20 + [("music", 1)] * 20
+    entries = [(Path(str(i)), "unused", label) for i, (_, label) in enumerate(buckets)]
+    domains = [domain for domain, _ in buckets]
+    weights = {"speech": 0.5, "environment": 0.3, "music": 0.2}
+    draws = list(
+        _balanced_sampler(
+            entries,
+            torch.Generator().manual_seed(42),
+            domains,
+            content_types=domains,
+            content_type_weights=weights,
+        )
+    )
+    assert len(draws) == len(entries)
+    domain_counts = Counter(domains[index] for index in draws)
+    expected = {
+        "speech": 0.5 * len(entries),
+        "environment": 0.3 * len(entries),
+        "music": 0.2 * len(entries),
+    }
+    for domain, share in expected.items():
+        assert abs(domain_counts[domain] - share) < 70
+    class_counts = Counter(buckets[index] for index in draws)
+    assert len(class_counts) == 6
+    for (domain, _), count in class_counts.items():
+        # Each domain holds two groups, so each class keeps half its share
+        # and the normalized domain mass equals the configured weight.
+        assert abs(count - expected[domain] / 2) < 70
+
+
+def test_content_type_weights_reject_absent_or_unlabeled_entries() -> None:
+    entries = [(Path(str(index)), "unused", index % 2) for index in range(8)]
+    with pytest.raises(ValueError, match="one content type per entry"):
+        _balanced_sampler(
+            entries,
+            torch.Generator().manual_seed(42),
+            content_type_weights={"music": 1.0},
+        )
+    with pytest.raises(ValueError, match="labeled content types"):
+        _balanced_sampler(
+            entries,
+            torch.Generator().manual_seed(42),
+            content_types=[""] * len(entries),
+            content_type_weights={"music": 1.0},
+        )
+    with pytest.raises(ValueError, match="absent content types"):
+        _balanced_sampler(
+            entries,
+            torch.Generator().manual_seed(42),
+            content_types=["music"] * len(entries),
+            content_type_weights={"speech": 1.0},
+        )
+
+
 @pytest.fixture
 def experiment(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     if not shutil.which("ffmpeg") or not shutil.which("ffprobe"):
@@ -269,95 +325,6 @@ def _change(path: Path, **changes: Any) -> None:
     config = json.loads(path.read_text())
     config.update(changes)
     path.write_text(json.dumps(config))
-
-
-@pytest.mark.parametrize("field", ["source", "content_type"])
-def test_explicit_dev_domain_summary_and_constraints(
-    experiment: Path, field: str
-) -> None:
-    domain = "synthetic" if field == "source" else "speech"
-    records = load_manifest(experiment.parent / "manifest.jsonl")
-    if field == "content_type":
-        records = [replace(record, content_type=domain) for record in records]
-        write_manifest(records, experiment.parent / "manifest.jsonl")
-    _change(
-        experiment,
-        dev_domain_field=field,
-        training={
-            "max_epochs": 1,
-            "domain_eer_constraints": {
-                domain: {"baseline_eer": 1.0, "max_regression": 0.0}
-            },
-        },
-    )
-    result = run_experiment(experiment)
-    evaluation = json.loads(
-        (experiment.parent / "run" / "dev-evaluation.json").read_text()
-    )
-    assert evaluation["domain_field"] == field
-    assert evaluation["domains"][domain]["fullset_eer"] == result.best_dev_eer
-    assert evaluation["domains"][domain]["sample_count"] == 2
-    history = json.loads(result.history_path.read_text())
-    assert history[0]["dev_domains"][domain]["eer"] == result.best_dev_eer
-    assert history[0]["selection_eligible"] is True
-
-
-def test_domain_summary_keeps_unknown_without_constraints(experiment: Path) -> None:
-    _change(experiment, dev_domain_field="content_type")
-    result = run_experiment(experiment)
-    evaluation = json.loads(
-        (experiment.parent / "run" / "dev-evaluation.json").read_text()
-    )
-    assert set(evaluation["domains"]) == {"unknown"}
-    assert evaluation["domains"]["unknown"]["fullset_eer"] == result.best_dev_eer
-
-
-@pytest.mark.parametrize("field", ["generator", "invalid", True])
-def test_domain_field_rejects_unsupported_values(
-    experiment: Path, field: object
-) -> None:
-    _change(experiment, dev_domain_field=field)
-    with pytest.raises(ValueError, match="dev_domain_field must"):
-        load_experiment_config(experiment)
-
-
-def test_domain_constraint_requires_field(experiment: Path) -> None:
-    _change(
-        experiment,
-        training={
-            "domain_eer_constraints": {
-                "speech": {"baseline_eer": 0.1, "max_regression": 0.02}
-            }
-        },
-    )
-    with pytest.raises(ValueError, match="requires dev_domain_field"):
-        load_experiment_config(experiment)
-
-
-def test_missing_domain_constraint_evidence_fails_before_model_preparation(
-    experiment: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    def unexpected_model(*args: Any) -> None:
-        pytest.fail("missing constrained domains must fail before model preparation")
-
-    monkeypatch.setattr(
-        "deepfake_detection_archive.experiments.create_model", unexpected_model
-    )
-    _change(
-        experiment,
-        dev_domain_field="content_type",
-        training={
-            "domain_eer_constraints": {
-                "speech": {"baseline_eer": 0.1, "max_regression": 0.02}
-            }
-        },
-    )
-    with pytest.raises(ValueError, match="data audit failed"):
-        run_experiment(experiment)
-    audit = json.loads((experiment.parent / "run" / "audit.json").read_text())
-    assert any(
-        "constrained dev domain 'speech'" in error for error in audit["split_errors"]
-    )
 
 
 @pytest.mark.parametrize("mask_width", [0, 16])
@@ -445,12 +412,6 @@ def test_ast_cached_training_and_offline_checkpoint_roundtrip(
     assert len(scores) == 2
     for score in scores:
         assert scorer(records[score.sample_id]) == pytest.approx(score.score, abs=1e-6)
-    from deepfake_detection_archive.runtime import inference_runtime  # noqa: PLC0415
-
-    cached_runtime = json.loads(next((root / "cache").glob("*.json")).read_text())[
-        "identity"
-    ]["runtime"]
-    assert cached_runtime["ast_frontend"] == inference_runtime(scorer)["ast_frontend"]
     # One training batch is masked; checkpoint-selection dev uses clean inputs.
     assert len(fills) == 1
     if mask_width:
@@ -599,6 +560,47 @@ def test_repeated_epochs_verify_existing_cache_once(
     result = run_experiment(experiment)
     assert result.epochs_completed == 2
     assert sorted(verified) == sorted((experiment.parent / "cache").glob("*.pt"))
+
+
+def test_gated_selection_reports_domain_metrics_and_gate_status(
+    experiment: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    parses = 0
+    original = SelectionOptions.from_options
+
+    def parse(options: Mapping[str, Any] | None) -> SelectionOptions | None:
+        nonlocal parses
+        parses += 1
+        return original(options)
+
+    monkeypatch.setattr(SelectionOptions, "from_options", parse)
+    _change(
+        experiment,
+        output_dir="gated",
+        selection={
+            "metric": "domain_macro_eer",
+            "max_bucket_eer": {"unknown": 1.0},
+        },
+    )
+    result = run_experiment(experiment)
+    assert parses == 1
+    assert result.selection_gate_passed is True
+    report = json.loads((experiment.parent / "gated" / "experiment.json").read_text())
+    assert report["selection_gate_passed"] is True
+    assert report["best_dev_eer"] == result.best_dev_eer
+    assert report["best_selection_metric"] == result.best_selection_metric
+    assert report["best_selection_value"] == result.best_selection_value
+    assert result.best_selection_metric == "domain_macro_eer"
+    history = json.loads(result.history_path.read_text())
+    assert history[0]["dev_macro_eer"] == history[0]["dev_domain_eer"]["unknown"]
+    evaluation = json.loads(
+        (experiment.parent / "gated" / "dev-evaluation.json").read_text()
+    )
+    assert set(evaluation["by_content_type"]) == {"unknown"}
+    assert (
+        evaluation["by_content_type"]["unknown"]["sample_count"]
+        == evaluation["evaluation"]["sample_count"]
+    )
 
 
 def test_training_prepares_media_without_a_redundant_decode_pass(
@@ -898,6 +900,26 @@ def test_orphan_sidecar_is_subtracted_from_cache_budget(tmp_path: Path) -> None:
         {"num_workers": -1},
         {"balance_sources": "yes"},
         {"balance_sources": True, "balanced_sampling": False},
+        {"content_type_weights": {"music": 1.0}},
+        {
+            "balanced_sampling": True,
+            "balance_sources": False,
+            "content_type_weights": {"music": 1.0},
+        },
+        {
+            "balanced_sampling": True,
+            "balance_sources": True,
+            "content_type_weights": {"music": 0.0},
+        },
+        {
+            "balanced_sampling": True,
+            "balance_sources": True,
+            "content_type_weights": {"music": True},
+        },
+        {"selection": {"metric": "dev_eer"}},
+        {"selection": {"metric": "domain_macro_eer", "unexpected": 1}},
+        {"selection": {"metric": "domain_macro_eer", "max_bucket_eer": {"music": 1.5}}},
+        {"selection": "domain_macro_eer"},
         {"unexpected": 1},
         {"audio": {"sample_rate": 8000}},
         {"training": {"max_epochs": 0}},
@@ -937,46 +959,3 @@ def test_duplicate_json_keys_are_rejected(tmp_path: Path) -> None:
     path.write_text('{"manifest":"a","manifest":"b"}')
     with pytest.raises(ValueError, match="duplicate JSON key"):
         load_experiment_config(path)
-
-
-def test_changed_decoder_runtime_invalidates_cached_inputs(
-    experiment: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    from deepfake_detection_archive import runtime  # noqa: PLC0415
-
-    run_experiment(experiment)
-    cache = experiment.parent / "cache"
-    original = {path: path.read_bytes() for path in cache.iterdir()}
-    sidecar = json.loads(next(cache.glob("*.json")).read_text())
-    assert sidecar["identity"]["cache_version"] == 3
-    assert sidecar["identity"]["runtime"]["decoder"]["ffmpeg"]["build_sha256"]
-    monkeypatch.setattr(
-        runtime, "_executable_version", lambda name: {"version": "changed"}
-    )
-    _change(experiment, output_dir="changed-runtime")
-    run_experiment(experiment)
-    assert len(list(cache.glob("*.pt"))) == 8
-    assert all(path.read_bytes() == data for path, data in original.items())
-
-
-def test_cache_v2_is_retained_but_never_reused(experiment: Path) -> None:
-    from deepfake_detection_archive.tracking import object_hash  # noqa: PLC0415
-
-    run_experiment(experiment)
-    cache = experiment.parent / "cache"
-    # Replace one cache pair with a correctly hashed v2 identity. Its values are
-    # deliberately wrong to prove migration recomputes rather than relabels it.
-    current = next(cache.glob("*.pt"))
-    identity = json.loads(current.with_suffix(".json").read_text())["identity"]
-    identity.pop("runtime")
-    identity["cache_version"] = 2
-    legacy = cache / f"{object_hash(identity)}.pt"
-    _save_tensor(legacy, torch.full((400,), 99.0), identity, 1_000_000)
-    legacy_bytes = legacy.read_bytes()
-    current.unlink()
-    current.with_suffix(".json").unlink()
-    _change(experiment, output_dir="migrated")
-    run_experiment(experiment)
-    assert current.exists()
-    assert legacy.read_bytes() == legacy_bytes
-    assert not torch.all(torch.load(current, weights_only=True) == 99.0)

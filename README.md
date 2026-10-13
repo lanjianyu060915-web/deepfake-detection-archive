@@ -42,9 +42,6 @@ scripts/devctl run python -m deepfake_detection_archive --help
 
 ```bash
 cp configs/train-logmel.example.json configs/train-logmel.local.json
-# 填好配置后，只读检查训练入口；不创建模型、解码或启动训练
-scripts/devctl run python -m deepfake_detection_archive train \
-  --config configs/train-logmel.local.json --check-config
 scripts/devctl run python -m deepfake_detection_archive train \
   --config configs/train-logmel.local.json
 

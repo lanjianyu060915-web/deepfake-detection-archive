@@ -3,16 +3,18 @@
 Loaders own decoding, split isolation and worker seeds. They must be re-iterable;
 no holdout loader is accepted here. Scores are logits with fake=1. Wall-clock
 limits are checked at epoch boundaries to preserve complete development reports.
+Optional gated selection scores development on per-domain metrics; domains are
+metadata for selection and reporting only and never reach the loss.
 """
 
+import contextlib
 import hashlib
 import json
 import math
 import random
 import time
 from collections.abc import Iterable, Mapping, Sequence
-from dataclasses import asdict, dataclass, field
-from functools import cached_property
+from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Literal, cast
 
@@ -20,38 +22,13 @@ import torch
 from torch import Tensor, nn
 from torch.nn import functional
 
-from .evaluation.metrics import evaluate_binary
+from .evaluation.metrics import UndefinedMetricError, evaluate_binary
 from .models.ast import ASTClassifier
 from .models.checkpoint import load_checkpoint, model_spec, save_checkpoint
 from .tracking import atomic_json
 
 
 Batch = tuple[Tensor, Tensor] | Mapping[str, Tensor]
-
-
-@dataclass(frozen=True)
-class DomainEERConstraint:
-    """A fixed development baseline and absolute EER regression allowance."""
-
-    baseline_eer: float
-    max_regression: float
-
-    def __post_init__(self) -> None:
-        for name in ("baseline_eer", "max_regression"):
-            value = getattr(self, name)
-            if type(value) not in (int, float) or not math.isfinite(value):
-                raise ValueError(f"{name} must be finite")
-            if not 0 <= value <= 1:
-                raise ValueError(f"{name} must lie in [0, 1]")
-
-
-@dataclass(frozen=True)
-class DevDomainMetrics:
-    sample_count: int
-    real_count: int
-    fake_count: int
-    eer: float | None
-    reason: str | None
 
 
 @dataclass(frozen=True)
@@ -72,7 +49,6 @@ class TrainConfig:
     backbone_lr_scale: float = 1.0
     time_mask_width: int = 0
     frequency_mask_width: int = 0
-    domain_eer_constraints: dict[str, dict[str, float]] = field(default_factory=dict)
 
     def __post_init__(self) -> None:  # noqa: C901, PLR0912
         for name in ("max_epochs", "accumulation_steps", "patience"):
@@ -115,34 +91,12 @@ class TrainConfig:
             raise ValueError("only CPU and CUDA are supported")
         if self.amp and device.type != "cuda":
             raise ValueError("AMP is supported only with CUDA")
-        _ = self.domain_constraints
-
-    @cached_property
-    def domain_constraints(self) -> dict[str, DomainEERConstraint]:
-        if not isinstance(self.domain_eer_constraints, dict):
-            raise ValueError("domain_eer_constraints must be an object")  # noqa: TRY004 -- schema
-        parsed: dict[str, DomainEERConstraint] = {}
-        for domain, options in self.domain_eer_constraints.items():
-            if (
-                not isinstance(domain, str)
-                or not domain.strip()
-                or domain.strip().casefold() == "unknown"
-            ):
-                raise ValueError("domain constraints require explicit known domains")
-            if not isinstance(options, dict) or set(options) != {
-                "baseline_eer",
-                "max_regression",
-            }:
-                raise ValueError(
-                    f"domain constraint {domain!r} requires exactly "
-                    "baseline_eer and max_regression"
-                )
-            parsed[domain] = DomainEERConstraint(**options)
-        return parsed
 
 
 @dataclass(frozen=True)
 class TrainResult:
+    """Selected checkpoint; best_dev_eer always denotes its pooled dev EER."""
+
     best_checkpoint: Path
     checkpoint_sha256: str
     best_epoch: int
@@ -151,6 +105,45 @@ class TrainResult:
     stop_reason: Literal["max_epochs", "early_stopping", "time_limit"]
     history_path: Path
     run_path: Path
+    selection_gate_passed: bool
+    best_selection_metric: Literal["dev_eer", "domain_macro_eer"]
+    best_selection_value: float
+
+
+@dataclass(frozen=True)
+class SelectionOptions:
+    """Validated domain-gated selection: macro EER plus per-domain EER caps."""
+
+    buckets: dict[str, float]
+
+    @classmethod
+    def from_options(
+        cls, options: Mapping[str, Any] | None
+    ) -> "SelectionOptions | None":
+        if options is None:
+            return None
+        if not isinstance(options, Mapping):
+            raise ValueError("selection must be an object")  # noqa: TRY004 -- schema
+        unknown = set(options) - {"metric", "max_bucket_eer"}
+        if unknown:
+            raise ValueError(f"invalid selection options: {sorted(unknown)}")
+        if options.get("metric") != "domain_macro_eer":
+            raise ValueError("selection.metric must be domain_macro_eer")
+        buckets = options.get("max_bucket_eer", {})
+        if not isinstance(buckets, Mapping) or any(
+            not isinstance(name, str)
+            or not name.strip()
+            or type(cap) is bool
+            or not isinstance(cap, (int, float))
+            or not math.isfinite(float(cap))
+            or not 0 < float(cap) <= 1
+            for name, cap in buckets.items()
+        ):
+            raise ValueError(
+                "selection.max_bucket_eer must map domains to finite fractions "
+                "in (0, 1]"
+            )
+        return cls({name: float(cap) for name, cap in buckets.items()})
 
 
 def _digest_json(value: Any) -> str:
@@ -269,12 +262,44 @@ def _step(
     return True
 
 
-def _dev_predictions(
-    model: nn.Module, loader: Iterable[Batch], device: torch.device
-) -> tuple[float, list[int], list[float]]:
+def _domain_metrics(
+    domains: Sequence[str], labels: Sequence[int], scores: Sequence[float]
+) -> dict[str, dict[str, Any]]:
+    """Per-domain counts and EERs; single-class domains keep ``eer=None``.
+
+    Domain EERs reuse the same tie-grouped interpolated definition as the
+    overall development metric, so a gate cannot be gamed by bucket size.
+    """
+    grouped: dict[str, tuple[list[int], list[float]]] = {}
+    for domain, label, score in zip(domains, labels, scores, strict=True):
+        bucket = grouped.setdefault(domain, ([], []))
+        bucket[0].append(label)
+        bucket[1].append(score)
+    metrics: dict[str, dict[str, Any]] = {}
+    for domain, (bucket_labels, bucket_scores) in grouped.items():
+        entry: dict[str, Any] = {
+            "count": len(bucket_labels),
+            "real_count": sum(label == 0 for label in bucket_labels),
+            "fake_count": sum(label == 1 for label in bucket_labels),
+            "eer": None,
+        }
+        with contextlib.suppress(UndefinedMetricError):
+            entry["eer"] = evaluate_binary(bucket_labels, bucket_scores).eer
+        metrics[domain] = entry
+    return metrics
+
+
+def _evaluate(
+    model: nn.Module,
+    loader: Iterable[Batch],
+    device: torch.device,
+    domains: Sequence[str] | None = None,
+) -> tuple[float, float, int, dict[str, dict[str, Any]] | None]:
+    """Score one loader; optional sample-aligned domains add per-domain EERs."""
     model.eval()
     labels_all: list[int] = []
     scores_all: list[float] = []
+    domains_all: list[str] = []
     loss_sum = 0.0
     with torch.inference_mode():
         for batch in loader:
@@ -287,89 +312,47 @@ def _dev_predictions(
             )
             labels_all.extend(int(value) for value in labels.cpu().tolist())
             scores_all.extend(logits.cpu().tolist())
-    return loss_sum, labels_all, scores_all
+            if domains is not None:
+                domains_all.extend(domains[len(domains_all) : len(labels_all)])
+    if domains is not None and len(domains_all) != len(domains):
+        raise ValueError("dev domains must align one-to-one with development samples")
+    metrics = evaluate_binary(labels_all, scores_all)
+    return (
+        loss_sum / len(labels_all),
+        metrics.eer,
+        len(labels_all),
+        _domain_metrics(domains_all, labels_all, scores_all)
+        if domains is not None
+        else None,
+    )
 
 
-def _evaluate(
-    model: nn.Module, loader: Iterable[Batch], device: torch.device
-) -> tuple[float, float, int]:
-    loss_sum, labels, scores = _dev_predictions(model, loader, device)
-    metrics = evaluate_binary(labels, scores)
-    return loss_sum / len(labels), metrics.eer, len(labels)
+def _select_epoch(
+    selection: SelectionOptions, domain_metrics: Mapping[str, Mapping[str, Any]]
+) -> tuple[float, list[str]]:
+    """Return one epoch's domain-macro EER and its cap violations.
 
-
-def _evaluate_domains(
-    model: nn.Module,
-    loader: Iterable[Batch],
-    device: torch.device,
-    domains: Sequence[str],
-) -> tuple[float, float, int, dict[str, DevDomainMetrics]]:
-    loss_sum, labels, scores = _dev_predictions(model, loader, device)
-    metrics = evaluate_binary(labels, scores)
-    if len(domains) != len(labels):
-        raise ValueError("dev_domains must match development sample count and order")
-    buckets: dict[str, list[int]] = {}
-    for index, domain in enumerate(domains):
-        buckets.setdefault(domain, []).append(index)
-    reports = {}
-    for domain, indices in sorted(buckets.items()):
-        domain_labels = [labels[index] for index in indices]
-        both_classes = set(domain_labels) == {0, 1}
-        reports[domain] = DevDomainMetrics(
-            sample_count=len(indices),
-            real_count=domain_labels.count(0),
-            fake_count=domain_labels.count(1),
-            eer=(
-                evaluate_binary(domain_labels, [scores[index] for index in indices]).eer
-                if both_classes
-                else None
-            ),
-            reason=None if both_classes else "missing_class",
-        )
-    return loss_sum / len(labels), metrics.eer, len(labels), reports
-
-
-def _check_domain_constraints(
-    reports: Mapping[str, DevDomainMetrics],
-    constraints: Mapping[str, DomainEERConstraint],
-) -> dict[str, dict[str, float]]:
-    regressions = {}
-    for domain, constraint in constraints.items():
-        report = reports.get(domain)
-        if report is None or report.eer is None:
-            reason = "missing_domain" if report is None else report.reason
-            raise ValueError(
-                f"domain constraint {domain!r} lacks development EER evidence: {reason}"
-            )
-        limit = constraint.baseline_eer + constraint.max_regression
-        if report.eer > limit:
-            regressions[domain] = {
-                "eer": report.eer,
-                "baseline_eer": constraint.baseline_eer,
-                "max_regression": constraint.max_regression,
-                "max_eer": limit,
-            }
-    return regressions
-
-
-def _validate_dev_domains(
-    domains: Sequence[str] | None, constraints: Mapping[str, DomainEERConstraint]
-) -> tuple[str, ...] | None:
-    if domains is None:
-        if constraints:
-            raise ValueError("domain_eer_constraints requires explicit dev_domains")
-        return None
-    if (
-        isinstance(domains, str)
-        or not domains
-        or any(not isinstance(domain, str) or not domain.strip() for domain in domains)
-    ):
-        raise ValueError("dev_domains must be a nonempty sequence of domain strings")
-    if missing := set(constraints) - set(domains):
-        raise ValueError(
-            f"constrained development domains are missing: {sorted(missing)}"
-        )
-    return tuple(domains)
+    The macro average covers every development domain with both classes; a
+    single-class domain is reported but cannot silently enter the average.
+    Every configured gate must be scorable, so a cap cannot disappear.
+    """
+    for name in selection.buckets:
+        stats = domain_metrics.get(name)
+        if stats is None or stats["eer"] is None:
+            raise ValueError(f"selection bucket {name!r} has no scorable dev samples")
+    values = [
+        float(stats["eer"])
+        for stats in domain_metrics.values()
+        if stats["eer"] is not None
+    ]
+    if not values:
+        raise ValueError("domain_macro_eer requires at least one scorable domain")
+    violations = sorted(
+        name
+        for name, cap in selection.buckets.items()
+        if float(domain_metrics[name]["eer"]) > cap
+    )
+    return sum(values) / len(values), violations
 
 
 def _mask_fbank(
@@ -462,9 +445,10 @@ def train_model(  # noqa: C901, PLR0913, PLR0912, PLR0915
     provenance: dict[str, Any],
     architecture: str | None = None,
     model_config: dict[str, Any] | None = None,
+    selection: SelectionOptions | None = None,
     dev_domains: Sequence[str] | None = None,
 ) -> TrainResult:
-    """Train AdamW/BCE and restore the checkpoint with the lowest dev EER.
+    """Train AdamW/BCE and restore the checkpoint selected on development data.
 
     Summed per-sample losses are backpropagated; gradients are divided by the
     actual accumulation-window sample count, including uneven and tail batches.
@@ -472,16 +456,19 @@ def train_model(  # noqa: C901, PLR0913, PLR0912, PLR0915
     Seed controls training randomness, not caller-side model initialization.
     Provenance hashes must describe data, code and initial weights. The caller
     must enforce train/dev media-group separation before constructing loaders.
-    Optional dev_domains must follow the unshuffled, stable dev loader order.
-    Domain constraints use fixed baselines and never inspect a holdout split.
+    `dev_domains` labels development samples in loader order for reporting and
+    optional gated selection; parsed `selection` keeps an epoch eligible only when
+    every capped domain is at or below its EER cap, then picks the lowest
+    domain-macro EER. Before the first eligible epoch the lowest-macro
+    checkpoint is kept as an explicitly reported provisional fallback.
     """
-    constraints = dict(config.domain_constraints)
-    domains = _validate_dev_domains(dev_domains, constraints)
-    # Record the validated effective values, not a caller-mutated raw JSON dict.
-    effective_config = asdict(config)
-    effective_config["domain_eer_constraints"] = {
-        domain: asdict(constraint) for domain, constraint in constraints.items()
-    }
+    if dev_domains is not None and any(
+        not isinstance(domain, str) or not domain.strip() for domain in dev_domains
+    ):
+        raise ValueError("dev_domains must be nonempty label strings")
+    selection_options = selection
+    if selection_options is not None and dev_domains is None:
+        raise ValueError("selection requires dev_domains")
     actual_architecture, actual_config = model_spec(model)
     if architecture is not None and architecture != actual_architecture:
         raise ValueError("architecture differs from model")
@@ -537,8 +524,8 @@ def train_model(  # noqa: C901, PLR0913, PLR0912, PLR0915
     run: dict[str, Any] = {
         "schema_version": 1,
         "status": "running",
-        "config": effective_config,
-        "config_sha256": _digest_json(effective_config),
+        "config": asdict(config),
+        "config_sha256": _digest_json(asdict(config)),
         "architecture": actual_architecture,
         "model_config": actual_config,
         "model_config_sha256": _digest_json(actual_config),
@@ -555,8 +542,12 @@ def train_model(  # noqa: C901, PLR0913, PLR0912, PLR0915
     }
     atomic_json(run_path, run)
     history: list[dict[str, Any]] = []
-    best_eer, best_epoch, stale = math.inf, 0, 0
-    best_domains: dict[str, DevDomainMetrics] = {}
+    best_selection_value, best_epoch, stale = math.inf, 0, 0
+    best_dev_eer = math.inf
+    best_selection_metric: Literal["dev_eer", "domain_macro_eer"] = (
+        "dev_eer" if selection_options is None else "domain_macro_eer"
+    )
+    eligible_epoch, fallback_eer, fallback_epoch = 0, math.inf, 0
     checkpoint = output_dir / "best.pt"
     descriptor: dict[str, Any] = {}
     stop_reason: Literal["max_epochs", "early_stopping", "time_limit"] = "max_epochs"
@@ -568,48 +559,75 @@ def train_model(  # noqa: C901, PLR0913, PLR0912, PLR0915
                 model, train_loader, device, optimizer, scaler, config, mask_fill
             )
             train_seconds = time.monotonic() - epoch_started
-            domain_reports: dict[str, DevDomainMetrics] = {}
-            if domains is None:
-                dev_loss, dev_eer, dev_count = _evaluate(model, dev_loader, device)
-            else:
-                dev_loss, dev_eer, dev_count, domain_reports = _evaluate_domains(
-                    model, dev_loader, device, domains
-                )
-            regressions = _check_domain_constraints(domain_reports, constraints)
-            eligible = not regressions
-            stale = (
-                0 if eligible and dev_eer < best_eer - config.min_delta else stale + 1
+            dev_loss, dev_eer, dev_count, domain_metrics = _evaluate(
+                model, dev_loader, device, dev_domains
             )
-            improved = eligible and dev_eer < best_eer
-            if improved:
-                descriptor = save_checkpoint(checkpoint, model)
-                best_eer, best_epoch = dev_eer, epoch
-                best_domains = domain_reports
-            history.append(
-                {
-                    "epoch": epoch,
-                    "train_loss": train_loss,
-                    "train_samples": samples,
-                    "train_seconds": train_seconds,
-                    "train_samples_per_second": samples / max(train_seconds, 1e-9),
-                    "optimizer_updates": updates,
-                    "skipped_updates": skipped,
-                    "dev_loss": dev_loss,
-                    "dev_eer": dev_eer,
-                    "dev_samples": dev_count,
-                    "selected": improved,
-                    "seconds": time.monotonic() - epoch_started,
+            row: dict[str, Any] = {
+                "epoch": epoch,
+                "train_loss": train_loss,
+                "train_samples": samples,
+                "train_seconds": train_seconds,
+                "train_samples_per_second": samples / max(train_seconds, 1e-9),
+                "optimizer_updates": updates,
+                "skipped_updates": skipped,
+                "dev_loss": dev_loss,
+                "dev_eer": dev_eer,
+                "dev_samples": dev_count,
+                "selected": False,
+                "seconds": time.monotonic() - epoch_started,
+            }
+            if domain_metrics is not None:
+                row["dev_domain_eer"] = {
+                    name: stats["eer"] for name, stats in sorted(domain_metrics.items())
                 }
-            )
-            if domains is not None:
-                history[-1].update(
-                    dev_domains={
-                        domain: asdict(report)
-                        for domain, report in domain_reports.items()
-                    },
-                    selection_eligible=eligible,
-                    domain_regressions=regressions,
+            if selection_options is None:
+                stale = (
+                    0
+                    if dev_eer < best_selection_value - config.min_delta
+                    else stale + 1
                 )
+                row["selected"] = dev_eer < best_selection_value
+                if row["selected"]:
+                    descriptor = save_checkpoint(checkpoint, model)
+                    best_selection_value, best_epoch = dev_eer, epoch
+                    best_dev_eer = dev_eer
+            else:
+                if domain_metrics is None:  # defensive: dev_domains was supplied
+                    raise ValueError(  # noqa: TRY301 -- defensive selection guard
+                        "selection requires per-domain dev metrics"
+                    )
+                macro, violations = _select_epoch(selection_options, domain_metrics)
+                row.update(
+                    dev_macro_eer=macro,
+                    selection_eligible=not violations,
+                    selection_violations=violations,
+                )
+                if violations:
+                    stale += 1
+                    if eligible_epoch == 0 and macro < fallback_eer:
+                        fallback_eer, fallback_epoch = macro, epoch
+                        descriptor = save_checkpoint(checkpoint, model)
+                        best_selection_value, best_epoch = macro, epoch
+                        best_dev_eer = dev_eer
+                else:
+                    stale = (
+                        0
+                        if eligible_epoch == 0
+                        or macro < best_selection_value - config.min_delta
+                        else stale + 1
+                    )
+                    row["selected"] = (
+                        eligible_epoch == 0 or macro < best_selection_value
+                    )
+                    if row["selected"]:
+                        descriptor = save_checkpoint(checkpoint, model)
+                        best_selection_value, best_epoch, eligible_epoch = (
+                            macro,
+                            epoch,
+                            epoch,
+                        )
+                        best_dev_eer = dev_eer
+            history.append(row)
             atomic_json(history_path, history)
             if stale >= config.patience:
                 stop_reason = "early_stopping"
@@ -620,25 +638,26 @@ def train_model(  # noqa: C901, PLR0913, PLR0912, PLR0915
             ):
                 stop_reason = "time_limit"
                 break
-        if not descriptor:
-            raise ValueError(  # noqa: TRY301 -- recorded in failed run metadata
-                "no checkpoint met the development domain EER constraints; "
-                "inspect history.json domain_regressions and configured baselines"
-            )
         restored, _ = load_checkpoint(checkpoint, expected_sha256=descriptor["sha256"])
         model.load_state_dict(restored.state_dict())
         model.eval()
         run.update(
             status="complete",
             best_epoch=best_epoch,
-            best_dev_eer=best_eer,
+            best_dev_eer=best_dev_eer,
+            best_selection_metric=best_selection_metric,
+            best_selection_value=best_selection_value,
+            selection_gate_passed=selection_options is None or eligible_epoch > 0,
             checkpoint=descriptor,
             stop_reason=stop_reason,
             epochs_completed=len(history),
         )
-        if domains is not None:
-            run["best_dev_domains"] = {
-                domain: asdict(report) for domain, report in best_domains.items()
+        if selection_options is not None:
+            run["selection"] = {
+                "metric": "domain_macro_eer",
+                "max_bucket_eer": dict(selection_options.buckets),
+                "gate_passed": eligible_epoch > 0,
+                "fallback_epoch": fallback_epoch or None,
             }
     except BaseException as exc:
         optimizer.zero_grad(set_to_none=True)
@@ -660,9 +679,12 @@ def train_model(  # noqa: C901, PLR0913, PLR0912, PLR0915
         checkpoint,
         descriptor["sha256"],
         best_epoch,
-        best_eer,
+        best_dev_eer,
         len(history),
         stop_reason,
         history_path,
         run_path,
+        selection_options is None or eligible_epoch > 0,
+        best_selection_metric,
+        best_selection_value,
     )

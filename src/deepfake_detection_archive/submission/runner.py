@@ -120,7 +120,7 @@ def _prepare_run(
         saved = _read_object(metadata_path.read_bytes())
         if object_hash(saved) != object_hash(metadata):
             raise ValueError(
-                "resume rejected: input/config/model/code/runtime identity changed; "
+                "resume rejected: input/config/model/code identity changed; "
                 "use a new output directory"
             )
         if not scores_path.exists() and (output_dir / "report.json").exists():
@@ -251,7 +251,7 @@ def run_inference(  # noqa: PLR0913 -- explicit backend failure boundary
 ) -> list[ScoreRecord]:
     """Persist one row per input, preserving order and never silently dropping errors.
 
-    The caller supplies config/model/code/runtime identity and must use immutable
+    The caller supplies config/model/code identity and must use immutable
     local model/media resources. Interrupts, memory/dependency failures and injected
     backend fatal exceptions propagate after committed rows, without a final report.
     An advisory OS flock guards every mutation; lock-file PID is only diagnostic.

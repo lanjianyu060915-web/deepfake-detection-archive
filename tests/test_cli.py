@@ -246,10 +246,6 @@ def mocked_scorer(monkeypatch: pytest.MonkeyPatch) -> list[str]:
     module = ModuleType("deepfake_detection_archive.scoring")
     module.OfflineScorer = FakeScorer  # type: ignore[attr-defined]
     monkeypatch.setitem(sys.modules, module.__name__, module)
-    monkeypatch.setattr(
-        "deepfake_detection_archive.runtime.inference_runtime",
-        lambda scorer: {"test": 1},
-    )
     monkeypatch.setattr(cli, "code_identity", lambda: {"code_sha256": "test"})
     return called
 

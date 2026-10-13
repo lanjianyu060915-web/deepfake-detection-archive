@@ -59,18 +59,18 @@ def audit_training_data(
     for split in ("train", "dev"):
         if {record.label for record in selected if record.split == split} != {0, 1}:
             errors.append(f"{split} requires both classes with known labels")
-    if config.dev_domain_field is not None:
-        for domain in config.train_config.domain_constraints:
+    selection = config.selection_options
+    if selection is not None:
+        for domain in selection.buckets:
             labels = {
                 record.label
                 for record in selected
-                if record.split == "dev"
-                and getattr(record, config.dev_domain_field) == domain
+                if record.split == "dev" and record.content_type == domain
             }
             if labels != {0, 1}:
                 errors.append(
                     f"constrained dev domain {domain!r} requires both classes "
-                    f"in {config.dev_domain_field}"
+                    "in content_type"
                 )
     # Full metadata already passed through the split gate above. The general
     # audit otherwise requires holdout class coverage, irrelevant to training.
@@ -183,7 +183,6 @@ def check_training_config(config_path: Path) -> dict[str, object]:
             "model construction, weight compatibility and encoder feature dimensions",
             "CUDA availability, GPU memory, throughput and training results",
             "output/cache write permissions and free disk capacity",
-            "provenance of domain EER baselines",
         ]
         + (
             ["AST pretrained config.json integrity (no trusted digest configured)"]

@@ -13,9 +13,8 @@ from torch import Tensor
 from deepfake_detection_archive.models.checkpoint import load_checkpoint
 from deepfake_detection_archive.models.core import FeatureHead, HeadConfig
 from deepfake_detection_archive.training import (
-    DevDomainMetrics,
+    SelectionOptions,
     TrainConfig,
-    _evaluate_domains,
     train_model,
 )
 
@@ -330,8 +329,8 @@ def test_min_delta_controls_patience_but_saves_lowest_eer(
 ) -> None:
     values = iter([0.4, 0.3, 0.35])
 
-    def fixed_eer(*args: object) -> tuple[float, float, int]:
-        return 0.5, next(values), 6
+    def fixed_eer(*args: object) -> tuple[float, float, int, None]:
+        return 0.5, next(values), 6, None
 
     monkeypatch.setattr("deepfake_detection_archive.training._evaluate", fixed_eer)
     result = train_model(
@@ -344,6 +343,231 @@ def test_min_delta_controls_patience_but_saves_lowest_eer(
     )
     assert result.best_epoch == 2
     assert result.best_dev_eer == 0.3
+
+
+def _domain_stub(**eers: float) -> dict[str, dict[str, object]]:
+    return {
+        name: {"count": 6, "real_count": 3, "fake_count": 3, "eer": value}
+        for name, value in eers.items()
+    }
+
+
+def test_domain_gate_rejects_violations_then_selects_feasible_macro(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    staged = [
+        _domain_stub(music=0.30, speech=0.01),
+        _domain_stub(music=0.05, speech=0.01),
+        _domain_stub(music=0.06, speech=0.01),
+    ]
+
+    pooled = iter([0.2, 0.4, 0.6])
+
+    def evaluate(*args: object) -> tuple[float, float, int, object]:
+        return 0.5, next(pooled), 6, staged.pop(0)
+
+    monkeypatch.setattr("deepfake_detection_archive.training._evaluate", evaluate)
+    inputs, labels = batches()
+    result = train_model(
+        model(),
+        [(inputs, labels)],
+        [(inputs, labels)],
+        config=TrainConfig(max_epochs=3, patience=3),
+        output_dir=tmp_path,
+        provenance=PROVENANCE,
+        selection=SelectionOptions.from_options(
+            {"metric": "domain_macro_eer", "max_bucket_eer": {"music": 0.1}}
+        ),
+        dev_domains=["music"] * 3 + ["speech"] * 3,
+    )
+    assert result.selection_gate_passed is True
+    assert result.best_epoch == 2
+    assert result.best_dev_eer == 0.4
+    assert result.best_selection_metric == "domain_macro_eer"
+    assert result.best_selection_value == pytest.approx((0.05 + 0.01) / 2)
+    history = json.loads(result.history_path.read_text())
+    assert [row["selection_eligible"] for row in history] == [False, True, True]
+    assert history[0]["selection_violations"] == ["music"]
+    assert [row["selected"] for row in history] == [False, True, False]
+    assert history[1]["dev_macro_eer"] == pytest.approx(0.03)
+    assert history[1]["dev_domain_eer"] == {"music": 0.05, "speech": 0.01}
+    metadata = json.loads(result.run_path.read_text())
+    assert metadata["best_dev_eer"] == 0.4
+    assert metadata["best_selection_metric"] == "domain_macro_eer"
+    assert metadata["best_selection_value"] == pytest.approx(0.03)
+    assert metadata["selection_gate_passed"] is True
+    assert metadata["selection"]["gate_passed"] is True
+    assert metadata["selection"]["fallback_epoch"] == 1
+
+
+def test_infeasible_gate_keeps_lowest_macro_provisional_fallback(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    staged = [
+        _domain_stub(music=0.30, speech=0.02),
+        _domain_stub(music=0.25, speech=0.20),
+    ]
+
+    def evaluate(*args: object) -> tuple[float, float, int, object]:
+        return 0.5, 0.5, 6, staged.pop(0)
+
+    monkeypatch.setattr("deepfake_detection_archive.training._evaluate", evaluate)
+    inputs, labels = batches()
+    result = train_model(
+        model(),
+        [(inputs, labels)],
+        [(inputs, labels)],
+        config=TrainConfig(max_epochs=2, patience=2),
+        output_dir=tmp_path,
+        provenance=PROVENANCE,
+        selection=SelectionOptions.from_options(
+            {"metric": "domain_macro_eer", "max_bucket_eer": {"music": 0.1}}
+        ),
+        dev_domains=["music"] * 3 + ["speech"] * 3,
+    )
+    assert result.selection_gate_passed is False
+    assert result.best_epoch == 1
+    assert result.best_dev_eer == 0.5
+    assert result.best_selection_metric == "domain_macro_eer"
+    assert result.best_selection_value == pytest.approx(0.16)
+    metadata = json.loads(result.run_path.read_text())
+    assert metadata["selection"]["gate_passed"] is False
+    assert metadata["selection"]["fallback_epoch"] == 1
+    assert metadata["best_dev_eer"] == 0.5
+    assert metadata["best_selection_value"] == pytest.approx(0.16)
+    assert metadata["selection_gate_passed"] is False
+    history = json.loads(result.history_path.read_text())
+    assert [row["selected"] for row in history] == [False, False]
+
+
+def test_first_eligible_epoch_resets_patience_after_better_macro_fallback(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    staged = [
+        _domain_stub(music=0.11, speech=0.0),
+        _domain_stub(music=0.10, speech=0.90),
+        _domain_stub(music=0.09, speech=0.10),
+    ]
+
+    def evaluate(*args: object) -> tuple[float, float, int, object]:
+        return 0.5, 0.4, 6, staged.pop(0)
+
+    monkeypatch.setattr("deepfake_detection_archive.training._evaluate", evaluate)
+    result = train_model(
+        model(),
+        [batches()],
+        [batches()],
+        config=TrainConfig(max_epochs=3, patience=2),
+        output_dir=tmp_path,
+        provenance=PROVENANCE,
+        selection=SelectionOptions.from_options(
+            {"metric": "domain_macro_eer", "max_bucket_eer": {"music": 0.1}}
+        ),
+        dev_domains=["music"] * 3 + ["speech"] * 3,
+    )
+    assert result.epochs_completed == 3
+    assert result.best_epoch == 3
+    assert result.selection_gate_passed is True
+    assert result.best_dev_eer == 0.4
+    assert result.best_selection_value == pytest.approx(0.095)
+
+
+def test_unscorable_gate_bucket_fails_the_run(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    def evaluate(*args: object) -> tuple[float, float, int, object]:
+        return 0.5, 0.5, 6, _domain_stub(music=0.05)
+
+    monkeypatch.setattr("deepfake_detection_archive.training._evaluate", evaluate)
+    inputs, labels = batches()
+    with pytest.raises(ValueError, match="no scorable dev samples"):
+        train_model(
+            model(),
+            [(inputs, labels)],
+            [(inputs, labels)],
+            config=TrainConfig(max_epochs=1),
+            output_dir=tmp_path,
+            provenance=PROVENANCE,
+            selection=SelectionOptions.from_options(
+                {
+                    "metric": "domain_macro_eer",
+                    "max_bucket_eer": {"environment": 0.1},
+                }
+            ),
+            dev_domains=["music"] * 6,
+        )
+    assert json.loads((tmp_path / "run.json").read_text())["status"] == "failed"
+
+
+def test_dev_domains_do_not_change_training_and_are_reported(
+    tmp_path: Path,
+) -> None:
+    inputs, labels = batches()
+    plain, labeled = model(), model()
+    common: dict[str, object] = {
+        "config": TrainConfig(max_epochs=1),
+        "provenance": PROVENANCE,
+    }
+    train_model(
+        plain,
+        [(inputs, labels)],
+        [(inputs, labels)],
+        output_dir=tmp_path / "plain",
+        **common,  # type: ignore[arg-type]
+    )
+    result = train_model(
+        labeled,
+        [(inputs, labels)],
+        [(inputs, labels)],
+        output_dir=tmp_path / "labeled",
+        dev_domains=["music"] * 6,
+        **common,  # type: ignore[arg-type]
+    )
+    for actual, expected in zip(labeled.parameters(), plain.parameters(), strict=True):
+        torch.testing.assert_close(actual, expected, rtol=0, atol=0)
+    history = json.loads(result.history_path.read_text())
+    assert set(history[0]["dev_domain_eer"]) == {"music"}
+    assert "dev_macro_eer" not in history[0]
+
+
+@pytest.mark.parametrize(
+    ("selection", "dev_domains", "match"),
+    [
+        ({"metric": "dev_eer"}, ["music"] * 6, "domain_macro_eer"),
+        ({"metric": "domain_macro_eer", "unknown": 1}, ["music"] * 6, "invalid"),
+        (
+            {"metric": "domain_macro_eer", "max_bucket_eer": {"music": 1.5}},
+            ["music"] * 6,
+            "max_bucket_eer",
+        ),
+        (
+            {"metric": "domain_macro_eer", "max_bucket_eer": {"music": True}},
+            ["music"] * 6,
+            "max_bucket_eer",
+        ),
+        ({"metric": "domain_macro_eer", "max_bucket_eer": {}}, None, "dev_domains"),
+        ({"metric": "domain_macro_eer", "max_bucket_eer": {}}, [""], "dev_domains"),
+    ],
+)
+def test_invalid_selection_is_rejected_before_training(
+    tmp_path: Path,
+    selection: dict[str, object],
+    dev_domains: list[str] | None,
+    match: str,
+) -> None:
+    inputs, labels = batches()
+    with pytest.raises(ValueError, match=match):
+        train_model(
+            model(),
+            [(inputs, labels)],
+            [(inputs, labels)],
+            config=TrainConfig(max_epochs=1),
+            output_dir=tmp_path / "rejected",
+            provenance=PROVENANCE,
+            selection=SelectionOptions.from_options(selection),
+            dev_domains=dev_domains,
+        )
+    assert not (tmp_path / "rejected").exists()
 
 
 def test_nonfinite_cpu_gradients_fail_and_restore_deterministic_state(
@@ -455,193 +679,3 @@ def test_fbank_masking_rejects_oversize_width_before_output(
             provenance=PROVENANCE,
         )
     assert not (tmp_path / "oversize").exists()
-
-
-@pytest.mark.parametrize(
-    "constraints",
-    [
-        [],
-        {"unknown": {"baseline_eer": 0.1, "max_regression": 0.02}},
-        {"": {"baseline_eer": 0.1, "max_regression": 0.02}},
-        {"speech": {"baseline_eer": 0.1}},
-        {"speech": {"baseline_eer": 0.1, "max_regression": 0.02, "extra": 1}},
-        {"speech": {"baseline_eer": True, "max_regression": 0.02}},
-        {"speech": {"baseline_eer": float("nan"), "max_regression": 0.02}},
-        {"speech": {"baseline_eer": 1.01, "max_regression": 0.02}},
-        {"speech": {"baseline_eer": 0.1, "max_regression": -0.01}},
-    ],
-)
-def test_invalid_domain_constraints_are_rejected(constraints: object) -> None:
-    with pytest.raises(ValueError, match=r"domain|baseline_eer|max_regression"):
-        TrainConfig(domain_eer_constraints=constraints)  # type: ignore[arg-type]
-
-
-def test_domain_summaries_preserve_unknown_and_report_single_class() -> None:
-    inputs, labels = batches()
-    loss, eer, count, reports = _evaluate_domains(
-        model(),
-        [(inputs[:3], labels[:3]), (inputs[3:], labels[3:])],
-        torch.device("cpu"),
-        ["speech", "speech", "unknown", "music", "music", "unknown"],
-    )
-    assert loss >= 0
-    assert 0 <= eer <= 1
-    assert count == 6
-    assert set(reports) == {"speech", "music", "unknown"}
-    assert reports["speech"].sample_count == 2
-    assert reports["speech"].real_count == reports["speech"].fake_count == 1
-    assert reports["speech"].eer is not None
-    assert reports["unknown"] == DevDomainMetrics(2, 2, 0, None, "missing_class")
-    assert reports["music"] == DevDomainMetrics(2, 0, 2, None, "missing_class")
-
-
-def test_domain_metadata_length_must_match_dev_samples() -> None:
-    with pytest.raises(ValueError, match="sample count and order"):
-        _evaluate_domains(model(), [batches()], torch.device("cpu"), ["speech"])
-
-
-@pytest.mark.parametrize("domains", [None, ["music"] * 6])
-def test_constraints_require_present_domain_metadata_before_output(
-    tmp_path: Path, domains: list[str] | None
-) -> None:
-    with pytest.raises(ValueError, match=r"requires explicit|domains are missing"):
-        train_model(
-            model(),
-            [batches()],
-            [batches()],
-            config=TrainConfig(
-                domain_eer_constraints={
-                    "speech": {"baseline_eer": 0.1, "max_regression": 0.02}
-                }
-            ),
-            output_dir=tmp_path / "missing",
-            provenance=PROVENANCE,
-            dev_domains=domains,
-        )
-    assert not (tmp_path / "missing").exists()
-
-
-def test_single_class_constrained_domain_fails_without_fabricated_eer(
-    tmp_path: Path,
-) -> None:
-    with pytest.raises(
-        ValueError, match="lacks development EER evidence: missing_class"
-    ):
-        train_model(
-            model(),
-            [batches()],
-            [batches()],
-            config=TrainConfig(
-                max_epochs=1,
-                domain_eer_constraints={
-                    "speech": {"baseline_eer": 0.1, "max_regression": 0.02}
-                },
-            ),
-            output_dir=tmp_path,
-            provenance=PROVENANCE,
-            dev_domains=["speech", "other", "speech", "other", "other", "speech"],
-        )
-    assert not (tmp_path / "best.pt").exists()
-    assert json.loads((tmp_path / "run.json").read_text())["status"] == "failed"
-
-
-def test_domain_regression_blocks_better_global_eer_and_accepts_limit(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    values = iter([(0.4, 0.1), (0.1, 0.3), (0.3, 0.2)])
-
-    def fixed_domains(
-        *args: object,
-    ) -> tuple[float, float, int, dict[str, DevDomainMetrics]]:
-        global_eer, domain_eer = next(values)
-        return (
-            0.5,
-            global_eer,
-            6,
-            {"speech": DevDomainMetrics(6, 3, 3, domain_eer, None)},
-        )
-
-    monkeypatch.setattr(
-        "deepfake_detection_archive.training._evaluate_domains", fixed_domains
-    )
-    result = train_model(
-        model(),
-        [batches()],
-        [batches()],
-        config=TrainConfig(
-            max_epochs=3,
-            domain_eer_constraints={
-                "speech": {"baseline_eer": 0.1, "max_regression": 0.1}
-            },
-        ),
-        output_dir=tmp_path,
-        provenance=PROVENANCE,
-        dev_domains=["speech"] * 6,
-    )
-    assert result.best_epoch == 3
-    assert result.best_dev_eer == 0.3
-    history = json.loads(result.history_path.read_text())
-    assert [row["selected"] for row in history] == [True, False, True]
-    assert [row["selection_eligible"] for row in history] == [True, False, True]
-    assert history[1]["domain_regressions"]["speech"]["max_eer"] == 0.2
-    assert history[2]["domain_regressions"] == {}
-    metadata = json.loads(result.run_path.read_text())
-    assert metadata["best_dev_domains"]["speech"]["eer"] == 0.2
-
-
-def test_all_domain_regressions_fail_with_auditable_history(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    monkeypatch.setattr(
-        "deepfake_detection_archive.training._evaluate_domains",
-        lambda *args: (0.5, 0.1, 6, {"speech": DevDomainMetrics(6, 3, 3, 0.3, None)}),
-    )
-    with pytest.raises(ValueError, match=r"no checkpoint met.*domain EER constraints"):
-        train_model(
-            model(),
-            [batches()],
-            [batches()],
-            config=TrainConfig(
-                max_epochs=2,
-                domain_eer_constraints={
-                    "speech": {"baseline_eer": 0.1, "max_regression": 0.1}
-                },
-            ),
-            output_dir=tmp_path,
-            provenance=PROVENANCE,
-            dev_domains=["speech"] * 6,
-        )
-    assert not (tmp_path / "best.pt").exists()
-    history = json.loads((tmp_path / "history.json").read_text())
-    assert len(history) == 2
-    assert all(not row["selected"] for row in history)
-    assert json.loads((tmp_path / "run.json").read_text())["status"] == "failed"
-
-
-def test_mutated_raw_domain_options_do_not_misstate_effective_run_config(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    raw = {"speech": {"baseline_eer": 0.1, "max_regression": 0.1}}
-    config = TrainConfig(max_epochs=1, domain_eer_constraints=raw)
-    raw["speech"]["baseline_eer"] = 0.9
-    config.domain_eer_constraints["speech"]["max_regression"] = 0.9
-    monkeypatch.setattr(
-        "deepfake_detection_archive.training._evaluate_domains",
-        lambda *args: (0.5, 0.1, 6, {"speech": DevDomainMetrics(6, 3, 3, 0.3, None)}),
-    )
-    with pytest.raises(ValueError, match="no checkpoint met"):
-        train_model(
-            model(),
-            [batches()],
-            [batches()],
-            config=config,
-            output_dir=tmp_path,
-            provenance=PROVENANCE,
-            dev_domains=["speech"] * 6,
-        )
-    run = json.loads((tmp_path / "run.json").read_text())
-    assert run["config"]["domain_eer_constraints"] == {
-        "speech": {"baseline_eer": 0.1, "max_regression": 0.1}
-    }
-    history = json.loads((tmp_path / "history.json").read_text())
-    assert history[0]["domain_regressions"]["speech"]["max_eer"] == 0.2

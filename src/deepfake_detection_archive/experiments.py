@@ -1,6 +1,7 @@
 """Audited train/dev experiments backed by content-bound local tensor caches."""
 
 import json
+import math
 import os
 import random
 import tempfile
@@ -9,7 +10,7 @@ from collections import Counter
 from dataclasses import asdict, dataclass, field
 from functools import cached_property
 from pathlib import Path
-from typing import Any, Literal, cast
+from typing import Any, cast
 
 import numpy as np
 import torch
@@ -43,9 +44,8 @@ from .models.checkpoint import create_model, save_checkpoint, verify_sha256
 from .models.encoders import FrozenAudioEncoder
 from .models.finetune import VideoFrameClassifier
 from .preflight import audit_training_data
-from .runtime import model_runtime, preprocessing_runtime
 from .tracking import atomic_json, canonical_json, code_identity, object_hash, utc_now
-from .training import TrainConfig, TrainResult, train_model
+from .training import SelectionOptions, TrainConfig, TrainResult, train_model
 
 
 @dataclass(frozen=True)
@@ -63,6 +63,8 @@ class ExperimentConfig:
     num_workers: int = 0
     balanced_sampling: bool = False
     balance_sources: bool = False
+    content_type_weights: dict[str, float] = field(default_factory=dict)
+    selection: dict[str, Any] = field(default_factory=dict)
     segment_samples: int = 64600
     segments: int = 1
     audio: dict[str, Any] = field(default_factory=dict)
@@ -72,7 +74,6 @@ class ExperimentConfig:
     augmentation: dict[str, Any] = field(default_factory=dict)
     feature_cache: str | None = None
     cache_max_bytes: int = 20 * 1024**3
-    dev_domain_field: Literal["source", "content_type"] | None = None
     schema_version: int = 1
 
     def __post_init__(self) -> None:  # noqa: C901, PLR0912 -- strict configuration schema
@@ -101,6 +102,27 @@ class ExperimentConfig:
             raise ValueError("balance_sources must be boolean")
         if self.balance_sources and not self.balanced_sampling:
             raise ValueError("balance_sources requires balanced_sampling")
+        if not isinstance(self.content_type_weights, dict) or any(
+            not isinstance(name, str)
+            or not name.strip()
+            or type(value) is bool
+            or not isinstance(value, (int, float))
+            or not math.isfinite(float(value))
+            or value <= 0
+            for name, value in self.content_type_weights.items()
+        ):
+            raise ValueError(
+                "content_type_weights must map content types to finite positive numbers"
+            )
+        if self.content_type_weights and not (
+            self.balanced_sampling and self.balance_sources
+        ):
+            raise ValueError(
+                "content_type_weights requires balanced_sampling and balance_sources"
+            )
+        if not isinstance(self.selection, dict):
+            raise ValueError("selection must be an object")  # noqa: TRY004 -- schema
+        _ = self.selection_options
         if self.modality not in ("audio", "video"):
             raise ValueError("modality must be audio or video")
         for name in (
@@ -153,10 +175,6 @@ class ExperimentConfig:
             raise ValueError("pretrained requires AST checkpoint and sha256")
         _ = self.bandwidth_spec
         _ = self.train_config
-        if self.dev_domain_field not in (None, "source", "content_type"):
-            raise ValueError("dev_domain_field must be null, source or content_type")
-        if self.train_config.domain_constraints and self.dev_domain_field is None:
-            raise ValueError("domain_eer_constraints requires dev_domain_field")
         audio, _ = self.media_configs
         if self.architecture == "aasist_l_v1" and (
             audio.sample_rate != 16000 or self.segment_samples != 64600
@@ -167,6 +185,10 @@ class ExperimentConfig:
             "audio_ast_v1",
         ) and audio.sample_rate != self.model_config.get("sample_rate", 16000):
             raise ValueError("audio and model sample rates must agree")
+
+    @cached_property
+    def selection_options(self) -> SelectionOptions | None:
+        return SelectionOptions.from_options(self.selection or None)
 
     @cached_property
     def bandwidth_spec(self) -> BandwidthSpec | None:
@@ -322,7 +344,16 @@ def _balanced_sampler(
     entries: list[tuple[Path, str, int]],
     generator: torch.Generator,
     sources: list[str] | None = None,
+    content_types: list[str] | None = None,
+    content_type_weights: dict[str, float] | None = None,
 ) -> WeightedRandomSampler:
+    """Balance declared groups, optionally scaling whole content domains.
+
+    Every (source, label) or label group receives an equal share unless
+    content-type weights multiply the per-entry weight. Unlisted content types
+    keep weight 1.0; classes inside a weighted domain stay balanced because the
+    domain factor is constant across its groups.
+    """
     keys = (
         [
             (source, label)
@@ -333,19 +364,31 @@ def _balanced_sampler(
     )
     counts = Counter(keys)
     weights = [1.0 / counts[key] for key in keys]
+    if content_type_weights:
+        if content_types is None or len(content_types) != len(entries):
+            raise ValueError("content_type_weights requires one content type per entry")
+        if any(not isinstance(name, str) or not name.strip() for name in content_types):
+            raise ValueError("content_type_weights requires labeled content types")
+        absent = set(content_type_weights) - set(content_types)
+        if absent:
+            raise ValueError(
+                f"content_type_weights names absent content types: {sorted(absent)}"
+            )
+        weights = [
+            weight * content_type_weights.get(content_type, 1.0)
+            for weight, content_type in zip(weights, content_types, strict=True)
+        ]
     return WeightedRandomSampler(
         weights, len(entries), replacement=True, generator=generator
     )
 
 
-def _write_dev_scores(  # noqa: PLR0913 -- scoring inputs and explicit domain field
+def _write_dev_scores(
     model: torch.nn.Module,
     loader: DataLoader[tuple[Tensor, Tensor]],
     records: list[SampleRecord],
     device: str,
     output: Path,
-    *,
-    domain_field: Literal["source", "content_type"] | None = None,
 ) -> None:
     """Score the selected checkpoint from the prepared dev tensors once."""
     values: list[float] = []
@@ -376,18 +419,18 @@ def _write_dev_scores(  # noqa: PLR0913 -- scoring inputs and explicit domain fi
         "".join(canonical_json(score.to_dict()) + "\n" for score in scores),
         encoding="utf-8",
     )
-    report: dict[str, Any] = {
-        "scope": "selected checkpoint on prepared dev tensors; decoding excluded",
-        "seconds": seconds,
-        "evaluation": asdict(evaluate_records(scores)),
-    }
-    if domain_field is not None:
-        report["domain_field"] = domain_field
-        report["domains"] = {
-            domain: asdict(evaluation)
-            for domain, evaluation in grouped_reports(scores, domain_field).items()
-        }
-    atomic_json(output / "dev-evaluation.json", report)
+    atomic_json(
+        output / "dev-evaluation.json",
+        {
+            "scope": "selected checkpoint on prepared dev tensors; decoding excluded",
+            "seconds": seconds,
+            "evaluation": asdict(evaluate_records(scores)),
+            "by_content_type": {
+                name: asdict(report)
+                for name, report in grouped_reports(scores, "content_type").items()
+            },
+        },
+    )
 
 
 def _audit_training_records(
@@ -440,14 +483,6 @@ def _prepare_cache(  # noqa: C901, PLR0912, PLR0913, PLR0915, PLR0917 -- cache a
         preprocessing["frame_preprocessing"] = {
             key: list(frame_preprocessing[key]) for key in ("input_size", "mean", "std")
         }
-    runtime = preprocessing_runtime(
-        config.modality,
-        audio_config,
-        ast=audio_preprocessor is not None,
-        normalized_frames=config.modality == "video",
-    )
-    if encoder is not None:
-        runtime["encoder"] = model_runtime(encoder, config.train_config.device)
     cache.mkdir(parents=True, exist_ok=True)
     cache_bytes = sum(path.stat().st_size for path in cache.iterdir() if path.is_file())
     if cache_bytes > config.cache_max_bytes:
@@ -458,8 +493,7 @@ def _prepare_cache(  # noqa: C901, PLR0912, PLR0913, PLR0915, PLR0917 -- cache a
 
     def cache_identity(record: SampleRecord) -> dict[str, Any]:
         return {
-            "cache_version": 3,
-            "runtime": runtime,
+            "cache_version": 2,
             "media_sha256": record.sha256,
             "encoder": config.encoder,
             "feature_precision": (
@@ -691,6 +725,16 @@ def run_experiment(config_path: Path) -> TrainResult:  # noqa: PLR0915 -- experi
                 [record.source for record in selected if record.split == "train"]
                 if config.balance_sources
                 else None,
+                content_types=(
+                    [
+                        record.content_type
+                        for record in selected
+                        if record.split == "train"
+                    ]
+                    if config.content_type_weights
+                    else None
+                ),
+                content_type_weights=config.content_type_weights or None,
             )
             if config.balanced_sampling
             else None
@@ -709,7 +753,6 @@ def run_experiment(config_path: Path) -> TrainResult:  # noqa: PLR0915 -- experi
         dev_loader = DataLoader(
             _CachedDataset(entries["dev"]), shuffle=False, **loader_options
         )
-        dev_records = [record for record in selected if record.split == "dev"]
         provenance = {
             "data_sha256": manifest_hash(selected),
             "code_sha256": code["code_sha256"],
@@ -735,26 +778,29 @@ def run_experiment(config_path: Path) -> TrainResult:  # noqa: PLR0915 -- experi
             provenance=provenance,
             architecture=config.architecture,
             model_config=initial["config"],
+            selection=config.selection_options,
             dev_domains=(
-                [getattr(record, config.dev_domain_field) for record in dev_records]
-                if config.dev_domain_field is not None
+                [record.content_type for record in selected if record.split == "dev"]
+                if config.selection
                 else None
             ),
         )
         _write_dev_scores(
             model,
             dev_loader,
-            dev_records,
+            [record for record in selected if record.split == "dev"],
             train_config.device,
             output,
-            domain_field=config.dev_domain_field,
         )
         report.update(
             status="complete",
             best_epoch=result.best_epoch,
             best_dev_eer=result.best_dev_eer,
+            best_selection_metric=result.best_selection_metric,
+            best_selection_value=result.best_selection_value,
             checkpoint_sha256=result.checkpoint_sha256,
             checkpoint=str(result.best_checkpoint.relative_to(output)),
+            selection_gate_passed=result.selection_gate_passed,
         )
     except BaseException as exc:
         report.update(status="failed", error_type=type(exc).__name__, error=str(exc))
