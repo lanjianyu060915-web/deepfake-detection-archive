@@ -6,6 +6,8 @@ from dataclasses import dataclass
 from math import isfinite
 from typing import Literal, Protocol
 
+from deepfake_detection_archive.data.split import is_statistical_group
+
 from .metrics import BinaryMetrics, MetricInputError, evaluate_binary
 
 
@@ -137,11 +139,7 @@ def evaluate_records(
         score for label, score in zip(labels, scores, strict=True) if label == 1
     ]
     known_groups = [
-        record
-        for record in records
-        if record.group_id is not None
-        and record.group_id.strip()
-        and record.group_id.strip().casefold() != "unknown"
+        record for record in records if is_statistical_group(record.group_id)
     ]
     return EvaluationReport(
         sample_count=len(records),

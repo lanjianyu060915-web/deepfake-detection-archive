@@ -52,6 +52,17 @@ def test_identical_scores_and_reordered_files_have_zero_delta() -> None:
     assert report.common_reason is None
 
 
+def test_legacy_prompt_score_groups_are_not_counted_as_independence() -> None:
+    baseline = [
+        replace(row, group_id=f"aime-prompt:{index}")
+        for index, row in enumerate(records([0.1, 0.2, 0.8, 0.9]))
+    ]
+    report = compare_records(baseline, baseline)
+    assert report.fullset_delta_eer == 0
+    assert report.baseline.group_count == report.candidate.group_count == 0
+    assert report.baseline.missing_group_count == 4
+
+
 def test_worse_scores_have_positive_candidate_minus_baseline_delta() -> None:
     report = compare_records(
         records([0.1, 0.2, 0.8, 0.9]), records([0.9, 0.8, 0.2, 0.1])

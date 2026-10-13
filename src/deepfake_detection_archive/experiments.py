@@ -6,10 +6,10 @@ import random
 import tempfile
 import time
 from collections import Counter
-from dataclasses import asdict, dataclass, field, replace
+from dataclasses import asdict, dataclass, field
 from functools import cached_property
 from pathlib import Path
-from typing import Any, cast
+from typing import Any, Literal, cast
 
 import numpy as np
 import torch
@@ -19,7 +19,6 @@ from torch.utils.data import DataLoader, Dataset, WeightedRandomSampler
 from .augmentation import BandwidthSpec, bandlimit_roundtrip
 from .config import load_object
 from .contracts import ScoreRecord
-from .data.audit import audit_manifest
 from .data.manifest import (
     SampleRecord,
     SourceRecord,
@@ -28,8 +27,8 @@ from .data.manifest import (
     load_sources,
     manifest_hash,
 )
-from .data.split import validate_splits
-from .evaluation.report import evaluate_records
+from .data.split import statistical_groups
+from .evaluation.report import evaluate_records, grouped_reports
 from .features import (
     Encoder,
     extract_audio_feature_batch,
@@ -43,6 +42,8 @@ from .models.ast import ASTClassifier
 from .models.checkpoint import create_model, save_checkpoint, verify_sha256
 from .models.encoders import FrozenAudioEncoder
 from .models.finetune import VideoFrameClassifier
+from .preflight import audit_training_data
+from .runtime import model_runtime, preprocessing_runtime
 from .tracking import atomic_json, canonical_json, code_identity, object_hash, utc_now
 from .training import TrainConfig, TrainResult, train_model
 
@@ -71,6 +72,7 @@ class ExperimentConfig:
     augmentation: dict[str, Any] = field(default_factory=dict)
     feature_cache: str | None = None
     cache_max_bytes: int = 20 * 1024**3
+    dev_domain_field: Literal["source", "content_type"] | None = None
     schema_version: int = 1
 
     def __post_init__(self) -> None:  # noqa: C901, PLR0912 -- strict configuration schema
@@ -151,6 +153,10 @@ class ExperimentConfig:
             raise ValueError("pretrained requires AST checkpoint and sha256")
         _ = self.bandwidth_spec
         _ = self.train_config
+        if self.dev_domain_field not in (None, "source", "content_type"):
+            raise ValueError("dev_domain_field must be null, source or content_type")
+        if self.train_config.domain_constraints and self.dev_domain_field is None:
+            raise ValueError("domain_eer_constraints requires dev_domain_field")
         audio, _ = self.media_configs
         if self.architecture == "aasist_l_v1" and (
             audio.sample_rate != 16000 or self.segment_samples != 64600
@@ -332,12 +338,14 @@ def _balanced_sampler(
     )
 
 
-def _write_dev_scores(
+def _write_dev_scores(  # noqa: PLR0913 -- scoring inputs and explicit domain field
     model: torch.nn.Module,
     loader: DataLoader[tuple[Tensor, Tensor]],
     records: list[SampleRecord],
     device: str,
     output: Path,
+    *,
+    domain_field: Literal["source", "content_type"] | None = None,
 ) -> None:
     """Score the selected checkpoint from the prepared dev tensors once."""
     values: list[float] = []
@@ -348,6 +356,7 @@ def _write_dev_scores(
             logits = cast(Tensor, model(inputs.to(device, non_blocking=True)))
             values.extend(logits.float().cpu().tolist())
     seconds = time.monotonic() - started
+    groups = statistical_groups(records)
     scores = [
         ScoreRecord(
             sample_id=record.sample_id,
@@ -356,7 +365,7 @@ def _write_dev_scores(
             status="ok",
             elapsed_seconds=seconds / len(records),
             label=record.label,
-            group_id=record.group_id,
+            group_id=groups[record.sample_id],
             source=record.source,
             content_type=record.content_type,
             generator=record.generator,
@@ -367,14 +376,18 @@ def _write_dev_scores(
         "".join(canonical_json(score.to_dict()) + "\n" for score in scores),
         encoding="utf-8",
     )
-    atomic_json(
-        output / "dev-evaluation.json",
-        {
-            "scope": "selected checkpoint on prepared dev tensors; decoding excluded",
-            "seconds": seconds,
-            "evaluation": asdict(evaluate_records(scores)),
-        },
-    )
+    report: dict[str, Any] = {
+        "scope": "selected checkpoint on prepared dev tensors; decoding excluded",
+        "seconds": seconds,
+        "evaluation": asdict(evaluate_records(scores)),
+    }
+    if domain_field is not None:
+        report["domain_field"] = domain_field
+        report["domains"] = {
+            domain: asdict(evaluation)
+            for domain, evaluation in grouped_reports(scores, domain_field).items()
+        }
+    atomic_json(output / "dev-evaluation.json", report)
 
 
 def _audit_training_records(
@@ -384,36 +397,11 @@ def _audit_training_records(
     sources: dict[str, SourceRecord],
     output: Path,
 ) -> list[SampleRecord]:
-    # Inspect split metadata globally without reading or decoding holdout bytes.
-    errors = validate_splits(records, require_class_coverage=False)
-    selected = [
-        record
-        for record in records
-        if record.modality == config.modality and record.split in ("train", "dev")
-    ]
-    for split in ("train", "dev"):
-        if {record.label for record in selected if record.split == split} != {0, 1}:
-            errors.append(f"{split} requires both classes with known labels")
-    audit = audit_manifest(
-        [replace(record, split="unassigned") for record in selected],
-        root,
-        sources,
-        require_decoded=False,
-    )
-    atomic_json(
-        output / "audit.json",
-        {
-            "audit": audit.to_dict(),
-            "split_errors": errors,
-            "scope": (
-                "train/dev registry and bytes; full split metadata checked; "
-                "actual decoding or verified feature cache required by preparation"
-            ),
-        },
-    )
-    if errors or not audit.passed:
+    data = audit_training_data(records, config, root, sources)
+    atomic_json(output / "audit.json", data.to_dict())
+    if not data.passed:
         raise ValueError("experiment data audit failed; inspect audit.json")
-    return selected
+    return data.records
 
 
 def _prepare_cache(  # noqa: C901, PLR0912, PLR0913, PLR0915, PLR0917 -- cache and media batching
@@ -452,6 +440,14 @@ def _prepare_cache(  # noqa: C901, PLR0912, PLR0913, PLR0915, PLR0917 -- cache a
         preprocessing["frame_preprocessing"] = {
             key: list(frame_preprocessing[key]) for key in ("input_size", "mean", "std")
         }
+    runtime = preprocessing_runtime(
+        config.modality,
+        audio_config,
+        ast=audio_preprocessor is not None,
+        normalized_frames=config.modality == "video",
+    )
+    if encoder is not None:
+        runtime["encoder"] = model_runtime(encoder, config.train_config.device)
     cache.mkdir(parents=True, exist_ok=True)
     cache_bytes = sum(path.stat().st_size for path in cache.iterdir() if path.is_file())
     if cache_bytes > config.cache_max_bytes:
@@ -462,7 +458,8 @@ def _prepare_cache(  # noqa: C901, PLR0912, PLR0913, PLR0915, PLR0917 -- cache a
 
     def cache_identity(record: SampleRecord) -> dict[str, Any]:
         return {
-            "cache_version": 2,
+            "cache_version": 3,
+            "runtime": runtime,
             "media_sha256": record.sha256,
             "encoder": config.encoder,
             "feature_precision": (
@@ -712,6 +709,7 @@ def run_experiment(config_path: Path) -> TrainResult:  # noqa: PLR0915 -- experi
         dev_loader = DataLoader(
             _CachedDataset(entries["dev"]), shuffle=False, **loader_options
         )
+        dev_records = [record for record in selected if record.split == "dev"]
         provenance = {
             "data_sha256": manifest_hash(selected),
             "code_sha256": code["code_sha256"],
@@ -737,13 +735,19 @@ def run_experiment(config_path: Path) -> TrainResult:  # noqa: PLR0915 -- experi
             provenance=provenance,
             architecture=config.architecture,
             model_config=initial["config"],
+            dev_domains=(
+                [getattr(record, config.dev_domain_field) for record in dev_records]
+                if config.dev_domain_field is not None
+                else None
+            ),
         )
         _write_dev_scores(
             model,
             dev_loader,
-            [record for record in selected if record.split == "dev"],
+            dev_records,
             train_config.device,
             output,
+            domain_field=config.dev_domain_field,
         )
         report.update(
             status="complete",

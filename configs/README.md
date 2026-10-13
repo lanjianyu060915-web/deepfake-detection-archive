@@ -19,8 +19,22 @@
 cp configs/train-logmel.example.json configs/train-logmel.local.json
 # 编辑真实清单、来源、路径、哈希、训练参数和新输出目录
 scripts/devctl run python -m deepfake_detection_archive train \
+  --config configs/train-logmel.local.json --check-config
+scripts/devctl run python -m deepfake_detection_archive train \
   --config configs/train-logmel.local.json
 ```
+
+`--check-config` 只读预检可在 CPU 环境检查 CUDA 配置，不分配模型、不加载权重、不下载、
+不解码，也不创建输出或缓存目录。它复用训练的数据审计，检查配置及模型/媒体字段、
+train/dev 双类与受约束 dev 域、全清单的已知分组泄漏、所选 train/dev 的实际字节和来源许可，
+以及本地权重/SSL bundle 的路径与 SHA-256；holdout 只读划分元数据，不读媒体。
+标准输出为 JSON，预检不通过返回状态码 2，配置/文件异常在标准错误中给出原因。
+`passed=true` 仅代表这些检查通过；`unchecked` 列出未检查项，包括实际解码、缓存张量、
+模型构建和权重兼容性、编码器维度、CUDA/显存/吞吐、可写权限/剩余磁盘及域基线来源。
+AST 预训练资源还需 `model.safetensors` 文件名与同目录的 `config.json`；当前配置只登记
+权重哈希，预检会明确提示这个 `config.json` 未有可信哈希，不能据此宣称其完整性已验证。
+它不是训练或效果验证，正式启动仍按当时的实际资产重新检查。只想预检时保留该标志；
+去掉后才进入训练。最小离线回归可运行 `scripts/devctl run pytest -q tests/test_preflight.py`。
 
 训练使用 train/dev，dev 用于早停；holdout 不参与训练或模型选择。每次训练使用新的输出目录。
 模板默认 CUDA 与 AMP，batch 和累积步数仅作起点，按当前 GPU 的实际 profile 调整。

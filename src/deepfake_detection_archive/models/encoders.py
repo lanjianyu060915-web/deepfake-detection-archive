@@ -1,11 +1,12 @@
 """Frozen local-only encoder boundaries; no model IDs or remote code accepted."""
 
-import json
 from pathlib import Path
 from typing import Any, Self, cast
 
 import torch
 from torch import Tensor, nn
+
+from deepfake_detection_archive.config import load_object
 
 from .checkpoint import verify_sha256
 from .core import validate_waveforms
@@ -21,6 +22,48 @@ VISION_ARCHITECTURES = frozenset(
     }
 )
 AUDIO_ARCHITECTURES = frozenset({"wav2vec2", "hubert", "wavlm"})
+
+
+def verify_audio_bundle(model_dir: Path, expected_hashes: dict[str, str]) -> Path:
+    """Verify the local SSL bundle without constructing or loading its model."""
+    if not isinstance(expected_hashes, dict) or any(
+        not isinstance(name, str) or not isinstance(digest, str)
+        for name, digest in expected_hashes.items()
+    ):
+        raise ValueError("expected_hashes must map filenames to SHA-256 strings")
+    model_dir = model_dir.resolve(strict=True)
+    if not model_dir.is_dir():
+        raise ValueError("model_dir must be a local directory")
+    weights = {path.name for path in model_dir.glob("*.safetensors")}
+    if not weights:
+        raise ValueError("local SSL bundle requires safetensors weights")
+    required = weights | {"config.json", "preprocessor_config.json"}
+    index = model_dir / "model.safetensors.index.json"
+    if index.exists():
+        required.add(index.name)
+    if not required <= expected_hashes.keys():
+        raise ValueError("trusted hashes must cover config, preprocessor and weights")
+    for name, digest in expected_hashes.items():
+        if Path(name).name != name:
+            raise ValueError("bundle hash keys must be filenames without paths")
+        verify_sha256(model_dir / name, digest)
+    if index.exists():
+        mapping = load_object(index).get("weight_map")
+        if (
+            not isinstance(mapping, dict)
+            or not mapping
+            or any(
+                not isinstance(name, str) or not isinstance(shard, str)
+                for name, shard in mapping.items()
+            )
+        ):
+            raise ValueError("weight index requires a nonempty string weight_map")
+        if not set(mapping.values()) <= weights:
+            raise ValueError("weight index references unverified or absent shards")
+    config_json = load_object(model_dir / "config.json")
+    if config_json.get("model_type") not in AUDIO_ARCHITECTURES:
+        raise ValueError("unsupported local SSL architecture")
+    return model_dir
 
 
 class _FrozenEncoder(nn.Module):
@@ -94,33 +137,7 @@ class FrozenAudioEncoder(_FrozenEncoder):
 
     def __init__(self, model_dir: Path, *, expected_hashes: dict[str, str]) -> None:
         super().__init__()
-        model_dir = model_dir.resolve(strict=True)
-        if not model_dir.is_dir():
-            raise ValueError("model_dir must be a local directory")
-        weights = {path.name for path in model_dir.glob("*.safetensors")}
-        if not weights:
-            raise ValueError("local SSL bundle requires safetensors weights")
-        required = weights | {"config.json", "preprocessor_config.json"}
-        index = model_dir / "model.safetensors.index.json"
-        if index.exists():
-            required.add(index.name)
-        if not required <= expected_hashes.keys():
-            raise ValueError(
-                "trusted hashes must cover config, preprocessor and weights"
-            )
-        for name, digest in expected_hashes.items():
-            if Path(name).name != name:
-                raise ValueError("bundle hash keys must be filenames without paths")
-            verify_sha256(model_dir / name, digest)
-        if index.exists():
-            contents = json.loads(index.read_text(encoding="utf-8"))
-            if not set(contents["weight_map"].values()) <= weights:
-                raise ValueError("weight index references unverified or absent shards")
-        config_json = json.loads(
-            (model_dir / "config.json").read_text(encoding="utf-8")
-        )
-        if config_json.get("model_type") not in AUDIO_ARCHITECTURES:
-            raise ValueError("unsupported local SSL architecture")
+        model_dir = verify_audio_bundle(model_dir, expected_hashes)
         from transformers import AutoFeatureExtractor, AutoModel  # noqa: PLC0415
 
         extractor = AutoFeatureExtractor.from_pretrained(  # type: ignore[no-untyped-call]

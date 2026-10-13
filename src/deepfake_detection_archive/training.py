@@ -11,7 +11,8 @@ import math
 import random
 import time
 from collections.abc import Iterable, Mapping, Sequence
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
+from functools import cached_property
 from pathlib import Path
 from typing import Any, Literal, cast
 
@@ -26,6 +27,31 @@ from .tracking import atomic_json
 
 
 Batch = tuple[Tensor, Tensor] | Mapping[str, Tensor]
+
+
+@dataclass(frozen=True)
+class DomainEERConstraint:
+    """A fixed development baseline and absolute EER regression allowance."""
+
+    baseline_eer: float
+    max_regression: float
+
+    def __post_init__(self) -> None:
+        for name in ("baseline_eer", "max_regression"):
+            value = getattr(self, name)
+            if type(value) not in (int, float) or not math.isfinite(value):
+                raise ValueError(f"{name} must be finite")
+            if not 0 <= value <= 1:
+                raise ValueError(f"{name} must lie in [0, 1]")
+
+
+@dataclass(frozen=True)
+class DevDomainMetrics:
+    sample_count: int
+    real_count: int
+    fake_count: int
+    eer: float | None
+    reason: str | None
 
 
 @dataclass(frozen=True)
@@ -46,6 +72,7 @@ class TrainConfig:
     backbone_lr_scale: float = 1.0
     time_mask_width: int = 0
     frequency_mask_width: int = 0
+    domain_eer_constraints: dict[str, dict[str, float]] = field(default_factory=dict)
 
     def __post_init__(self) -> None:  # noqa: C901, PLR0912
         for name in ("max_epochs", "accumulation_steps", "patience"):
@@ -88,6 +115,30 @@ class TrainConfig:
             raise ValueError("only CPU and CUDA are supported")
         if self.amp and device.type != "cuda":
             raise ValueError("AMP is supported only with CUDA")
+        _ = self.domain_constraints
+
+    @cached_property
+    def domain_constraints(self) -> dict[str, DomainEERConstraint]:
+        if not isinstance(self.domain_eer_constraints, dict):
+            raise ValueError("domain_eer_constraints must be an object")  # noqa: TRY004 -- schema
+        parsed: dict[str, DomainEERConstraint] = {}
+        for domain, options in self.domain_eer_constraints.items():
+            if (
+                not isinstance(domain, str)
+                or not domain.strip()
+                or domain.strip().casefold() == "unknown"
+            ):
+                raise ValueError("domain constraints require explicit known domains")
+            if not isinstance(options, dict) or set(options) != {
+                "baseline_eer",
+                "max_regression",
+            }:
+                raise ValueError(
+                    f"domain constraint {domain!r} requires exactly "
+                    "baseline_eer and max_regression"
+                )
+            parsed[domain] = DomainEERConstraint(**options)
+        return parsed
 
 
 @dataclass(frozen=True)
@@ -218,9 +269,9 @@ def _step(
     return True
 
 
-def _evaluate(
+def _dev_predictions(
     model: nn.Module, loader: Iterable[Batch], device: torch.device
-) -> tuple[float, float, int]:
+) -> tuple[float, list[int], list[float]]:
     model.eval()
     labels_all: list[int] = []
     scores_all: list[float] = []
@@ -236,8 +287,89 @@ def _evaluate(
             )
             labels_all.extend(int(value) for value in labels.cpu().tolist())
             scores_all.extend(logits.cpu().tolist())
-    metrics = evaluate_binary(labels_all, scores_all)
-    return loss_sum / len(labels_all), metrics.eer, len(labels_all)
+    return loss_sum, labels_all, scores_all
+
+
+def _evaluate(
+    model: nn.Module, loader: Iterable[Batch], device: torch.device
+) -> tuple[float, float, int]:
+    loss_sum, labels, scores = _dev_predictions(model, loader, device)
+    metrics = evaluate_binary(labels, scores)
+    return loss_sum / len(labels), metrics.eer, len(labels)
+
+
+def _evaluate_domains(
+    model: nn.Module,
+    loader: Iterable[Batch],
+    device: torch.device,
+    domains: Sequence[str],
+) -> tuple[float, float, int, dict[str, DevDomainMetrics]]:
+    loss_sum, labels, scores = _dev_predictions(model, loader, device)
+    metrics = evaluate_binary(labels, scores)
+    if len(domains) != len(labels):
+        raise ValueError("dev_domains must match development sample count and order")
+    buckets: dict[str, list[int]] = {}
+    for index, domain in enumerate(domains):
+        buckets.setdefault(domain, []).append(index)
+    reports = {}
+    for domain, indices in sorted(buckets.items()):
+        domain_labels = [labels[index] for index in indices]
+        both_classes = set(domain_labels) == {0, 1}
+        reports[domain] = DevDomainMetrics(
+            sample_count=len(indices),
+            real_count=domain_labels.count(0),
+            fake_count=domain_labels.count(1),
+            eer=(
+                evaluate_binary(domain_labels, [scores[index] for index in indices]).eer
+                if both_classes
+                else None
+            ),
+            reason=None if both_classes else "missing_class",
+        )
+    return loss_sum / len(labels), metrics.eer, len(labels), reports
+
+
+def _check_domain_constraints(
+    reports: Mapping[str, DevDomainMetrics],
+    constraints: Mapping[str, DomainEERConstraint],
+) -> dict[str, dict[str, float]]:
+    regressions = {}
+    for domain, constraint in constraints.items():
+        report = reports.get(domain)
+        if report is None or report.eer is None:
+            reason = "missing_domain" if report is None else report.reason
+            raise ValueError(
+                f"domain constraint {domain!r} lacks development EER evidence: {reason}"
+            )
+        limit = constraint.baseline_eer + constraint.max_regression
+        if report.eer > limit:
+            regressions[domain] = {
+                "eer": report.eer,
+                "baseline_eer": constraint.baseline_eer,
+                "max_regression": constraint.max_regression,
+                "max_eer": limit,
+            }
+    return regressions
+
+
+def _validate_dev_domains(
+    domains: Sequence[str] | None, constraints: Mapping[str, DomainEERConstraint]
+) -> tuple[str, ...] | None:
+    if domains is None:
+        if constraints:
+            raise ValueError("domain_eer_constraints requires explicit dev_domains")
+        return None
+    if (
+        isinstance(domains, str)
+        or not domains
+        or any(not isinstance(domain, str) or not domain.strip() for domain in domains)
+    ):
+        raise ValueError("dev_domains must be a nonempty sequence of domain strings")
+    if missing := set(constraints) - set(domains):
+        raise ValueError(
+            f"constrained development domains are missing: {sorted(missing)}"
+        )
+    return tuple(domains)
 
 
 def _mask_fbank(
@@ -330,6 +462,7 @@ def train_model(  # noqa: C901, PLR0913, PLR0912, PLR0915
     provenance: dict[str, Any],
     architecture: str | None = None,
     model_config: dict[str, Any] | None = None,
+    dev_domains: Sequence[str] | None = None,
 ) -> TrainResult:
     """Train AdamW/BCE and restore the checkpoint with the lowest dev EER.
 
@@ -339,7 +472,16 @@ def train_model(  # noqa: C901, PLR0913, PLR0912, PLR0915
     Seed controls training randomness, not caller-side model initialization.
     Provenance hashes must describe data, code and initial weights. The caller
     must enforce train/dev media-group separation before constructing loaders.
+    Optional dev_domains must follow the unshuffled, stable dev loader order.
+    Domain constraints use fixed baselines and never inspect a holdout split.
     """
+    constraints = dict(config.domain_constraints)
+    domains = _validate_dev_domains(dev_domains, constraints)
+    # Record the validated effective values, not a caller-mutated raw JSON dict.
+    effective_config = asdict(config)
+    effective_config["domain_eer_constraints"] = {
+        domain: asdict(constraint) for domain, constraint in constraints.items()
+    }
     actual_architecture, actual_config = model_spec(model)
     if architecture is not None and architecture != actual_architecture:
         raise ValueError("architecture differs from model")
@@ -395,8 +537,8 @@ def train_model(  # noqa: C901, PLR0913, PLR0912, PLR0915
     run: dict[str, Any] = {
         "schema_version": 1,
         "status": "running",
-        "config": asdict(config),
-        "config_sha256": _digest_json(asdict(config)),
+        "config": effective_config,
+        "config_sha256": _digest_json(effective_config),
         "architecture": actual_architecture,
         "model_config": actual_config,
         "model_config_sha256": _digest_json(actual_config),
@@ -414,6 +556,7 @@ def train_model(  # noqa: C901, PLR0913, PLR0912, PLR0915
     atomic_json(run_path, run)
     history: list[dict[str, Any]] = []
     best_eer, best_epoch, stale = math.inf, 0, 0
+    best_domains: dict[str, DevDomainMetrics] = {}
     checkpoint = output_dir / "best.pt"
     descriptor: dict[str, Any] = {}
     stop_reason: Literal["max_epochs", "early_stopping", "time_limit"] = "max_epochs"
@@ -425,12 +568,23 @@ def train_model(  # noqa: C901, PLR0913, PLR0912, PLR0915
                 model, train_loader, device, optimizer, scaler, config, mask_fill
             )
             train_seconds = time.monotonic() - epoch_started
-            dev_loss, dev_eer, dev_count = _evaluate(model, dev_loader, device)
-            stale = 0 if dev_eer < best_eer - config.min_delta else stale + 1
-            improved = dev_eer < best_eer
+            domain_reports: dict[str, DevDomainMetrics] = {}
+            if domains is None:
+                dev_loss, dev_eer, dev_count = _evaluate(model, dev_loader, device)
+            else:
+                dev_loss, dev_eer, dev_count, domain_reports = _evaluate_domains(
+                    model, dev_loader, device, domains
+                )
+            regressions = _check_domain_constraints(domain_reports, constraints)
+            eligible = not regressions
+            stale = (
+                0 if eligible and dev_eer < best_eer - config.min_delta else stale + 1
+            )
+            improved = eligible and dev_eer < best_eer
             if improved:
                 descriptor = save_checkpoint(checkpoint, model)
                 best_eer, best_epoch = dev_eer, epoch
+                best_domains = domain_reports
             history.append(
                 {
                     "epoch": epoch,
@@ -447,6 +601,15 @@ def train_model(  # noqa: C901, PLR0913, PLR0912, PLR0915
                     "seconds": time.monotonic() - epoch_started,
                 }
             )
+            if domains is not None:
+                history[-1].update(
+                    dev_domains={
+                        domain: asdict(report)
+                        for domain, report in domain_reports.items()
+                    },
+                    selection_eligible=eligible,
+                    domain_regressions=regressions,
+                )
             atomic_json(history_path, history)
             if stale >= config.patience:
                 stop_reason = "early_stopping"
@@ -457,6 +620,11 @@ def train_model(  # noqa: C901, PLR0913, PLR0912, PLR0915
             ):
                 stop_reason = "time_limit"
                 break
+        if not descriptor:
+            raise ValueError(  # noqa: TRY301 -- recorded in failed run metadata
+                "no checkpoint met the development domain EER constraints; "
+                "inspect history.json domain_regressions and configured baselines"
+            )
         restored, _ = load_checkpoint(checkpoint, expected_sha256=descriptor["sha256"])
         model.load_state_dict(restored.state_dict())
         model.eval()
@@ -468,6 +636,10 @@ def train_model(  # noqa: C901, PLR0913, PLR0912, PLR0915
             stop_reason=stop_reason,
             epochs_completed=len(history),
         )
+        if domains is not None:
+            run["best_dev_domains"] = {
+                domain: asdict(report) for domain, report in best_domains.items()
+            }
     except BaseException as exc:
         optimizer.zero_grad(set_to_none=True)
         run.update(status="failed", error_type=type(exc).__name__, error=str(exc))

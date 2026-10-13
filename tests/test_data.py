@@ -19,6 +19,7 @@ from deepfake_detection_archive.data.manifest import (
 from deepfake_detection_archive.data.split import (
     assign_splits,
     connected_groups,
+    statistical_groups,
     validate_splits,
 )
 
@@ -145,6 +146,24 @@ def test_external_parent_siblings_and_source_scoping() -> None:
     assert mapping["c"] != mapping["d"]
 
 
+def test_prompt_components_do_not_inherit_independence_from_mixed_speakers() -> None:
+    records = [
+        sample("a", group_id="aime-prompt:music", sha256="a" * 64),
+        sample("b", group_id="aime-prompt:music", identity_id="known-speaker"),
+        sample("c", group_id="registered-uploader", sha256="a" * 64),
+        sample("d", parent_id="c", derivation_group_id="derived"),
+        sample("e", derivation_group_id="derived"),
+        sample("f"),
+        sample("separate", identity_id="separate-speaker"),
+    ]
+    duplicates = (("e", "f"),)
+    components = connected_groups(records, duplicates)
+    assert {components[name] for name in "abcdef"} == {"a"}
+    expected = dict.fromkeys("abcdef", "unknown") | {"separate": "separate"}
+    assert statistical_groups(records, duplicates) == expected
+    assert statistical_groups(records[::-1], duplicates) == expected
+
+
 def test_split_is_deterministic_balanced_and_keeps_derivatives_together() -> None:
     records = [
         sample(
@@ -180,7 +199,7 @@ def test_fixed_holdout_is_never_reassigned() -> None:
 
 
 def test_split_reports_insufficient_groups_and_rejects_unlabelled_samples() -> None:
-    with pytest.raises(ValueError, match="insufficient independent groups"):
+    with pytest.raises(ValueError, match="insufficient leakage components"):
         assign_splits([sample("real"), sample("fake", label=1)])
     with pytest.raises(ValueError, match="unlabelled"):
         assign_splits([sample(label=None)])
@@ -240,6 +259,43 @@ def test_audit_missing_entries_remain_in_denominators(tmp_path: Path) -> None:
         "unknown_hash",
         "unregistered_source",
     }
+
+
+def test_audit_separates_prompt_components_from_statistical_evidence(
+    tmp_path: Path,
+) -> None:
+    records = [
+        sample(
+            f"{group}-{label}-{index}",
+            label=label,
+            content_type="music",
+            group_id=f"aime-prompt:{group}",
+        )
+        for group in range(10)
+        for label in (0, 1)
+        for index in range(5)
+    ]
+    report = audit_manifest(records, tmp_path, {})
+    assert report.group_count == 10
+    assert report.known_statistical_groups == 0
+    assert report.unknown_statistical_samples == 100
+    music = report.coverage["audio/music"]
+    assert music["groups"] == 10
+    assert music["known_statistical_groups"] == 0
+    assert music["unknown_statistical_samples"] == 100
+    assert music["real_statistical_groups"] == music["fake_statistical_groups"] == 0
+    assert music["status"] == "sparse"
+
+    registered = [
+        replace(r, group_id=r.group_id.replace("aime-prompt:", "known-uploader:"))
+        for r in records
+    ]
+    known_report = audit_manifest(registered, tmp_path, {})
+    assert known_report.group_count == known_report.known_statistical_groups == 10
+    assert known_report.unknown_statistical_samples == 0
+    assert known_report.coverage["audio/music"]["status"] == "counts_sufficient"
+    # Counts are descriptive; unreadable samples still fail the byte/decode audit.
+    assert not known_report.passed
 
 
 def test_audit_rejects_symlink_escape(tmp_path: Path) -> None:

@@ -7,6 +7,8 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from math import floor, isfinite
 
+from deepfake_detection_archive.data.split import is_statistical_group
+
 from .metrics import UndefinedMetricError, evaluate_binary, validate_inputs
 
 
@@ -90,9 +92,7 @@ def paired_group_bootstrap(  # noqa: PLR0913 -- aligned vectors and explicit pro
     ):
         raise ValueError("groups and sources must be nonempty strings")
     if unknown_groups := [
-        index
-        for index, group in enumerate(groups)
-        if group.strip().casefold() == "unknown"
+        index for index, group in enumerate(groups) if not is_statistical_group(group)
     ]:
         raise ValueError(
             f"bootstrap requires known independent groups; rows={unknown_groups}"

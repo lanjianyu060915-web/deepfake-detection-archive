@@ -17,6 +17,10 @@ from deepfake_detection_archive.evaluation.report import (
     evaluate_records,
     grouped_reports,
 )
+from deepfake_detection_archive.timing import (
+    InferenceStageTimings,
+    collect_inference_stages,
+)
 from deepfake_detection_archive.tracking import (
     atomic_json,
     canonical_json,
@@ -116,7 +120,8 @@ def _prepare_run(
         saved = _read_object(metadata_path.read_bytes())
         if object_hash(saved) != object_hash(metadata):
             raise ValueError(
-                "resume rejected: input/config/model/code identity changed"
+                "resume rejected: input/config/model/code/runtime identity changed; "
+                "use a new output directory"
             )
         if not scores_path.exists() and (output_dir / "report.json").exists():
             raise ValueError("completed run report exists but its scores are missing")
@@ -246,11 +251,14 @@ def run_inference(  # noqa: PLR0913 -- explicit backend failure boundary
 ) -> list[ScoreRecord]:
     """Persist one row per input, preserving order and never silently dropping errors.
 
-    The caller supplies config/model/code hashes in identity and must use immutable
+    The caller supplies config/model/code/runtime identity and must use immutable
     local model/media resources. Interrupts, memory/dependency failures and injected
     backend fatal exceptions propagate after committed rows, without a final report.
     An advisory OS flock guards every mutation; lock-file PID is only diagnostic.
+    Stage timings are scoped to newly processed rows in this invocation and are
+    additive report fields; persisted score rows and resume identity are unchanged.
     """
+    started = time.perf_counter()
     records = tuple(records)
     ids = [record.sample_id for record in records]
     if not ids or len(set(ids)) != len(ids):
@@ -264,13 +272,52 @@ def run_inference(  # noqa: PLR0913 -- explicit backend failure boundary
         scores = _prepare_run(records, output_dir, identity, identity_hash, resume)
         new_rows = len(records) - len(scores)
         write_seconds = 0.0
+        sample_seconds = 0.0
+        instrumented_rows = 0
+        stages = InferenceStageTimings()
         with (output_dir / "scores.jsonl").open("ab") as stream:
+            setup_seconds = time.perf_counter() - started
             for record in records[len(scores) :]:
-                score = _infer_one(record, scorer, fatal_exceptions)
+                previous_scopes = stages.measured_scopes
+                with collect_inference_stages(stages):
+                    score = _infer_one(record, scorer, fatal_exceptions)
+                instrumented_rows += stages.measured_scopes > previous_scopes
+                sample_seconds += score.elapsed_seconds
                 write_seconds += _append_score(stream, score)
                 scores.append(score)
         report_path = output_dir / "report.json"
         # Preserve the measured write timings when an already complete run resumes.
         if new_rows or not report_path.exists():
-            atomic_json(report_path, _report(scores, write_seconds, new_rows, ids))
+            report_started = time.perf_counter()
+            report = _report(scores, write_seconds, new_rows, ids)
+            timing = cast(dict[str, object], report["timing"])
+            stage_seconds: dict[str, float] = dict(stages.seconds.items())
+            stage_seconds["unattributed_sample_call"] = max(
+                0.0, sample_seconds - sum(stages.seconds.values())
+            )
+            timing.update(
+                {
+                    "current_session_setup_seconds": setup_seconds,
+                    "current_session_sample_call_seconds": sample_seconds,
+                    "current_session_instrumented_rows": instrumented_rows,
+                    "current_session_stage_seconds": stage_seconds,
+                    "current_session_report_build_seconds": time.perf_counter()
+                    - report_started,
+                    "current_session_elapsed_seconds_before_report_write": time.perf_counter()
+                    - started,
+                    "current_session_scope": (
+                        "runner entry through report preparation; excludes caller "
+                        "preflight/model startup, final report write and lock release; "
+                        "stage timings cover only newly processed rows, including "
+                        "sample failures; uninstrumented work is unattributed"
+                    ),
+                    "stage_clock": (
+                        "host wall clock, no added CUDA synchronization; built-in "
+                        "successful scoring includes blocking CPU feature/score "
+                        "copies, transfers and pooling, not kernel-only time; "
+                        "failed CUDA calls may leave asynchronous work pending"
+                    ),
+                }
+            )
+            atomic_json(report_path, report)
         return scores

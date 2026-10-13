@@ -70,7 +70,6 @@ def _index(args: argparse.Namespace) -> dict[str, object]:
 def _split(args: argparse.Namespace) -> dict[str, object]:
     records = assign_splits(load_manifest(args.manifest), seed=args.seed)
     groups = statistical_groups(records)
-    records = [replace(record, group_id=groups[record.sample_id]) for record in records]
     digest = write_manifest(records, args.output)
     return {
         "samples": len(records),
@@ -179,6 +178,7 @@ def _infer_records(  # noqa: PLR0913 -- parsed inputs and explicit run controls
 ) -> dict[str, object]:
     import torch  # noqa: PLC0415 -- optional inference backend
 
+    from .runtime import inference_runtime  # noqa: PLC0415
     from .scoring import OfflineScorer  # noqa: PLC0415
     from .submission.runner import run_inference  # noqa: PLC0415
 
@@ -193,11 +193,13 @@ def _infer_records(  # noqa: PLR0913 -- parsed inputs and explicit run controls
     preflight = time.perf_counter() - preflight_started
     started = time.perf_counter()
     scorer = OfflineScorer(config, base)
+    runtime = inference_runtime(scorer)
     startup = time.perf_counter() - started
     output = base / config.output_dir
     identity = {
         "config": config.to_dict(),
         "manifest_sha256": manifest_hash(records),
+        "runtime": runtime,
         "media_snapshot": snapshot,
         "media_snapshot_sha256": object_hash(snapshot),
         "code": code_identity(),
@@ -237,6 +239,7 @@ def _infer_records(  # noqa: PLR0913 -- parsed inputs and explicit run controls
         "failures": summary["failure_count"],
         "fullset_eer": summary["fullset_eer"],
         "output": str(output),
+        "elapsed_seconds": time.perf_counter() - preflight_started,
     }
 
 
@@ -283,10 +286,15 @@ def _predict(args: argparse.Namespace) -> dict[str, object]:
         **result,
         "official": False,
         "scores_csv": str(csv_path),
+        "elapsed_seconds": time.perf_counter() - started,
     }
 
 
 def _train(args: argparse.Namespace) -> dict[str, object]:
+    if args.check_config:
+        from .preflight import check_training_config  # noqa: PLC0415
+
+        return check_training_config(args.config)
     from .experiments import run_experiment  # noqa: PLC0415
 
     result = run_experiment(args.config)
@@ -361,6 +369,12 @@ def parser() -> argparse.ArgumentParser:
         command.add_argument("--config", type=Path, required=True)
         if name == "audit":
             command.add_argument("--decode", action="store_true")
+        if name == "train":
+            command.add_argument(
+                "--check-config",
+                action="store_true",
+                help="read-only schema, train/dev data and local asset checks; no training",
+            )
         if name == "infer":
             command.add_argument("--resume", action="store_true")
             command.add_argument("--frozen-audit", action="store_true")
@@ -419,9 +433,11 @@ def main(argv: list[str] | None = None) -> int:
     try:
         result = actions[args.command](args)
         print(canonical_json(result))
-        if args.command == "audit" and not result["passed"]:
+        if (
+            args.command == "audit" or (args.command == "train" and args.check_config)
+        ) and not result["passed"]:
             return 2
-        if args.command == "predict" and result["failures"]:
+        if args.command in {"infer", "predict"} and result["failures"]:
             return 2
     except (
         ValueError,

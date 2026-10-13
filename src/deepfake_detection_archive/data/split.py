@@ -10,6 +10,18 @@ from dataclasses import replace
 from .manifest import SPLITS, UNKNOWN, SampleRecord
 
 
+def is_statistical_group(group: str | None) -> bool:
+    """Recognize usable group IDs, excluding known prompt-only namespaces.
+
+    This does not verify provenance. Manifest-backed callers must still resolve
+    all connected relations with ``statistical_groups`` before reporting evidence.
+    """
+    if group is None:
+        return False
+    value = group.strip().casefold()
+    return bool(value) and value != UNKNOWN and not value.startswith("aime-prompt:")
+
+
 def connected_groups(
     records: list[SampleRecord],
     duplicate_pairs: tuple[tuple[str, str], ...] = (),
@@ -71,14 +83,23 @@ def statistical_groups(
     Hashes, source item IDs and singleton components prevent known leakage but
     cannot establish independent people or independent acquisition units. A
     component without explicit group_id/identity_id evidence remains unknown.
+    The historical ``aime-prompt:`` namespace records label combinations, not
+    artists or source recordings. Its entire component remains unknown, even
+    when a derived music/speech mixture also has a known speaker identity.
     """
     components = connected_groups(records, duplicate_pairs)
+    prompt_only = {
+        components[record.sample_id]
+        for record in records
+        if record.group_id.strip().casefold().startswith("aime-prompt:")
+    }
     evidenced = {
         components[record.sample_id]
         for record in records
-        if record.group_id.strip().casefold() != UNKNOWN
-        or record.identity_id.strip().casefold() != UNKNOWN
+        if is_statistical_group(record.group_id)
+        or is_statistical_group(record.identity_id)
     }
+    evidenced.difference_update(prompt_only)
     return {
         sample_id: group if group in evidenced else UNKNOWN
         for sample_id, group in components.items()
@@ -187,8 +208,8 @@ def assign_splits(
             candidates = [g for g in remaining if counts[g][key] > 0]
             if not candidates:
                 raise ValueError(
-                    f"insufficient independent groups for {split}/{key}; "
-                    "collect more groups or revise predeclared partitions"
+                    f"insufficient leakage components for {split}/{key}; "
+                    "collect more components or revise predeclared partitions"
                 )
             group = min(
                 candidates,

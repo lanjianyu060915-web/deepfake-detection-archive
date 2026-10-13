@@ -25,7 +25,11 @@ from deepfake_detection_archive.data.manifest import (
     load_manifest,
     write_manifest,
 )
-from deepfake_detection_archive.data.split import assign_splits, connected_groups
+from deepfake_detection_archive.data.split import (
+    assign_splits,
+    connected_groups,
+    statistical_groups,
+)
 from deepfake_detection_archive.tracking import atomic_json
 
 
@@ -338,6 +342,14 @@ def prepare(
         "train_models": sorted(TRAIN_MODELS),
         "real_descriptions": len(descriptions),
         "connected_groups": len(set(connected_groups(selected).values())),
+        "known_statistical_groups": len(
+            set(statistical_groups(selected).values()) - {"unknown"}
+        ),
+        "grouping_evidence": {
+            "group_id": "prompt_label_combination",
+            "independent_artists": "unknown",
+            "independent_source_recordings": "unknown",
+        },
         "manifest": _counts(main),
         "unseen": _counts(unseen),
         "inventory": _counts(inventory),

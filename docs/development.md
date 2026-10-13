@@ -39,6 +39,10 @@ scripts/devctl run python -m deepfake_detection_archive index \
 ```
 
 索引不推断标签或许可。补齐来源、标签及已知原媒体/派生/身份关系后，用 `split` 进行组级划分。
+划分连通组用于防止已知泄漏，不自动构成统计独立证据。AIME 的 `aime-prompt:` 只表示
+prompt 标签隔离，不能替代 artist/原曲关系；这些组及关联派生样本仍整组隔离，统计分组
+保留 `unknown`，不能据此做独立组置信区间或宣称跨 artist 泛化。补齐真实来源关系后
+应重新整理清单和评测，而不是把未知关系当作不同来源。
 已有可信 split 直接训练；需要独立完整解码报告时才运行 `audit --decode`，不重复预解码。
 训练会在准备张量时实际解码并记录失败。
 
@@ -50,8 +54,17 @@ scripts/devctl run python -m deepfake_detection_archive index \
 ```bash
 cp configs/train-logmel.example.json configs/train-logmel.local.json
 scripts/devctl run python -m deepfake_detection_archive train \
+  --config configs/train-logmel.local.json --check-config
+scripts/devctl run python -m deepfake_detection_archive train \
   --config configs/train-logmel.local.json
 ```
+
+`train --check-config` 是可在 CPU 机器运行的只读启动检查：解析配置与模型参数，
+核验本地资源、train/dev 注册字节、来源登记、完整清单隔离关系、两类覆盖及受约束域覆盖。
+它不创建输出目录、加载模型、解码媒体或访问 holdout 媒体；CUDA 配置也可检查。
+通过只代表报告列出的静态条件成立；模型权重兼容性、实际解码、缓存张量、GPU 容量、
+磁盘写入能力和基线来源仍不在其证明范围。数据检查失败返回2，详细问题在标准输出 JSON；
+配置/资源异常写入标准错误。正式训练继续执行自己的入口审计，不因预检通过而跳过。
 
 | 方向 | 当前实现与模板 |
 | --- | --- |
@@ -67,6 +80,25 @@ CUDA 支持 BF16/FP16 AMP、梯度累积；新方法先用一次小 profile 确�
 `balanced_sampling` 仅用于 train 的类别平衡；同时开启 `balance_sources` 后，
 已存在的来源与类别组合等权抽样，避免小来源被淹没。它不改变 dev 选模指标；
 多来源实验需明确选模使用哪个 dev，并分别报告其他来源。
+需要逐域摘要时，设置 `dev_domain_field="content_type"` 或 `"source"`，按 manifest
+原值输出每个 epoch 的 `dev_domains`，以及 `dev-evaluation.json` 中的 `domains`。
+不从来源名推断语音、音乐或环境音；`unknown` 单独保留，缺类域的 EER 为 null 并注明原因。
+可选 `training.domain_eer_constraints` 为指定域加入固定 dev 基线回退限制，例如：
+
+```json
+"dev_domain_field": "content_type",
+"training": {
+  "domain_eer_constraints": {
+    "speech": {"baseline_eer": 0.10, "max_regression": 0.02}
+  }
+}
+```
+
+此处数字仅演示语法，不是实测成绩；域名须与清单一致。基线需人工确认来自同一 dev
+样本、评分方向和评测协议，不能填入 holdout 结果。EER 使用 0–1 数值，0.02 表示
+2 个百分点。仅在所有受约束域 EER 不超过基线加容差时，按全 dev EER 选择 checkpoint；
+未通过的 epoch 及原因写入 `training/history.json`。缺域、缺类或所有 epoch 均未通过
+都会明确失败，不回退选用不合格模型。未配置时保持原来的全 dev EER 选模行为。
 `feature_batch_size` 控制冻结特征提取批量。
 `soundfile` 后端只用于原生目标采样率/单声道；通用媒体使用 FFmpeg。
 
@@ -93,6 +125,21 @@ AST 使用 `architecture="audio_ast_v1"`，`model_config.trainable_layers` 指�
 训练暂不支持 optimizer/RNG 续跑，中断后保留旧目录并在新目录重启。
 算法试验需要长时间运行时再补恢复功能；`infer --resume` 不恢复训练。
 
+### 无真实数据的 CPU 回归
+
+在已安装锁定依赖的独立 CPU 环境中，可离线跑合成媒体和小随机模型回归：
+
+```bash
+UV_PROJECT_ENVIRONMENT="$PWD/.venv-cpu" scripts/devctl run python -m pytest -q \
+  tests/test_experiments.py tests/test_offline_dual_branch.py
+UV_PROJECT_ENVIRONMENT="$PWD/.venv-cpu" scripts/devctl check
+```
+
+第一条覆盖 train/dev→缓存→小模型训练→checkpoint→离线评分、音视频包搬迁以及禁止
+隐式下载；完整检查还包含数据/分数契约、失败恢复、静态检查和构建。首次环境准备仍需
+锁定依赖及 CI 固定的 ASVspoof 参考文件；“离线回归”不代表空环境能离线安装。
+这些是执行契约测试，不是 #39/#40/#41 的真实训练、泛化或性能结果。
+
 ## 推理与 EER
 
 无标签媒体可直接 `predict --config MODEL_CONFIG --input DIR --output DIR`，
@@ -111,9 +158,34 @@ scripts/devctl run python -m deepfake_detection_archive evaluate \
 ```
 
 每样本输出一个连续分数或失败记录。分数越高越伪造，通常为 logit，不保证是概率。
+`infer` 和 `predict` 只要存在样本失败就返回退出码2，仍保留逐样本记录及汇总；
+全部成功返回0。恢复已有失败记录也返回2，不能把成功写出报告当作推理全部成功。
+命令返回 JSON 的 `elapsed_seconds` 包含本次配置/媒体预检、模型启动、推理和结果落盘；
+`predict` 还包含 CSV 导出。不含 Python 进程启动和最后的标准输出写入。
 EER 需要两类标签；失败计入覆盖率分母，不能把成功子集当作完整成绩。
 模型和输入不变时可加 `infer --resume`，变化时使用新目录。
 冻结后评估 holdout 使用 `--frozen-audit`，该参数记录声明，不能代替实际候选冻结。
+
+`report.json` 的 `timing.current_session_stage_seconds` 区分输入路径/SHA-256 校验、
+解码与 CPU 预处理（`decode_and_preprocess`）、编码器与分类模型前向/聚合/传输
+（`model_and_feature_scoring`）；模型内部的频谱等前端仍归入模型阶段。
+阶段范围串行且不嵌套，包含各自的 I/O；阶段统计是样本调用耗时的分解，不能再次与总调用耗时相加。
+未插桩调用和其余样本开销归入 `unattributed_sample_call`，
+`current_session_instrumented_rows` 给出实际有阶段计时的新样本数。
+runner 初始化、逐行持久写入和报告计算分别记录；runner 总耗时字段明确截止于报告写入前，
+命令级完整耗时看返回 JSON 的 `elapsed_seconds`。阶段均为主机墙钟，
+成功调用包含现有阻塞 CPU 特征/分数回传，不新增 CUDA 同步，也不是纯 GPU kernel 耗时；
+CUDA 调用异常时尚未完成的异步工作可能落在后续调用中。
+阶段统计只覆盖本次新增样本（含失败），旧行仅保留原有总耗时；已完成的 resume 不覆盖旧计时。
+缓存与推理恢复同时绑定相关运行时及实际预处理后端。更换音频/视频解码工具、
+相关依赖版本或 AST 前端后，不得沿用旧环境分数；恢复身份不匹配时使用新输出目录。
+这避免同一配置在不同后端下静默混用缓存或分数，不证明两个环境数值完全相同。
+缓存身份升级为v3，旧缓存保留但不再复用，准备阶段重新生成；旧文件仍计入容量上限，
+空间不足时指定新的缓存目录，不要在其他任务运行时删除其输入。普通波形缓存不因训练
+设备或无关模型依赖变化而失效。AST记录实际NumPy或Kaldi前端，视频记录解码与归一化，
+冻结特征另记录所用编码器依赖和执行后端；身份在启动阶段计算，不在epoch内重复探测。
+旧推理目录缺少运行时身份，同样拒绝resume，不能手改identity元数据绕过。checkpoint和
+逐样本分数schema保持兼容，但迁移环境后应在新目录重评测再比较，不能假定旧分数等价。
 
 ## 压缩与重采样对照
 

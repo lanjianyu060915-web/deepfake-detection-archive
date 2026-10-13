@@ -42,6 +42,9 @@ scripts/devctl run python -m deepfake_detection_archive --help
 
 ```bash
 cp configs/train-logmel.example.json configs/train-logmel.local.json
+# 填好配置后，只读检查训练入口；不创建模型、解码或启动训练
+scripts/devctl run python -m deepfake_detection_archive train \
+  --config configs/train-logmel.local.json --check-config
 scripts/devctl run python -m deepfake_detection_archive train \
   --config configs/train-logmel.local.json
 
@@ -56,6 +59,8 @@ scripts/devctl run python -m deepfake_detection_archive evaluate \
 
 视频可训练冻结头或 ResNet18 末端主干，见[开发指南](docs/development.md#训练)。
 推理读取本地权重，不联网下载；有标签时再计算 EER。
+数据隔离关系与统计独立证据分别记录：AIME prompt 组仍整组隔离，但不能证明
+artist/原曲独立。缓存和推理恢复绑定实际预处理运行时，后端变化需重建缓存或新目录重评测。
 完整参数、训练输出、推理恢复及离线打包见[开发指南](docs/development.md)。
 
 ## 项目结构
