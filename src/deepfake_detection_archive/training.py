@@ -95,6 +95,8 @@ class TrainConfig:
 
 @dataclass(frozen=True)
 class TrainResult:
+    """Selected checkpoint; best_dev_eer always denotes its pooled dev EER."""
+
     best_checkpoint: Path
     checkpoint_sha256: str
     best_epoch: int
@@ -103,7 +105,9 @@ class TrainResult:
     stop_reason: Literal["max_epochs", "early_stopping", "time_limit"]
     history_path: Path
     run_path: Path
-    selection_gate_passed: bool = True
+    selection_gate_passed: bool
+    best_selection_metric: Literal["dev_eer", "domain_macro_eer"]
+    best_selection_value: float
 
 
 @dataclass(frozen=True)
@@ -441,10 +445,10 @@ def train_model(  # noqa: C901, PLR0913, PLR0912, PLR0915
     provenance: dict[str, Any],
     architecture: str | None = None,
     model_config: dict[str, Any] | None = None,
-    selection: Mapping[str, Any] | None = None,
+    selection: SelectionOptions | None = None,
     dev_domains: Sequence[str] | None = None,
 ) -> TrainResult:
-    """Train AdamW/BCE and restore the checkpoint with the lowest dev EER.
+    """Train AdamW/BCE and restore the checkpoint selected on development data.
 
     Summed per-sample losses are backpropagated; gradients are divided by the
     actual accumulation-window sample count, including uneven and tail batches.
@@ -453,7 +457,7 @@ def train_model(  # noqa: C901, PLR0913, PLR0912, PLR0915
     Provenance hashes must describe data, code and initial weights. The caller
     must enforce train/dev media-group separation before constructing loaders.
     `dev_domains` labels development samples in loader order for reporting and
-    optional gated selection; `selection` keeps an epoch eligible only when
+    optional gated selection; parsed `selection` keeps an epoch eligible only when
     every capped domain is at or below its EER cap, then picks the lowest
     domain-macro EER. Before the first eligible epoch the lowest-macro
     checkpoint is kept as an explicitly reported provisional fallback.
@@ -462,7 +466,7 @@ def train_model(  # noqa: C901, PLR0913, PLR0912, PLR0915
         not isinstance(domain, str) or not domain.strip() for domain in dev_domains
     ):
         raise ValueError("dev_domains must be nonempty label strings")
-    selection_options = SelectionOptions.from_options(selection)
+    selection_options = selection
     if selection_options is not None and dev_domains is None:
         raise ValueError("selection requires dev_domains")
     actual_architecture, actual_config = model_spec(model)
@@ -538,7 +542,11 @@ def train_model(  # noqa: C901, PLR0913, PLR0912, PLR0915
     }
     atomic_json(run_path, run)
     history: list[dict[str, Any]] = []
-    best_eer, best_epoch, stale = math.inf, 0, 0
+    best_selection_value, best_epoch, stale = math.inf, 0, 0
+    best_dev_eer = math.inf
+    best_selection_metric: Literal["dev_eer", "domain_macro_eer"] = (
+        "dev_eer" if selection_options is None else "domain_macro_eer"
+    )
     eligible_epoch, fallback_eer, fallback_epoch = 0, math.inf, 0
     checkpoint = output_dir / "best.pt"
     descriptor: dict[str, Any] = {}
@@ -573,11 +581,16 @@ def train_model(  # noqa: C901, PLR0913, PLR0912, PLR0915
                     name: stats["eer"] for name, stats in sorted(domain_metrics.items())
                 }
             if selection_options is None:
-                stale = 0 if dev_eer < best_eer - config.min_delta else stale + 1
-                row["selected"] = dev_eer < best_eer
+                stale = (
+                    0
+                    if dev_eer < best_selection_value - config.min_delta
+                    else stale + 1
+                )
+                row["selected"] = dev_eer < best_selection_value
                 if row["selected"]:
                     descriptor = save_checkpoint(checkpoint, model)
-                    best_eer, best_epoch = dev_eer, epoch
+                    best_selection_value, best_epoch = dev_eer, epoch
+                    best_dev_eer = dev_eer
             else:
                 if domain_metrics is None:  # defensive: dev_domains was supplied
                     raise ValueError(  # noqa: TRY301 -- defensive selection guard
@@ -594,13 +607,26 @@ def train_model(  # noqa: C901, PLR0913, PLR0912, PLR0915
                     if eligible_epoch == 0 and macro < fallback_eer:
                         fallback_eer, fallback_epoch = macro, epoch
                         descriptor = save_checkpoint(checkpoint, model)
-                        best_eer, best_epoch = macro, epoch
+                        best_selection_value, best_epoch = macro, epoch
+                        best_dev_eer = dev_eer
                 else:
-                    stale = 0 if macro < best_eer - config.min_delta else stale + 1
-                    row["selected"] = eligible_epoch == 0 or macro < best_eer
+                    stale = (
+                        0
+                        if eligible_epoch == 0
+                        or macro < best_selection_value - config.min_delta
+                        else stale + 1
+                    )
+                    row["selected"] = (
+                        eligible_epoch == 0 or macro < best_selection_value
+                    )
                     if row["selected"]:
                         descriptor = save_checkpoint(checkpoint, model)
-                        best_eer, best_epoch, eligible_epoch = macro, epoch, epoch
+                        best_selection_value, best_epoch, eligible_epoch = (
+                            macro,
+                            epoch,
+                            epoch,
+                        )
+                        best_dev_eer = dev_eer
             history.append(row)
             atomic_json(history_path, history)
             if stale >= config.patience:
@@ -618,7 +644,10 @@ def train_model(  # noqa: C901, PLR0913, PLR0912, PLR0915
         run.update(
             status="complete",
             best_epoch=best_epoch,
-            best_dev_eer=best_eer,
+            best_dev_eer=best_dev_eer,
+            best_selection_metric=best_selection_metric,
+            best_selection_value=best_selection_value,
+            selection_gate_passed=selection_options is None or eligible_epoch > 0,
             checkpoint=descriptor,
             stop_reason=stop_reason,
             epochs_completed=len(history),
@@ -650,10 +679,12 @@ def train_model(  # noqa: C901, PLR0913, PLR0912, PLR0915
         checkpoint,
         descriptor["sha256"],
         best_epoch,
-        best_eer,
+        best_dev_eer,
         len(history),
         stop_reason,
         history_path,
         run_path,
         selection_options is None or eligible_epoch > 0,
+        best_selection_metric,
+        best_selection_value,
     )

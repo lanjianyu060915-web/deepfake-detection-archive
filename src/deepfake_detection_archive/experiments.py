@@ -45,7 +45,7 @@ from .models.checkpoint import create_model, save_checkpoint, verify_sha256
 from .models.encoders import FrozenAudioEncoder
 from .models.finetune import VideoFrameClassifier
 from .tracking import atomic_json, canonical_json, code_identity, object_hash, utc_now
-from .training import TrainConfig, TrainResult, train_model
+from .training import SelectionOptions, TrainConfig, TrainResult, train_model
 
 
 @dataclass(frozen=True)
@@ -76,7 +76,7 @@ class ExperimentConfig:
     cache_max_bytes: int = 20 * 1024**3
     schema_version: int = 1
 
-    def __post_init__(self) -> None:  # noqa: C901, PLR0912, PLR0915 -- strict configuration schema
+    def __post_init__(self) -> None:  # noqa: C901, PLR0912 -- strict configuration schema
         if type(self.schema_version) is not int or self.schema_version != 1:
             raise ValueError("experiment schema_version must be 1")
         for name in ("manifest", "data_root", "sources", "output_dir"):
@@ -122,25 +122,7 @@ class ExperimentConfig:
             )
         if not isinstance(self.selection, dict):
             raise ValueError("selection must be an object")  # noqa: TRY004 -- schema
-        unknown_selection = set(self.selection) - {"metric", "max_bucket_eer"}
-        if unknown_selection:
-            raise ValueError(f"invalid selection options: {sorted(unknown_selection)}")
-        if self.selection and self.selection.get("metric") != "domain_macro_eer":
-            raise ValueError("selection.metric must be domain_macro_eer")
-        bucket_caps = self.selection.get("max_bucket_eer", {})
-        if not isinstance(bucket_caps, dict) or any(
-            not isinstance(name, str)
-            or not name.strip()
-            or type(value) is bool
-            or not isinstance(value, (int, float))
-            or not math.isfinite(float(value))
-            or not 0 < value <= 1
-            for name, value in bucket_caps.items()
-        ):
-            raise ValueError(
-                "selection.max_bucket_eer must map content types to "
-                "finite fractions in (0, 1]"
-            )
+        _ = self.selection_options
         if self.modality not in ("audio", "video"):
             raise ValueError("modality must be audio or video")
         for name in (
@@ -203,6 +185,10 @@ class ExperimentConfig:
             "audio_ast_v1",
         ) and audio.sample_rate != self.model_config.get("sample_rate", 16000):
             raise ValueError("audio and model sample rates must agree")
+
+    @cached_property
+    def selection_options(self) -> SelectionOptions | None:
+        return SelectionOptions.from_options(self.selection or None)
 
     @cached_property
     def bandwidth_spec(self) -> BandwidthSpec | None:
@@ -816,7 +802,7 @@ def run_experiment(config_path: Path) -> TrainResult:  # noqa: PLR0915 -- experi
             provenance=provenance,
             architecture=config.architecture,
             model_config=initial["config"],
-            selection=config.selection or None,
+            selection=config.selection_options,
             dev_domains=(
                 [record.content_type for record in selected if record.split == "dev"]
                 if config.selection
@@ -834,6 +820,8 @@ def run_experiment(config_path: Path) -> TrainResult:  # noqa: PLR0915 -- experi
             status="complete",
             best_epoch=result.best_epoch,
             best_dev_eer=result.best_dev_eer,
+            best_selection_metric=result.best_selection_metric,
+            best_selection_value=result.best_selection_value,
             checkpoint_sha256=result.checkpoint_sha256,
             checkpoint=str(result.best_checkpoint.relative_to(output)),
             selection_gate_passed=result.selection_gate_passed,

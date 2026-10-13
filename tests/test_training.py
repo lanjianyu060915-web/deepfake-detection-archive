@@ -12,7 +12,11 @@ from torch import Tensor
 
 from deepfake_detection_archive.models.checkpoint import load_checkpoint
 from deepfake_detection_archive.models.core import FeatureHead, HeadConfig
-from deepfake_detection_archive.training import TrainConfig, train_model
+from deepfake_detection_archive.training import (
+    SelectionOptions,
+    TrainConfig,
+    train_model,
+)
 
 
 PROVENANCE = dict.fromkeys(("data_sha256", "code_sha256", "weights_sha256"), "a" * 64)
@@ -357,8 +361,10 @@ def test_domain_gate_rejects_violations_then_selects_feasible_macro(
         _domain_stub(music=0.06, speech=0.01),
     ]
 
+    pooled = iter([0.2, 0.4, 0.6])
+
     def evaluate(*args: object) -> tuple[float, float, int, object]:
-        return 0.5, 0.5, 6, staged.pop(0)
+        return 0.5, next(pooled), 6, staged.pop(0)
 
     monkeypatch.setattr("deepfake_detection_archive.training._evaluate", evaluate)
     inputs, labels = batches()
@@ -369,12 +375,16 @@ def test_domain_gate_rejects_violations_then_selects_feasible_macro(
         config=TrainConfig(max_epochs=3, patience=3),
         output_dir=tmp_path,
         provenance=PROVENANCE,
-        selection={"metric": "domain_macro_eer", "max_bucket_eer": {"music": 0.1}},
+        selection=SelectionOptions.from_options(
+            {"metric": "domain_macro_eer", "max_bucket_eer": {"music": 0.1}}
+        ),
         dev_domains=["music"] * 3 + ["speech"] * 3,
     )
     assert result.selection_gate_passed is True
     assert result.best_epoch == 2
-    assert result.best_dev_eer == pytest.approx((0.05 + 0.01) / 2)
+    assert result.best_dev_eer == 0.4
+    assert result.best_selection_metric == "domain_macro_eer"
+    assert result.best_selection_value == pytest.approx((0.05 + 0.01) / 2)
     history = json.loads(result.history_path.read_text())
     assert [row["selection_eligible"] for row in history] == [False, True, True]
     assert history[0]["selection_violations"] == ["music"]
@@ -382,6 +392,10 @@ def test_domain_gate_rejects_violations_then_selects_feasible_macro(
     assert history[1]["dev_macro_eer"] == pytest.approx(0.03)
     assert history[1]["dev_domain_eer"] == {"music": 0.05, "speech": 0.01}
     metadata = json.loads(result.run_path.read_text())
+    assert metadata["best_dev_eer"] == 0.4
+    assert metadata["best_selection_metric"] == "domain_macro_eer"
+    assert metadata["best_selection_value"] == pytest.approx(0.03)
+    assert metadata["selection_gate_passed"] is True
     assert metadata["selection"]["gate_passed"] is True
     assert metadata["selection"]["fallback_epoch"] == 1
 
@@ -391,7 +405,7 @@ def test_infeasible_gate_keeps_lowest_macro_provisional_fallback(
 ) -> None:
     staged = [
         _domain_stub(music=0.30, speech=0.02),
-        _domain_stub(music=0.25, speech=0.02),
+        _domain_stub(music=0.25, speech=0.20),
     ]
 
     def evaluate(*args: object) -> tuple[float, float, int, object]:
@@ -406,16 +420,56 @@ def test_infeasible_gate_keeps_lowest_macro_provisional_fallback(
         config=TrainConfig(max_epochs=2, patience=2),
         output_dir=tmp_path,
         provenance=PROVENANCE,
-        selection={"metric": "domain_macro_eer", "max_bucket_eer": {"music": 0.1}},
+        selection=SelectionOptions.from_options(
+            {"metric": "domain_macro_eer", "max_bucket_eer": {"music": 0.1}}
+        ),
         dev_domains=["music"] * 3 + ["speech"] * 3,
     )
     assert result.selection_gate_passed is False
-    assert result.best_epoch == 2
+    assert result.best_epoch == 1
+    assert result.best_dev_eer == 0.5
+    assert result.best_selection_metric == "domain_macro_eer"
+    assert result.best_selection_value == pytest.approx(0.16)
     metadata = json.loads(result.run_path.read_text())
     assert metadata["selection"]["gate_passed"] is False
-    assert metadata["selection"]["fallback_epoch"] == 2
+    assert metadata["selection"]["fallback_epoch"] == 1
+    assert metadata["best_dev_eer"] == 0.5
+    assert metadata["best_selection_value"] == pytest.approx(0.16)
+    assert metadata["selection_gate_passed"] is False
     history = json.loads(result.history_path.read_text())
     assert [row["selected"] for row in history] == [False, False]
+
+
+def test_first_eligible_epoch_resets_patience_after_better_macro_fallback(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    staged = [
+        _domain_stub(music=0.11, speech=0.0),
+        _domain_stub(music=0.10, speech=0.90),
+        _domain_stub(music=0.09, speech=0.10),
+    ]
+
+    def evaluate(*args: object) -> tuple[float, float, int, object]:
+        return 0.5, 0.4, 6, staged.pop(0)
+
+    monkeypatch.setattr("deepfake_detection_archive.training._evaluate", evaluate)
+    result = train_model(
+        model(),
+        [batches()],
+        [batches()],
+        config=TrainConfig(max_epochs=3, patience=2),
+        output_dir=tmp_path,
+        provenance=PROVENANCE,
+        selection=SelectionOptions.from_options(
+            {"metric": "domain_macro_eer", "max_bucket_eer": {"music": 0.1}}
+        ),
+        dev_domains=["music"] * 3 + ["speech"] * 3,
+    )
+    assert result.epochs_completed == 3
+    assert result.best_epoch == 3
+    assert result.selection_gate_passed is True
+    assert result.best_dev_eer == 0.4
+    assert result.best_selection_value == pytest.approx(0.095)
 
 
 def test_unscorable_gate_bucket_fails_the_run(
@@ -434,10 +488,12 @@ def test_unscorable_gate_bucket_fails_the_run(
             config=TrainConfig(max_epochs=1),
             output_dir=tmp_path,
             provenance=PROVENANCE,
-            selection={
-                "metric": "domain_macro_eer",
-                "max_bucket_eer": {"environment": 0.1},
-            },
+            selection=SelectionOptions.from_options(
+                {
+                    "metric": "domain_macro_eer",
+                    "max_bucket_eer": {"environment": 0.1},
+                }
+            ),
             dev_domains=["music"] * 6,
         )
     assert json.loads((tmp_path / "run.json").read_text())["status"] == "failed"
@@ -508,7 +564,7 @@ def test_invalid_selection_is_rejected_before_training(
             config=TrainConfig(max_epochs=1),
             output_dir=tmp_path / "rejected",
             provenance=PROVENANCE,
-            selection=selection,
+            selection=SelectionOptions.from_options(selection),
             dev_domains=dev_domains,
         )
     assert not (tmp_path / "rejected").exists()

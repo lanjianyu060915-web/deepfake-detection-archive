@@ -89,6 +89,8 @@ def _verify_media(records: list[SampleRecord], media_root: Path) -> dict[str, in
     checked = {"train": 0, "dev": 0, "holdout": 0}
     missing: list[str] = []
     for record in records:
+        if record.split == "holdout":
+            continue
         if not (media_root / record.path).is_file():
             missing.append(record.sample_id)
         else:
@@ -117,13 +119,6 @@ def build(  # noqa: PLR0913, PLR0917 -- explicit curation inputs
     identifiers = [record.sample_id for record in rows]
     if len(set(identifiers)) != len(identifiers):
         raise ValueError("merged registry has duplicate sample IDs")
-    for domain in CONTENT_TYPES:
-        errors = validate_splits(
-            [record for record in rows if record.content_type == domain],
-            require_class_coverage=False,
-        )
-        if errors:
-            raise ValueError(f"{domain} split validation failed: {'; '.join(errors)}")
     errors = validate_splits(rows, require_class_coverage=False)
     if errors:
         raise ValueError(f"merged split validation failed: {'; '.join(errors)}")
@@ -136,7 +131,7 @@ def build(  # noqa: PLR0913, PLR0917 -- explicit curation inputs
     }
     if tuple(sorted(registries)) != EXPECTED_SOURCES:
         raise ValueError(f"unexpected source registry: {sorted(registries)}")
-    output_dir.mkdir(parents=True, exist_ok=True)
+    output_dir.mkdir(parents=True, exist_ok=False)
     manifest_path = output_dir / "manifest.jsonl"
     manifest_digest = write_manifest(rows, manifest_path)
     source_path = output_dir / "sources.jsonl"

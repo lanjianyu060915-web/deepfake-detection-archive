@@ -5,6 +5,7 @@ import shutil
 import socket
 import wave
 from collections import Counter
+from collections.abc import Mapping
 from dataclasses import replace
 from pathlib import Path
 from typing import Any
@@ -30,6 +31,7 @@ from deepfake_detection_archive.experiments import (
     run_experiment,
 )
 from deepfake_detection_archive.scoring import OfflineScorer
+from deepfake_detection_archive.training import SelectionOptions
 
 
 def test_video_frame_cache_reuses_tuple_preprocessing(
@@ -511,8 +513,17 @@ def test_repeated_epochs_verify_existing_cache_once(
 
 
 def test_gated_selection_reports_domain_metrics_and_gate_status(
-    experiment: Path,
+    experiment: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    parses = 0
+    original = SelectionOptions.from_options
+
+    def parse(options: Mapping[str, Any] | None) -> SelectionOptions | None:
+        nonlocal parses
+        parses += 1
+        return original(options)
+
+    monkeypatch.setattr(SelectionOptions, "from_options", parse)
     _change(
         experiment,
         output_dir="gated",
@@ -522,9 +533,14 @@ def test_gated_selection_reports_domain_metrics_and_gate_status(
         },
     )
     result = run_experiment(experiment)
+    assert parses == 1
     assert result.selection_gate_passed is True
     report = json.loads((experiment.parent / "gated" / "experiment.json").read_text())
     assert report["selection_gate_passed"] is True
+    assert report["best_dev_eer"] == result.best_dev_eer
+    assert report["best_selection_metric"] == result.best_selection_metric
+    assert report["best_selection_value"] == result.best_selection_value
+    assert result.best_selection_metric == "domain_macro_eer"
     history = json.loads(result.history_path.read_text())
     assert history[0]["dev_macro_eer"] == history[0]["dev_domain_eer"]["unknown"]
     evaluation = json.loads(
