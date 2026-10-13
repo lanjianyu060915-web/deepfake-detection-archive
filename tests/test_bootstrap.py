@@ -115,7 +115,9 @@ def test_class_coverage_gate_checks_groups_not_rows() -> None:
     assert result.insufficiency_reasons == ("insufficient_groups_per_class",)
 
 
-@pytest.mark.parametrize("group", ["", " ", "unknown", " UNKNOWN "])
+@pytest.mark.parametrize(
+    "group", ["", " ", "unknown", " UNKNOWN ", "aime-prompt:tags", " AIME-PROMPT:x "]
+)
 def test_unknown_group_identity_cannot_supply_promotion_evidence(group: str) -> None:
     with pytest.raises(ValueError, match=r"nonempty|known independent groups"):
         paired_group_bootstrap(

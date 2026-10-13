@@ -116,6 +116,13 @@ MusicGen Small/Medium、AudioLDM 2 Large、Riffusion、Mustango参与训练。
 `unseen.jsonl` 另保留dev/holdout各16条real和9条未训练路径fake；训练不读取该清单。
 这些真实音乐已包含在主清单，不能相加当作独立媒体数量。
 按三标签描述组合和已确认重复隔离；未知原曲、artist与album不当成已确认独立实体。
+`aime-prompt:` 只记录划分隔离关系；统计分组返回 `unknown`，仍可报告描述性EER，
+不能用描述组合数支持独立artist/原录音的bootstrap结论。音乐/语音派生物即使有已知
+speaker，音乐artist仍未知，因此包含该关系的整个连通组保持统计未知；未来补齐
+原曲/artist证据后需重新整理清单，不能凭speaker字段自动解除限制。
+新导出dev分数使用同一统计分组规则；直接评测旧分数时，原始 `aime-prompt:` 也不计为
+已知统计组，bootstrap拒绝此类输入。旧流程若已把prompt名称改写成样本ID，分数本身
+无法恢复语义，需用原始清单重新评测；不能直接沿用历史独立组计数或区间结论。
 
 扩展轮复用旧90个分片，新增29个，主清单train1,338/dev288/holdout288，
 预留音乐路径dev154条（48real/106fake）；旧697条已分配记录保持split，0冲突。
@@ -144,6 +151,10 @@ AI-OpenBMAT固定128对原始成品，按共同区间准备混合152段、纯音
 
 内部 `real=0`、`fake=1`；train 训练，dev 早停/选择，holdout 在候选冻结后验收。
 同一原媒体、派生、已知身份或确认重复组不跨 split。候选关系保留为候选，不据此捏造身份。
+`split` 保留原 `group_id`，不会以统计单元覆盖隔离关系。audit的 `group_count` 及
+覆盖桶 `groups` 是隔离连通组数；`known_statistical_groups` 与
+`unknown_statistical_samples` 单独报告统计证据。`counts_sufficient` 需各类至少
+50条、10个已知统计组且无统计未知样本，只是计数检查，不证明泛化、许可或媒体可用性。
 失败保留在库存及覆盖率分母。真实/生成执行对称采样和媒体处理，避免来源成为标签代理。
 
 | 来源 | 当前登记范围 | 材料 |

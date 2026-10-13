@@ -7,7 +7,7 @@ import random
 import tempfile
 import time
 from collections import Counter
-from dataclasses import asdict, dataclass, field, replace
+from dataclasses import asdict, dataclass, field
 from functools import cached_property
 from pathlib import Path
 from typing import Any, cast
@@ -20,7 +20,6 @@ from torch.utils.data import DataLoader, Dataset, WeightedRandomSampler
 from .augmentation import BandwidthSpec, bandlimit_roundtrip
 from .config import load_object
 from .contracts import ScoreRecord
-from .data.audit import audit_manifest
 from .data.manifest import (
     SampleRecord,
     SourceRecord,
@@ -29,7 +28,7 @@ from .data.manifest import (
     load_sources,
     manifest_hash,
 )
-from .data.split import validate_splits
+from .data.split import statistical_groups
 from .evaluation.report import evaluate_records, grouped_reports
 from .features import (
     Encoder,
@@ -44,6 +43,7 @@ from .models.ast import ASTClassifier
 from .models.checkpoint import create_model, save_checkpoint, verify_sha256
 from .models.encoders import FrozenAudioEncoder
 from .models.finetune import VideoFrameClassifier
+from .preflight import audit_training_data
 from .tracking import atomic_json, canonical_json, code_identity, object_hash, utc_now
 from .training import SelectionOptions, TrainConfig, TrainResult, train_model
 
@@ -399,6 +399,7 @@ def _write_dev_scores(
             logits = cast(Tensor, model(inputs.to(device, non_blocking=True)))
             values.extend(logits.float().cpu().tolist())
     seconds = time.monotonic() - started
+    groups = statistical_groups(records)
     scores = [
         ScoreRecord(
             sample_id=record.sample_id,
@@ -407,7 +408,7 @@ def _write_dev_scores(
             status="ok",
             elapsed_seconds=seconds / len(records),
             label=record.label,
-            group_id=record.group_id,
+            group_id=groups[record.sample_id],
             source=record.source,
             content_type=record.content_type,
             generator=record.generator,
@@ -439,36 +440,11 @@ def _audit_training_records(
     sources: dict[str, SourceRecord],
     output: Path,
 ) -> list[SampleRecord]:
-    # Inspect split metadata globally without reading or decoding holdout bytes.
-    errors = validate_splits(records, require_class_coverage=False)
-    selected = [
-        record
-        for record in records
-        if record.modality == config.modality and record.split in ("train", "dev")
-    ]
-    for split in ("train", "dev"):
-        if {record.label for record in selected if record.split == split} != {0, 1}:
-            errors.append(f"{split} requires both classes with known labels")
-    audit = audit_manifest(
-        [replace(record, split="unassigned") for record in selected],
-        root,
-        sources,
-        require_decoded=False,
-    )
-    atomic_json(
-        output / "audit.json",
-        {
-            "audit": audit.to_dict(),
-            "split_errors": errors,
-            "scope": (
-                "train/dev registry and bytes; full split metadata checked; "
-                "actual decoding or verified feature cache required by preparation"
-            ),
-        },
-    )
-    if errors or not audit.passed:
+    data = audit_training_data(records, config, root, sources)
+    atomic_json(output / "audit.json", data.to_dict())
+    if not data.passed:
         raise ValueError("experiment data audit failed; inspect audit.json")
-    return selected
+    return data.records
 
 
 def _prepare_cache(  # noqa: C901, PLR0912, PLR0913, PLR0915, PLR0917 -- cache and media batching

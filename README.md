@@ -56,6 +56,9 @@ scripts/devctl run python -m deepfake_detection_archive evaluate \
 
 视频可训练冻结头或 ResNet18 末端主干，见[开发指南](docs/development.md#训练)。
 推理读取本地权重，不联网下载；有标签时再计算 EER。
+数据隔离关系与统计独立证据分别记录：AIME prompt 组仍整组隔离，但不能证明
+artist/原曲独立。缓存按媒体、预处理配置及准备源码识别；推理恢复检查输入、模型、
+配置和代码身份。迁移环境后使用新输出目录重评测。
 完整参数、训练输出、推理恢复及离线打包见[开发指南](docs/development.md)。
 
 ## 项目结构

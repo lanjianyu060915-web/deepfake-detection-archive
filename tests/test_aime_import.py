@@ -18,7 +18,7 @@ from deepfake_detection_archive.data.manifest import (
     load_manifest,
     load_sources,
 )
-from deepfake_detection_archive.data.split import validate_splits
+from deepfake_detection_archive.data.split import statistical_groups, validate_splits
 
 
 MODULE: dict[str, Any] = runpy.run_path(
@@ -113,6 +113,13 @@ def test_prompt_isolation_and_reserved_generators(inputs: dict[str, Path]) -> No
     assert not (inputs["output"] / "sources.json").exists()
     assert summary["competition_approved"] is False
     assert summary["connected_groups"] == 12
+    assert summary["known_statistical_groups"] == 0
+    assert summary["grouping_evidence"] == {
+        "group_id": "prompt_label_combination",
+        "independent_artists": "unknown",
+        "independent_source_recordings": "unknown",
+    }
+    assert set(statistical_groups(inventory).values()) == {"unknown"}
     assert not (inputs["output"] / "raw").exists()
 
 

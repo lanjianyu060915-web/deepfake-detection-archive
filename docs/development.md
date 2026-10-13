@@ -39,6 +39,10 @@ scripts/devctl run python -m deepfake_detection_archive index \
 ```
 
 索引不推断标签或许可。补齐来源、标签及已知原媒体/派生/身份关系后，用 `split` 进行组级划分。
+划分连通组用于防止已知泄漏，不自动构成统计独立证据。AIME 的 `aime-prompt:` 只表示
+prompt 标签隔离，不能替代 artist/原曲关系；这些组及关联派生样本仍整组隔离，统计分组
+保留 `unknown`，不能据此做独立组置信区间或宣称跨 artist 泛化。补齐真实来源关系后
+应重新整理清单和评测，而不是把未知关系当作不同来源。
 已有可信 split 直接训练；需要独立完整解码报告时才运行 `audit --decode`，不重复预解码。
 训练会在准备张量时实际解码并记录失败。
 
@@ -52,6 +56,13 @@ cp configs/train-logmel.example.json configs/train-logmel.local.json
 scripts/devctl run python -m deepfake_detection_archive train \
   --config configs/train-logmel.local.json
 ```
+
+需要在 CPU 机器查看 CUDA 训练配置时，可单独使用 `train --check-config` 只读诊断：解析配置与模型参数，
+核验本地资源、train/dev 注册字节、来源登记、完整清单隔离关系、两类覆盖及受约束域覆盖。
+它不创建输出目录、加载模型、解码媒体或访问 holdout 媒体；CUDA 配置也可检查。
+通过只代表报告列出的静态条件成立；模型权重兼容性、实际解码、缓存张量、GPU 容量、
+磁盘写入能力仍不在其检查范围。数据检查失败返回2，详细问题在标准输出 JSON；
+配置/资源异常写入标准错误。这是可选诊断；正式训练使用同一个数据审计入口。
 
 | 方向 | 当前实现与模板 |
 | --- | --- |
@@ -67,6 +78,13 @@ CUDA 支持 BF16/FP16 AMP、梯度累积；新方法先用一次小 profile 确�
 `balanced_sampling` 仅用于 train 的类别平衡；同时开启 `balance_sources` 后，
 已存在的来源与类别组合等权抽样，避免小来源被淹没。它不改变 dev 选模指标；
 多来源实验需明确选模使用哪个 dev，并分别报告其他来源。
+三域训练使用 `selection.metric="domain_macro_eer"` 和
+`selection.max_bucket_eer`，域名来自清单的 `content_type`。
+每个受约束域必须有真假两类；先满足各域 EER 上限，再按各域宏平均选择 checkpoint。
+`best_dev_eer` 保留所选 epoch 的 pooled EER，另记 `best_selection_metric/value`。
+无合格 epoch 时保留最低 macro 的研究诊断权重，明确 `selection_gate_passed=false`；
+候选冻结时须据此判断资格。未配置selection时保持原 pooled EER选模。
+具体三域配置与结果边界见[联合训练实验](experiments/universal-audio-20261012/README.md)。
 `feature_batch_size` 控制冻结特征提取批量。
 `soundfile` 后端只用于原生目标采样率/单声道；通用媒体使用 FFmpeg。
 
@@ -93,6 +111,21 @@ AST 使用 `architecture="audio_ast_v1"`，`model_config.trainable_layers` 指�
 训练暂不支持 optimizer/RNG 续跑，中断后保留旧目录并在新目录重启。
 算法试验需要长时间运行时再补恢复功能；`infer --resume` 不恢复训练。
 
+### 无真实数据的 CPU 回归
+
+在已安装锁定依赖的独立 CPU 环境中，可离线跑合成媒体和小随机模型回归：
+
+```bash
+UV_PROJECT_ENVIRONMENT="$PWD/.venv-cpu" scripts/devctl run python -m pytest -q \
+  tests/test_experiments.py tests/test_offline_dual_branch.py
+UV_PROJECT_ENVIRONMENT="$PWD/.venv-cpu" scripts/devctl check
+```
+
+第一条覆盖 train/dev→缓存→小模型训练→checkpoint→离线评分、音视频包搬迁以及禁止
+隐式下载；完整检查还包含数据/分数契约、失败恢复、静态检查和构建。首次环境准备仍需
+锁定依赖及 CI 固定的 ASVspoof 参考文件；“离线回归”不代表空环境能离线安装。
+这些是执行契约测试，不是 #39/#40/#41 的真实训练、泛化或性能结果。
+
 ## 推理与 EER
 
 无标签媒体可直接 `predict --config MODEL_CONFIG --input DIR --output DIR`，
@@ -111,9 +144,29 @@ scripts/devctl run python -m deepfake_detection_archive evaluate \
 ```
 
 每样本输出一个连续分数或失败记录。分数越高越伪造，通常为 logit，不保证是概率。
+`infer` 和 `predict` 只要存在样本失败就返回退出码2，仍保留逐样本记录及汇总；
+全部成功返回0。恢复已有失败记录也返回2，不能把成功写出报告当作推理全部成功。
+命令返回 JSON 的 `elapsed_seconds` 包含本次配置/媒体预检、模型启动、推理和结果落盘；
+`predict` 还包含 CSV 导出。不含 Python 进程启动和最后的标准输出写入。
 EER 需要两类标签；失败计入覆盖率分母，不能把成功子集当作完整成绩。
 模型和输入不变时可加 `infer --resume`，变化时使用新目录。
 冻结后评估 holdout 使用 `--frozen-audit`，该参数记录声明，不能代替实际候选冻结。
+
+`report.json` 的 `timing.current_session_stage_seconds` 区分输入路径/SHA-256 校验、
+解码与 CPU 预处理（`decode_and_preprocess`）、编码器与分类模型前向/聚合/传输
+（`model_and_feature_scoring`）；模型内部的频谱等前端仍归入模型阶段。
+阶段范围串行且不嵌套，包含各自的 I/O；阶段统计是样本调用耗时的分解，不能再次与总调用耗时相加。
+未插桩调用和其余样本开销归入 `unattributed_sample_call`，
+`current_session_instrumented_rows` 给出实际有阶段计时的新样本数。
+runner 初始化、逐行持久写入和报告计算分别记录；runner 总耗时字段明确截止于报告写入前，
+命令级完整耗时看返回 JSON 的 `elapsed_seconds`。阶段均为主机墙钟，
+成功调用包含现有阻塞 CPU 特征/分数回传，不新增 CUDA 同步，也不是纯 GPU kernel 耗时；
+CUDA 调用异常时尚未完成的异步工作可能落在后续调用中。
+阶段统计只覆盖本次新增样本（含失败），旧行仅保留原有总耗时；已完成的 resume 不覆盖旧计时。
+本轮不迁移运行时指纹，缓存仍为v2，避免让既有AST filterbank整体重提取。
+实际媒体、预处理配置或准备源码变化仍按现有身份规则失效；本轮修改features/encoder
+源码涉及的视觉与SSL缓存仍会重新生成。推理resume继续检查输入、配置、模型和代码身份；
+迁移运行环境后的数值等价性未获保证，应在新目录评分，不能手改身份元数据。
 
 ## 压缩与重采样对照
 

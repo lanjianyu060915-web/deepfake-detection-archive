@@ -27,11 +27,61 @@ from deepfake_detection_archive.experiments import (
     _balanced_sampler,
     _prepare_cache,
     _save_tensor,
+    _write_dev_scores,
     load_experiment_config,
     run_experiment,
 )
 from deepfake_detection_archive.scoring import OfflineScorer
 from deepfake_detection_archive.training import SelectionOptions
+
+
+def test_dev_scores_resolve_group_evidence_before_domain_reports(
+    tmp_path: Path,
+) -> None:
+    records = [
+        SampleRecord(
+            "p0", "p0.wav", "audio", 0, "prompt", group_id="aime-prompt:music"
+        ),
+        SampleRecord(
+            "p1",
+            "p1.wav",
+            "audio",
+            1,
+            "prompt",
+            group_id="aime-prompt:music",
+            identity_id="mixed-speaker",
+        ),
+        SampleRecord(
+            "k0",
+            "k0.wav",
+            "audio",
+            0,
+            "registered",
+            group_id="known-uploader",
+            sha256="b" * 64,
+        ),
+        SampleRecord("k1", "k1.wav", "audio", 1, "registered", sha256="b" * 64),
+    ]
+    loader = torch.utils.data.DataLoader(
+        torch.utils.data.TensorDataset(
+            torch.tensor([0.1, 0.9, 0.2, 0.8]), torch.tensor([0, 1, 0, 1])
+        ),
+        batch_size=2,
+    )
+    _write_dev_scores(torch.nn.Identity(), loader, records, "cpu", tmp_path)
+    scores = load_scores(tmp_path / "dev-scores.jsonl")
+    assert {row.sample_id: row.group_id for row in scores} == {
+        "p0": "unknown",
+        "p1": "unknown",
+        "k0": "k0",
+        "k1": "k0",
+    }
+    assert records[0].group_id == "aime-prompt:music"
+    report = json.loads((tmp_path / "dev-evaluation.json").read_text())
+    assert report["evaluation"]["group_count"] == 1
+    assert report["evaluation"]["missing_group_count"] == 2
+    assert report["evaluation"]["fullset_eer"] == 0
+    assert report["by_content_type"]["unknown"]["group_count"] == 1
 
 
 def test_video_frame_cache_reuses_tuple_preprocessing(

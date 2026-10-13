@@ -162,7 +162,10 @@ def test_complete_success_and_unlabeled_rows() -> None:
     assert result.coverage == 1
 
 
-@pytest.mark.parametrize("group", [None, "", " ", "unknown", " UNKNOWN "])
+@pytest.mark.parametrize(
+    "group",
+    [None, "", " ", "unknown", " UNKNOWN ", "aime-prompt:tags", " AIME-PROMPT:x "],
+)
 def test_unknown_groups_are_missing_evidence(group: str | None) -> None:
     rows = [
         Record("real", 0, 0, group_id=group),

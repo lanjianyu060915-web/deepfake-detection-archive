@@ -16,47 +16,58 @@ from .media import (
     sample_audio_segments,
 )
 from .models.encoders import FrozenAudioEncoder, FrozenVisionEncoder
+from .timing import inference_stage
 
 
 Encoder = FrozenAudioEncoder | FrozenVisionEncoder
 
 
-def load_encoder(config: dict[str, Any], base_dir: Path, device: str) -> Encoder:
-    """Construct a frozen encoder from explicit local, hash-verified resources."""
+def validate_encoder_config(config: dict[str, Any]) -> None:
+    """Check the encoder boundary's schema without loading a backbone."""
     if config.get("kind") == "audio":
         if set(config) != {"kind", "model_dir", "expected_hashes"}:
             raise ValueError(
                 "audio encoder requires kind, model_dir and expected_hashes"
             )
-        if not isinstance(config["model_dir"], str) or not isinstance(
-            config["expected_hashes"], dict
+        if (
+            not isinstance(config["model_dir"], str)
+            or not config["model_dir"].strip()
+            or not isinstance(config["expected_hashes"], dict)
         ):
             raise ValueError("invalid audio encoder configuration")
-        encoder: Encoder = FrozenAudioEncoder(
-            base_dir / config["model_dir"], expected_hashes=config["expected_hashes"]
-        )
     elif config.get("kind") == "vision":
         if set(config) != {"kind", "architecture", "checkpoint", "expected_sha256"}:
             raise ValueError(
                 "vision encoder requires kind, architecture, checkpoint and expected_sha256"
             )
         if any(
-            not isinstance(config[name], str)
+            not isinstance(config[name], str) or not config[name].strip()
             for name in ("architecture", "checkpoint", "expected_sha256")
         ):
             raise ValueError("invalid vision encoder configuration")
+    else:
+        raise ValueError("encoder kind must be audio or vision")
+
+
+def load_encoder(config: dict[str, Any], base_dir: Path, device: str) -> Encoder:
+    """Construct a frozen encoder from explicit local, hash-verified resources."""
+    validate_encoder_config(config)
+    if config["kind"] == "audio":
+        encoder: Encoder = FrozenAudioEncoder(
+            base_dir / config["model_dir"], expected_hashes=config["expected_hashes"]
+        )
+    else:
         encoder = FrozenVisionEncoder(
             config["architecture"],
             base_dir / config["checkpoint"],
             expected_sha256=config["expected_sha256"],
         )
-    else:
-        raise ValueError("encoder kind must be audio or vision")
     encoder.to(device)
     encoder.eval()
     return encoder
 
 
+@inference_stage("input_validation")
 def media_path(record: SampleRecord, root: Path) -> Path:
     """Recheck containment and bytes at the consumption boundary."""
     resolved_root = root.resolve(strict=True)
@@ -138,42 +149,46 @@ def extract_features(  # noqa: PLR0913, PLR0917
     if type(batch_size) is not int or batch_size <= 0:
         raise ValueError("feature batch_size must be a positive integer")
     path = media_path(record, root)
-    if record.modality == "audio":
-        if not isinstance(encoder, FrozenAudioEncoder):
-            raise ValueError("audio media requires an audio encoder")
-        audio = decode_audio(path, audio_config)
-        inputs = torch.from_numpy(
-            sample_audio_segments(audio.waveform, segment_samples, segments)
-        )
-    else:
-        if not isinstance(encoder, FrozenVisionEncoder):
-            raise ValueError("video media requires a vision encoder")
-        size = tuple(encoder.preprocessing["input_size"])
-        if size != (3, video_config.height, video_config.width):
-            raise ValueError("video dimensions must match encoder input_size")
-        video = decode_video(path, video_config)
-        inputs = torch.from_numpy(video.frames).permute(0, 3, 1, 2).float().div_(255)
-        mean = inputs.new_tensor(encoder.preprocessing["mean"])[None, :, None, None]
-        std = inputs.new_tensor(encoder.preprocessing["std"])[None, :, None, None]
-        inputs = (inputs - mean) / std
-    encoder.eval()
-    result: list[Tensor] = []
-    with torch.inference_mode():
-        for batch in inputs.split(batch_size):  # type: ignore[no-untyped-call]
-            if isinstance(encoder, FrozenAudioEncoder):
-                features = encoder(
-                    batch.to(device), sample_rate=audio_config.sample_rate
-                )
-            else:
-                features = encoder(batch.to(device))
-            if (
-                features.ndim != 2
-                or features.shape[0] != batch.shape[0]
-                or not bool(torch.isfinite(features).all())
-            ):
-                raise ValueError("encoder returned invalid feature shape or values")
-            result.append(features.cpu().float())
-    return torch.cat(result)
+    with inference_stage("decode_and_preprocess"):
+        if record.modality == "audio":
+            if not isinstance(encoder, FrozenAudioEncoder):
+                raise ValueError("audio media requires an audio encoder")
+            audio = decode_audio(path, audio_config)
+            inputs = torch.from_numpy(
+                sample_audio_segments(audio.waveform, segment_samples, segments)
+            )
+        else:
+            if not isinstance(encoder, FrozenVisionEncoder):
+                raise ValueError("video media requires a vision encoder")
+            size = tuple(encoder.preprocessing["input_size"])
+            if size != (3, video_config.height, video_config.width):
+                raise ValueError("video dimensions must match encoder input_size")
+            video = decode_video(path, video_config)
+            inputs = (
+                torch.from_numpy(video.frames).permute(0, 3, 1, 2).float().div_(255)
+            )
+            mean = inputs.new_tensor(encoder.preprocessing["mean"])[None, :, None, None]
+            std = inputs.new_tensor(encoder.preprocessing["std"])[None, :, None, None]
+            inputs = (inputs - mean) / std
+    with inference_stage("model_and_feature_scoring"):
+        encoder.eval()
+        result: list[Tensor] = []
+        with torch.inference_mode():
+            for batch in inputs.split(batch_size):  # type: ignore[no-untyped-call]
+                if isinstance(encoder, FrozenAudioEncoder):
+                    features = encoder(
+                        batch.to(device), sample_rate=audio_config.sample_rate
+                    )
+                else:
+                    features = encoder(batch.to(device))
+                if (
+                    features.ndim != 2
+                    or features.shape[0] != batch.shape[0]
+                    or not bool(torch.isfinite(features).all())
+                ):
+                    raise ValueError("encoder returned invalid feature shape or values")
+                result.append(features.cpu().float())
+        return torch.cat(result)
 
 
 def extract_video_frames(
@@ -193,11 +208,13 @@ def extract_video_frames(
     size = tuple(preprocessing["input_size"])
     if size != (3, video_config.height, video_config.width):
         raise ValueError("video dimensions must match the backbone input_size")
-    video = decode_video(media_path(record, root), video_config)
-    frames = torch.from_numpy(video.frames).permute(0, 3, 1, 2).float().div_(255)
-    mean = frames.new_tensor(preprocessing["mean"])[None, :, None, None]
-    std = frames.new_tensor(preprocessing["std"])[None, :, None, None]
-    result: Tensor = (frames - mean) / std
-    if result.ndim != 4 or not bool(torch.isfinite(result).all()):
-        raise ValueError("decoded frames must be finite [frames, 3, height, width]")
-    return result.contiguous()
+    path = media_path(record, root)
+    with inference_stage("decode_and_preprocess"):
+        video = decode_video(path, video_config)
+        frames = torch.from_numpy(video.frames).permute(0, 3, 1, 2).float().div_(255)
+        mean = frames.new_tensor(preprocessing["mean"])[None, :, None, None]
+        std = frames.new_tensor(preprocessing["std"])[None, :, None, None]
+        result: Tensor = (frames - mean) / std
+        if result.ndim != 4 or not bool(torch.isfinite(result).all()):
+            raise ValueError("decoded frames must be finite [frames, 3, height, width]")
+        return result.contiguous()

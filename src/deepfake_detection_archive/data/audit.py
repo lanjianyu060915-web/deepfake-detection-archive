@@ -8,7 +8,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 
 from .manifest import UNKNOWN, SampleRecord, SourceRecord, file_sha256, manifest_hash
-from .split import connected_groups, validate_splits
+from .split import connected_groups, statistical_groups, validate_splits
 
 
 @dataclass(frozen=True)
@@ -25,6 +25,8 @@ class AuditReport:
     total_samples: int
     total_bytes: int
     group_count: int
+    known_statistical_groups: int
+    unknown_statistical_samples: int
     trainable_ids: tuple[str, ...]
     issues: tuple[AuditIssue, ...]
     counts: dict[str, dict[str, int]]
@@ -127,7 +129,7 @@ def _hash_conflicts(actual_hashes: dict[str, list[SampleRecord]]) -> list[AuditI
 
 
 def _coverage(
-    records: list[SampleRecord], groups: dict[str, str]
+    records: list[SampleRecord], groups: dict[str, str], statistical: dict[str, str]
 ) -> dict[str, dict[str, object]]:
     coverage: dict[str, dict[str, object]] = {}
     for modality in ("audio", "video"):
@@ -144,20 +146,33 @@ def _coverage(
                 if r.modality == modality and r.content_type == content_type
             ]
             bucket_groups = {groups[r.sample_id] for r in bucket}
+            known = [r for r in bucket if statistical[r.sample_id] != UNKNOWN]
             label_counts = Counter(r.label for r in bucket)
             per_label_groups = {
-                label: len({groups[r.sample_id] for r in bucket if r.label == label})
+                label: len(
+                    {statistical[r.sample_id] for r in known if r.label == label}
+                )
                 for label in (0, 1)
             }
             status = "unverified" if content_type == UNKNOWN or not bucket else "sparse"
-            if content_type != UNKNOWN and all(
-                label_counts[label] >= 50 and per_label_groups[label] >= 10
-                for label in (0, 1)
+            if (
+                content_type != UNKNOWN
+                and len(known) == len(bucket)
+                and all(
+                    label_counts[label] >= 50 and per_label_groups[label] >= 10
+                    for label in (0, 1)
+                )
             ):
                 status = "counts_sufficient"
             coverage[f"{modality}/{content_type}"] = {
                 "samples": len(bucket),
                 "groups": len(bucket_groups),
+                "known_statistical_groups": len(
+                    {statistical[r.sample_id] for r in known}
+                ),
+                "unknown_statistical_samples": len(bucket) - len(known),
+                "real_statistical_groups": per_label_groups[0],
+                "fake_statistical_groups": per_label_groups[1],
                 "real": label_counts[0],
                 "fake": label_counts[1],
                 "unknown_label": label_counts[None],
@@ -185,6 +200,7 @@ def audit_manifest(
     Coverage counts alone do not certify generalization or statistical sufficiency.
     """
     groups = connected_groups(records, duplicate_pairs)
+    statistical = statistical_groups(records, duplicate_pairs)
     root = root.resolve()
     issues: list[AuditIssue] = []
     total_bytes = 0
@@ -232,10 +248,12 @@ def audit_manifest(
         len(records),
         total_bytes,
         len(set(groups.values())),
+        len(set(statistical.values()) - {UNKNOWN}),
+        sum(group == UNKNOWN for group in statistical.values()),
         tuple(sorted(item for item in trainable if item not in invalid)),
         tuple(issues),
         counts,
-        _coverage(records, groups),
+        _coverage(records, groups, statistical),
     )
 
 

@@ -30,6 +30,7 @@ from .models import (
 )
 from .models.ast import ASTClassifier
 from .models.core import PoolingMethod
+from .timing import inference_stage
 
 
 def resolve_path(base: Path, value: str) -> Path:
@@ -121,8 +122,9 @@ class OfflineScorer:
             frames = extract_video_frames(
                 record, self.root, self.video, self.frame_preprocessing
             )
-            frame_result: Tensor = self.model(frames[None, ...].to(self.device))
-            return float(frame_result[0].float().cpu())
+            with inference_stage("model_and_feature_scoring"):
+                frame_result: Tensor = self.model(frames[None, ...].to(self.device))
+                return float(frame_result[0].float().cpu())
         if self.encoder is not None:
             features = extract_features(
                 record,
@@ -135,31 +137,35 @@ class OfflineScorer:
                 str(self.device),
                 self.config.batch_size,
             )
-            result: Tensor = self.model(features[None, ...].to(self.device))
-            return float(result[0].float().cpu())
-        decoded = decode_audio(media_path(record, self.root), self.audio)
-        if isinstance(self.model, ASTClassifier):
-            observations = self.model.prepare_audio(
-                decoded.waveform,
-                self.config.segment_samples,
-                self.config.segments,
-            )
-        else:
-            observations = torch.from_numpy(
-                sample_audio_segments(
+            with inference_stage("model_and_feature_scoring"):
+                result: Tensor = self.model(features[None, ...].to(self.device))
+                return float(result[0].float().cpu())
+        path = media_path(record, self.root)
+        with inference_stage("decode_and_preprocess"):
+            decoded = decode_audio(path, self.audio)
+            if isinstance(self.model, ASTClassifier):
+                observations = self.model.prepare_audio(
                     decoded.waveform,
                     self.config.segment_samples,
                     self.config.segments,
                 )
+            else:
+                observations = torch.from_numpy(
+                    sample_audio_segments(
+                        decoded.waveform,
+                        self.config.segment_samples,
+                        self.config.segments,
+                    )
+                )
+        with inference_stage("model_and_feature_scoring"):
+            scores = [
+                self.model(
+                    observations[start : start + self.config.batch_size].to(self.device)
+                ).float()
+                for start in range(0, len(observations), self.config.batch_size)
+            ]
+            pooled = pool_media_scores(
+                torch.cat(scores)[None, :],
+                method=cast(PoolingMethod, self.config.aggregation),
             )
-        scores = [
-            self.model(
-                observations[start : start + self.config.batch_size].to(self.device)
-            ).float()
-            for start in range(0, len(observations), self.config.batch_size)
-        ]
-        pooled = pool_media_scores(
-            torch.cat(scores)[None, :],
-            method=cast(PoolingMethod, self.config.aggregation),
-        )
-        return float(pooled[0].cpu())
+            return float(pooled[0].cpu())

@@ -143,6 +143,74 @@ def test_split_preserves_unknown_statistical_group_ids(tmp_path: Path) -> None:
     )
 
 
+def test_split_preserves_prompt_relations_without_claiming_independence(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    samples = [
+        SampleRecord(
+            f"{label}-{index}",
+            f"{label}-{index}.wav",
+            "audio",
+            label,
+            "fixture",
+            group_id=f"aime-prompt:{index}",
+        )
+        for label in (0, 1)
+        for index in range(4)
+    ]
+    write_manifest(samples, tmp_path / "input.jsonl")
+    assert (
+        cli.main(
+            [
+                "split",
+                "--manifest",
+                str(tmp_path / "input.jsonl"),
+                "--output",
+                str(tmp_path / "split.jsonl"),
+            ]
+        )
+        == 0
+    )
+    summary = json.loads(capsys.readouterr().out)
+    assigned = load_manifest(tmp_path / "split.jsonl")
+    assert {r.sample_id: r.group_id for r in assigned} == {
+        r.sample_id: r.group_id for r in samples
+    }
+    assert summary["leakage_components"] == 4
+    assert summary["known_statistical_groups"] == 0
+    for index in range(4):
+        assert (
+            len({r.split for r in assigned if r.group_id == f"aime-prompt:{index}"})
+            == 1
+        )
+
+
+def test_evaluate_prompt_manifest_keeps_eer_but_not_independence_claims(
+    tmp_path: Path,
+) -> None:
+    samples = [replace(r, group_id="aime-prompt:shared") for r in records()]
+    write_manifest(samples, tmp_path / "manifest.jsonl")
+    write_scores(tmp_path / "scores.jsonl", samples)
+    assert (
+        cli.main(
+            [
+                "evaluate",
+                "--scores",
+                str(tmp_path / "scores.jsonl"),
+                "--manifest",
+                str(tmp_path / "manifest.jsonl"),
+                "--output",
+                str(tmp_path / "report.json"),
+            ]
+        )
+        == 0
+    )
+    report = json.loads((tmp_path / "report.json").read_text())
+    assert report["group_count"] == 0
+    assert report["missing_group_count"] == 2
+    assert report["fullset_eer"] == 0
+
+
 def infer_config(tmp_path: Path) -> Path:
     write_manifest(records(), tmp_path / "manifest.jsonl")
     path = tmp_path / "infer.json"
@@ -193,7 +261,9 @@ def test_infer_resume_binds_actual_media_snapshot(
     (tmp_path / "r.wav").write_bytes(b"initial-real")
     if mutation != "created":
         (tmp_path / "f.wav").write_bytes(b"initial-fake")
-    assert cli.main(["infer", "--config", str(config)]) == 0
+    assert cli.main(["infer", "--config", str(config)]) == (
+        2 if mutation == "created" else 0
+    )
     assert mocked_scorer == ["f", "r"]
     original = (tmp_path / "run/scores.jsonl").read_bytes()
     metadata = json.loads((tmp_path / "run/metadata.json").read_text())
@@ -337,6 +407,7 @@ def test_predict_exports_successes_with_failure_accounting_and_resumes(
     assert cli.main(command) == 2
     result = json.loads(capsys.readouterr().out)
     assert result["scores_csv"] == str(output / "scores.csv")
+    assert result["elapsed_seconds"] > 0
     with (output / "scores.csv").open(newline="") as stream:
         rows = list(csv.DictReader(stream))
     saved = [
@@ -368,17 +439,26 @@ def test_predict_exports_successes_with_failure_accounting_and_resumes(
 
 
 @pytest.mark.parametrize("kind", ["memory", "cuda_oom"])
-def test_predict_fatal_failure_aborts_without_completed_artifacts(
+@pytest.mark.parametrize("entrypoint", ["infer", "predict"])
+@pytest.mark.usefixtures("mocked_scorer")
+def test_inference_fatal_failure_aborts_without_completed_artifacts(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
-    mocked_scorer: list[str],
     capsys: pytest.CaptureFixture[str],
     kind: str,
+    entrypoint: str,
 ) -> None:
     torch = pytest.importorskip("torch")
     config = infer_config(tmp_path)
     for name in ("a.wav", "b.wav", "c.wav"):
         (tmp_path / name).write_bytes(b"media")
+    write_manifest(
+        [
+            SampleRecord(name, name, "audio", None, "fixture")
+            for name in ("a.wav", "b.wav", "c.wav")
+        ],
+        tmp_path / "manifest.jsonl",
+    )
     called: list[str] = []
 
     class FatalScorer:
@@ -396,23 +476,46 @@ def test_predict_fatal_failure_aborts_without_completed_artifacts(
     monkeypatch.setattr(
         sys.modules["deepfake_detection_archive.scoring"], "OfflineScorer", FatalScorer
     )
-    output = tmp_path / "prediction"
-    assert (
-        cli.main(
-            [
-                "predict",
-                "--config",
-                str(config),
-                "--input",
-                str(tmp_path),
-                "--output",
-                str(output),
-            ]
-        )
-        == 2
-    )
+    output = tmp_path / ("prediction" if entrypoint == "predict" else "run")
+    command = [entrypoint, "--config", str(config)]
+    if entrypoint == "predict":
+        command.extend(["--input", str(tmp_path), "--output", str(output)])
+    assert cli.main(command) == 2
     assert "exhausted" in capsys.readouterr().err
     assert called == ["a.wav", "b.wav"]
     assert len((output / "scores.jsonl").read_text().splitlines()) == 1
     assert not (output / "report.json").exists()
     assert not (output / "scores.csv").exists()
+
+
+@pytest.mark.parametrize("missing", [0, 1, 2])
+def test_infer_failure_exit_preserves_scores_and_report_on_resume(
+    tmp_path: Path,
+    mocked_scorer: list[str],
+    capsys: pytest.CaptureFixture[str],
+    missing: int,
+) -> None:
+    config = infer_config(tmp_path)
+    for sample in records()[missing:]:
+        (tmp_path / sample.path).write_bytes(b"media")
+    command = ["infer", "--config", str(config)]
+    expected_exit = 2 if missing else 0
+    assert cli.main(command) == expected_exit
+    result = json.loads(capsys.readouterr().out)
+    assert result["samples"] == 2
+    assert result["failures"] == missing
+    assert result["elapsed_seconds"] > 0
+    output = tmp_path / "run"
+    original = (output / "scores.jsonl").read_bytes()
+    scores = [json.loads(line) for line in original.splitlines()]
+    assert len(scores) == 2
+    assert sum(row["status"] == "error" for row in scores) == missing
+    assert all(row["score"] is None for row in scores if row["status"] == "error")
+    report = json.loads((output / "report.json").read_text())
+    assert report["failure_count"] == missing
+    if missing:
+        assert report["fullset_eer"] is None
+    assert cli.main([*command, "--resume"]) == expected_exit
+    assert json.loads(capsys.readouterr().out)["failures"] == missing
+    assert len(mocked_scorer) == 2
+    assert (output / "scores.jsonl").read_bytes() == original

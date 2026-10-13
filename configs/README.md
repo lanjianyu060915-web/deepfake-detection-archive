@@ -22,6 +22,11 @@ scripts/devctl run python -m deepfake_detection_archive train \
   --config configs/train-logmel.local.json
 ```
 
+CPU机器需要在启动前查看CUDA配置时，可单独运行
+`train --config ... --check-config`。它复用实际训练的配置与train/dev审计，只读本地数据、
+资源元数据和权重哈希，不分配模型、解码、下载或创建输出；holdout只检查划分元数据。
+这一步是可选诊断，不是每轮训练前的额外门槛。详细范围见[开发指南](../docs/development.md#训练)。
+
 训练使用 train/dev，dev 用于早停；holdout 不参与训练或模型选择。每次训练使用新的输出目录。
 模板默认 CUDA 与 AMP，batch 和累积步数仅作起点，按当前 GPU 的实际 profile 调整。
 CPU 调试需同时设置 `device="cpu"` 和 `amp=false`。
