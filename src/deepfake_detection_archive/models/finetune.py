@@ -27,6 +27,7 @@ class VideoFrameConfig:
     aggregation: PoolingMethod = "mean"
     trim_fraction: float = 0.1
     trainable_prefix: str = "layer4"
+    temporal_kernel_size: int = 1
 
     def __post_init__(self) -> None:
         if not isinstance(self.architecture, str) or not self.architecture.strip():
@@ -46,6 +47,10 @@ class VideoFrameConfig:
             raise ValueError("trainable_prefix must be a nonempty module name")
         if type(self.hidden_dim) is not int or self.hidden_dim <= 0:
             raise ValueError("hidden_dim must be a positive integer")
+        if type(
+            self.temporal_kernel_size
+        ) is not int or self.temporal_kernel_size not in (1, 3):
+            raise ValueError("temporal_kernel_size must be 1 or 3")
         if not 0 <= self.dropout < 1:
             raise ValueError("dropout must lie in [0, 1)")
         if self.aggregation not in ("mean", "median", "logsumexp", "trimmed_mean"):
@@ -54,13 +59,32 @@ class VideoFrameConfig:
             raise ValueError("trim_fraction must lie in [0, 0.5)")
 
 
+class TemporalHead(nn.Module):
+    """Contextual frame logits from chronological [batch, frames, features]."""
+
+    def __init__(self, feature_dim: int, hidden_dim: int, dropout: float) -> None:
+        super().__init__()
+        self.norm = nn.LayerNorm(feature_dim)
+        self.layers = nn.Sequential(
+            nn.Conv1d(feature_dim, hidden_dim, kernel_size=3, padding=1),
+            nn.GELU(),
+            nn.Dropout(dropout),
+            nn.Conv1d(hidden_dim, 1, kernel_size=1),
+        )
+
+    def forward(self, features: Tensor) -> Tensor:
+        normalized = self.norm(features).transpose(1, 2)
+        logits: Tensor = self.layers(normalized).squeeze(1)
+        return logits
+
+
 class VideoFrameClassifier(nn.Module):
     """Media-level fake logit from a partially fine-tuned frame backbone.
 
     The forward pass accepts an already preprocessed frame batch with shape
     [batch, frames, 3, height, width] and returns one logit per media. Frames
-    are encoded independently and aggregated by the registered pooling method,
-    so the model never depends on frame order beyond that aggregation. Callers
+    are encoded independently. The default head pools independent frame logits;
+    the optional temporal head uses neighboring frames before pooling. Callers
     that need bounded scores may apply a sigmoid to the media logit.
     """
 
@@ -74,13 +98,14 @@ class VideoFrameClassifier(nn.Module):
         )
         if not hasattr(self.backbone, config.trainable_prefix):
             raise ValueError("trainable_prefix is not a backbone submodule")
-        self.head = FeatureHead(
-            HeadConfig(
-                int(cast(int, self.backbone.num_features)),
-                config.hidden_dim,
-                config.dropout,
+        feature_dim = int(cast(int, self.backbone.num_features))
+        self.head: FeatureHead | TemporalHead
+        if config.temporal_kernel_size == 1:
+            self.head = FeatureHead(
+                HeadConfig(feature_dim, config.hidden_dim, config.dropout)
             )
-        )
+        else:
+            self.head = TemporalHead(feature_dim, config.hidden_dim, config.dropout)
         self.preprocessing: dict[str, Any] = resolve_model_data_config(  # type: ignore[no-untyped-call]
             self.backbone
         )
@@ -139,7 +164,10 @@ class VideoFrameClassifier(nn.Module):
             raise ValueError("images must contain finite floating-point values")
         batch, frames = images.shape[0], images.shape[1]
         flattened = images.reshape(batch * frames, *images.shape[2:])
-        logits = self.head.forward(self.backbone(flattened)).reshape(batch, frames)
+        features = self.backbone(flattened)
+        if self.config.temporal_kernel_size == 3:
+            features = features.reshape(batch, frames, -1)
+        logits = self.head.forward(features).reshape(batch, frames)
         return pool_media_scores(
             logits, None, self.config.aggregation, self.config.trim_fraction
         )
