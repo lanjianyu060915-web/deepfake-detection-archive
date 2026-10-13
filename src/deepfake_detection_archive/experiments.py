@@ -1,6 +1,7 @@
 """Audited train/dev experiments backed by content-bound local tensor caches."""
 
 import json
+import math
 import os
 import random
 import tempfile
@@ -29,7 +30,7 @@ from .data.manifest import (
     manifest_hash,
 )
 from .data.split import validate_splits
-from .evaluation.report import evaluate_records
+from .evaluation.report import evaluate_records, grouped_reports
 from .features import (
     Encoder,
     extract_audio_feature_batch,
@@ -62,6 +63,8 @@ class ExperimentConfig:
     num_workers: int = 0
     balanced_sampling: bool = False
     balance_sources: bool = False
+    content_type_weights: dict[str, float] = field(default_factory=dict)
+    selection: dict[str, Any] = field(default_factory=dict)
     segment_samples: int = 64600
     segments: int = 1
     audio: dict[str, Any] = field(default_factory=dict)
@@ -73,7 +76,7 @@ class ExperimentConfig:
     cache_max_bytes: int = 20 * 1024**3
     schema_version: int = 1
 
-    def __post_init__(self) -> None:  # noqa: C901, PLR0912 -- strict configuration schema
+    def __post_init__(self) -> None:  # noqa: C901, PLR0912, PLR0915 -- strict configuration schema
         if type(self.schema_version) is not int or self.schema_version != 1:
             raise ValueError("experiment schema_version must be 1")
         for name in ("manifest", "data_root", "sources", "output_dir"):
@@ -99,6 +102,45 @@ class ExperimentConfig:
             raise ValueError("balance_sources must be boolean")
         if self.balance_sources and not self.balanced_sampling:
             raise ValueError("balance_sources requires balanced_sampling")
+        if not isinstance(self.content_type_weights, dict) or any(
+            not isinstance(name, str)
+            or not name.strip()
+            or type(value) is bool
+            or not isinstance(value, (int, float))
+            or not math.isfinite(float(value))
+            or value <= 0
+            for name, value in self.content_type_weights.items()
+        ):
+            raise ValueError(
+                "content_type_weights must map content types to finite positive numbers"
+            )
+        if self.content_type_weights and not (
+            self.balanced_sampling and self.balance_sources
+        ):
+            raise ValueError(
+                "content_type_weights requires balanced_sampling and balance_sources"
+            )
+        if not isinstance(self.selection, dict):
+            raise ValueError("selection must be an object")  # noqa: TRY004 -- schema
+        unknown_selection = set(self.selection) - {"metric", "max_bucket_eer"}
+        if unknown_selection:
+            raise ValueError(f"invalid selection options: {sorted(unknown_selection)}")
+        if self.selection and self.selection.get("metric") != "domain_macro_eer":
+            raise ValueError("selection.metric must be domain_macro_eer")
+        bucket_caps = self.selection.get("max_bucket_eer", {})
+        if not isinstance(bucket_caps, dict) or any(
+            not isinstance(name, str)
+            or not name.strip()
+            or type(value) is bool
+            or not isinstance(value, (int, float))
+            or not math.isfinite(float(value))
+            or not 0 < value <= 1
+            for name, value in bucket_caps.items()
+        ):
+            raise ValueError(
+                "selection.max_bucket_eer must map content types to "
+                "finite fractions in (0, 1]"
+            )
         if self.modality not in ("audio", "video"):
             raise ValueError("modality must be audio or video")
         for name in (
@@ -316,7 +358,16 @@ def _balanced_sampler(
     entries: list[tuple[Path, str, int]],
     generator: torch.Generator,
     sources: list[str] | None = None,
+    content_types: list[str] | None = None,
+    content_type_weights: dict[str, float] | None = None,
 ) -> WeightedRandomSampler:
+    """Balance declared groups, optionally scaling whole content domains.
+
+    Every (source, label) or label group receives an equal share unless
+    content-type weights multiply the per-entry weight. Unlisted content types
+    keep weight 1.0; classes inside a weighted domain stay balanced because the
+    domain factor is constant across its groups.
+    """
     keys = (
         [
             (source, label)
@@ -327,6 +378,20 @@ def _balanced_sampler(
     )
     counts = Counter(keys)
     weights = [1.0 / counts[key] for key in keys]
+    if content_type_weights:
+        if content_types is None or len(content_types) != len(entries):
+            raise ValueError("content_type_weights requires one content type per entry")
+        if any(not isinstance(name, str) or not name.strip() for name in content_types):
+            raise ValueError("content_type_weights requires labeled content types")
+        absent = set(content_type_weights) - set(content_types)
+        if absent:
+            raise ValueError(
+                f"content_type_weights names absent content types: {sorted(absent)}"
+            )
+        weights = [
+            weight * content_type_weights.get(content_type, 1.0)
+            for weight, content_type in zip(weights, content_types, strict=True)
+        ]
     return WeightedRandomSampler(
         weights, len(entries), replacement=True, generator=generator
     )
@@ -373,6 +438,10 @@ def _write_dev_scores(
             "scope": "selected checkpoint on prepared dev tensors; decoding excluded",
             "seconds": seconds,
             "evaluation": asdict(evaluate_records(scores)),
+            "by_content_type": {
+                name: asdict(report)
+                for name, report in grouped_reports(scores, "content_type").items()
+            },
         },
     )
 
@@ -694,6 +763,16 @@ def run_experiment(config_path: Path) -> TrainResult:  # noqa: PLR0915 -- experi
                 [record.source for record in selected if record.split == "train"]
                 if config.balance_sources
                 else None,
+                content_types=(
+                    [
+                        record.content_type
+                        for record in selected
+                        if record.split == "train"
+                    ]
+                    if config.content_type_weights
+                    else None
+                ),
+                content_type_weights=config.content_type_weights or None,
             )
             if config.balanced_sampling
             else None
@@ -737,6 +816,12 @@ def run_experiment(config_path: Path) -> TrainResult:  # noqa: PLR0915 -- experi
             provenance=provenance,
             architecture=config.architecture,
             model_config=initial["config"],
+            selection=config.selection or None,
+            dev_domains=(
+                [record.content_type for record in selected if record.split == "dev"]
+                if config.selection
+                else None
+            ),
         )
         _write_dev_scores(
             model,
@@ -751,6 +836,7 @@ def run_experiment(config_path: Path) -> TrainResult:  # noqa: PLR0915 -- experi
             best_dev_eer=result.best_dev_eer,
             checkpoint_sha256=result.checkpoint_sha256,
             checkpoint=str(result.best_checkpoint.relative_to(output)),
+            selection_gate_passed=result.selection_gate_passed,
         )
     except BaseException as exc:
         report.update(status="failed", error_type=type(exc).__name__, error=str(exc))
