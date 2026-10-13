@@ -7,6 +7,7 @@ import random
 import tempfile
 import time
 from collections import Counter
+from concurrent.futures import Future, ThreadPoolExecutor
 from dataclasses import asdict, dataclass, field
 from functools import cached_property
 from pathlib import Path
@@ -63,6 +64,7 @@ class ExperimentConfig:
     num_workers: int = 0
     balanced_sampling: bool = False
     balance_sources: bool = False
+    balance_generators: bool = False
     content_type_weights: dict[str, float] = field(default_factory=dict)
     selection: dict[str, Any] = field(default_factory=dict)
     segment_samples: int = 64600
@@ -96,10 +98,18 @@ class ExperimentConfig:
                 raise ValueError(f"{name} must be a positive integer")
         if type(self.num_workers) is not int or self.num_workers < 0:
             raise ValueError("num_workers must be a nonnegative integer")
-        if type(self.balanced_sampling) is not bool:
-            raise ValueError("balanced_sampling must be boolean")
-        if type(self.balance_sources) is not bool:
-            raise ValueError("balance_sources must be boolean")
+        for name in ("balanced_sampling", "balance_sources", "balance_generators"):
+            if type(getattr(self, name)) is not bool:
+                raise ValueError(f"{name} must be boolean")
+        if self.balance_generators and (
+            self.modality != "video"
+            or not self.balanced_sampling
+            or self.balance_sources
+        ):
+            raise ValueError(
+                "balance_generators requires video balanced_sampling without "
+                "balance_sources"
+            )
         if self.balance_sources and not self.balanced_sampling:
             raise ValueError("balance_sources requires balanced_sampling")
         if not isinstance(self.content_type_weights, dict) or any(
@@ -340,19 +350,23 @@ def _worker_seed(_worker_id: int) -> None:
     np.random.seed(seed)  # noqa: NPY002 -- initialize worker-local legacy RNG users
 
 
-def _balanced_sampler(
+def _balanced_sampler(  # noqa: PLR0913 -- explicit independent sampling options
     entries: list[tuple[Path, str, int]],
     generator: torch.Generator,
     sources: list[str] | None = None,
     content_types: list[str] | None = None,
     content_type_weights: dict[str, float] | None = None,
+    *,
+    generators: list[str] | None = None,
 ) -> WeightedRandomSampler:
     """Balance declared groups, optionally scaling whole content domains.
 
     Every (source, label) or label group receives an equal share unless
     content-type weights multiply the per-entry weight. Unlisted content types
     keep weight 1.0; classes inside a weighted domain stay balanced because the
-    domain factor is constant across its groups.
+    domain factor is constant across its groups. Generator balancing instead
+    divides each label's equal mass between its generators, so the real/unknown
+    bucket receives half the draws even when there are many fake generators.
     """
     keys = (
         [
@@ -362,8 +376,19 @@ def _balanced_sampler(
         if sources is not None
         else [("all", label) for _, _, label in entries]
     )
+    if generators is not None:
+        keys = [
+            (name, label)
+            for name, (_, _, label) in zip(generators, entries, strict=True)
+        ]
     counts = Counter(keys)
-    weights = [1.0 / counts[key] for key in keys]
+    groups_per_label = Counter(label for _, label in counts)
+    weights = [
+        1.0 / (counts[key] * groups_per_label[key[1]])
+        if generators is not None
+        else 1.0 / counts[key]
+        for key in keys
+    ]
     if content_type_weights:
         if content_types is None or len(content_types) != len(entries):
             raise ValueError("content_type_weights requires one content type per entry")
@@ -508,6 +533,8 @@ def _prepare_cache(  # noqa: C901, PLR0912, PLR0913, PLR0915, PLR0917 -- cache a
     chunk_size = (
         max(1, config.feature_batch_size // config.segments)
         if isinstance(encoder, FrozenAudioEncoder)
+        else max(1, config.num_workers)
+        if frame_preprocessing is not None
         else 1
     )
     for offset in range(0, len(records), chunk_size):
@@ -556,6 +583,20 @@ def _prepare_cache(  # noqa: C901, PLR0912, PLR0913, PLR0915, PLR0917 -- cache a
                     raise ValueError(
                         "sample preparation failed; inspect decode_failures.json"
                     ) from exc
+        frame_futures: dict[str, Future[Tensor]] = {}
+        if frame_preprocessing is not None and config.num_workers > 0:
+            with ThreadPoolExecutor(max_workers=config.num_workers) as pool:
+                frame_futures = {
+                    record.sample_id: pool.submit(
+                        extract_video_frames,
+                        record,
+                        root,
+                        video_config,
+                        frame_preprocessing,
+                    )
+                    for record, _, path in chunk
+                    if not path.exists()
+                }
         for record, identity, path in chunk:
             try:
                 if path.exists():
@@ -567,6 +608,8 @@ def _prepare_cache(  # noqa: C901, PLR0912, PLR0913, PLR0915, PLR0917 -- cache a
                 else:
                     if record.sample_id in prepared:
                         tensor = prepared.pop(record.sample_id)
+                    elif record.sample_id in frame_futures:
+                        tensor = frame_futures.pop(record.sample_id).result()
                     elif frame_preprocessing is not None:
                         tensor = extract_video_frames(
                             record, root, video_config, frame_preprocessing
@@ -735,6 +778,11 @@ def run_experiment(config_path: Path) -> TrainResult:  # noqa: PLR0915 -- experi
                     else None
                 ),
                 content_type_weights=config.content_type_weights or None,
+                generators=(
+                    [record.generator for record in selected if record.split == "train"]
+                    if config.balance_generators
+                    else None
+                ),
             )
             if config.balanced_sampling
             else None
