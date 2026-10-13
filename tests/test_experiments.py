@@ -504,14 +504,23 @@ def test_waveform_experiment_caches_only_train_dev_and_records_provenance(
     )
 
 
-def test_bandwidth_augmentation_trains_without_changing_the_cache(
-    experiment: Path,
+@pytest.mark.parametrize(
+    "augmentation",
+    [
+        {"bandwidth": {"probability": 0.5, "target_sample_rate": 8000}},
+        {
+            "bandwidth": {"probability": 0.5, "target_sample_rate": 8000},
+            "noise": {"probability": 0.5, "min_snr_db": 10.0, "max_snr_db": 30.0},
+        },
+    ],
+)
+def test_waveform_augmentation_trains_without_changing_the_cache(
+    experiment: Path, augmentation: dict[str, Any]
 ) -> None:
     run_experiment(experiment)
     root = experiment.parent
     cached = {path.name: file_sha256(path) for path in (root / "cache").glob("*.pt")}
     assert len(cached) == 4
-    augmentation = {"bandwidth": {"probability": 0.5, "target_sample_rate": 8000}}
     _change(experiment, output_dir="augmented", augmentation=augmentation)
     result = run_experiment(experiment)
     report = json.loads((root / "augmented" / "experiment.json").read_text())
@@ -940,6 +949,23 @@ def test_orphan_sidecar_is_subtracted_from_cache_budget(tmp_path: Path) -> None:
             }
         },
         {"augmentation": {"cutout": {"probability": 0.5}}},
+        {"augmentation": {"noise": {"probability": 0.5, "min_snr_db": 10.0}}},
+        {
+            "augmentation": {
+                "noise": {"probability": 0.5, "min_snr_db": 30.0, "max_snr_db": 10.0}
+            }
+        },
+        {
+            "augmentation": {
+                "noise": {"probability": 0.5, "min_snr_db": True, "max_snr_db": 10.0}
+            }
+        },
+        {
+            "architecture": "audio_ast_v1",
+            "augmentation": {
+                "noise": {"probability": 0.5, "min_snr_db": 10.0, "max_snr_db": 30.0}
+            },
+        },
         {
             "architecture": "audio_ast_v1",
             "augmentation": {

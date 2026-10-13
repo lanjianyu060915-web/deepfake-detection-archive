@@ -1,4 +1,4 @@
-"""Bandwidth augmentation is train-only, symmetric and shape preserving."""
+"""Waveform augmentation is train-only, symmetric and shape preserving."""
 
 import math
 import random
@@ -9,6 +9,8 @@ import torch
 
 from deepfake_detection_archive.augmentation import (
     BandwidthSpec,
+    NoiseSpec,
+    add_white_noise,
     bandlimit_roundtrip,
     bandlimited_resample,
 )
@@ -101,3 +103,58 @@ def test_cached_dataset_augments_train_only(tmp_path: Path) -> None:
         assert torch.equal(unchanged, cached)
         assert changed.shape == unchanged.shape
         assert float(changed.std()) < 0.01 * float(cached.std())
+
+
+@pytest.mark.parametrize("snr_db", [0.0, 10.0, 30.0])
+def test_white_noise_meets_the_requested_snr(snr_db: float) -> None:
+    tone = _tone(1000.0)
+    noisy = add_white_noise(tone, snr_db, torch.Generator().manual_seed(0))
+    noise = (noisy - tone).double()
+    measured = 10.0 * math.log10(
+        float(tone.double().square().mean()) / float(noise.square().mean())
+    )
+    assert noisy.shape == tone.shape
+    assert noisy.dtype == tone.dtype
+    assert measured == pytest.approx(snr_db, abs=0.1)
+
+
+def test_white_noise_is_seeded_and_keeps_silence() -> None:
+    tone = _tone(1000.0, samples=4000)
+    first = add_white_noise(tone, 20.0, torch.Generator().manual_seed(7))
+    second = add_white_noise(tone, 20.0, torch.Generator().manual_seed(7))
+    assert torch.equal(first, second)
+    silence = torch.zeros(4000)
+    assert torch.equal(
+        add_white_noise(silence, 20.0, torch.Generator().manual_seed(7)), silence
+    )
+
+
+def test_noise_spec_rejects_invalid_values() -> None:
+    with pytest.raises(ValueError, match="probability"):
+        NoiseSpec(probability=0.0, min_snr_db=10.0, max_snr_db=30.0)
+    with pytest.raises(ValueError, match="exceed"):
+        NoiseSpec(probability=0.5, min_snr_db=30.0, max_snr_db=10.0)
+    with pytest.raises(ValueError, match="finite"):
+        NoiseSpec(probability=0.5, min_snr_db=10.0, max_snr_db=math.inf)
+    with pytest.raises(TypeError, match="numbers"):
+        NoiseSpec(probability=True, min_snr_db=10.0, max_snr_db=30.0)
+    with pytest.raises(ValueError, match="nonempty mono"):
+        add_white_noise(torch.zeros(2, 8), 20.0, torch.Generator())
+    with pytest.raises(ValueError, match="floating point"):
+        add_white_noise(torch.zeros(8, dtype=torch.int64), 20.0, torch.Generator())
+
+
+def test_cached_dataset_adds_noise_to_every_label(tmp_path: Path) -> None:
+    random.seed(0)
+    entries: list[tuple[Path, str, int]] = []
+    for index, label in enumerate((0, 1)):
+        path = tmp_path / f"{index}.pt"
+        torch.save(_tone(1000.0 + index * 500.0, samples=4000), path)
+        entries.append((path, "unused", label))
+    noisy = _CachedDataset(entries, noise=NoiseSpec(1.0, 10.0, 10.0))
+    for index, (path, _, label) in enumerate(entries):
+        changed, changed_label = noisy[index]
+        cached = torch.load(path, weights_only=True)
+        assert changed_label == float(label)
+        assert changed.shape == cached.shape
+        assert not torch.equal(changed, cached)

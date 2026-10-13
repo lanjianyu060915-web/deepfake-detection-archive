@@ -1,9 +1,10 @@
 """Training-time waveform augmentation that leaves evaluation untouched.
 
 Bandwidth augmentation band-limits a training waveform at a lower Nyquist and
-restores the training sample rate. It is symmetric: every label passes through
-the same policy, so the transform cannot become a label shortcut, and nothing in
-this module is used by the offline scorer.
+restores the training sample rate; noise augmentation adds white Gaussian noise
+at a drawn signal-to-noise ratio. Both are symmetric: every label passes through
+the same policy, so the transforms cannot become a label shortcut, and nothing
+in this module is used by the offline scorer.
 """
 
 from __future__ import annotations
@@ -32,6 +33,49 @@ class BandwidthSpec:
             raise ValueError("bandwidth probability must lie in (0, 1]")
         if type(self.target_sample_rate) is not int or self.target_sample_rate <= 0:
             raise ValueError("bandwidth target_sample_rate must be a positive integer")
+
+
+@dataclass(frozen=True)
+class NoiseSpec:
+    """Probability and uniform SNR range, in dB, of additive white noise."""
+
+    probability: float
+    min_snr_db: float
+    max_snr_db: float
+
+    def __post_init__(self) -> None:
+        values = (self.probability, self.min_snr_db, self.max_snr_db)
+        if any(
+            isinstance(value, bool) or not isinstance(value, (int, float))
+            for value in values
+        ):
+            raise TypeError("noise parameters must be numbers")
+        if not all(math.isfinite(value) for value in values):
+            raise ValueError("noise parameters must be finite")
+        if not 0 < self.probability <= 1:
+            raise ValueError("noise probability must lie in (0, 1]")
+        if self.min_snr_db > self.max_snr_db:
+            raise ValueError("noise min_snr_db must not exceed max_snr_db")
+
+
+def add_white_noise(
+    waveform: Tensor, snr_db: float, generator: torch.Generator
+) -> Tensor:
+    """Add white Gaussian noise at ``snr_db`` relative to the waveform power.
+
+    A silent waveform has no reference power and is returned unchanged.
+    """
+    if waveform.ndim != 1 or waveform.numel() == 0:
+        raise ValueError("noise augmentation expects a nonempty mono waveform")
+    if not waveform.is_floating_point():
+        raise ValueError("noise augmentation expects a floating point waveform")
+    signal = waveform.to(torch.float64)
+    power = float(signal.square().mean())
+    if power == 0.0:
+        return waveform
+    noise = torch.randn(signal.shape, generator=generator, dtype=torch.float64)
+    scale = math.sqrt(power / 10.0 ** (snr_db / 10.0))
+    return cast(Tensor, (signal + scale * noise).to(waveform.dtype))
 
 
 def bandlimited_resample(
