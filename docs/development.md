@@ -54,17 +54,15 @@ prompt 标签隔离，不能替代 artist/原曲关系；这些组及关联派�
 ```bash
 cp configs/train-logmel.example.json configs/train-logmel.local.json
 scripts/devctl run python -m deepfake_detection_archive train \
-  --config configs/train-logmel.local.json --check-config
-scripts/devctl run python -m deepfake_detection_archive train \
   --config configs/train-logmel.local.json
 ```
 
-`train --check-config` 是可在 CPU 机器运行的只读启动检查：解析配置与模型参数，
+需要在 CPU 机器查看 CUDA 训练配置时，可单独使用 `train --check-config` 只读诊断：解析配置与模型参数，
 核验本地资源、train/dev 注册字节、来源登记、完整清单隔离关系、两类覆盖及受约束域覆盖。
 它不创建输出目录、加载模型、解码媒体或访问 holdout 媒体；CUDA 配置也可检查。
 通过只代表报告列出的静态条件成立；模型权重兼容性、实际解码、缓存张量、GPU 容量、
-磁盘写入能力和基线来源仍不在其证明范围。数据检查失败返回2，详细问题在标准输出 JSON；
-配置/资源异常写入标准错误。正式训练继续执行自己的入口审计，不因预检通过而跳过。
+磁盘写入能力仍不在其检查范围。数据检查失败返回2，详细问题在标准输出 JSON；
+配置/资源异常写入标准错误。这是可选诊断；正式训练使用同一个数据审计入口。
 
 | 方向 | 当前实现与模板 |
 | --- | --- |
