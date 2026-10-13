@@ -25,6 +25,7 @@ model_tools=(
   tools/prepare_aime.py
   tools/prepare_ai_openbmat.py
   tools/prepare_audio_mixtures.py
+  tools/prepare_universal_audio.py
   tools/prepare_video_control.py
   tools/prepare_video_size_control.py
   tools/report_video_pairs.py

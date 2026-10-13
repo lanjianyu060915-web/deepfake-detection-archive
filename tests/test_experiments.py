@@ -5,6 +5,7 @@ import shutil
 import socket
 import wave
 from collections import Counter
+from collections.abc import Mapping
 from dataclasses import replace
 from pathlib import Path
 from typing import Any
@@ -30,6 +31,7 @@ from deepfake_detection_archive.experiments import (
     run_experiment,
 )
 from deepfake_detection_archive.scoring import OfflineScorer
+from deepfake_detection_archive.training import SelectionOptions
 
 
 def test_video_frame_cache_reuses_tuple_preprocessing(
@@ -134,6 +136,63 @@ def test_source_balancing_preserves_rare_music_and_both_classes() -> None:
     assert len(first) == len(entries)
     assert all(200 < count < 300 for count in counts.values())
     assert len(counts) == 4
+
+
+def test_content_type_weights_scale_domains_and_keep_classes_balanced() -> None:
+    buckets = [("speech", 0)] * 400 + [("speech", 1)] * 400
+    buckets += [("environment", 0)] * 200 + [("environment", 1)] * 200
+    buckets += [("music", 0)] * 20 + [("music", 1)] * 20
+    entries = [(Path(str(i)), "unused", label) for i, (_, label) in enumerate(buckets)]
+    domains = [domain for domain, _ in buckets]
+    weights = {"speech": 0.5, "environment": 0.3, "music": 0.2}
+    draws = list(
+        _balanced_sampler(
+            entries,
+            torch.Generator().manual_seed(42),
+            domains,
+            content_types=domains,
+            content_type_weights=weights,
+        )
+    )
+    assert len(draws) == len(entries)
+    domain_counts = Counter(domains[index] for index in draws)
+    expected = {
+        "speech": 0.5 * len(entries),
+        "environment": 0.3 * len(entries),
+        "music": 0.2 * len(entries),
+    }
+    for domain, share in expected.items():
+        assert abs(domain_counts[domain] - share) < 70
+    class_counts = Counter(buckets[index] for index in draws)
+    assert len(class_counts) == 6
+    for (domain, _), count in class_counts.items():
+        # Each domain holds two groups, so each class keeps half its share
+        # and the normalized domain mass equals the configured weight.
+        assert abs(count - expected[domain] / 2) < 70
+
+
+def test_content_type_weights_reject_absent_or_unlabeled_entries() -> None:
+    entries = [(Path(str(index)), "unused", index % 2) for index in range(8)]
+    with pytest.raises(ValueError, match="one content type per entry"):
+        _balanced_sampler(
+            entries,
+            torch.Generator().manual_seed(42),
+            content_type_weights={"music": 1.0},
+        )
+    with pytest.raises(ValueError, match="labeled content types"):
+        _balanced_sampler(
+            entries,
+            torch.Generator().manual_seed(42),
+            content_types=[""] * len(entries),
+            content_type_weights={"music": 1.0},
+        )
+    with pytest.raises(ValueError, match="absent content types"):
+        _balanced_sampler(
+            entries,
+            torch.Generator().manual_seed(42),
+            content_types=["music"] * len(entries),
+            content_type_weights={"speech": 1.0},
+        )
 
 
 @pytest.fixture
@@ -453,6 +512,47 @@ def test_repeated_epochs_verify_existing_cache_once(
     assert sorted(verified) == sorted((experiment.parent / "cache").glob("*.pt"))
 
 
+def test_gated_selection_reports_domain_metrics_and_gate_status(
+    experiment: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    parses = 0
+    original = SelectionOptions.from_options
+
+    def parse(options: Mapping[str, Any] | None) -> SelectionOptions | None:
+        nonlocal parses
+        parses += 1
+        return original(options)
+
+    monkeypatch.setattr(SelectionOptions, "from_options", parse)
+    _change(
+        experiment,
+        output_dir="gated",
+        selection={
+            "metric": "domain_macro_eer",
+            "max_bucket_eer": {"unknown": 1.0},
+        },
+    )
+    result = run_experiment(experiment)
+    assert parses == 1
+    assert result.selection_gate_passed is True
+    report = json.loads((experiment.parent / "gated" / "experiment.json").read_text())
+    assert report["selection_gate_passed"] is True
+    assert report["best_dev_eer"] == result.best_dev_eer
+    assert report["best_selection_metric"] == result.best_selection_metric
+    assert report["best_selection_value"] == result.best_selection_value
+    assert result.best_selection_metric == "domain_macro_eer"
+    history = json.loads(result.history_path.read_text())
+    assert history[0]["dev_macro_eer"] == history[0]["dev_domain_eer"]["unknown"]
+    evaluation = json.loads(
+        (experiment.parent / "gated" / "dev-evaluation.json").read_text()
+    )
+    assert set(evaluation["by_content_type"]) == {"unknown"}
+    assert (
+        evaluation["by_content_type"]["unknown"]["sample_count"]
+        == evaluation["evaluation"]["sample_count"]
+    )
+
+
 def test_training_prepares_media_without_a_redundant_decode_pass(
     experiment: Path,
 ) -> None:
@@ -750,6 +850,26 @@ def test_orphan_sidecar_is_subtracted_from_cache_budget(tmp_path: Path) -> None:
         {"num_workers": -1},
         {"balance_sources": "yes"},
         {"balance_sources": True, "balanced_sampling": False},
+        {"content_type_weights": {"music": 1.0}},
+        {
+            "balanced_sampling": True,
+            "balance_sources": False,
+            "content_type_weights": {"music": 1.0},
+        },
+        {
+            "balanced_sampling": True,
+            "balance_sources": True,
+            "content_type_weights": {"music": 0.0},
+        },
+        {
+            "balanced_sampling": True,
+            "balance_sources": True,
+            "content_type_weights": {"music": True},
+        },
+        {"selection": {"metric": "dev_eer"}},
+        {"selection": {"metric": "domain_macro_eer", "unexpected": 1}},
+        {"selection": {"metric": "domain_macro_eer", "max_bucket_eer": {"music": 1.5}}},
+        {"selection": "domain_macro_eer"},
         {"unexpected": 1},
         {"audio": {"sample_rate": 8000}},
         {"training": {"max_epochs": 0}},
