@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "architecture": "video_frame_finetune_v1",
+  "modality": "video",
+  "manifest": "/var/tmp/deepfake-video-multigen-20261013/canonical-2s/manifest.jsonl",
+  "data_root": "/var/tmp/deepfake-video-multigen-20261013/canonical-2s",
+  "sources": "/var/tmp/deepfake-video-multigen-20261013/canonical-2s/sources.jsonl",
+  "output_dir": "/var/tmp/deepfake-video-multigen-20261013/paired-seed43",
+  "feature_cache": "/var/tmp/deepfake-video-multigen-20261013/cache/frames",
+  "cache_max_bytes": 17179869184,
+  "batch_size": 64,
+  "feature_batch_size": 8,
+  "num_workers": 4,
+  "segments": 1,
+  "model_config": {
+    "architecture": "resnet18",
+    "encoder_checkpoint": "/var/tmp/deepfake-video-multigen-20261013/models/encoder.pt",
+    "expected_sha256": "db6fd0c5cfb2b712d1904bb8b7edcf41a850491bdf42729e4ab485e89f1b6889",
+    "hidden_dim": 64,
+    "dropout": 0.1,
+    "aggregation": "mean",
+    "trim_fraction": 0.0,
+    "trainable_prefix": "layer4"
+  },
+  "training": {
+    "accumulation_steps": 1,
+    "amp": true,
+    "amp_dtype": "bfloat16",
+    "deterministic": true,
+    "device": "cuda",
+    "learning_rate": 0.001,
+    "backbone_lr_scale": 0.1,
+    "max_epochs": 25,
+    "max_grad_norm": 1.0,
+    "min_delta": 0.0,
+    "patience": 6,
+    "seed": 43,
+    "weight_decay": 0.0001
+  },
+  "video": {
+    "height": 224,
+    "width": 224,
+    "n_frames": 4,
+    "resize_mode": "center_crop",
+    "max_duration_seconds": 600.0,
+    "max_output_bytes": 536870912,
+    "max_source_frames": 100000,
+    "max_source_pixels": 40000000,
+    "timeout_seconds": 60.0
+  },
+  "balanced_sampling": false,
+  "balance_generators": false
+}
