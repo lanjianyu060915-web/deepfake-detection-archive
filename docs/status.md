@@ -27,7 +27,7 @@
 | --- | --- | --- |
 | [语音稳健训练 #39](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/39) | 已发布，lanjianyu060915-web负责 | 第二种子、编码/噪声训练与独立跨来源诊断 |
 | [多生成器视频训练 #40](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/40) | 已发布，rrx59负责 | 扩展训练来源，保留固定跨生成器诊断与原候选对照 |
-| [三域通用音频 #41](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/41) | zhl-zx负责；承接已完成#32；两档seed42训练已早停 | 按域上限选模、冻结六桶评分与实验卡；日程见[比赛前里程碑](roadmap.md#比赛前里程碑2026-10-13制定) |
+| [三域通用音频 #41](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/41) | zhl-zx负责；承接已完成#32；两档seed42已早停，dev三域平均0.704%（1:1:1）/0.803%（0.4:0.3:0.3），差距在音乐dev噪声内 | seed43双档、GPU冻结评分与鲁棒性诊断，10-14定比例，10-16冻结；见[比赛前里程碑](roadmap.md#比赛前里程碑2026-10-13修订) |
 
 具体认领和进程状态在Issue更新。本页不逐轮追加运行日志或历史结果。
 RTX4090按实际负载共享；数据、权重与分数按dlteam读取，任务输出各自独立。
