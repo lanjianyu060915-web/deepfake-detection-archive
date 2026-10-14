@@ -1,0 +1,190 @@
+{
+  "schema_version": 1,
+  "updated": "2026-10-14",
+  "purpose": "Dated archive asset and preprocessing snapshot, not runtime configuration; runtime defaults use configs/release/models.json and its inference configs.",
+  "archive_root": "/mnt/deepfake-archive",
+  "archive_index": "index.json",
+  "score_direction": "higher_is_fake",
+  "label_convention": {"real": 0, "fake": 1},
+  "environment": {
+    "python": "3.12.15",
+    "torch": "2.14.1+cu132",
+    "timm": "1.0.30",
+    "transformers": "5.19.0",
+    "numpy": "2.5.3",
+    "torchaudio": "absent",
+    "ffmpeg": "N-127271-gba987fe24d-20261010",
+    "constraints": [
+      "AST features use the transformers numpy branch only while torchaudio is absent; installing torchaudio switches ASTFeatureExtractor to kaldi fbank silently.",
+      "Video resize/crop happens in ffmpeg; timm crop_pct/interpolation are resolved but never applied and must not be added.",
+      "ffmpeg/ffprobe come from the host and are not bundled."
+    ]
+  },
+  "shared": {
+    "resnet18-a1": {
+      "path": "shared/resnet18-a1/encoder.pt",
+      "sha256": "db6fd0c5cfb2b712d1904bb8b7edcf41a850491bdf42729e4ab485e89f1b6889",
+      "kind": "pretrained_backbone",
+      "upstream": "timm/resnet18.a1_in1k"
+    },
+    "ast-audioset": {
+      "path": "shared/ast-audioset/model.safetensors",
+      "sha256": "ae0c1e2ad4e1381d851fa9bf298ba13ebc9c5a914cdee2dbe427a6583869924d",
+      "kind": "pretrained_backbone",
+      "upstream": "MIT/ast-finetuned-audioset-10-10-0.4593@f826b80d28226b62986cc218e5cec390b1096902",
+      "note": "Initialisation only; fine-tuned AST checkpoints below are self-contained."
+    }
+  },
+  "preprocessing": {
+    "audio_ast": {
+      "sample_rate": 16000,
+      "channels": "mono; ffmpeg backend equal-weight downmix, soundfile backend requires native mono",
+      "waveform_preparation": "center_pad_64000_peak095_v1",
+      "segment_samples": 64000,
+      "segments": 1,
+      "frontend": "transformers ASTFeatureExtractor numpy branch",
+      "frame_length": 400,
+      "frame_shift": 160,
+      "n_fft": 512,
+      "window": "symmetric hann",
+      "preemphasis": 0.97,
+      "remove_dc_offset": true,
+      "dither": 0.0,
+      "num_mel_bins": 128,
+      "mel_scale": "kaldi",
+      "f_min": 20,
+      "f_max": 8000,
+      "log": "natural log, floor 1.192092955078125e-07",
+      "max_length": 512,
+      "padding": "right with 0.0 before normalisation",
+      "normalize": "(x - mean) / (2 * std)",
+      "mean": -4.2677393,
+      "std": 4.5689974
+    },
+    "audio_logmel": {
+      "sample_rate": 16000,
+      "channels": "mono; ffmpeg backend equal-weight downmix, soundfile backend requires native mono",
+      "segment_samples": 64600,
+      "segments": 1,
+      "frontend": "models/core.py LogMelCNN (in-model)",
+      "n_fft": 512,
+      "win_length": 512,
+      "hop_length": 160,
+      "window": "periodic hann",
+      "center": false,
+      "n_mels": 64,
+      "mel_scale": "htk",
+      "f_min": 0.0,
+      "f_max": 8000,
+      "log": "natural log, floor 1e-07",
+      "normalize": "none"
+    },
+    "video_resnet18": {
+      "n_frames": 4,
+      "frame_times": "linspace over decoded timestamps, nearest frame",
+      "height": 224,
+      "width": 224,
+      "resize_mode": "center_crop",
+      "resize": "ffmpeg bicubic scale to cover, then crop, setsar=1",
+      "pixel": "rgb24 / 255",
+      "mean": [0.485, 0.456, 0.406],
+      "std": [0.229, 0.224, 0.225]
+    }
+  },
+  "candidates": {
+    "release-audio-environment": {
+      "modality": "audio",
+      "status": "release_default_v0.1.1",
+      "scope": "environmental sound; fails on music/speech",
+      "checkpoint": "C1-release-v0.1.1/weights/audio-ast-urban.pt",
+      "checkpoint_sha256": "62584d52533fc4204df9c8c37e4f78fd2b5299e5cded13869c23faf4399c3efb",
+      "kind": "complete_detector",
+      "architecture": "audio_ast_v1",
+      "preprocessing": "audio_ast",
+      "aggregation": "mean",
+      "code": {"commit": "8c81a385d81ef23d4dd9b4a9975176bf95d4d9e7", "dirty": false},
+      "loader": "release v0.1.1 run.sh"
+    },
+    "release-video": {
+      "modality": "video",
+      "status": "release_default_v0.1.1",
+      "scope": "full-frame visual; weak across generators",
+      "checkpoint": "C1-release-v0.1.1/weights/video-resnet18.pt",
+      "checkpoint_sha256": "21fdd4e547a5ae7c7a24162eaf2cb526379b7d152e36aa4546891657ae48f115",
+      "kind": "complete_detector",
+      "architecture": "video_frame_finetune_v1",
+      "training_initialization": ["resnet18-a1"],
+      "preprocessing": "video_resnet18",
+      "aggregation": "mean, trim_fraction 0.0",
+      "code": {"commit": "8c81a385d81ef23d4dd9b4a9975176bf95d4d9e7", "dirty": false},
+      "loader": "release v0.1.1 run.sh"
+    },
+    "audio-universal-seed42": {
+      "modality": "audio",
+      "status": "research_main",
+      "scope": "speech, music, environmental sound",
+      "checkpoint": "C2-audio-universal/weights/seed42/best.pt",
+      "checkpoint_sha256": "00e6af1c1a6180a0eefb154a964c920234093ce1cf3f1a7d69f37879ddbbf831",
+      "kind": "complete_detector",
+      "architecture": "audio_ast_v1",
+      "preprocessing": "audio_ast",
+      "aggregation": "mean",
+      "code": {"commit": "8c81a385d81ef23d4dd9b4a9975176bf95d4d9e7", "dirty": true},
+      "loader": "release v0.1.1 run.sh infer"
+    },
+    "audio-universal-seed43": {
+      "modality": "audio",
+      "status": "research_backup",
+      "scope": "speech, music, environmental sound",
+      "checkpoint": "C2-audio-universal/weights/seed43/best.pt",
+      "checkpoint_sha256": "18f60bc2e42ab4977e76b4ff59916f2a011f88892dd6b880e9b5d19786674755",
+      "kind": "complete_detector",
+      "architecture": "audio_ast_v1",
+      "preprocessing": "audio_ast",
+      "aggregation": "mean",
+      "code": {"commit": "49a0efd25c5bc11d08d94a49b426f04fe8bc849e", "dirty": true},
+      "loader": "release v0.1.1 run.sh infer"
+    },
+    "speech-logmel-bandwidth-seed42": {
+      "modality": "audio",
+      "status": "research_speech_reference",
+      "scope": "speech only",
+      "checkpoint": "C3-speech-logmel-bandwidth/weights/bandwidth-seed42/best.pt",
+      "checkpoint_sha256": "c860394c2b3704087c4e216bbbaab61f17a81e8410be4b94f267111408c3fb51",
+      "kind": "complete_detector",
+      "architecture": "logmel_cnn_v1",
+      "preprocessing": "audio_logmel",
+      "aggregation": "mean",
+      "code": {"commit": "395a7d8e8f6639e990ec9049f5a46b9aaf9578ed", "dirty": true, "code_sha256": "daae2a27bf00108791c2ffd5baebfb5a943effc7b63efe5729224624e0d8c1db"},
+      "loader": "repository infer"
+    },
+    "video-multigen-paired-seed43": {
+      "modality": "video",
+      "status": "research",
+      "scope": "full-frame visual",
+      "checkpoint": "C4-video-multigen/weights/paired-seed43/best.pt",
+      "checkpoint_sha256": "1d7cb9f5dab5cecef04ec11d67ad2323d1e85fe5b58ad0bb5efb0bfc6f143dc3",
+      "kind": "complete_detector",
+      "architecture": "video_frame_finetune_v1",
+      "training_initialization": ["resnet18-a1"],
+      "preprocessing": "video_resnet18",
+      "aggregation": "mean, trim_fraction 0.0",
+      "code": {"commit": "bb04b0e14e666258cb61b5ad112835222f7a9d55", "dirty": true},
+      "loader": "repository infer; release v0.1.1 rejects temporal_kernel_size"
+    },
+    "video-temporal-seed43": {
+      "modality": "video",
+      "status": "research",
+      "scope": "full-frame visual",
+      "checkpoint": "C5-video-temporal/weights/seed43-retry/best.pt",
+      "checkpoint_sha256": "977721c2edd496c6e790ea56df41a34b1402399ebd8f414f754b0dfd4ea1cef1",
+      "kind": "complete_detector",
+      "architecture": "video_frame_finetune_v1",
+      "training_initialization": ["resnet18-a1"],
+      "preprocessing": "video_resnet18",
+      "aggregation": "mean, trim_fraction 0.1",
+      "code": {"commit": "64bbd6740055a56b9720656600991ac363af3ae7", "dirty": true},
+      "loader": "repository infer"
+    }
+  }
+}
