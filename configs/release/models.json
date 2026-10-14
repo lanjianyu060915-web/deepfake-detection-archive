@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "version": "v0.1.1-entry-v1",
+  "score_direction": "higher_is_fake",
+  "score_type": "raw_logit",
+  "stream_selection": "first_non_attached_video_else_first_audio_by_stream_index",
+  "resource_uses": "licenses/README.md",
+  "runtime_contract": "release.json",
+  "models": {
+    "audio": {
+      "model_id": "audio-ast-urban-v0.1.1",
+      "status": "research",
+      "scope": "environmental_audio; speech/music generalization unverified",
+      "architecture": "audio_ast_v1",
+      "checkpoint_schema": 1,
+      "preprocessing_version": "center_pad_64000_peak095_v1",
+      "config": "audio-environment.json"
+    },
+    "video": {
+      "model_id": "video-resnet18-v0.1.1",
+      "status": "research",
+      "scope": "visual_only; four sampled frames; independent-source generalization limited",
+      "architecture": "video_frame_finetune_v1",
+      "checkpoint_schema": 1,
+      "preprocessing_version": "timestamp4_224_center_crop_rgb_v1",
+      "config": "video.json"
+    }
+  }
+}

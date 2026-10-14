@@ -128,9 +128,11 @@ UV_PROJECT_ENVIRONMENT="$PWD/.venv-cpu" scripts/devctl check
 
 ## 推理与 EER
 
-无标签媒体可直接 `predict --config MODEL_CONFIG --input DIR --output DIR`，
-音频/视频发布配置和完整启动方式见[发布版运行](release.md)。
-该入口复用下面的推理与导出逻辑，无需先手写 manifest。
+无标签媒体可直接 `predict INPUT... --output DIR`，支持文件与音视频混合目录；
+源码运行先通过 `DEEPFAKE_MODEL_PACKAGE` 指定本地模型包，
+见[统一预测入口](release.md#统一预测入口当前源码)。
+原 `predict --config MODEL_CONFIG --input DIR --output DIR` 继续用于显式模型配置。
+两种入口复用现有推理逻辑，无需先手写 manifest。
 
 准备与 checkpoint 对应的实值配置；以下示例使用 `data/audio-dev.jsonl`，
 推理配置的 `output_dir` 设为 `../outputs/audio-dev`：

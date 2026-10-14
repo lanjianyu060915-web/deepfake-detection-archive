@@ -9,7 +9,7 @@ import torch
 
 from deepfake_detection_archive.config import InferenceConfig
 from deepfake_detection_archive.data.manifest import SampleRecord
-from deepfake_detection_archive.media import VideoConfig
+from deepfake_detection_archive.media import AudioConfig, VideoConfig
 from deepfake_detection_archive.scoring import OfflineScorer
 from deepfake_detection_archive.submission.runner import run_inference
 
@@ -98,3 +98,21 @@ def test_ordinary_runtime_error_remains_a_sample_failure(
     assert result[1].error_code == "inference_error"
     assert result[1].error_message == message
     assert (tmp_path / "output" / "report.json").exists()
+
+
+def test_feature_scorer_uses_selected_stream_configs(monkeypatch, tmp_path):
+    scorer = make_scorer(monkeypatch, tmp_path)
+    scorer.frame_preprocessing = None
+    scorer.encoder = Mock()
+    scorer.audio = AudioConfig()
+    scorer.model = Mock(return_value=torch.tensor([0.25]))
+    extract = Mock(return_value=torch.zeros(2, 4))
+    monkeypatch.setattr("deepfake_detection_archive.scoring.extract_features", extract)
+    audio_config = AudioConfig(stream_index=2)
+    video_config = VideoConfig(stream_index=3)
+    assert (
+        scorer(records()[0], audio_config=audio_config, video_config=video_config)
+        == 0.25
+    )
+    assert extract.call_args.args[3] is audio_config
+    assert extract.call_args.args[4] is video_config
