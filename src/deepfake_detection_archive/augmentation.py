@@ -75,7 +75,7 @@ def add_white_noise(
         return waveform
     noise = torch.randn(signal.shape, generator=generator, dtype=torch.float64)
     scale = math.sqrt(power / 10.0 ** (snr_db / 10.0))
-    return cast(Tensor, (signal + scale * noise).to(waveform.dtype))
+    return (signal + scale * noise).to(waveform.dtype)
 
 
 def bandlimited_resample(
