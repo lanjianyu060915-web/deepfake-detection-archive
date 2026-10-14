@@ -14,7 +14,13 @@ from typing import Any, Self, cast
 import torch
 from torch import Tensor, nn
 
-from .core import FeatureHead, HeadConfig, PoolingMethod, pool_media_scores
+from .core import (
+    FeatureHead,
+    HeadConfig,
+    PoolingMethod,
+    TemporalHead,
+    pool_media_scores,
+)
 
 
 @dataclass(frozen=True)
@@ -57,25 +63,6 @@ class VideoFrameConfig:
             raise ValueError(f"unsupported aggregation: {self.aggregation}")
         if not 0 <= self.trim_fraction < 0.5:
             raise ValueError("trim_fraction must lie in [0, 0.5)")
-
-
-class TemporalHead(nn.Module):
-    """Contextual frame logits from chronological [batch, frames, features]."""
-
-    def __init__(self, feature_dim: int, hidden_dim: int, dropout: float) -> None:
-        super().__init__()
-        self.norm = nn.LayerNorm(feature_dim)
-        self.layers = nn.Sequential(
-            nn.Conv1d(feature_dim, hidden_dim, kernel_size=3, padding=1),
-            nn.GELU(),
-            nn.Dropout(dropout),
-            nn.Conv1d(hidden_dim, 1, kernel_size=1),
-        )
-
-    def forward(self, features: Tensor) -> Tensor:
-        normalized = self.norm(features).transpose(1, 2)
-        logits: Tensor = self.layers(normalized).squeeze(1)
-        return logits
 
 
 class VideoFrameClassifier(nn.Module):
