@@ -22,7 +22,12 @@ from deepfake_detection_archive.data.manifest import (
 
 TEMPORAL_CANONICAL = "video_h264_crf23_448x256_16fps_3p5s"
 MULTIGEN_CANONICAL = "video_h264_crf23_448x256_16fps_2s"
-CANONICAL_TIMING = {TEMPORAL_CANONICAL: (3.5, 56), MULTIGEN_CANONICAL: (2.0, 32)}
+SHORT_CANONICAL = "video_h264_crf23_448x256_16fps_1p25s"
+CANONICAL_TIMING = {
+    TEMPORAL_CANONICAL: (3.5, 56),
+    MULTIGEN_CANONICAL: (2.0, 32),
+    SHORT_CANONICAL: (1.25, 20),
+}
 
 
 CONDITIONS = {
@@ -174,6 +179,12 @@ CONDITIONS[MULTIGEN_CANONICAL] = (
     _container,
     _codec,
     tuple("2" if argument == "3.5" else argument for argument in _arguments),
+)
+CONDITIONS[SHORT_CANONICAL] = (
+    _video,
+    _container,
+    _codec,
+    tuple("1.25" if argument == "3.5" else argument for argument in _arguments),
 )
 
 
