@@ -3,6 +3,7 @@
 import json
 import shutil
 import socket
+import threading
 import wave
 from collections import Counter
 from collections.abc import Mapping
@@ -14,6 +15,7 @@ import numpy as np
 import pytest
 import torch
 
+from deepfake_detection_archive import experiments
 from deepfake_detection_archive.config import InferenceConfig
 from deepfake_detection_archive.contracts import load_scores
 from deepfake_detection_archive.data.manifest import (
@@ -162,6 +164,120 @@ def test_video_frame_cache_reuses_tuple_preprocessing(
     assert failures[0]["error"] == "existing frame tensors must be reused"
 
 
+def test_video_frame_cache_parallelism_is_bounded_and_failures_are_per_sample(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    config = ExperimentConfig(
+        manifest="manifest.jsonl",
+        data_root=".",
+        sources="sources.jsonl",
+        output_dir="run",
+        modality="video",
+        architecture="video_frame_finetune_v1",
+        model_config={},
+        training={},
+        num_workers=2,
+    )
+    records = [
+        SampleRecord(
+            sample_id=f"video-{index}",
+            path=f"video-{index}.mp4",
+            modality="video",
+            label=index % 2,
+            source="synthetic",
+            sha256=f"{index:064x}",
+            split="train" if index < 4 else "dev",
+        )
+        for index in range(6)
+    ]
+    preprocessing = {
+        "input_size": (3, 4, 4),
+        "mean": (0.5, 0.5, 0.5),
+        "std": (0.25, 0.25, 0.25),
+    }
+    active = 0
+    peak = 0
+    lock = threading.Lock()
+    overlap = threading.Barrier(config.num_workers)
+    calls: list[str] = []
+
+    def extract(record: SampleRecord, *args: Any) -> torch.Tensor:
+        nonlocal active, peak
+        with lock:
+            calls.append(record.sample_id)
+            active += 1
+            peak = max(peak, active)
+        try:
+            overlap.wait(timeout=5)
+            if record.sample_id == "video-1":
+                raise ValueError("fixture decode failure")
+            return torch.ones(2, 3, 4, 4)
+        finally:
+            with lock:
+                active -= 1
+
+    monkeypatch.setattr(
+        "deepfake_detection_archive.experiments.extract_video_frames", extract
+    )
+    cache = tmp_path / "cache"
+    with pytest.raises(ValueError, match="sample preparation failed"):
+        _prepare_cache(
+            records,
+            config,
+            tmp_path,
+            cache,
+            None,
+            tmp_path,
+            frame_preprocessing=preprocessing,
+        )
+    assert peak == config.num_workers
+    assert sorted(calls) == sorted(row.sample_id for row in records)
+    failures = json.loads((tmp_path / "decode_failures.json").read_text())
+    assert failures == [
+        {
+            "sample_id": "video-1",
+            "error_type": "ValueError",
+            "error": "fixture decode failure",
+        }
+    ]
+    assert len(list(cache.glob("*.pt"))) == 5
+    cached_times = {path: path.stat().st_mtime_ns for path in cache.iterdir()}
+    calls.clear()
+    cache_reads: list[Path] = []
+    original_load = experiments._load_tensor
+
+    def counted_load(path: Path, digest: str) -> torch.Tensor:
+        cache_reads.append(path)
+        return original_load(path, digest)
+
+    monkeypatch.setattr(experiments, "_load_tensor", counted_load)
+
+    def repaired(record: SampleRecord, *args: Any) -> torch.Tensor:
+        calls.append(record.sample_id)
+        return torch.ones(2, 3, 4, 4)
+
+    monkeypatch.setattr(
+        "deepfake_detection_archive.experiments.extract_video_frames", repaired
+    )
+    entries = _prepare_cache(
+        records,
+        config,
+        tmp_path,
+        cache,
+        None,
+        tmp_path,
+        frame_preprocessing=preprocessing,
+    )
+    assert calls == ["video-1"]
+    assert len(cache_reads) == len(set(cache_reads)) == 5
+    assert {split: len(rows) for split, rows in entries.items()} == {
+        "train": 4,
+        "dev": 2,
+    }
+    assert all(path.stat().st_mtime_ns == value for path, value in cached_times.items())
+    assert json.loads((tmp_path / "decode_failures.json").read_text()) == []
+
+
 def test_balanced_sampling_corrects_class_imbalance_and_repeats_by_seed() -> None:
     entries = [(Path(str(index)), "unused", int(index >= 100)) for index in range(1000)]
     first = list(_balanced_sampler(entries, torch.Generator().manual_seed(42)))
@@ -186,6 +302,28 @@ def test_source_balancing_preserves_rare_music_and_both_classes() -> None:
     assert len(first) == len(entries)
     assert all(200 < count < 300 for count in counts.values())
     assert len(counts) == 4
+
+
+def test_generator_balancing_keeps_half_real_and_equal_fake_generators() -> None:
+    buckets = [("unknown", 0)] * 1000
+    buckets += [("common", 1)] * 900 + [("rare", 1)] * 100
+    entries = [(Path(str(i)), "unused", label) for i, (_, label) in enumerate(buckets)]
+    sampler = _balanced_sampler(
+        entries,
+        torch.Generator().manual_seed(42),
+        generators=[name for name, _ in buckets],
+    )
+    mass = Counter()
+    for bucket, weight in zip(buckets, sampler.weights, strict=True):
+        mass[bucket] += float(weight)
+    assert mass[("unknown", 0)] == pytest.approx(1.0)
+    assert mass[("common", 1)] == pytest.approx(0.5)
+    assert mass[("rare", 1)] == pytest.approx(0.5)
+    draws = list(sampler)
+    counts = Counter(buckets[i] for i in draws)
+    assert 900 < counts[("unknown", 0)] < 1100
+    assert 400 < counts[("common", 1)] < 600
+    assert 400 < counts[("rare", 1)] < 600
 
 
 def test_content_type_weights_scale_domains_and_keep_classes_balanced() -> None:
@@ -504,14 +642,23 @@ def test_waveform_experiment_caches_only_train_dev_and_records_provenance(
     )
 
 
-def test_bandwidth_augmentation_trains_without_changing_the_cache(
-    experiment: Path,
+@pytest.mark.parametrize(
+    "augmentation",
+    [
+        {"bandwidth": {"probability": 0.5, "target_sample_rate": 8000}},
+        {
+            "bandwidth": {"probability": 0.5, "target_sample_rate": 8000},
+            "noise": {"probability": 0.5, "min_snr_db": 10.0, "max_snr_db": 30.0},
+        },
+    ],
+)
+def test_waveform_augmentation_trains_without_changing_the_cache(
+    experiment: Path, augmentation: dict[str, Any]
 ) -> None:
     run_experiment(experiment)
     root = experiment.parent
     cached = {path.name: file_sha256(path) for path in (root / "cache").glob("*.pt")}
     assert len(cached) == 4
-    augmentation = {"bandwidth": {"probability": 0.5, "target_sample_rate": 8000}}
     _change(experiment, output_dir="augmented", augmentation=augmentation)
     result = run_experiment(experiment)
     report = json.loads((root / "augmented" / "experiment.json").read_text())
@@ -899,6 +1046,9 @@ def test_orphan_sidecar_is_subtracted_from_cache_budget(tmp_path: Path) -> None:
         {"batch_size": True},
         {"num_workers": -1},
         {"balance_sources": "yes"},
+        {"balance_generators": "yes"},
+        {"balance_generators": True},
+        {"balance_generators": True, "balanced_sampling": True},
         {"balance_sources": True, "balanced_sampling": False},
         {"content_type_weights": {"music": 1.0}},
         {
@@ -940,6 +1090,23 @@ def test_orphan_sidecar_is_subtracted_from_cache_budget(tmp_path: Path) -> None:
             }
         },
         {"augmentation": {"cutout": {"probability": 0.5}}},
+        {"augmentation": {"noise": {"probability": 0.5, "min_snr_db": 10.0}}},
+        {
+            "augmentation": {
+                "noise": {"probability": 0.5, "min_snr_db": 30.0, "max_snr_db": 10.0}
+            }
+        },
+        {
+            "augmentation": {
+                "noise": {"probability": 0.5, "min_snr_db": True, "max_snr_db": 10.0}
+            }
+        },
+        {
+            "architecture": "audio_ast_v1",
+            "augmentation": {
+                "noise": {"probability": 0.5, "min_snr_db": 10.0, "max_snr_db": 30.0}
+            },
+        },
         {
             "architecture": "audio_ast_v1",
             "augmentation": {

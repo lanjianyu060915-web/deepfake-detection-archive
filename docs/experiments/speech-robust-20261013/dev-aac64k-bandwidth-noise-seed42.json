@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "manifest": "../../../data/robustness-aac64k/audio_aac64k/manifest.jsonl",
+  "data_root": "../../../data/robustness-aac64k/audio_aac64k",
+  "output_dir": "../../../outputs/speech-robust-20261013/dev-aac64k-bandwidth-noise-seed42",
+  "modality": "audio",
+  "model_kind": "audio_waveform",
+  "checkpoint": "../../../outputs/speech-robust-20261013/bandwidth-noise-seed42/training/best.pt",
+  "checkpoint_sha256": "584a5b13eaaeacc66cabd46906b7addc47076d478dada57ad68173b4bec7092a",
+  "device": "cuda",
+  "batch_size": 16,
+  "segment_samples": 64600,
+  "segments": 1,
+  "aggregation": "mean",
+  "audio": {
+    "sample_rate": 16000,
+    "max_duration_seconds": 60,
+    "max_samples": 960000,
+    "backend": "ffmpeg"
+  },
+  "seed": 42
+}

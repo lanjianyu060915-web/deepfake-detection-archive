@@ -21,6 +21,8 @@ from deepfake_detection_archive.data.manifest import (
 
 
 TEMPORAL_CANONICAL = "video_h264_crf23_448x256_16fps_3p5s"
+MULTIGEN_CANONICAL = "video_h264_crf23_448x256_16fps_2s"
+CANONICAL_TIMING = {TEMPORAL_CANONICAL: (3.5, 56), MULTIGEN_CANONICAL: (2.0, 32)}
 
 
 CONDITIONS = {
@@ -165,6 +167,16 @@ CONDITIONS = {
 }
 
 
+# Keep the shared encoding identical; only the duration changes for shorter clips.
+_video, _container, _codec, _arguments = CONDITIONS[TEMPORAL_CANONICAL]
+CONDITIONS[MULTIGEN_CANONICAL] = (
+    _video,
+    _container,
+    _codec,
+    tuple("2" if argument == "3.5" else argument for argument in _arguments),
+)
+
+
 def video_timing(path: Path, timeout: float) -> tuple[float, int | None]:
     """Probe actual video duration; frame count also verifies canonical output."""
     completed = subprocess.run(  # noqa: S603
@@ -224,11 +236,12 @@ def transform(
             failure_reason=row.failure_reason,
         )
     try:
-        if condition == TEMPORAL_CANONICAL:
+        if condition in CANONICAL_TIMING:
+            seconds, _ = CANONICAL_TIMING[condition]
             duration, _ = video_timing(data_root / row.path, timeout)
-            if duration < 3.5:
+            if duration < seconds:
                 raise ValueError(  # noqa: TRY301 -- persist per-sample failure
-                    f"video is shorter than 3.5 seconds: {duration}"
+                    f"video is shorter than {seconds:g} seconds: {duration}"
                 )
         subprocess.run(  # noqa: S603 - media paths are separate arguments
             [  # noqa: S607 - use the configured local FFmpeg
@@ -256,13 +269,15 @@ def transform(
             check=True,
             timeout=timeout,
         )
-        if condition == TEMPORAL_CANONICAL:
+        if condition in CANONICAL_TIMING:
+            seconds, expected_frames = CANONICAL_TIMING[condition]
             duration, frames = video_timing(target, timeout)
-            if duration != 3.5 or frames != 56:
+            if duration != seconds or frames != expected_frames:
                 raise ValueError(  # noqa: TRY301 -- remove invalid output and persist failure
-                    "canonical video must contain exactly 56 frames / 3.5s"
+                    f"canonical video must contain exactly {expected_frames} frames / "
+                    f"{seconds:g}s"
                 )
-            derived = replace(derived, duration_seconds=3.5, frame_rate=16)
+            derived = replace(derived, duration_seconds=seconds, frame_rate=16)
         return replace(
             derived,
             sha256=file_sha256(target),

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "manifest": "../../../data/in-the-wild/in-the-wild-manifest/manifest.jsonl",
+  "data_root": "../../../data/in-the-wild/release_in_the_wild",
+  "output_dir": "../../../outputs/speech-robust-20261013/itw-bandwidth-noise-seed42",
+  "modality": "audio",
+  "model_kind": "audio_waveform",
+  "checkpoint": "../../../outputs/speech-robust-20261013/bandwidth-noise-seed42/training/best.pt",
+  "checkpoint_sha256": "584a5b13eaaeacc66cabd46906b7addc47076d478dada57ad68173b4bec7092a",
+  "device": "cuda",
+  "batch_size": 64,
+  "segment_samples": 64600,
+  "segments": 1,
+  "aggregation": "mean",
+  "audio": {
+    "sample_rate": 16000,
+    "max_duration_seconds": 60,
+    "max_samples": 960000,
+    "backend": "soundfile"
+  },
+  "seed": 42
+}

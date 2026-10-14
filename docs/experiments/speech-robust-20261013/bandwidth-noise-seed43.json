@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "manifest": "../../../data/issue9-asv/main/manifest-training.jsonl",
+  "data_root": "../../../data/issue9-asv/LA",
+  "sources": "../../../data/issue9-asv/main/sources.jsonl",
+  "output_dir": "../../../outputs/speech-robust-20261013/bandwidth-noise-seed43",
+  "modality": "audio",
+  "architecture": "logmel_cnn_v1",
+  "model_config": {
+    "sample_rate": 16000,
+    "n_fft": 512,
+    "hop_length": 160,
+    "n_mels": 64,
+    "channels": 24,
+    "hidden_dim": 64,
+    "dropout": 0.1
+  },
+  "training": {
+    "device": "cuda",
+    "amp": true,
+    "amp_dtype": "bfloat16",
+    "max_epochs": 30,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "accumulation_steps": 1,
+    "patience": 5,
+    "min_delta": 0.0,
+    "max_grad_norm": 1.0,
+    "seed": 43,
+    "deterministic": true
+  },
+  "batch_size": 256,
+  "num_workers": 4,
+  "segment_samples": 64600,
+  "segments": 1,
+  "audio": {
+    "sample_rate": 16000,
+    "max_duration_seconds": 60,
+    "max_samples": 960000,
+    "backend": "soundfile"
+  },
+  "feature_cache": "../../../cache/speech-robust-20261013/waveforms",
+  "cache_max_bytes": 21474836480,
+  "balanced_sampling": true,
+  "feature_batch_size": 32,
+  "augmentation": {
+    "bandwidth": {
+      "probability": 0.5,
+      "target_sample_rate": 8000
+    },
+    "noise": {
+      "probability": 0.5,
+      "min_snr_db": 10.0,
+      "max_snr_db": 30.0
+    }
+  }
+}

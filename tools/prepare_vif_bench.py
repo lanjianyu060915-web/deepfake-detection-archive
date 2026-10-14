@@ -65,7 +65,7 @@ MAX_MEMBERS = 20000
 
 def component(stem: str) -> str:
     """Return the conservative component name for one media stem."""
-    match = re.match(r"^([A-Za-z0-9_-]{11})-", stem)
+    match = re.match(r"^([A-Za-z0-9_-]{11})[-_]", stem)
     return match.group(1) if match else "clip:" + stem
 
 

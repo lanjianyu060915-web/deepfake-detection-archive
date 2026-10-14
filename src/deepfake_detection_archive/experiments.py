@@ -7,6 +7,7 @@ import random
 import tempfile
 import time
 from collections import Counter
+from concurrent.futures import Future, ThreadPoolExecutor
 from dataclasses import asdict, dataclass, field
 from functools import cached_property
 from pathlib import Path
@@ -17,7 +18,12 @@ import torch
 from torch import Tensor
 from torch.utils.data import DataLoader, Dataset, WeightedRandomSampler
 
-from .augmentation import BandwidthSpec, bandlimit_roundtrip
+from .augmentation import (
+    BandwidthSpec,
+    NoiseSpec,
+    add_white_noise,
+    bandlimit_roundtrip,
+)
 from .config import load_object
 from .contracts import ScoreRecord
 from .data.manifest import (
@@ -63,6 +69,7 @@ class ExperimentConfig:
     num_workers: int = 0
     balanced_sampling: bool = False
     balance_sources: bool = False
+    balance_generators: bool = False
     content_type_weights: dict[str, float] = field(default_factory=dict)
     selection: dict[str, Any] = field(default_factory=dict)
     segment_samples: int = 64600
@@ -96,10 +103,18 @@ class ExperimentConfig:
                 raise ValueError(f"{name} must be a positive integer")
         if type(self.num_workers) is not int or self.num_workers < 0:
             raise ValueError("num_workers must be a nonnegative integer")
-        if type(self.balanced_sampling) is not bool:
-            raise ValueError("balanced_sampling must be boolean")
-        if type(self.balance_sources) is not bool:
-            raise ValueError("balance_sources must be boolean")
+        for name in ("balanced_sampling", "balance_sources", "balance_generators"):
+            if type(getattr(self, name)) is not bool:
+                raise ValueError(f"{name} must be boolean")
+        if self.balance_generators and (
+            self.modality != "video"
+            or not self.balanced_sampling
+            or self.balance_sources
+        ):
+            raise ValueError(
+                "balance_generators requires video balanced_sampling without "
+                "balance_sources"
+            )
         if self.balance_sources and not self.balanced_sampling:
             raise ValueError("balance_sources requires balanced_sampling")
         if not isinstance(self.content_type_weights, dict) or any(
@@ -174,6 +189,7 @@ class ExperimentConfig:
         ):
             raise ValueError("pretrained requires AST checkpoint and sha256")
         _ = self.bandwidth_spec
+        _ = self.noise_spec
         _ = self.train_config
         audio, _ = self.media_configs
         if self.architecture == "aasist_l_v1" and (
@@ -190,34 +206,52 @@ class ExperimentConfig:
     def selection_options(self) -> SelectionOptions | None:
         return SelectionOptions.from_options(self.selection or None)
 
+    def _augmentation_options(
+        self, name: str, expected: set[str]
+    ) -> dict[str, Any] | None:
+        """Return one validated train-only augmentation option object, if set."""
+        if not self.augmentation:
+            return None
+        unknown = set(self.augmentation) - {"bandwidth", "noise"}
+        if unknown:
+            raise ValueError(f"invalid augmentation options: {sorted(unknown)}")
+        if name not in self.augmentation:
+            return None
+        options = self.augmentation[name]
+        if not isinstance(options, dict) or set(options) != expected:
+            fields = " and ".join(sorted(expected))
+            raise ValueError(f"{name} augmentation requires exactly {fields}")
+        if any(type(value) is bool for value in options.values()):
+            raise ValueError("augmentation parameters cannot be boolean")
+        if self.architecture not in ("logmel_cnn_v1", "aasist_l_v1"):
+            raise ValueError(
+                f"{name} augmentation requires LogMel or AASIST waveform training"
+            )
+        return options
+
     @cached_property
     def bandwidth_spec(self) -> BandwidthSpec | None:
         """Return the configured train-only bandwidth augmentation, if any."""
-        if not self.augmentation:
+        options = self._augmentation_options(
+            "bandwidth", {"probability", "target_sample_rate"}
+        )
+        if options is None:
             return None
-        unknown = set(self.augmentation) - {"bandwidth"}
-        if unknown:
-            raise ValueError(f"invalid augmentation options: {sorted(unknown)}")
-        options = self.augmentation["bandwidth"]
-        expected = {"probability", "target_sample_rate"}
-        if not isinstance(options, dict) or set(options) != expected:
-            raise ValueError(
-                "bandwidth augmentation requires exactly probability and "
-                "target_sample_rate"
-            )
-        if any(type(value) is bool for value in options.values()):
-            raise ValueError("augmentation parameters cannot be boolean")
         spec = BandwidthSpec(**options)
         audio, _ = self.media_configs
-        if self.architecture not in ("logmel_cnn_v1", "aasist_l_v1"):
-            raise ValueError(
-                "bandwidth augmentation requires LogMel or AASIST waveform training"
-            )
         if spec.target_sample_rate >= audio.sample_rate:
             raise ValueError(
                 "bandwidth augmentation target rate must be below the audio rate"
             )
         return spec
+
+    @cached_property
+    def noise_spec(self) -> NoiseSpec | None:
+        """Return the configured train-only white-noise augmentation, if any."""
+        options = self._augmentation_options(
+            "noise", {"probability", "min_snr_db", "max_snr_db"}
+        )
+        return None if options is None else NoiseSpec(**options)
 
     @cached_property
     def train_config(self) -> TrainConfig:
@@ -311,10 +345,12 @@ class _CachedDataset(Dataset[tuple[Tensor, Tensor]]):
         entries: list[tuple[Path, str, int]],
         bandwidth: BandwidthSpec | None = None,
         sample_rate: int = 16_000,
+        noise: NoiseSpec | None = None,
     ) -> None:
         self.entries = entries
         self.bandwidth = bandwidth
         self.sample_rate = sample_rate
+        self.noise = noise
 
     def __len__(self) -> int:
         return len(self.entries)
@@ -323,15 +359,21 @@ class _CachedDataset(Dataset[tuple[Tensor, Tensor]]):
         # Cache preparation validates bytes and tensors once before training.
         path, _, label = self.entries[index]
         value = torch.load(path, map_location="cpu", weights_only=True)
+        noise = self.noise
+        if noise is not None and _augmentation_draw(noise.probability):
+            # Noise enters before the channel, so band-limiting also filters it.
+            snr_db = random.uniform(noise.min_snr_db, noise.max_snr_db)  # noqa: S311
+            generator = torch.Generator().manual_seed(random.getrandbits(63))
+            value = add_white_noise(value, snr_db, generator)
         bandwidth = self.bandwidth
-        if bandwidth is not None and _bandwidth_draw(bandwidth):
+        if bandwidth is not None and _augmentation_draw(bandwidth.probability):
             value = bandlimit_roundtrip(value, bandwidth, self.sample_rate)
         return value, torch.tensor(label, dtype=torch.float32)
 
 
-def _bandwidth_draw(spec: BandwidthSpec) -> bool:
+def _augmentation_draw(probability: float) -> bool:
     """Draw one augmentation decision from the seeded worker-local stream."""
-    return random.random() < spec.probability  # noqa: S311
+    return random.random() < probability  # noqa: S311
 
 
 def _worker_seed(_worker_id: int) -> None:
@@ -340,19 +382,23 @@ def _worker_seed(_worker_id: int) -> None:
     np.random.seed(seed)  # noqa: NPY002 -- initialize worker-local legacy RNG users
 
 
-def _balanced_sampler(
+def _balanced_sampler(  # noqa: PLR0913 -- explicit independent sampling options
     entries: list[tuple[Path, str, int]],
     generator: torch.Generator,
     sources: list[str] | None = None,
     content_types: list[str] | None = None,
     content_type_weights: dict[str, float] | None = None,
+    *,
+    generators: list[str] | None = None,
 ) -> WeightedRandomSampler:
     """Balance declared groups, optionally scaling whole content domains.
 
     Every (source, label) or label group receives an equal share unless
     content-type weights multiply the per-entry weight. Unlisted content types
     keep weight 1.0; classes inside a weighted domain stay balanced because the
-    domain factor is constant across its groups.
+    domain factor is constant across its groups. Generator balancing instead
+    divides each label's equal mass between its generators, so the real/unknown
+    bucket receives half the draws even when there are many fake generators.
     """
     keys = (
         [
@@ -362,8 +408,19 @@ def _balanced_sampler(
         if sources is not None
         else [("all", label) for _, _, label in entries]
     )
+    if generators is not None:
+        keys = [
+            (name, label)
+            for name, (_, _, label) in zip(generators, entries, strict=True)
+        ]
     counts = Counter(keys)
-    weights = [1.0 / counts[key] for key in keys]
+    groups_per_label = Counter(label for _, label in counts)
+    weights = [
+        1.0 / (counts[key] * groups_per_label[key[1]])
+        if generators is not None
+        else 1.0 / counts[key]
+        for key in keys
+    ]
     if content_type_weights:
         if content_types is None or len(content_types) != len(entries):
             raise ValueError("content_type_weights requires one content type per entry")
@@ -508,6 +565,8 @@ def _prepare_cache(  # noqa: C901, PLR0912, PLR0913, PLR0915, PLR0917 -- cache a
     chunk_size = (
         max(1, config.feature_batch_size // config.segments)
         if isinstance(encoder, FrozenAudioEncoder)
+        else max(1, config.num_workers)
+        if frame_preprocessing is not None
         else 1
     )
     for offset in range(0, len(records), chunk_size):
@@ -556,6 +615,20 @@ def _prepare_cache(  # noqa: C901, PLR0912, PLR0913, PLR0915, PLR0917 -- cache a
                     raise ValueError(
                         "sample preparation failed; inspect decode_failures.json"
                     ) from exc
+        frame_futures: dict[str, Future[Tensor]] = {}
+        if frame_preprocessing is not None and config.num_workers > 0:
+            with ThreadPoolExecutor(max_workers=config.num_workers) as pool:
+                frame_futures = {
+                    record.sample_id: pool.submit(
+                        extract_video_frames,
+                        record,
+                        root,
+                        video_config,
+                        frame_preprocessing,
+                    )
+                    for record, _, path in chunk
+                    if not path.exists()
+                }
         for record, identity, path in chunk:
             try:
                 if path.exists():
@@ -567,6 +640,8 @@ def _prepare_cache(  # noqa: C901, PLR0912, PLR0913, PLR0915, PLR0917 -- cache a
                 else:
                     if record.sample_id in prepared:
                         tensor = prepared.pop(record.sample_id)
+                    elif record.sample_id in frame_futures:
+                        tensor = frame_futures.pop(record.sample_id).result()
                     elif frame_preprocessing is not None:
                         tensor = extract_video_frames(
                             record, root, video_config, frame_preprocessing
@@ -735,6 +810,11 @@ def run_experiment(config_path: Path) -> TrainResult:  # noqa: PLR0915 -- experi
                     else None
                 ),
                 content_type_weights=config.content_type_weights or None,
+                generators=(
+                    [record.generator for record in selected if record.split == "train"]
+                    if config.balance_generators
+                    else None
+                ),
             )
             if config.balanced_sampling
             else None
@@ -744,6 +824,7 @@ def run_experiment(config_path: Path) -> TrainResult:  # noqa: PLR0915 -- experi
                 entries["train"],
                 bandwidth=config.bandwidth_spec,
                 sample_rate=config.media_configs[0].sample_rate,
+                noise=config.noise_spec,
             ),
             shuffle=sampler is None,
             sampler=sampler,
