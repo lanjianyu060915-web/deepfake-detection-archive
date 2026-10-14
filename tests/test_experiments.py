@@ -1126,3 +1126,94 @@ def test_duplicate_json_keys_are_rejected(tmp_path: Path) -> None:
     path.write_text('{"manifest":"a","manifest":"b"}')
     with pytest.raises(ValueError, match="duplicate JSON key"):
         load_experiment_config(path)
+
+
+def test_ast_frontends_have_separate_reusable_feature_caches(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    pytest.importorskip("torchaudio")
+    from deepfake_detection_archive.models.ast import (  # noqa: PLC0415
+        ASTClassifier,
+        ASTConfig,
+    )
+
+    samples = (10000 * np.sin(np.arange(6400) * 0.17)).astype("<i2")
+    path = tmp_path / "tone.wav"
+    with wave.open(str(path), "wb") as stream:
+        stream.setnchannels(1)
+        stream.setsampwidth(2)
+        stream.setframerate(16000)
+        stream.writeframes(samples.tobytes())
+    record = SampleRecord(
+        "tone",
+        "tone.wav",
+        "audio",
+        0,
+        "synthetic",
+        sha256=file_sha256(path),
+        split="train",
+    )
+    config = ExperimentConfig(
+        manifest="manifest.jsonl",
+        data_root=".",
+        sources="sources.jsonl",
+        output_dir="run",
+        modality="audio",
+        architecture="audio_ast_v1",
+        model_config={},
+        training={},
+        segment_samples=6400,
+        audio={"sample_rate": 16000, "backend": "soundfile"},
+    )
+    ast_config = ASTConfig(
+        backbone_config={
+            "hidden_size": 16,
+            "num_hidden_layers": 2,
+            "num_attention_heads": 2,
+            "intermediate_size": 24,
+            "max_length": 32,
+            "num_mel_bins": 32,
+        },
+        trainable_layers=1,
+    )
+    numpy_model = ASTClassifier(ast_config)
+    kaldi_model = ASTClassifier(replace(ast_config, frontend="torchaudio_kaldi_v1"))
+    cache = tmp_path / "cache"
+    first = _prepare_cache(
+        [record],
+        config,
+        tmp_path,
+        cache,
+        None,
+        tmp_path,
+        audio_preprocessor=numpy_model,
+    )
+    second = _prepare_cache(
+        [record],
+        config,
+        tmp_path,
+        cache,
+        None,
+        tmp_path,
+        audio_preprocessor=kaldi_model,
+    )
+    assert first["train"][0][0] != second["train"][0][0]
+    assert len(list(cache.glob("*.pt"))) == 2
+
+    def no_decode(*args: Any) -> None:
+        raise AssertionError("each frontend must reuse its own cached features")
+
+    monkeypatch.setattr(experiments, "decode_audio", no_decode)
+    for model, expected in ((numpy_model, first), (kaldi_model, second)):
+        assert (
+            _prepare_cache(
+                [record],
+                config,
+                tmp_path,
+                cache,
+                None,
+                tmp_path,
+                audio_preprocessor=model,
+            )
+            == expected
+        )

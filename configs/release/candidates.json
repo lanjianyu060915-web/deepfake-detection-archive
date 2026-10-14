@@ -15,7 +15,7 @@
     "torchaudio": "absent",
     "ffmpeg": "N-127271-gba987fe24d-20261010",
     "constraints": [
-      "AST features use the transformers numpy branch only while torchaudio is absent; installing torchaudio switches ASTFeatureExtractor to kaldi fbank silently.",
+      "Archive-time code selected the NumPy frontend because torchaudio was absent. Current code pins frontend per checkpoint; this environment entry remains a historical snapshot.",
       "Video resize/crop happens in ffmpeg; timm crop_pct/interpolation are resolved but never applied and must not be added.",
       "ffmpeg/ffprobe come from the host and are not bundled."
     ]

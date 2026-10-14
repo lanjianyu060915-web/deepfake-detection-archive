@@ -135,9 +135,11 @@ def test_waveform_policy_validation_and_legacy_checkpoint(config, tmp_path):
     save_checkpoint(path, ASTClassifier(config))
     payload = torch.load(path, weights_only=True)
     del payload["config"]["waveform_preparation"]
+    del payload["config"]["frontend"]
     torch.save(payload, path)
     restored, _ = load_checkpoint(path, expected_sha256=sha256_file(path))
     assert restored.config.waveform_preparation == "legacy"
+    assert restored.config.frontend == "numpy_spectrogram_v1"
 
 
 def test_train_keeps_frozen_blocks_in_eval(config):
@@ -207,3 +209,57 @@ def test_pretrained_time_crop_preserves_frequency_and_special_tokens(config, tmp
     )
     with pytest.raises(ValueError, match="can only be shortened"):
         larger.initialize_pretrained(path, sha256_file(path))
+
+
+def test_numpy_frontend_matches_pre_torchaudio_baseline(config):
+    model = ASTClassifier(
+        replace(config, backbone_config={**config.backbone_config, "max_length": 48})
+    )
+    time = np.arange(6400, dtype=np.float32) / 16000
+    waveform = (
+        0.3 * np.sin(2 * np.pi * 440 * time) + 0.1 * np.cos(2 * np.pi * 1700 * time)
+    ).astype(np.float32)
+    features = model.prepare_waveforms(torch.from_numpy(waveform[None]))[0].numpy()
+    # Recorded before installing torchaudio, using the unchanged HF NumPy path.
+    np.testing.assert_allclose(
+        features[[0, 1, 10, 37, 38, 47]][:, [0, 5, 17, 31]],
+        [
+            [-0.86405325, 0.87126446, -0.6507202, -1.2775939],
+            [-0.7919193, 0.87126243, -0.65026575, -1.2775939],
+            [-0.8641039, 0.87126416, -0.6507184, -1.2662324],
+            [-0.7630081, 0.87126195, -0.65034467, -0.99096376],
+            [0.46703237] * 4,
+            [0.46703237] * 4,
+        ],
+        rtol=1e-6,
+        atol=1e-7,
+    )
+    assert float(features.mean()) == pytest.approx(-0.4011737, abs=1e-7)
+    assert float(features.std()) == pytest.approx(0.7758249, abs=1e-7)
+    assert model.preprocessing["frontend"] == "numpy_spectrogram_v1"
+
+
+def test_explicit_kaldi_frontend_and_checkpoint_identity(config, tmp_path):
+    torchaudio = pytest.importorskip("torchaudio")
+    with pytest.raises(ValueError, match="frontend"):
+        replace(config, frontend="auto")
+    numpy_model = ASTClassifier(config)
+    kaldi_model = ASTClassifier(replace(config, frontend="torchaudio_kaldi_v1"))
+    waveform = torch.sin(torch.arange(6400, dtype=torch.float32) * 0.17)[None]
+    numpy_features = numpy_model.prepare_waveforms(waveform)
+    kaldi_features = kaldi_model.prepare_waveforms(waveform)
+    assert numpy_features.shape == kaldi_features.shape
+    assert torch.isfinite(kaldi_features).all()
+    expected = torchaudio.compliance.kaldi.fbank(
+        waveform, sample_frequency=16000, window_type="hanning", num_mel_bins=32
+    )[:32]
+    expected = (expected - config.feature_mean) / (config.feature_std * 2)
+    torch.testing.assert_close(kaldi_features[0], expected)
+    assert numpy_model.preprocessing != kaldi_model.preprocessing
+    assert "torchaudio" not in numpy_model.preprocessing["frontend_versions"]
+    assert "torchaudio" in kaldi_model.preprocessing["frontend_versions"]
+    path = tmp_path / "kaldi.pt"
+    save_checkpoint(path, kaldi_model)
+    restored, _ = load_checkpoint(path, expected_sha256=sha256_file(path))
+    assert restored.config.frontend == "torchaudio_kaldi_v1"
+    torch.testing.assert_close(restored.prepare_waveforms(waveform), kaldi_features)

@@ -148,6 +148,9 @@ split -b 1900M -d outputs/releases/deepfake-v0.1.1-linux-x86_64.tar.gz \
 包内 `release.json` 标识版本、构建源码、平台、权重及实际运行依赖版本，
 `deps/uv.lock` 记录完整构建环境。发布包按已安装 wheel 的 `Requires-Dist` 闭包和
 `RECORD` 复制运行文件，移除开发工具，保留 Torch 声明的 Triton/CUDA 依赖。
+新构建的 `release.json` 从音频 checkpoint 记录 `ast_frontend`。NumPy 权重不因构建环境
+装有 torchaudio 而切换前端，也不额外打包该依赖；明确使用 Kaldi 的权重才打包 torchaudio。
+已发布 v0.1.1 与本轮 RC 包保持原内容，当前源码可在已安装 torchaudio 的环境恢复其 NumPy 权重。
 包内含可直接运行的无标签演示清单。目录搬移后不依赖原仓库、训练路径或共享虚拟环境。
 来源、版权与非商业限制见包内 `licenses/README.md`，项目内见 `docs/release-licenses.md`。
 
