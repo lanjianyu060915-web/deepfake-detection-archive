@@ -51,6 +51,7 @@
 | `C4-video-multigen/` | 五次运行权重（冻结为`paired-seed43`）、配置、`canonical-2s`与统一诊断清单、全部评分 |
 | `C5-video-temporal/` | 时序头seed42/seed43-retry权重、分数、训练清单 |
 | `C6-video-ufd-clip-20261014/` | UFD完整编码器与公开头、冻结CLIP双seed头、配置和三组完整分数；31内容文件约1.219GB |
+| `C7-video-clip-temporal-20261014/` | 轻量时序头双seed最佳权重、配置、训练历史/选择、预计算适配器和分数；24内容文件6.92MB，未采用为主候选，骨干复用C6 |
 | `shared/` | `resnet18-a1/encoder.pt`（视频共享基座）与`ast-audioset/`（AST预训练基座） |
 
 原C1–C5与shared共396个内容文件、约3.07GiB，不含原始媒体、特征缓存和可再生的发布分片。
