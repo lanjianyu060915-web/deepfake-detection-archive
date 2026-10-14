@@ -23,6 +23,11 @@
 正式比赛I/O和外部资源适用性尚未确认，详见[发布资产说明](docs/release-licenses.md)。
 [项目状态](docs/status.md)记录算法结果与缺口，[路线图](docs/roadmap.md)列出后续任务。
 
+当前源码另提供统一入口，支持单文件、多文件和音视频混合目录；只指定输入和输出，
+自动按实际媒体流选择固定模型。源码运行需用 `DEEPFAKE_MODEL_PACKAGE` 指向本地模型包，
+命令与输出见[统一预测入口](docs/release.md#统一预测入口当前源码)。
+已发布的 v0.1.1 压缩包仍使用上面的显式配置命令。
+
 ## 环境
 
 Python 3.12、uv、FFmpeg/ffprobe。当前 RTX 4090 服务器共享环境已就绪：
