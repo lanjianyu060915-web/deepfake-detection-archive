@@ -7,6 +7,7 @@
 
 | 资产 | 实际位置 | 当前用途 |
 | --- | --- | --- |
+| UFD强视频对照 | `/var/tmp/deepfake-video-ufd-20261014/` | `models/`完整本地检测器与sidecar，`configs/`固定配置，`runs/`三组完整评分；团队可读，公开检测头负结果，不替换release；持久备份仍归#50 |
 | 三域联合音频冻结候选 | `/srv/shared-data/candidates/audio-universal-20261014/` | seed42主/seed43备权重、sidecar、原始配置/历史、完整dev与冻结评分；文件0444、目录2755，研究用途 |
 | 音频补充诊断媒体 | `/srv/shared-data/datasets/audio-review-20261014/` | AIME未训练路径154条、AI-OpenBMAT纯音乐94/混合152条；原清单与媒体哈希保留，只作已见研究诊断 |
 | ASVspoof LA Parquet | `/srv/shared-data/datasets/asvspoof2019-la/` | 官方 train/dev 物化输入；#9 已接入协议与 FLAC |

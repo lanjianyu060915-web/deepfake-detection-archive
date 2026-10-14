@@ -1,6 +1,6 @@
 # 预训练模型来源
 
-这些是预训练表征模型，鉴伪分类器需要另行训练。当前实例可用位置见
+下表原有资源是预训练表征模型，鉴伪分类器需要另行训练；文末UFD另含已训练检测头。当前实例可用位置见
 [数据与模型资源](../../data.md#预训练模型)。正式外部权重使用规则待比赛平台确认。
 
 | 资源 | 固定上游版本 | 用途 |
@@ -36,3 +36,21 @@ AST 保留原始 safetensors，通过官方本地加载接口初始化；训练�
 包含完整主干、分类头和前端配置，离线推理无需再读取预训练目录。
 
 旧安装/前向探针和脚本执行流水在整理前提交 `4bbd292`，不作为新训练前置门。
+
+## UniversalFakeDetect 视频强对照
+
+使用[作者项目](https://github.com/WisconsinAIVision/UniversalFakeDetect/tree/030495aea3300a8b54c0ec37ec7fe1dd7e63c619)
+固定commit `030495aea3300a8b54c0ec37ec7fe1dd7e63c619` 的 `pretrained_weights/fc_weights.pth`，
+SHA-256 `477100745713bcc957beb2b40859536859b6483fd6301b3b9293151b194c7847`。
+完整编码器来自OpenAI官方ViT-L/14 TorchScript资源，URL中的可信SHA-256为
+`b8cca3fd41ae0c99ba7e8951adf17d267cdb84cd88be6f7c2e0eca1737a03836`。
+检测器使用768维未归一化视觉投影接线性头；不使用文本提示词或CLIP相似度。
+
+`tools/prepare_ufd.py` 在准备阶段核对两份来源哈希，将视觉Q/K/V及投影映射到已安装的
+transformers实现，保存完整 `ufd_video_v1` tensor checkpoint。运行时不读取原JIT、
+不需要文本编码器或额外CLIP包、不联网。作者评测预处理为RGB、原尺寸CenterCrop224及
+CLIP mean/std，**无Resize**；本项目显式使用 `native_center_crop`，视频分数为四帧rawlogit均值。
+
+UFD及CLIP仓库有MIT代码许可；分类头未见独立model card，训练素材和赛用/再分发范围
+仍需按各资源处理。现阶段仅作研究候选，图像论文成绩不代表本赛视频EER。
+实际权重、配置和评分位置见[资产说明](../../data.md)，结果见[实验索引](../../experiments/README.md)。
