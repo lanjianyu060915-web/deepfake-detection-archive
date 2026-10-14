@@ -2,6 +2,7 @@
 
 import math
 from dataclasses import dataclass
+from importlib.metadata import version
 from pathlib import Path
 from typing import Any, Self, cast
 
@@ -21,6 +22,7 @@ class ASTConfig:
     feature_std: float = 4.5689974
     dropout: float = 0.1
     waveform_preparation: str = "legacy"
+    frontend: str = "numpy_spectrogram_v1"
 
     def __post_init__(self) -> None:
         if type(self.trainable_layers) is not int or self.trainable_layers < 0:
@@ -33,8 +35,74 @@ class ASTConfig:
             raise ValueError("feature mean/std must be finite, with std > 0")
         if not 0 <= self.dropout < 1:
             raise ValueError("dropout must lie in [0, 1)")
+        if self.frontend not in {"numpy_spectrogram_v1", "torchaudio_kaldi_v1"}:
+            raise ValueError("unsupported AST frontend")
         if self.waveform_preparation not in {"legacy", "center_pad_64000_peak095_v1"}:
             raise ValueError("unsupported AST waveform_preparation")
+
+
+def _feature_extractor(*, frontend: str, **kwargs: Any) -> Any:
+    """Pin HF's numerical branch per model instead of package availability."""
+    from transformers import ASTFeatureExtractor  # noqa: PLC0415
+    from transformers.audio_utils import (  # noqa: PLC0415
+        mel_filter_bank,
+        spectrogram,
+        window_function,
+    )
+
+    class ExplicitASTFeatureExtractor(ASTFeatureExtractor):
+        def __init__(self, **settings: Any) -> None:
+            super().__init__(**settings)  # type: ignore[no-untyped-call]
+            if frontend == "torchaudio_kaldi_v1":
+                from torchaudio.compliance.kaldi import fbank  # type: ignore[import-untyped]  # noqa: PLC0415
+
+                self.kaldi_fbank = fbank
+            else:
+                self.mel_filters = mel_filter_bank(
+                    num_frequency_bins=257,
+                    num_mel_filters=self.num_mel_bins,
+                    min_frequency=20,
+                    max_frequency=self.sampling_rate // 2,
+                    sampling_rate=self.sampling_rate,
+                    norm=None,
+                    mel_scale="kaldi",
+                    triangularize_in_mel_space=True,
+                )
+                self.window = window_function(400, "hann", periodic=False)
+
+        def _extract_fbank_features(
+            self, waveform: NDArray[np.float32], max_length: int
+        ) -> NDArray[np.float32]:
+            # HF ASTFeatureExtractor's Apache-2.0 NumPy/Kaldi branches, with
+            # selection fixed by checkpoint config; HF still normalizes/batches.
+            if frontend == "torchaudio_kaldi_v1":
+                features = self.kaldi_fbank(
+                    from_numpy(waveform).unsqueeze(0),
+                    sample_frequency=self.sampling_rate,
+                    window_type="hanning",
+                    num_mel_bins=self.num_mel_bins,
+                ).numpy()
+            else:
+                features = spectrogram(
+                    np.squeeze(waveform),
+                    self.window,
+                    frame_length=400,
+                    hop_length=160,
+                    fft_length=512,
+                    power=2.0,
+                    center=False,
+                    preemphasis=0.97,
+                    mel_filters=self.mel_filters,
+                    log_mel="log",
+                    mel_floor=1.192092955078125e-07,
+                    remove_dc_offset=True,
+                ).T.astype(np.float32)
+            missing = max_length - features.shape[0]
+            if missing > 0:
+                features = np.pad(features, ((0, missing), (0, 0)))
+            return cast(NDArray[np.float32], features[:max_length])
+
+    return ExplicitASTFeatureExtractor(**kwargs)
 
 
 class ASTClassifier(nn.Module):
@@ -44,7 +112,6 @@ class ASTClassifier(nn.Module):
         super().__init__()
         from transformers import (  # noqa: PLC0415
             ASTConfig as BackboneConfig,
-            ASTFeatureExtractor,
             ASTModel,
         )
 
@@ -57,7 +124,8 @@ class ASTClassifier(nn.Module):
         self.head = nn.Sequential(
             nn.Dropout(config.dropout), nn.Linear(backbone_config.hidden_size, 1)
         )
-        self._extractor = ASTFeatureExtractor(  # type: ignore[no-untyped-call]
+        self._extractor = _feature_extractor(
+            frontend=config.frontend,
             sampling_rate=config.sample_rate,
             num_mel_bins=backbone_config.num_mel_bins,
             max_length=backbone_config.max_length,
@@ -79,6 +147,15 @@ class ASTClassifier(nn.Module):
         """Effective frontend configuration, suitable for a JSON cache identity."""
         result = {
             "feature_extractor_type": "ASTFeatureExtractor",
+            "frontend": self.config.frontend,
+            "frontend_versions": {
+                name: version(name)
+                for name in (
+                    ("transformers", "numpy", "torch", "torchaudio")
+                    if self.config.frontend == "torchaudio_kaldi_v1"
+                    else ("transformers", "numpy")
+                )
+            },
             "sampling_rate": self._extractor.sampling_rate,
             "num_mel_bins": self._extractor.num_mel_bins,
             "max_length": self._extractor.max_length,

@@ -261,28 +261,39 @@ def test_missing_input_and_empty_directory_have_single_failure(bundle, tmp_path)
     assert str(report["global_error"]).startswith("no_media:")
 
 
-def test_ast_release_frontend_contract_is_narrow(bundle, monkeypatch):
+def test_ast_release_frontend_contract_is_narrow(bundle):
     expected = {"transformers": "5.19.0", "numpy": "2.5.3", "unrelated": "old"}
     (bundle / "release.json").write_text(json.dumps({"runtime_dependencies": expected}))
     registry = {"runtime_contract": "release.json"}
-    monkeypatch.setattr(
-        "transformers.utils.import_utils.is_torchaudio_available", lambda: False
-    )
     assert (
-        _validate_ast_frontend(bundle / "configs", registry, expected)["frontend"]
-        == "transformers_numpy"
+        _validate_ast_frontend(
+            bundle / "configs", registry, {**expected, "torchaudio": "installed"}
+        )["frontend"]
+        == "numpy_spectrogram_v1"
     )
     with pytest.raises(ValueError, match="numpy"):
         _validate_ast_frontend(
             bundle / "configs", registry, {**expected, "numpy": "different"}
         )
-    monkeypatch.setattr(
-        "transformers.utils.import_utils.is_torchaudio_available", lambda: True
+    kaldi = {**expected, "torch": "2", "torchaudio": "2"}
+    (bundle / "release.json").write_text(json.dumps({"runtime_dependencies": kaldi}))
+    assert (
+        _validate_ast_frontend(bundle / "configs", registry, kaldi)["frontend"]
+        == "torchaudio_kaldi_v1"
     )
-    with pytest.raises(ValueError, match="availability"):
+    with pytest.raises(ValueError, match="torchaudio"):
         _validate_ast_frontend(
-            bundle / "configs", registry, {**expected, "torchaudio": "new"}
+            bundle / "configs", registry, {**kaldi, "torchaudio": None}
         )
+    (bundle / "release.json").write_text(
+        json.dumps(
+            {"runtime_dependencies": kaldi, "ast_frontend": "numpy_spectrogram_v1"}
+        )
+    )
+    assert (
+        _validate_ast_frontend(bundle / "configs", registry, kaldi)["frontend"]
+        == "numpy_spectrogram_v1"
+    )
 
 
 def test_resume_records_media_tool_build_identity(audio, bundle, tmp_path, monkeypatch):
@@ -312,3 +323,58 @@ def test_loop_symlink_does_not_abort_other_media(audio, tmp_path):
     failed = [entry for entry in entries if entry["status"] == "error"]
     assert len(failed) == 1
     assert failed[0]["reason"] == "restricted_symlink"
+
+
+def test_legacy_numpy_ast_release_runs_with_torchaudio_installed(
+    audio, bundle, tmp_path
+):
+    pytest.importorskip("torchaudio")
+    from importlib.metadata import version  # noqa: PLC0415
+
+    from deepfake_detection_archive.models.ast import (  # noqa: PLC0415
+        ASTClassifier,
+        ASTConfig,
+    )
+
+    model = ASTClassifier(
+        ASTConfig(
+            backbone_config={
+                "hidden_size": 16,
+                "num_hidden_layers": 2,
+                "num_attention_heads": 2,
+                "intermediate_size": 24,
+                "max_length": 32,
+                "num_mel_bins": 32,
+            },
+            trainable_layers=1,
+        )
+    )
+    metadata = save_checkpoint(bundle / "weights/ast.pt", model)
+    config_path = bundle / "configs/audio-environment.json"
+    config = json.loads(config_path.read_text())
+    config.update(checkpoint="../weights/ast.pt", checkpoint_sha256=metadata["sha256"])
+    config_path.write_text(json.dumps(config))
+    registry_path = bundle / "configs/models.json"
+    registry = json.loads(registry_path.read_text())
+    registry["models"]["audio"]["architecture"] = "audio_ast_v1"
+    registry_path.write_text(json.dumps(registry))
+    dependencies = {name: version(name) for name in ("transformers", "numpy")}
+    (bundle / "release.json").write_text(
+        json.dumps({"runtime_dependencies": dependencies})
+    )
+    assert (
+        predict_media([audio], tmp_path / "numpy-run", "cpu", resume=False)["failures"]
+        == 0
+    )
+    dependencies.update({name: version(name) for name in ("torch", "torchaudio")})
+    (bundle / "release.json").write_text(
+        json.dumps(
+            {
+                "runtime_dependencies": dependencies,
+                "ast_frontend": "torchaudio_kaldi_v1",
+            }
+        )
+    )
+    report = predict_media([audio], tmp_path / "wrong-contract", "cpu", resume=False)
+    assert "checkpoint AST frontend differs" in report["global_error"]
+    assert report["failures"] > 0

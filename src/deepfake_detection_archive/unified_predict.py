@@ -298,16 +298,16 @@ def predict_media(
 def _validate_ast_frontend(
     folder: Path, registry: dict[str, Any], runtime: dict[str, str | None]
 ) -> dict[str, object]:
-    """Enforce only the shipped AST frontend, including absent torchaudio."""
-    from transformers.utils.import_utils import is_torchaudio_available  # noqa: PLC0415
-
+    """Validate the selected frontend, independent of unused installed packages."""
     release = load_object(folder.parent / registry["runtime_contract"])
     expected = cast(dict[str, str], release["runtime_dependencies"])
-    uses_torchaudio = is_torchaudio_available()
-    if uses_torchaudio != ("torchaudio" in expected):
-        raise ValueError(
-            "incompatible AST frontend: torchaudio availability differs from release"
-        )
+    frontend = release.get(
+        "ast_frontend",
+        "torchaudio_kaldi_v1" if "torchaudio" in expected else "numpy_spectrogram_v1",
+    )
+    if frontend not in {"numpy_spectrogram_v1", "torchaudio_kaldi_v1"}:
+        raise ValueError("unsupported release AST frontend")
+    uses_torchaudio = frontend == "torchaudio_kaldi_v1"
     implementation = (
         ("transformers", "numpy", "torch", "torchaudio")
         if uses_torchaudio
@@ -319,7 +319,7 @@ def _validate_ast_frontend(
                 f"incompatible AST frontend: {name}={runtime[name]}, release requires {expected[name]}"
             )
     return {
-        "frontend": "torchaudio_kaldi" if uses_torchaudio else "transformers_numpy",
+        "frontend": frontend,
         "versions": {name: expected[name] for name in implementation},
     }
 
@@ -343,6 +343,7 @@ def _predict_run(  # noqa: C901, PLR0912, PLR0915 -- orchestration over the exis
     import torch  # noqa: PLC0415
 
     from .media import _run  # noqa: PLC0415
+    from .models.ast import ASTClassifier  # noqa: PLC0415
     from .scoring import OfflineScorer  # noqa: PLC0415
     from .submission.runner import run_inference  # noqa: PLC0415
 
@@ -443,6 +444,15 @@ def _predict_run(  # noqa: C901, PLR0912, PLR0915 -- orchestration over the exis
             ):
                 raise ValueError(  # noqa: TRY301 -- global failure recorded below
                     "default model architecture/schema differs from registry"
+                )
+            if (
+                scorer.metadata["architecture"] == "audio_ast_v1"
+                and frontend_contract
+                and cast(ASTClassifier, scorer.model).config.frontend
+                != frontend_contract["frontend"]
+            ):
+                raise ValueError(  # noqa: TRY301 -- recorded as global failure below
+                    "checkpoint AST frontend differs from release"
                 )
             decoder_config = scorer.audio if modality == "audio" else scorer.video
             stream_configs = {
