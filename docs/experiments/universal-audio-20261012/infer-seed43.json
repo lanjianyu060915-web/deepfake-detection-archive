@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "manifest": "/srv/shared-data/datasets/audio-review-20261014/aime-unseen/unseen-dev-manifest.jsonl",
+  "data_root": "/srv/shared-data/datasets/audio-review-20261014/aime-unseen",
+  "output_dir": "../../../outputs/universal-audio/seed43-aime-unseen",
+  "modality": "audio",
+  "model_kind": "audio_waveform",
+  "checkpoint": "/srv/shared-data/candidates/audio-universal-20261014/seed43/training/best.pt",
+  "checkpoint_sha256": "18f60bc2e42ab4977e76b4ff59916f2a011f88892dd6b880e9b5d19786674755",
+  "device": "cuda",
+  "audio": {
+    "sample_rate": 16000,
+    "backend": "soundfile"
+  },
+  "segment_samples": 64000,
+  "segments": 1,
+  "batch_size": 8,
+  "aggregation": "mean",
+  "seed": 42
+}

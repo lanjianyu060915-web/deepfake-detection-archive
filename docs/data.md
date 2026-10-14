@@ -7,6 +7,8 @@
 
 | 资产 | 实际位置 | 当前用途 |
 | --- | --- | --- |
+| 三域联合音频冻结候选 | `/srv/shared-data/candidates/audio-universal-20261014/` | seed42主/seed43备权重、sidecar、原始配置/历史、完整dev与冻结评分；文件0444、目录2755，研究用途 |
+| 音频补充诊断媒体 | `/srv/shared-data/datasets/audio-review-20261014/` | AIME未训练路径154条、AI-OpenBMAT纯音乐94/混合152条；原清单与媒体哈希保留，只作已见研究诊断 |
 | ASVspoof LA Parquet | `/srv/shared-data/datasets/asvspoof2019-la/` | 官方 train/dev 物化输入；#9 已接入协议与 FLAC |
 | ASV 训练清单/媒体 | `/var/tmp/lanjianyu-issue9-20261011/data/main/`、`data/LA/` | #9 已完成四次训练和完整dev评分 |
 | 音频检测器及分数 | `/var/tmp/lanjianyu-issue9-20261011/runs/` | LogMel/HuBERT各两种子，见云端音频实验卡 |
