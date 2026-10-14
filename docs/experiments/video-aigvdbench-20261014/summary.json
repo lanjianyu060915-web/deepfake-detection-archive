@@ -967,5 +967,189 @@
     "保持各候选必要空间预处理；比较整体候选而非骨干因果效应。",
     "底层YouTube许可未确认；不作为正式比赛资源。",
     "保留部分未读取，本轮不重训、不重选seed，不替换release。"
-  ]
+  ],
+  "frame_count_trial": {
+    "eight_frames": {
+      "pooled": {
+        "real_count": 600,
+        "fake_count": 1280,
+        "eer": 0.31796875,
+        "roc_auc": 0.7427578125000001
+      },
+      "without_Open-Sora": {
+        "real_count": 600,
+        "fake_count": 680,
+        "eer": 0.30833333333333335,
+        "roc_auc": 0.7624044117647059
+      },
+      "paired_Open-Sora_real": {
+        "real_count": 600,
+        "fake_count": 600,
+        "eer": 0.325,
+        "roc_auc": 0.7204916666666666
+      },
+      "per_generator": {
+        "AccVideo": {
+          "real_count": 600,
+          "fake_count": 40,
+          "eer": 0.26,
+          "roc_auc": 0.8196666666666667
+        },
+        "AnimateDiff": {
+          "real_count": 600,
+          "fake_count": 40,
+          "eer": 0.225,
+          "roc_auc": 0.870375
+        },
+        "EasyAnimate": {
+          "real_count": 600,
+          "fake_count": 40,
+          "eer": 0.335,
+          "roc_auc": 0.7665416666666667
+        },
+        "Gen2": {
+          "real_count": 600,
+          "fake_count": 40,
+          "eer": 0.32166666666666666,
+          "roc_auc": 0.6998333333333333
+        },
+        "Gen3": {
+          "real_count": 600,
+          "fake_count": 40,
+          "eer": 0.3616666666666667,
+          "roc_auc": 0.703
+        },
+        "IPOC": {
+          "real_count": 600,
+          "fake_count": 40,
+          "eer": 0.225,
+          "roc_auc": 0.873875
+        },
+        "Jimeng": {
+          "real_count": 600,
+          "fake_count": 40,
+          "eer": 0.30666666666666664,
+          "roc_auc": 0.716125
+        },
+        "Luma": {
+          "real_count": 600,
+          "fake_count": 40,
+          "eer": 0.4166666666666667,
+          "roc_auc": 0.6806666666666666
+        },
+        "Open-Sora": {
+          "real_count": 600,
+          "fake_count": 600,
+          "eer": 0.325,
+          "roc_auc": 0.7204916666666666
+        },
+        "Opensora": {
+          "real_count": 600,
+          "fake_count": 40,
+          "eer": 0.3466666666666667,
+          "roc_auc": 0.7436666666666667
+        },
+        "Pyramid-Flow": {
+          "real_count": 600,
+          "fake_count": 40,
+          "eer": 0.23,
+          "roc_auc": 0.861875
+        },
+        "RepVideo": {
+          "real_count": 600,
+          "fake_count": 40,
+          "eer": 0.32666666666666666,
+          "roc_auc": 0.7643333333333333
+        },
+        "SEINE": {
+          "real_count": 600,
+          "fake_count": 40,
+          "eer": 0.425,
+          "roc_auc": 0.61075
+        },
+        "SVD": {
+          "real_count": 600,
+          "fake_count": 40,
+          "eer": 0.35,
+          "roc_auc": 0.7046666666666667
+        },
+        "Sora": {
+          "real_count": 600,
+          "fake_count": 40,
+          "eer": 0.295,
+          "roc_auc": 0.7381666666666666
+        },
+        "VideoCrafter": {
+          "real_count": 600,
+          "fake_count": 40,
+          "eer": 0.22333333333333333,
+          "roc_auc": 0.87375
+        },
+        "causvid_24fps": {
+          "real_count": 600,
+          "fake_count": 40,
+          "eer": 0.26,
+          "roc_auc": 0.80925
+        },
+        "vidu": {
+          "real_count": 600,
+          "fake_count": 40,
+          "eer": 0.35,
+          "roc_auc": 0.7243333333333334
+        }
+      }
+    },
+    "delta_eer_8_minus_4": {
+      "pooled": 0.00463541666666667,
+      "without_Open-Sora": 0.009803921568627472,
+      "paired_Open-Sora_real": -0.0016666666666666496
+    },
+    "sample_count": 1880,
+    "successful": 1880,
+    "failures": 0,
+    "resources": {
+      "elapsed_seconds": 797.3882996523753,
+      "cuda_peak_allocated_bytes": 1337059840,
+      "cuda_peak_reserved_bytes": 1379926016
+    },
+    "timing": {
+      "T10k_raw_seconds": 4088.4196693301797,
+      "T10k_safe_seconds": 5110.524586662725,
+      "current_session_elapsed_seconds_before_report_write": 761.6882790708914,
+      "current_session_instrumented_rows": 1880,
+      "current_session_new_rows": 1880,
+      "current_session_report_build_seconds": 0.0766972005367279,
+      "current_session_sample_call_seconds": 754.7004292234778,
+      "current_session_scope": "runner entry through report preparation; excludes caller preflight/model startup, final report write and lock release; stage timings cover only newly processed rows, including sample failures; uninstrumented work is unattributed",
+      "current_session_setup_seconds": 0.09773611463606358,
+      "current_session_stage_seconds": {
+        "decode_and_preprocess": 523.9332324275747,
+        "input_validation": 1.0406719418242574,
+        "model_and_feature_scoring": 229.31127733457834,
+        "unattributed_sample_call": 0.4152475195005536
+      },
+      "current_session_write_seconds": 6.652800966054201,
+      "preflight_seconds": 0.7296074945479631,
+      "preflight_seconds_per_sample": 0.00038808909284466126,
+      "projection_scope": "model startup, media/config preflight per sample, sample calls, and row writes",
+      "representative": false,
+      "representativeness_reason": "duration_content_distribution_not_verified",
+      "sample_call_seconds": 754.7004292234778,
+      "samples_per_second": 2.4910546320138693,
+      "stage_clock": "host wall clock, no added CUDA synchronization; built-in successful scoring includes blocking CPU feature/score copies, transfers and pooling, not kernel-only time; failed CUDA calls may leave asynchronous work pending",
+      "startup_seconds": 34.787553989328444,
+      "write_estimate_available": true
+    },
+    "elapsed_ratio_8_over_4": 1.097284359634015,
+    "source_code": {
+      "code_sha256": "11f178a827a8e43c39529fc69a97131e55b31bc0838dd3484cda0f16f32986ec",
+      "commit": "32f027e3be7e774ff3d9b1d360685e5bfeb2decb",
+      "dirty": false
+    },
+    "scores_path": "/var/tmp/deepfake-video-eightframes-20261014/runs/controlled/scores.jsonl",
+    "scores_sha256": "8bdc7f9f5ed4fa11195153f84b5979f32d63d261cc567084e5f7c72be702df35",
+    "config": "infer-controlled-8frames.json",
+    "decision": "保留4帧，停止增加帧数；下一步有界学习时序头，不将此dev当盲测。",
+    "scope": "same frozen head/backbone, same dev media and FP32/batch4/native center crop/mean logits; only algorithm change is evenly sampled frame count. Eight frames change inner timestamps, not a strict superset of four frames. Shared GPU/CPU load differs."
+  }
 }
