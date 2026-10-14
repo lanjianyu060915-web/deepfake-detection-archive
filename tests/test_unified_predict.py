@@ -134,7 +134,14 @@ def test_stream_routes_audio_container_cover_and_first_true_video(audio, tmp_pat
     )
     assert probe_media(video) == ("video", 1)
     decoded = decode_video(
-        video, VideoConfig(n_frames=1, height=32, width=32, stream_index=1)
+        video,
+        VideoConfig(
+            n_frames=1,
+            height=32,
+            width=32,
+            stream_index=1,
+            resize_mode="native_center_crop",
+        ),
     )
     assert decoded.frames[0, 0, 0, 0] > 200
     assert decoded.frames[0, 0, 0, 1] < 10
