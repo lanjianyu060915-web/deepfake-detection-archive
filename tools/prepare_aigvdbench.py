@@ -100,7 +100,9 @@ def load_rows(path: Path) -> list[dict[str, Any]]:
     return rows
 
 
-def build_records(rows: list[dict[str, Any]]) -> tuple[list[SampleRecord], dict[str, Any]]:
+def build_records(
+    rows: list[dict[str, Any]],
+) -> tuple[list[SampleRecord], dict[str, Any]]:
     """Return manifest records plus the isolation and duplicate report."""
     groups = _groups(rows)
     splits_by_group: dict[str, set[str]] = defaultdict(set)
@@ -123,7 +125,9 @@ def build_records(rows: list[dict[str, Any]]) -> tuple[list[SampleRecord], dict[
             status, reason = "missing", str(row.get("error") or "download failed")
         elif group in leaking:
             status, reason = "excluded", "group spans dev and holdout"
-            excluded.append({"sample_id": sample_ids[row["member_key"]], "group": group})
+            excluded.append(
+                {"sample_id": sample_ids[row["member_key"]], "group": group}
+            )
         paired = row.get("paired_real")
         records.append(
             SampleRecord(
@@ -191,13 +195,16 @@ def format_summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
             summary[f"label{label}-{role}"] = {
                 "count": len(probes),
                 "resolutions": dict(
-                    Counter(f"{p['width']}x{p['height']}" for p in probes).most_common(5)
+                    Counter(f"{p['width']}x{p['height']}" for p in probes).most_common(
+                        5
+                    )
                 ),
                 "fps": dict(Counter(round(p["fps"], 2) for p in probes).most_common(5)),
                 "duration_min": min(durations) if durations else None,
                 "duration_median": median(durations) if durations else None,
                 "duration_max": max(durations) if durations else None,
-                "audio_share": sum(bool(p.get("has_audio")) for p in probes) / len(probes),
+                "audio_share": sum(bool(p.get("has_audio")) for p in probes)
+                / len(probes),
             }
     return summary
 
@@ -222,20 +229,25 @@ def prepare(
     output.mkdir(parents=True, exist_ok=True)
     digest = write_manifest(records, output / "manifest.jsonl")
     (output / "sources.jsonl").write_text(
-        json.dumps(asdict(source) | {"allowed_uses": list(source.allowed_uses)},
-                   ensure_ascii=False, sort_keys=True) + "\n",
+        json.dumps(
+            asdict(source) | {"allowed_uses": list(source.allowed_uses)},
+            ensure_ascii=False,
+            sort_keys=True,
+        )
+        + "\n",
         encoding="utf-8",
     )
     counts = Counter(
-        (record.split, record.label, record.generator, record.status) for record in records
+        (record.split, record.label, record.generator, record.status)
+        for record in records
     )
     summary = {
         "manifest_sha256": digest,
         "revision": revision,
         "samples": len(records),
         "counts": [
-            {"split": s, "label": l, "generator": g, "status": st, "n": n}
-            for (s, l, g, st), n in sorted(counts.items())
+            {"split": split, "label": label, "generator": gen, "status": state, "n": n}
+            for (split, label, gen, state), n in sorted(counts.items())
         ],
         "isolation": report,
         "format": format_summary(rows),
@@ -255,7 +267,9 @@ def main() -> None:
     parser.add_argument("--downloaded-at", required=True)
     args = parser.parse_args()
     try:
-        summary = prepare(args.download, args.selection, args.output_dir, args.downloaded_at)
+        summary = prepare(
+            args.download, args.selection, args.output_dir, args.downloaded_at
+        )
     except (OSError, ValueError) as exc:
         parser.exit(2, f"aigvdbench import failed: {exc}\n")
     print(json.dumps({k: summary[k] for k in ("manifest_sha256", "samples")}))
