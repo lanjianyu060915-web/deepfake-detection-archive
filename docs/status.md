@@ -18,7 +18,7 @@
 | 视频 | 七生成器train3,614/dev844，四轮训练；统一1949条EER33.12%→31.73%，未训练标签33.47%→33.14% | 原同域dev16.44%→19.18%，保留研究候选、不替换v0.1.1；仍缺独立来源泛化与更强视觉表征；[实验](experiments/video-multigen-20261013/README.md) |
 | 强视频公开权重对照 | UFD完整1949条47.75%、未训练标签50.00%、旧dev49.32%、CRF35 58.43%；共2405条全覆盖、零失败 | 作者数值已对齐；停止直接采用公开检测头，不替换现候选，继续有限适配与独立来源比较；[实验](experiments/video-ufd-20261014/README.md) |
 | 冻结CLIP视频头 | 双种子dev24.88%/24.64%；冻结seed43统一1949条26.56%、未训练标签27.88%、CRF35 25.84% | 优于七生成器ResNet的31.73%/33.14%/32.13%，原同域dev20.55%仍退化；保留下一轮研究候选，独立来源与许可未确认，不替换release；[实验](experiments/video-clip-head-20261014/README.md) |
-| 离线系统 | 新统一入口RC包实际搬移，CPU/GPU4条均成功；240音频/200视频58.67/69.32秒、零失败；中断恢复20/20，已完成行保留 | 仍用原研究默认，未重发Release；可用已登记视频不足万条，新环境/完整容量/官方I/O及赛用资源仍待完成；[实验](experiments/offline-entry-20261014/README.md) |
+| 离线系统 | 统一入口RC包搬移、CPU/GPU演示及440条profile成功；真实唯一语音10,000/10,000、零失败，端到端1,800.67秒；中断恢复20/20 | 仍用原研究默认，未重发Release；可用已登记视频不足万条，新环境/完整容量/官方I/O及赛用资源仍待完成；[实验](experiments/offline-entry-20261014/README.md) |
 
 以上不是比赛成绩。music-aime96、speech-asv200来自当前dev；未训练音乐视图共享既有dev
 真样本与prompt组，原曲/artist独立性未知。AI-OpenBMAT有标签纯度与底层许可限制。
@@ -36,6 +36,7 @@ In-the-Wild及多轮使用的dev已见，不能再作为未来盲测；正式交
 | LogMel带宽 seed42冻结/seed43 | 完成 | 语音对照 | seed43经#55复核，seed42仅自评 | #37、#55 | 否 | 是 | 仓库源码入口 |
 | 七生成器视频 paired-seed43 | 完成 | 研究候选 | #48复核 | #48 | 否 | 是 | 发布包不兼容（`temporal_kernel_size`），仓库源码入口20条最大差4.9e-3 |
 | 视频时序头 seed43 | 完成 | 研究候选 | 复核目录团队不可读 | #43 | 否 | 是（原权重root 0600，归档副本可读） | 未演练 |
+| 冻结CLIP视频头 seed43 | 完成 | 研究候选 | 未独立重跑完整集 | #61、#64 | 否 | 是（C6） | 标准infer可加载；C6两条恢复分数一致 |
 
 所有候选的正式赛用许可均未确认。三域AST两种子与时序头为脏工作区产物，LogMel seed43未记录commit
 （实际为#55分支`2fabb61`），代码以 `code_sha256` 追溯。
@@ -48,8 +49,8 @@ In-the-Wild及多轮使用的dev已见，不能再作为未来盲测；正式交
 
 - 独立来源数据与评测隔离：[#51](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/51)。
 - 更强视频基线：[#52](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/52)；语音SSL对照：[#53](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/53)。
-- 统一媒体预测入口：[#57](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/57)，由maochuanjun在视频首轮对照后推进。
-- 共享资产持久保存：[#50](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/50)；离线兼容与容量：[#54](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/54)。
+- 统一媒体预测入口：[#57](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/57)已完成，经#62/#64合入main；实际交付由#54继续。
+- 共享资产持久保存：[#50](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/50)已完成；离线兼容与容量：[#54](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/54)。
 
 RTX4090按实际负载共享，任务输出独立。联合音频候选位于
 `/srv/shared-data/candidates/audio-universal-20261014/`，文件只读、团队可读取；

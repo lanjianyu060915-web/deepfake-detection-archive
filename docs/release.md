@@ -68,7 +68,8 @@ CSV 不填充失败分数，因此不能将部分覆盖结果冒充完整提交�
 
 当前另有未公开发布的 `0.1.2-rc1` 研究包，使用原 v0.1.1 权重和下述统一入口，
 位于团队服务器 `/var/tmp/deepfake-offline54-20261014/relocated/deepfake-v0.1.2-rc1/`。
-已完成真实搬移、CPU/GPU演示、240音频/200视频运行及实际中断恢复；
+已完成真实搬移、CPU/GPU演示、440条profile及实际中断恢复；真实唯一语音10,000条全成功，
+端到端1,800.67秒。视频万级与独立新环境尚未验收；
 系统依赖、资源结果与未完成项见[实验记录](experiments/offline-entry-20261014/README.md)。
 已下载的 v0.1.1 压缩包仍按本页原命令使用。
 
@@ -81,7 +82,7 @@ CSV 不填充失败分数，因此不能将部分覆盖结果冒充完整提交�
 源码开发时显式指定已取得的本地模型包；团队服务器示例：
 
 ```bash
-export DEEPFAKE_MODEL_PACKAGE=/srv/shared-data/releases/v0.1.1/deepfake-v0.1.1
+export DEEPFAKE_MODEL_PACKAGE=/var/tmp/deepfake-offline54-20261014/relocated/deepfake-v0.1.2-rc1
 scripts/devctl run python -m deepfake_detection_archive predict --show-models
 scripts/devctl run python -m deepfake_detection_archive predict \
   /data/clip.mp4 /data/录音.wav /data/mixed --output outputs/mixed

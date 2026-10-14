@@ -564,11 +564,11 @@
     "gpu": "Unavailable: nvidia-smi reports host-namespace PIDs not mapped to current /proc inference PIDs; no per-task attribution proved. GPU values null, not zero."
   },
   "limitations": [
-    "440 selected real files are runtime coverage/resource evidence only, not algorithm EER or 10000-file acceptance.",
-    "Same host with two pre-existing GPU inference processes, no isolated new OS; FFmpeg/FFprobe/driver remain host dependencies.",
-    "Per-task GPU memory unavailable because host-namespace GPU PIDs could not be mapped to inference PIDs; RSS is per process and not concurrent total memory.",
-    "Existing release weights and inference unchanged; no holdout selected; all failures are retained.",
-    "Per-task GPU peak unavailable because nvidia-smi host PID namespace differs from local /proc; no unrelated process memory attributed."
+    "440 selected real files are runtime coverage/resource evidence only; separate actual10000-file speech capacity completed, not EER or full audio/video acceptance.",
+    "Same host with concurrent GPU work, no isolated new OS; FFmpeg/FFprobe/driver remain host dependencies.",
+    "Per-task GPU peak unavailable because nvidia-smi host PID namespace differs from local /proc; no unrelated process memory attributed; RSS is not concurrent total memory.",
+    "Existing release weights and inference unchanged; no retained holdout accessed; all failures are retained.",
+    "Actual10000-file run covers previously seen16kHz mono speech only; no video10000 test, full content/format coverage or competition deadline claim."
   ],
   "host_dependencies": {
     "ffmpeg": {
@@ -598,12 +598,146 @@
     "profile-summary.json": "e8032c3ecb79d0871d15f20897a585fb535f068d83272be2018d1d95bcd4df50",
     "probe-summary.json": "d624c5723e373bcbd02644593385354fe51304cb70c5c8ea964d80fd6aef3622",
     "failure-resume-summary.json": "0bbd07188aa31e9bee83f5326d3e10debb07c81724b545f0fcc626ddc784ce2b",
-    "archive-restore-summary.json": "232bae8353e1553bca0066929c68240a0aa7987843bb1887bdff553fd00ff607"
+    "archive-restore-summary.json": "232bae8353e1553bca0066929c68240a0aa7987843bb1887bdff553fd00ff607",
+    "audio-capacity/summary.json": "376a1fc47d8d66caccca2f8e0c6263392542e8656c2a318d1d4fab285702eca3",
+    "audio-capacity/selection.jsonl": "6c5ae11a80e27d1e0cc0dcc1505d0283a1a186ce1bf5f4d3b480e1b99fbaf1dd"
   },
   "package_runtime_paths": {
     "executable": "/var/tmp/deepfake-offline54-20261014/relocated/deepfake-v0.1.2-rc1/runtime/python/bin/python3.12",
     "torch_file": "/var/tmp/deepfake-offline54-20261014/relocated/deepfake-v0.1.2-rc1/runtime/site-packages/torch/__init__.py",
     "numpy_file": "/var/tmp/deepfake-offline54-20261014/relocated/deepfake-v0.1.2-rc1/runtime/site-packages/numpy/__init__.py",
     "media_file": "/var/tmp/deepfake-offline54-20261014/relocated/deepfake-v0.1.2-rc1/src/deepfake_detection_archive/media/__init__.py"
+  },
+  "audio_capacity": {
+    "purpose": "actual runtime capacity only; previously seen diagnostic speech, not EER or generalization",
+    "source_manifest": "/var/tmp/lanjianyu-issue39-20261013/data/in-the-wild-manifest/manifest.jsonl",
+    "source_manifest_sha256": "ad779d0b49687b882f208b446989a9f422bcac692dcebb68795c171a6fee55a8",
+    "registered_split": "test",
+    "role": "previously seen external diagnostic, no retained holdout accessed",
+    "selection_rule": "registered previously-used In-the-Wild diagnostic test manifest; each label ascending sample_id, global registered SHA dedup, first5000 real and first5000 fake; never retained holdout, never transformed/repeated media",
+    "label_counts": {
+      "0": 5000,
+      "1": 5000
+    },
+    "selected_bytes": 2863551136,
+    "materialization_counts": {
+      "hardlink": 10000
+    },
+    "input_distributions": {
+      "duration_seconds": {
+        "n": 10000,
+        "min": 0.506,
+        "p50": 3.38953125,
+        "p95": 11.3701125,
+        "p99": 18.941160625000002,
+        "max": 24.9710625
+      },
+      "sample_rate": {
+        "n": 10000,
+        "min": 16000,
+        "p50": 16000.0,
+        "p95": 16000.0,
+        "p99": 16000.0,
+        "max": 16000
+      },
+      "channels": {
+        "n": 10000,
+        "min": 1,
+        "p50": 1.0,
+        "p95": 1.0,
+        "p99": 1.0,
+        "max": 1
+      },
+      "bytes": {
+        "n": 10000,
+        "min": 32442,
+        "p50": 216988.0,
+        "p95": 727745.2,
+        "p99": 1212292.2800000003,
+        "max": 1598206
+      }
+    },
+    "exit_code": 0,
+    "wall_end_to_end_seconds": 1800.6706587532535,
+    "wall_scope": "spawn through reaping, includes stdlib probe/Python process startup/discovery/input identity/model loading/scoring/writing; monitor detection granularity0.5sec",
+    "wall_samples_per_second": 5.553486392077821,
+    "process_max_rss_kib": 1719484,
+    "rss_scope": "wait4 ru_maxrss for completed child and waited-for descendants",
+    "gpu_memory_peak_mib": null,
+    "gpu_memory_status": "not attributable: nvidia-smi host PIDs differ from current /proc namespace; no team processes counted",
+    "server_condition": "shared RTX4090 with concurrent unrelated work; not exclusive deadline proof",
+    "per_row_elapsed_seconds": {
+      "n": 10000,
+      "min": 0.09048235230147839,
+      "p50": 0.13902116753160954,
+      "p95": 0.14830847876146436,
+      "p99": 0.16096185938455165,
+      "max": 0.4045773511752486
+    },
+    "per_row_scope": "sample scoring calls, excludes discovery and model loading",
+    "session_stage_seconds": {
+      "decode_and_preprocess": 1024.0157884079963,
+      "input_validation": 9.754028458148241,
+      "model_and_feature_scoring": 306.50410828366876,
+      "unattributed_sample_call": 1.6767797283828259
+    },
+    "session_write_seconds": 7.091338183730841,
+    "session_scope": "runner entry through report preparation; excludes caller preflight/model startup, final report write and lock release; stage timings cover only newly processed rows, including sample failures; uninstrumented work is unattributed",
+    "report": {
+      "by_modality": {
+        "audio": {
+          "coverage": 1.0,
+          "failed": 0,
+          "not_run": 0,
+          "registered": 10000,
+          "success": 10000
+        },
+        "video": {
+          "coverage": null,
+          "failed": 0,
+          "not_run": 0,
+          "registered": 0,
+          "success": 0
+        }
+      },
+      "device": "cuda",
+      "discovered": 10000,
+      "discovery_counts": {
+        "duplicate": 0,
+        "error": 0,
+        "excluded": 0,
+        "media": 10000
+      },
+      "failures": 0,
+      "global_error": null,
+      "official": false,
+      "output": "/var/tmp/deepfake-offline54-20261014/audio-capacity/output",
+      "samples": 10000,
+      "score_direction": "higher_is_fake",
+      "score_type": "raw_logit"
+    },
+    "ledger_closure": {
+      "selected": 10000,
+      "discovered": 10000,
+      "result_rows": 10000,
+      "scored_rows": 10000,
+      "unique_result_ids": 10000,
+      "selection_paths_equal_discovery": true,
+      "discovery_ids_equal_results": true,
+      "result_ids_equal_scores": true,
+      "status_counts": {
+        "ok": 10000
+      },
+      "actual_media_count": 10000,
+      "actual_media_unique_sha256": 10000,
+      "all_actual_sha_match_registered_selection": true,
+      "sha_basis": "actual bytes hashed by existing unified discovery; reused discovery.json SHA values, no additional hashing task"
+    },
+    "cache_files_after": [],
+    "limitations": [
+      "10000 unique previously used diagnostic speech files test actual runtime capacity, not EER, generator generalization, universal audio coverage or holdout evaluation.",
+      "Same relocated package and release-v0.1.1 weights unchanged; shared server GPU load, no isolated competition time limit claim.",
+      "Input hardlinks retain original shared inode permissions/content; no media rewritten, chmodded or chowned."
+    ]
   }
 }

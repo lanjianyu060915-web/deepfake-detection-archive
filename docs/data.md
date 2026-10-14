@@ -9,7 +9,7 @@
 | --- | --- | --- |
 | UFD强视频对照 | `/var/tmp/deepfake-video-ufd-20261014/` | 完整检测器、固定配置与三组分数；公开头负结果；最小资产已另存下方C6持久归档 |
 | 冻结CLIP视频头 | `/var/tmp/deepfake-video-clip-head-20261014/` | 双seed头与三组完整分数，冻结43为研究候选；复用UFD骨干，最小资产已另存C6，不替换release |
-| 统一入口研究包 | `/var/tmp/deepfake-offline54-20261014/relocated/deepfake-v0.1.2-rc1/` | 真实v0.1.1权重、包内解释器和依赖；搬移及440条profile已完成，未重发Release |
+| 统一入口研究包 | `/var/tmp/deepfake-offline54-20261014/relocated/deepfake-v0.1.2-rc1/` | 真实v0.1.1权重、包内解释器和依赖；搬移、440条profile及真实语音万级已完成，未重发Release |
 | 三域联合音频冻结候选 | `/srv/shared-data/candidates/audio-universal-20261014/` | seed42主/seed43备权重、sidecar、原始配置/历史、完整dev与冻结评分；文件0444、目录2755，研究用途 |
 | 音频补充诊断媒体 | `/srv/shared-data/datasets/audio-review-20261014/` | AIME未训练路径154条、AI-OpenBMAT纯音乐94/混合152条；原清单与媒体哈希保留，只作已见研究诊断 |
 | ASVspoof LA Parquet | `/srv/shared-data/datasets/asvspoof2019-la/` | 官方 train/dev 物化输入；#9 已接入协议与 FLAC |
