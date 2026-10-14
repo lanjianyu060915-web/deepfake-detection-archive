@@ -10,7 +10,8 @@
 | --- | --- | --- |
 | [ASV 云端双种子](asv-cloud-20261011/README.md) | LogMel EER0.7849%/0.9419%；冻结HuBERT未改善同域dev | 未知攻击、跨来源及压缩评分 |
 | [语音压缩与未知攻击](audio-generalization-20261011/README.md) | LogMel42未知攻击EER2.97%；AAC退化较小，8kHz采样率带限EER13.10% | 带宽增强、跨来源及未知攻击叠加退化 |
-| [语音带宽增强](bandwidth-augmentation-20261012/README.md) | 训练期8kHz增强：带限EER13.10%→1.39%，clean+0.12点，AAC与未知子集亦改善 | seed43复现与更宽目标率/编码增强 |
+| [语音带宽增强](bandwidth-augmentation-20261012/README.md) | 训练期8kHz增强：带限EER13.10%→1.39%，clean+0.12点，AAC与未知子集亦改善 | seed43复现见下一行 |
+| [语音第二种子与白噪声增强](speech-robust-20261013/README.md) | 带宽seed43 8kHz 1.04%，收益稳定；白噪声增强双种子dev 1.84%/0.94%不稳定，停止；In-the-Wild约30%（冻结候选30.67%） | 真实场景语音并入三域联合训练 |
 | [ViF 云端受控视频](vif-cloud-20261011/README.md) | Hunyuan train618/dev146；视觉EER20.55%/21.92%，优于同集元数据 | 跨来源/生成器与压缩评分，再决定微调/时序 |
 | [ViF 帧微调](video-finetune-20261011/README.md) | 同划分解冻layer4与头，双种子dev EER16.44%（冻结头对照20.55%/21.92%），覆盖率1.0 | 尺寸受控后的跨生成器验收见下一行 |
 | [七生成器视频训练](video-multigen-20261013/README.md) | train3,614/dev844，四轮+Hunyuan对照；冻结候选统一1949条33.12%→31.73%，未训练标签33.47%→33.14%，原dev退化 | 保留研究候选；独立来源与更强视觉表征，默认发布不变 |

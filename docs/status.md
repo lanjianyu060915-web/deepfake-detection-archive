@@ -11,7 +11,7 @@
 
 | 方向 | 已有结果 | 当前选择与缺口 |
 | --- | --- | --- |
-| 语音 | 带宽增强seed42 clean EER0.90%、8kHz带限1.39%、A07–A19子集2.70%；原基线clean0.78%、带限13.10% | 保留增强研究候选；第二种子与跨来源尚未完成；[实验](experiments/bandwidth-augmentation-20261012/README.md) |
+| 语音 | 带宽增强seed42/43 clean 0.90%/1.08%、8kHz带限1.39%/1.04%；原基线带限13.10%；In-the-Wild外部诊断30.67% | 保留带宽增强seed42；白噪声增强不稳定已停止；真实网络语音是主要缺口；[实验](experiments/speech-robust-20261013/README.md) |
 | 环境音 | Urban AST12层seed42 dev1.39%；冻结研究候选holdout已见1.43%、未见生成器6.51% | 保留冻结环境音候选；不能代表音乐或通用音频；[实验](experiments/audio-envsdd-20261011/README.md) |
 | 音乐/通用音频 | 扩展AIME无增强候选未训练音乐18.75%；事后等权分数融合14.58% | 融合尚未接离线推理，跨来源和真实混合内容仍弱；[实验](experiments/audio-ast-regularization-20261012/README.md) |
 | 音乐/语音混合 | 匹配对照中未训练路径合成混合32.55%→26.89%；真实广播混合仍50%，环境音退化 | 只保留研究结果，不替换主候选；优先独立来源与真实混合数据；[实验](experiments/audio-speech-mix-20261012/README.md) |
@@ -25,8 +25,8 @@
 
 | 任务 | 本次已知状态 | 下一交付 |
 | --- | --- | --- |
-| [语音稳健训练 #39](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/39) | 已发布，lanjianyu060915-web负责 | 第二种子、编码/噪声训练与独立跨来源诊断 |
-| [多生成器视频训练 #40](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/40) | maochuanjun已完成四轮多生成器训练及Hunyuan对照 | 独立来源扩展与更强视觉表征，取舍与PR在Issue维护 |
+| [语音稳健训练 #39](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/39) | 第二种子、白噪声增强与In-the-Wild诊断已完成 | 保留带宽seed42，停止白噪声；后续重点为独立来源泛化 |
+| [多生成器视频训练 #40](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/40) | 已完成四轮多生成器训练及Hunyuan对照 | 独立来源扩展与更强视觉表征，取舍与PR在Issue维护 |
 | [三域通用音频 #41](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/41) | 已发布，zhl-zx负责；承接已完成#32 | 语音/音乐/环境音联合训练，改善整域失效 |
 
 具体认领和进程状态在Issue更新。本页不逐轮追加运行日志或历史结果。

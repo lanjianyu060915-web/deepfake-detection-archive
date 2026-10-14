@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "manifest": "../../../data/eval-subset/manifest.jsonl",
+  "data_root": "../../../data/eval",
+  "output_dir": "../../../outputs/speech-robust-20261013/eval-subset-bandwidth-noise-seed43",
+  "modality": "audio",
+  "model_kind": "audio_waveform",
+  "checkpoint": "../../../outputs/speech-robust-20261013/bandwidth-noise-seed43/training/best.pt",
+  "checkpoint_sha256": "e1c7c03e710270404e9b1aaf76bf96fb137ca89e4d51e84e98f509784a42deb2",
+  "device": "cuda",
+  "batch_size": 16,
+  "segment_samples": 64600,
+  "segments": 1,
+  "aggregation": "mean",
+  "audio": {
+    "sample_rate": 16000,
+    "max_duration_seconds": 60,
+    "max_samples": 960000,
+    "backend": "soundfile"
+  },
+  "seed": 42
+}
