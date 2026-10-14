@@ -161,6 +161,9 @@ def build_release(  # noqa: PLR0913, PLR0917 -- explicit local build inputs
         (output / "configs" / path.name).write_text(
             json.dumps(config, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
         )
+    shutil.copyfile(
+        REPOSITORY / "configs/release/models.json", output / "configs/models.json"
+    )
     shutil.copyfile(REPOSITORY / "docs/release.md", output / "README.md")
     licenses = output / "licenses"
     licenses.mkdir()

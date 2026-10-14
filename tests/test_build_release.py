@@ -29,7 +29,7 @@ def release_module(monkeypatch: pytest.MonkeyPatch) -> ModuleType:
     return module
 
 
-def test_build_layout_and_launcher_after_relocation(
+def test_build_layout_and_launcher_after_relocation(  # noqa: PLR0915
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, release_module: ModuleType
 ) -> None:
     repo = tmp_path / "repo"
@@ -40,6 +40,7 @@ def test_build_layout_and_launcher_after_relocation(
         "docs/release.md",
         "docs/release-licenses.md",
         "docs/license.txt",
+        "configs/release/models.json",
     ):
         (repo / filename).write_text(filename)
     (repo / "src/demo/__init__.py").write_text("value = 1\n")
@@ -79,8 +80,10 @@ def test_build_layout_and_launcher_after_relocation(
     output = tmp_path / "build"
     args = (output, runtime, python_home, weights, weights, repo / "src")
     release_module.build_release(*args, version="0.1.1")
+    assert (output / "configs/models.json").read_text() == "configs/release/models.json"
     with pytest.raises(FileExistsError):
         release_module.build_release(*args, version="0.1.1")
+    assert (output / "configs/models.json").read_text() == "configs/release/models.json"
     assert (output / "licenses/upstream/license.txt").read_text() == "docs/license.txt"
     assert (output / "runtime/site-packages/torch-2.0.dist-info/LICENSE").is_file()
     assert (output / "runtime/python/bin/python").readlink() == Path("python3.12")

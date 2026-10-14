@@ -41,8 +41,13 @@ class AudioConfig:
     timeout_seconds: float = 30.0
     max_samples: int = 9_600_000
     backend: Literal["ffmpeg", "soundfile"] = "ffmpeg"
+    stream_index: int | None = None
 
     def __post_init__(self) -> None:
+        if self.stream_index is not None and (
+            type(self.stream_index) is not int or self.stream_index < 0
+        ):
+            raise ValueError("stream_index must be a nonnegative integer or null")
         for name in ("sample_rate", "max_samples"):
             value = getattr(self, name)
             if type(value) is not int or value <= 0:
@@ -59,6 +64,7 @@ class VideoConfig:
     height: int = 224
     width: int = 224
     resize_mode: Literal["pad", "center_crop", "native_center_crop"] = "pad"
+    stream_index: int | None = None
     max_duration_seconds: float = 600.0
     timeout_seconds: float = 60.0
     max_source_pixels: int = 40_000_000
@@ -66,6 +72,10 @@ class VideoConfig:
     max_output_bytes: int = 512 * 1024 * 1024
 
     def __post_init__(self) -> None:
+        if self.stream_index is not None and (
+            type(self.stream_index) is not int or self.stream_index < 0
+        ):
+            raise ValueError("stream_index must be a nonnegative integer or null")
         for name in (
             "n_frames",
             "height",
@@ -241,7 +251,11 @@ def decode_audio(path: str | Path, config: AudioConfig | None = None) -> AudioDa
     source = _local_file(path)
     if config.backend == "soundfile":
         return _decode_audio_soundfile(source, config)
-    metadata = _probe(source, "a:0", config.timeout_seconds)
+    metadata = _probe(
+        source,
+        str(config.stream_index) if config.stream_index is not None else "a:0",
+        config.timeout_seconds,
+    )
     duration = _duration(metadata, config.max_duration_seconds)
     try:
         rate = int(metadata["streams"][0]["sample_rate"])
@@ -276,7 +290,7 @@ def decode_audio(path: str | Path, config: AudioConfig | None = None) -> AudioDa
             "-i",
             source,
             "-map",
-            "0:a:0",
+            f"0:{config.stream_index}" if config.stream_index is not None else "0:a:0",
             "-vn",
             "-af",
             downmix,
@@ -312,7 +326,7 @@ def _frame_timestamps(source: str, config: VideoConfig) -> NDArray[np.float64]:
             "-protocol_whitelist",
             "file,pipe",
             "-select_streams",
-            "v:0",
+            str(config.stream_index) if config.stream_index is not None else "v:0",
             "-show_frames",
             "-show_entries",
             "frame=best_effort_timestamp_time",
@@ -349,7 +363,11 @@ def _frame_timestamps(source: str, config: VideoConfig) -> NDArray[np.float64]:
 def decode_video(path: str | Path, config: VideoConfig | None = None) -> VideoData:
     config = config or VideoConfig()
     source = _local_file(path)
-    metadata = _probe(source, "v:0", config.timeout_seconds)
+    metadata = _probe(
+        source,
+        str(config.stream_index) if config.stream_index is not None else "v:0",
+        config.timeout_seconds,
+    )
     duration = _duration(metadata, config.max_duration_seconds)
     try:
         width = int(metadata["streams"][0]["width"])
@@ -411,7 +429,7 @@ def decode_video(path: str | Path, config: VideoConfig | None = None) -> VideoDa
             "-i",
             source,
             "-map",
-            "0:v:0",
+            f"0:{config.stream_index}" if config.stream_index is not None else "0:v:0",
             "-an",
             "-filter_threads",
             "1",
