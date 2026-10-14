@@ -30,8 +30,45 @@
 | FakeSound 诊断清单 | `/var/tmp/lanjianyu-issue11-20261011/fakesound-v1/` | data_root 为其 `media/`，含缺失 real 记录 |
 
 共享原媒体和模型只读；`outputs/`、`cache/` 使用各自任务目录。
-`/var/tmp` 产物当前可定位，但不是已确认的持久卷；实例回收前由维护者迁入平台持久化存储。
+`/var/tmp` 产物当前可定位，但不是已确认的持久卷；候选的最小集合已另存[持久归档](#持久归档)。
 音视频任务已交付的目录组为 `dlteam`，团队可读；实际配置与权重标识见实验卡。
+
+## 持久归档
+
+`/var/tmp` 不保证跨实例保留。保留候选的最小集合已复制到矩池云持久网盘
+`/mnt/deepfake-archive/`（2026-10-14，#50），原副本保留不动。
+
+| 目录 | 内容 |
+| --- | --- |
+| `C1-release-v0.1.1/` | 发布包两份权重、sidecar、配置、`release.json`、review各桶分数 |
+| `C2-audio-universal/` | 三域AST seed42/43及两个对比组权重、完整dev与冻结评分、7份清单 |
+| `C3-speech-logmel-bandwidth/` | LogMel带宽seed42/43与两次白噪声运行、各条件分数与比较、训练/dev/条件清单、In-the-Wild清单 |
+| `C4-video-multigen/` | 五次运行权重（冻结为`paired-seed43`）、配置、`canonical-2s`与统一诊断清单、全部评分 |
+| `C5-video-temporal/` | 时序头seed42/seed43-retry权重、分数、训练清单 |
+| `shared/` | `resnet18-a1/encoder.pt`（视频共享基座）与`ast-audioset/`（AST预训练基座） |
+
+共396个内容文件、约3.07GiB，不含原始媒体、特征缓存和可再生的发布分片。
+`index.json` 逐文件记录原路径、归档路径、大小和SHA-256；配置中的原路径按该表替换即可指向归档。
+校验：
+
+```bash
+cd /mnt/deepfake-archive && sha256sum -c SHA256SUMS
+```
+
+恢复演练：三域AST seed42从归档权重经发布包 `infer` 重评两桶各40条，与原分数逐位一致；
+七生成器视频 `paired-seed43` 从归档权重与基座经仓库源码入口重评20条，最大差4.9e-3，
+来自原评分缓存批量64与本次批量8的CUDA数值差。发布包v0.1.1不能加载该视频权重
+（缺少 `temporal_kernel_size` 字段），需要仓库源码入口。
+
+各候选的加载契约在 [`configs/release/candidates.json`](../configs/release/candidates.json)：
+完整鉴伪权重或所需基座的归档路径与SHA-256、代码版本、适用范围、研究/发布状态，以及
+从当前环境实际读出的有效预处理（AST频谱前端常量、LogMel前端、视频帧采样与RGB mean/std）。
+约束：AST前端依赖环境中**没有** torchaudio（装上后 transformers 会静默改用 kaldi fbank）；
+视频缩放裁剪全部由 ffmpeg 完成，不能再叠加 timm 的 `crop_pct`；ffmpeg 由主机提供。
+统一入口 #57 从这里读取，不在别处重复维护参数。
+
+网盘为 `fuse.fx`：`chgrp` 不生效（gid固定为2000），文件统一 0444 全员可读；
+`du` 显示为0，大小以 `index.json` 或 `stat` 为准。原始媒体与特征缓存仍只在实例上，需按各工具重建。
 
 ## 导入与训练清单
 
