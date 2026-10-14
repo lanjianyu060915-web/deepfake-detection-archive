@@ -8,8 +8,9 @@ from torch import Tensor, nn
 
 from deepfake_detection_archive.config import load_object
 
-from .checkpoint import verify_sha256
+from .checkpoint import load_checkpoint, verify_sha256
 from .core import validate_waveforms
+from .ufd import UFDVideoClassifier
 
 
 VISION_ARCHITECTURES = frozenset(
@@ -19,6 +20,7 @@ VISION_ARCHITECTURES = frozenset(
         "efficientnet_b0",
         "vit_small_patch16_224",
         "convnext_tiny",
+        "ufd_clip_vit_l14",
     }
 )
 AUDIO_ARCHITECTURES = frozenset({"wav2vec2", "hubert", "wavlm"})
@@ -80,10 +82,10 @@ class _FrozenEncoder(nn.Module):
 
 
 class FrozenVisionEncoder(_FrozenEncoder):
-    """Load a timm feature-only state_dict from an explicit hash-verified file.
+    """Load local timm features or the projected visual encoder of a UFD model.
 
-    The file must contain the exact `num_classes=0` state_dict, without wrappers.
-    Pretrained classifiers must be explicitly converted before this boundary.
+    Timm files contain the exact `num_classes=0` state_dict without wrappers;
+    UFD uses a standard full checkpoint containing its projected visual encoder.
     Input RGB tensors must already use the registered model preprocessing;
     `preprocessing` exposes its size, interpolation, mean and standard deviation.
     """
@@ -94,6 +96,17 @@ class FrozenVisionEncoder(_FrozenEncoder):
         super().__init__()
         if architecture not in VISION_ARCHITECTURES:
             raise ValueError(f"unsupported local vision architecture: {architecture}")
+        self.architecture = architecture
+        self.checkpoint_sha256 = expected_sha256
+        if architecture == "ufd_clip_vit_l14":
+            model, _ = load_checkpoint(checkpoint, expected_sha256=expected_sha256)
+            if not isinstance(model, UFDVideoClassifier):
+                raise ValueError("ufd_clip_vit_l14 requires a ufd_video_v1 checkpoint")
+            self.backbone: nn.Module = model.backbone
+            self.feature_dim = model.head.in_features
+            self.preprocessing: dict[str, Any] = dict(model.preprocessing)
+            self._freeze()
+            return
         verify_sha256(checkpoint, expected_sha256)
         import timm  # noqa: PLC0415
         from timm.data.config import resolve_model_data_config  # noqa: PLC0415
@@ -109,11 +122,9 @@ class FrozenVisionEncoder(_FrozenEncoder):
             raise ValueError("vision checkpoint contains non-finite tensors")
         self.backbone.load_state_dict(state, strict=True)
         self.feature_dim = int(cast(int, self.backbone.num_features))
-        self.preprocessing: dict[str, Any] = resolve_model_data_config(  # type: ignore[no-untyped-call]
+        self.preprocessing = resolve_model_data_config(  # type: ignore[no-untyped-call]
             self.backbone
         )
-        self.architecture = architecture
-        self.checkpoint_sha256 = expected_sha256
         self._freeze()
 
     @torch.no_grad()
@@ -124,6 +135,8 @@ class FrozenVisionEncoder(_FrozenEncoder):
             )
         if not images.is_floating_point() or not bool(torch.isfinite(images).all()):
             raise ValueError("images must contain finite floating-point values")
+        if self.architecture == "ufd_clip_vit_l14":
+            return cast(Tensor, self.backbone(pixel_values=images).image_embeds)
         return cast(Tensor, self.backbone(images))
 
 

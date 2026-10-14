@@ -1,5 +1,6 @@
 """Shared local-only media preprocessing for frozen feature extraction."""
 
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any
 
@@ -163,6 +164,9 @@ def extract_features(  # noqa: PLR0913, PLR0917
             size = tuple(encoder.preprocessing["input_size"])
             if size != (3, video_config.height, video_config.width):
                 raise ValueError("video dimensions must match encoder input_size")
+            required_mode = encoder.preprocessing.get("resize_mode")
+            if required_mode is not None and video_config.resize_mode != required_mode:
+                raise ValueError("video resize_mode must match encoder preprocessing")
             video = decode_video(path, video_config)
             inputs = (
                 torch.from_numpy(video.frames).permute(0, 3, 1, 2).float().div_(255)
@@ -189,6 +193,42 @@ def extract_features(  # noqa: PLR0913, PLR0917
                     raise ValueError("encoder returned invalid feature shape or values")
                 result.append(features.cpu().float())
         return torch.cat(result)
+
+
+def extract_video_feature_batch(  # noqa: PLR0913, PLR0917
+    records: list[SampleRecord],
+    root: Path,
+    encoder: FrozenVisionEncoder,
+    video_config: VideoConfig,
+    device: str,
+    batch_size: int,
+    num_workers: int,
+) -> list[Tensor]:
+    """Decode a bounded chunk concurrently, then batch frames across videos.
+
+    Only the main thread runs the encoder. Cache entries own their CPU FP32
+    tensors, so serializing one video's features never saves a whole GPU batch.
+    """
+    if not records:
+        return []
+    required_mode = encoder.preprocessing.get("resize_mode")
+    if required_mode is not None and video_config.resize_mode != required_mode:
+        raise ValueError("video resize_mode must match encoder preprocessing")
+    with ThreadPoolExecutor(max_workers=max(1, num_workers)) as pool:
+        futures = [
+            pool.submit(
+                extract_video_frames, record, root, video_config, encoder.preprocessing
+            )
+            for record in records
+        ]
+        inputs = [future.result() for future in futures]
+    with torch.inference_mode():
+        features = [
+            encoder(frames.to(device)).cpu().float()
+            for frames in torch.cat(inputs).split(batch_size)  # type: ignore[no-untyped-call]
+        ]
+    values = torch.cat(features).reshape(len(records), video_config.n_frames, -1)
+    return [value.clone() for value in values.unbind()]
 
 
 def extract_video_frames(

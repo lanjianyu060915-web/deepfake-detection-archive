@@ -1,0 +1,401 @@
+{
+  "experiment": "video-clip-head-20261014",
+  "code_commit": "865a2c9",
+  "research_only": true,
+  "official_evaluation": false,
+  "holdout_accessed": false,
+  "encoder_sha256": "81907988948ab62e4ab20adc33f7eff6bee14f1067cf47e1e712525e0010d7f7",
+  "selection": {
+    "epoch": "minimum full training dev EER, patience6",
+    "seed": "lower selected dev EER among42/43, tie favors42",
+    "head": "existing 64-dimensional MLP with LayerNorm; CLIP encoder frozen",
+    "diagnostic": "only after seed selection; historical views remain seen diagnostics; no holdout access",
+    "data": "unchanged seven-generator train3614/dev844",
+    "selected_seed": 43,
+    "selected_epoch": 16,
+    "checkpoint": "/var/tmp/deepfake-video-clip-head-20261014/seed43/training/best.pt",
+    "checkpoint_sha256": "7dc0283f0975b2c373956e670138e4f870ed64fda78d2863183655af49037bdf",
+    "dev_results": {
+      "42": {
+        "best_dev_eer": 0.24881516587677724,
+        "best_epoch": 17
+      },
+      "43": {
+        "best_dev_eer": 0.24644549763033174,
+        "best_epoch": 16
+      }
+    },
+    "diagnostics_accessed_at_selection": false
+  },
+  "precision": "frozen encoder FP32, head training BF16 AMP, inference FP32; TF32 disabled",
+  "method": "frozen original projected CLIP ViT-L/14 features without L2 normalization; existing LayerNorm/64-dimensional MLP; mean raw frame logits; four native-center-cropped frames",
+  "train_count": 3614,
+  "dev_count": 844,
+  "training": {
+    "42": {
+      "best_dev_eer": 0.24881516587677724,
+      "best_epoch": 17,
+      "epochs_completed": 23,
+      "stop_reason": "early_stopping",
+      "seconds": 38.51397185306996,
+      "peak_cuda_allocated_bytes": 72572928,
+      "peak_cuda_reserved_bytes": 2120220672,
+      "total_experiment_seconds": 280.3267568917945,
+      "skipped_optimizer_updates": 0,
+      "checkpoint_sha256": "ab157a0221aabefb770eef815fe0c808bd1fa36941fbbbb6ad2ff2a364eb6451",
+      "dev_scores_sha256": "638406a6f953f7bf3e7f5bfcd19befeadafa21ef5536d21d89b696ee9701ee06"
+    },
+    "43": {
+      "best_dev_eer": 0.24644549763033174,
+      "best_epoch": 16,
+      "epochs_completed": 22,
+      "stop_reason": "early_stopping",
+      "seconds": 33.938618692569435,
+      "peak_cuda_allocated_bytes": 72048640,
+      "peak_cuda_reserved_bytes": 1296039936,
+      "total_experiment_seconds": 51.23627265077084,
+      "skipped_optimizer_updates": 0,
+      "checkpoint_sha256": "7dc0283f0975b2c373956e670138e4f870ed64fda78d2863183655af49037bdf",
+      "dev_scores_sha256": "4cb915e0a1e478081e0e84fa3f3039d3c12e4325408f968d532bbc49d740fb20"
+    }
+  },
+  "conditions": {
+    "canonical": {
+      "manifest": "/var/tmp/deepfake-release-review-20261012/video-canonical/video_h264_crf23_448x256_16fps_3p5s/manifest.jsonl",
+      "scores": "/var/tmp/deepfake-video-clip-head-20261014/runs/canonical/scores.jsonl",
+      "scores_sha256": "8333f425c68a1e634f8305a3869331bfee23531f3eef70413e60d3ce8477acfe",
+      "clip_mlp": {
+        "sample_count": 1949,
+        "real_count": 104,
+        "fake_count": 1845,
+        "fullset_eer": 0.26558265582655827,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "published": {
+        "sample_count": 1949,
+        "real_count": 104,
+        "fake_count": 1845,
+        "fullset_eer": 0.3311653116531165,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "multigen": {
+        "sample_count": 1949,
+        "real_count": 104,
+        "fake_count": 1845,
+        "fullset_eer": 0.3173076923076923,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "ufd": {
+        "sample_count": 1949,
+        "real_count": 104,
+        "fake_count": 1845,
+        "fullset_eer": 0.4775067750677507,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "timing": {
+        "startup_seconds": 14.084114712662995,
+        "preflight_seconds": 2.008132180199027,
+        "current_session_sample_call_seconds": 445.1004806207493,
+        "current_session_stage_seconds": {
+          "decode_and_preprocess": 378.15119214355946,
+          "input_validation": 1.4146931879222393,
+          "model_and_feature_scoring": 65.27218807581812,
+          "unattributed_sample_call": 0.26240721344947815
+        },
+        "samples_per_second": 4.378786554626657
+      },
+      "seen_labels": {
+        "sample_count": 727,
+        "real_count": 104,
+        "fake_count": 623,
+        "fullset_eer": 0.2403846153846154,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "unseen_labels": {
+        "sample_count": 1326,
+        "real_count": 104,
+        "fake_count": 1222,
+        "fullset_eer": 0.27884615384615385,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "paired_generators": {
+        "CogVideoX1.5-5B-T": {
+          "sample_count": 208,
+          "real_count": 104,
+          "fake_count": 104,
+          "fullset_eer": 0.18269230769230768,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "HunyuanVideo": {
+          "sample_count": 206,
+          "real_count": 103,
+          "fake_count": 103,
+          "fullset_eer": 0.1941747572815534,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "HunyuanVideo-I2V": {
+          "sample_count": 208,
+          "real_count": 104,
+          "fake_count": 104,
+          "fullset_eer": 0.3557692307692308,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "LTX-Video-13B-I": {
+          "sample_count": 204,
+          "real_count": 102,
+          "fake_count": 102,
+          "fullset_eer": 0.38235294117647056,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "LTX-Video-13B-T": {
+          "sample_count": 200,
+          "real_count": 100,
+          "fake_count": 100,
+          "fullset_eer": 0.23,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "SkyReels-V2": {
+          "sample_count": 208,
+          "real_count": 104,
+          "fake_count": 104,
+          "fullset_eer": 0.20192307692307693,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "SkyReels-V2-I2V-14B-540P": {
+          "sample_count": 206,
+          "real_count": 103,
+          "fake_count": 103,
+          "fullset_eer": 0.34951456310679613,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "Wan2.1-T2V-1.3B": {
+          "sample_count": 208,
+          "real_count": 104,
+          "fake_count": 104,
+          "fullset_eer": 0.14423076923076922,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "Wan2.1-VACE-1.3B-T": {
+          "sample_count": 208,
+          "real_count": 104,
+          "fake_count": 104,
+          "fullset_eer": 0.375,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "Wan2.2-I2V-14B": {
+          "sample_count": 208,
+          "real_count": 104,
+          "fake_count": 104,
+          "fullset_eer": 0.36538461538461536,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "Wan2.2-T2V-14B": {
+          "sample_count": 208,
+          "real_count": 104,
+          "fake_count": 104,
+          "fullset_eer": 0.20192307692307693,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "Wan2.2-TI2V-5B-I": {
+          "sample_count": 208,
+          "real_count": 104,
+          "fake_count": 104,
+          "fullset_eer": 0.36538461538461536,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "Wan2.2-TI2V-5B-T": {
+          "sample_count": 208,
+          "real_count": 104,
+          "fake_count": 104,
+          "fullset_eer": 0.15384615384615385,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "gen4-turbo": {
+          "sample_count": 128,
+          "real_count": 64,
+          "fake_count": 64,
+          "fullset_eer": 0.390625,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "hailuo": {
+          "sample_count": 162,
+          "real_count": 81,
+          "fake_count": 81,
+          "fullset_eer": 0.2345679012345679,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "kling-v1": {
+          "sample_count": 160,
+          "real_count": 80,
+          "fake_count": 80,
+          "fullset_eer": 0.225,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "pika-v2": {
+          "sample_count": 180,
+          "real_count": 90,
+          "fake_count": 90,
+          "fullset_eer": 0.13333333333333333,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "pixverse-v4-5": {
+          "sample_count": 184,
+          "real_count": 92,
+          "fake_count": 92,
+          "fullset_eer": 0.2608695652173913,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "sora-2": {
+          "sample_count": 188,
+          "real_count": 94,
+          "fake_count": 94,
+          "fullset_eer": 0.2872340425531915,
+          "failure_count": 0,
+          "coverage": 1.0
+        }
+      }
+    },
+    "old-dev": {
+      "manifest": "/var/tmp/deepfake-video-multigen-20261013/old-dev/manifest.jsonl",
+      "scores": "/var/tmp/deepfake-video-clip-head-20261014/runs/old-dev/scores.jsonl",
+      "scores_sha256": "6385b91a9c143818f2d3b8f58a32ae173ffbdfa2eee042dd208b8616e6792d1d",
+      "clip_mlp": {
+        "sample_count": 146,
+        "real_count": 73,
+        "fake_count": 73,
+        "fullset_eer": 0.2054794520547945,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "published": {
+        "sample_count": 146,
+        "real_count": 73,
+        "fake_count": 73,
+        "fullset_eer": 0.1643835616438356,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "multigen": {
+        "sample_count": 146,
+        "real_count": 73,
+        "fake_count": 73,
+        "fullset_eer": 0.1917808219178082,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "ufd": {
+        "sample_count": 146,
+        "real_count": 73,
+        "fake_count": 73,
+        "fullset_eer": 0.4931506849315068,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "timing": {
+        "startup_seconds": 14.237100375816226,
+        "preflight_seconds": 1.4824438728392124,
+        "current_session_sample_call_seconds": 35.511554402299225,
+        "current_session_stage_seconds": {
+          "decode_and_preprocess": 29.387234788388014,
+          "input_validation": 0.10269161127507687,
+          "model_and_feature_scoring": 6.001400065608323,
+          "unattributed_sample_call": 0.020227937027812004
+        },
+        "samples_per_second": 4.111337914021221
+      }
+    },
+    "crf35": {
+      "manifest": "/var/tmp/deepfake-video-temporal-20261012/diagnostic/size-control/canonical/video_h264_crf35_448x256/manifest.jsonl",
+      "scores": "/var/tmp/deepfake-video-clip-head-20261014/runs/crf35/scores.jsonl",
+      "scores_sha256": "71ea1bab11c2eb55d6891aba072fab97a46b17980e4e7af9c8819b4dda23d260",
+      "clip_mlp": {
+        "sample_count": 310,
+        "real_count": 89,
+        "fake_count": 221,
+        "fullset_eer": 0.25842696629213485,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "published": {
+        "sample_count": 310,
+        "real_count": 89,
+        "fake_count": 221,
+        "fullset_eer": 0.3258426966292135,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "multigen": {
+        "sample_count": 310,
+        "real_count": 89,
+        "fake_count": 221,
+        "fullset_eer": 0.3212669683257919,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "ufd": {
+        "sample_count": 310,
+        "real_count": 89,
+        "fake_count": 221,
+        "fullset_eer": 0.5842696629213483,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "timing": {
+        "startup_seconds": 14.529638391919434,
+        "preflight_seconds": 1.5383081678301096,
+        "current_session_sample_call_seconds": 67.13419286161661,
+        "current_session_stage_seconds": {
+          "decode_and_preprocess": 54.874509745277464,
+          "input_validation": 0.1898650238290429,
+          "model_and_feature_scoring": 12.026594662107527,
+          "unattributed_sample_call": 0.04322343040257692
+        },
+        "samples_per_second": 4.617617145394173
+      }
+    }
+  },
+  "profile": {
+    "media": 8,
+    "frames": 32,
+    "feature_batch_size": 32,
+    "decode_workers": 8,
+    "seconds": 0.6464628260582685,
+    "peak_cuda_allocated_bytes": 1920588288,
+    "peak_cuda_reserved_bytes": 2118123520,
+    "cache_files": 8,
+    "precision": "float32",
+    "train_backbone": false
+  },
+  "feature_cache_bytes": 65350395,
+  "limitations": [
+    "same Panda/HD-VILA source families as prior training",
+    "historical diagnostics already seen across experiments",
+    "unseen labels include related generator family versions; not independent source domains",
+    "four frame aggregation has no learned temporal model",
+    "formal competition resource terms unresolved"
+  ]
+}

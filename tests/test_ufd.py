@@ -12,9 +12,14 @@ from torchvision.transforms import CenterCrop, Compose, Normalize, ToTensor
 
 from deepfake_detection_archive.config import InferenceConfig
 from deepfake_detection_archive.data.manifest import SampleRecord, file_sha256
-from deepfake_detection_archive.features import extract_video_frames
-from deepfake_detection_archive.media import VideoConfig
+from deepfake_detection_archive.features import (
+    extract_features,
+    extract_video_feature_batch,
+    extract_video_frames,
+)
+from deepfake_detection_archive.media import AudioConfig, VideoConfig
 from deepfake_detection_archive.models import load_checkpoint, save_checkpoint
+from deepfake_detection_archive.models.encoders import FrozenVisionEncoder
 from deepfake_detection_archive.models.ufd import UFDConfig, UFDVideoClassifier
 from deepfake_detection_archive.scoring import OfflineScorer
 
@@ -53,6 +58,78 @@ def test_checkpoint_cold_load_and_raw_frame_mean(tmp_path, monkeypatch):
     assert metadata["architecture"] == "ufd_video_v1"
     with torch.inference_mode():
         assert torch.equal(loaded(images), expected)
+
+
+def test_frozen_clip_features_preserve_projection_and_freeze(tmp_path):
+    model = UFDVideoClassifier(tiny_config()).eval()
+    checkpoint = tmp_path / "ufd.pt"
+    descriptor = save_checkpoint(checkpoint, model)
+    encoder = FrozenVisionEncoder(
+        "ufd_clip_vit_l14", checkpoint, expected_sha256=descriptor["sha256"]
+    )
+    encoder.train()
+    assert not encoder.training
+    assert not encoder.backbone.training
+    assert all(not parameter.requires_grad for parameter in encoder.parameters())
+    images = torch.randn(3, 3, 8, 8)
+    with torch.inference_mode():
+        expected = model.backbone(pixel_values=images).image_embeds
+        torch.testing.assert_close(encoder(images), expected, rtol=0, atol=0)
+    assert encoder.feature_dim == 6
+    assert encoder.preprocessing == model.preprocessing
+
+
+def test_clip_feature_batch_matches_serial_and_owns_storage(tmp_path):
+    model = UFDVideoClassifier(tiny_config()).eval()
+    checkpoint = tmp_path / "ufd.pt"
+    descriptor = save_checkpoint(checkpoint, model)
+    encoder = FrozenVisionEncoder(
+        "ufd_clip_vit_l14", checkpoint, expected_sha256=descriptor["sha256"]
+    )
+    records = []
+    for index in range(2):
+        png = tmp_path / f"source-{index}.png"
+        pixels = np.random.default_rng(index).integers(
+            0, 256, (11, 13, 3), dtype=np.uint8
+        )
+        Image.fromarray(pixels).save(png)
+        path = tmp_path / f"video-{index}.mkv"
+        subprocess.run(
+            ["ffmpeg", "-v", "error", "-i", str(png), "-c:v", "ffv1", str(path)],
+            check=True,
+            capture_output=True,
+            timeout=20,
+        )
+        records.append(
+            SampleRecord(
+                str(index), path.name, "video", index, "dev", sha256=file_sha256(path)
+            )
+        )
+    config = VideoConfig(
+        n_frames=3, height=8, width=8, resize_mode="native_center_crop"
+    )
+    expected = [
+        extract_features(
+            record, tmp_path, encoder, AudioConfig(), config, 10, 1, "cpu", 4
+        )
+        for record in records
+    ]
+    actual = extract_video_feature_batch(
+        records, tmp_path, encoder, config, "cpu", 4, 2
+    )
+    for value, reference in zip(actual, expected, strict=True):
+        torch.testing.assert_close(value, reference)
+        assert value.untyped_storage().nbytes() == value.numel() * value.element_size()
+    with pytest.raises(ValueError, match="resize_mode"):
+        extract_video_feature_batch(
+            records,
+            tmp_path,
+            encoder,
+            VideoConfig(n_frames=3, height=8, width=8),
+            "cpu",
+            4,
+            2,
+        )
 
 
 def test_scorer_requires_native_crop_and_matching_aggregation(tmp_path):
