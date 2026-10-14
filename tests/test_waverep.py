@@ -88,3 +88,19 @@ def test_scorer_requires_native_crop_at_detector_size(tmp_path):
         tmp_path,
     )
     assert isinstance(scorer.model, WaveRepVideoClassifier)
+
+
+@pytest.mark.parametrize(
+    "external_kwargs",
+    [
+        {"timm_name": "hf-hub:timm/vit_base_patch14_reg4_dinov2"},
+        {"backbone_overrides": {**TINY, "checkpoint_path": "extra.pt"}},
+    ],
+)
+def test_rejects_external_sources_before_timm(external_kwargs, monkeypatch):
+    def forbidden_model(*args, **kwargs):
+        pytest.fail("external configuration must be rejected before timm")
+
+    monkeypatch.setattr(timm, "create_model", forbidden_model)
+    with pytest.raises(ValueError, match=r"pinned|structural"):
+        WaveRepVideoClassifier(WaveRepConfig(**external_kwargs))

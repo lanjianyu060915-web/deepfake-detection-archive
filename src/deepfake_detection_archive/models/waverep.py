@@ -18,6 +18,11 @@ class WaveRepConfig:
     aggregation: str = "mean"
 
     def __post_init__(self) -> None:
+        if self.timm_name != "vit_base_patch14_reg4_dinov2.lvd142m":
+            raise ValueError("WaveRep requires the pinned G1 timm architecture")
+        structural = {"img_size", "embed_dim", "depth", "num_heads"}
+        if set(self.backbone_overrides) - structural:
+            raise ValueError("WaveRep backbone accepts only structural overrides")
         if self.aggregation != "mean":
             raise ValueError("WaveRep requires mean frame-logit aggregation")
         if "img_size" not in self.backbone_overrides:

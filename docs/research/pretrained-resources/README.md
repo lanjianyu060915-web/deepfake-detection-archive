@@ -69,6 +69,9 @@ UFD及CLIP仓库有MIT代码许可；分类头未见独立model card，训练素
 `waverep_video_v1` checkpoint；运行时不联网、不读取 timm 预训练缓存。预处理为 RGB、原尺寸
 `CenterCrop(504)`（不足补零）、ImageNet mean/std，**无 Resize**，即 `native_center_crop`；视频分数为帧 logit 均值。
 
-代码与权重均为 GRIP-UNINA 非营利研究许可（禁止工业/营利用途，公开结果须引用作者）。
+作者代码及权重下载目录均附GRIP-UNINA informational/nonprofit许可，禁止未授权工业/营利用途，公开结果须引用作者。
+权重目录许可证仍以software措辞描述，未单独明确比赛授权，赛用范围待确认。
+[代码许可](https://github.com/grip-unina/WaveRep-SyntheticVideoDetection/blob/0fd6010759c14b572b7842a28fa9f85fe1ddd2fd/LICENSE.md)、
+[权重目录许可](https://www.grip.unina.it/download/prog/WaveRep_SynthVideoDet/LICENSE.txt)。
 现阶段仅作研究与可选融合候选，赛用范围须由负责人确认；结果见
 [生成机制鉴伪](../../experiments/generator-forensics-20261014/README.md)。
