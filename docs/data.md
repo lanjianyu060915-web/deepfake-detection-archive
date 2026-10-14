@@ -7,8 +7,9 @@
 
 | 资产 | 实际位置 | 当前用途 |
 | --- | --- | --- |
-| UFD强视频对照 | `/var/tmp/deepfake-video-ufd-20261014/` | `models/`完整本地检测器与sidecar，`configs/`固定配置，`runs/`三组完整评分；团队可读，公开检测头负结果，不替换release；持久备份仍归#50 |
-| 冻结CLIP视频头 | `/var/tmp/deepfake-video-clip-head-20261014/` | 双seed头权重、约65MB特征缓存、三组完整评分；冻结seed43为研究候选，视觉骨干复用上一行；不替换release，持久备份仍归#50 |
+| UFD强视频对照 | `/var/tmp/deepfake-video-ufd-20261014/` | 完整检测器、固定配置与三组分数；公开头负结果；最小资产已另存下方C6持久归档 |
+| 冻结CLIP视频头 | `/var/tmp/deepfake-video-clip-head-20261014/` | 双seed头与三组完整分数，冻结43为研究候选；复用UFD骨干，最小资产已另存C6，不替换release |
+| 统一入口研究包 | `/var/tmp/deepfake-offline54-20261014/relocated/deepfake-v0.1.2-rc1/` | 真实v0.1.1权重、包内解释器和依赖；搬移及440条profile已完成，未重发Release |
 | 三域联合音频冻结候选 | `/srv/shared-data/candidates/audio-universal-20261014/` | seed42主/seed43备权重、sidecar、原始配置/历史、完整dev与冻结评分；文件0444、目录2755，研究用途 |
 | 音频补充诊断媒体 | `/srv/shared-data/datasets/audio-review-20261014/` | AIME未训练路径154条、AI-OpenBMAT纯音乐94/混合152条；原清单与媒体哈希保留，只作已见研究诊断 |
 | ASVspoof LA Parquet | `/srv/shared-data/datasets/asvspoof2019-la/` | 官方 train/dev 物化输入；#9 已接入协议与 FLAC |
@@ -47,10 +48,13 @@
 | `C3-speech-logmel-bandwidth/` | LogMel带宽seed42/43与两次白噪声运行、各条件分数与比较、训练/dev/条件清单、In-the-Wild清单 |
 | `C4-video-multigen/` | 五次运行权重（冻结为`paired-seed43`）、配置、`canonical-2s`与统一诊断清单、全部评分 |
 | `C5-video-temporal/` | 时序头seed42/seed43-retry权重、分数、训练清单 |
+| `C6-video-ufd-clip-20261014/` | UFD完整编码器与公开头、冻结CLIP双seed头、配置和三组完整分数；31内容文件约1.219GB |
 | `shared/` | `resnet18-a1/encoder.pt`（视频共享基座）与`ast-audioset/`（AST预训练基座） |
 
-共396个内容文件、约3.07GiB，不含原始媒体、特征缓存和可再生的发布分片。
+原C1–C5与shared共396个内容文件、约3.07GiB，不含原始媒体、特征缓存和可再生的发布分片。
 `index.json` 逐文件记录原路径、归档路径、大小和SHA-256；配置中的原路径按该表替换即可指向归档。
+C6是后来完成的独立批次，另31内容文件，由其目录内 `index.json` 与 `SHA256SUMS` 登记，
+不改写原396文件索引。配置保留原路径，恢复时按索引重映射；C6引用原C4数据清单，不重复备份媒体。
 校验：
 
 ```bash
@@ -70,6 +74,8 @@ cd /mnt/deepfake-archive && sha256sum -c SHA256SUMS
 该文件仅记录本次归档时的事实，不作为运行配置。统一入口 #57 由
 `configs/release/models.json` 及其引用的推理配置选择模型；完整 checkpoint 包含模型参数，
 视频 ResNet18 基座仅用于训练初始化，恢复推理无需额外加载基座。
+C6的CLIP特征头则需要显式加载同批保存的视觉编码器。以持久路径标准 `infer` 恢复2条原诊断，
+与原分数逐值一致；源码/候选用途与限制见[本轮运行包](experiments/offline-entry-20261014/README.md)。
 
 网盘为 `fuse.fx`：`chgrp` 不生效（gid固定为2000），文件统一 0444 全员可读；
 `du` 显示为0，大小以 `index.json` 或 `stat` 为准。原始媒体与特征缓存仍只在实例上，需按各工具重建。

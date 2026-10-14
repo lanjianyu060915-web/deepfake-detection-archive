@@ -1,0 +1,609 @@
+{
+  "experiment": "offline-entry-20261014",
+  "package": "/var/tmp/deepfake-offline54-20261014/relocated/deepfake-v0.1.2-rc1",
+  "package_version": "0.1.2-rc1",
+  "source": {
+    "git_head": "3783dc02feb7f1f4e5491d022402684a08cf6243",
+    "dirty": false
+  },
+  "checkpoint_sha256": {
+    "audio": "62584d52533fc4204df9c8c37e4f78fd2b5299e5cded13869c23faf4399c3efb",
+    "video": "21fdd4e547a5ae7c7a24162eaf2cb526379b7d152e36aa4546891657ae48f115"
+  },
+  "research_only": true,
+  "published": false,
+  "holdout_accessed": false,
+  "network_condition": "same inherited seccomp filter denies new INET/INET6 socket/socketpair and x32; not security sandbox",
+  "runtime_profile": {
+    "audio": {
+      "exit_code": 0,
+      "wall_end_to_end_seconds": 58.67377458419651,
+      "process_max_rss_kib": 1633580,
+      "gpu_memory_sampled_max_mib": null,
+      "gpu_measurement_status": "unavailable_pid_namespace_mapping",
+      "input_distributions": {
+        "domain": {
+          "speech": 80,
+          "environment": 80,
+          "music": 80
+        },
+        "generator": {
+          "unknown": 160,
+          "audiogen": 14,
+          "audioldm1": 13,
+          "audioldm2": 13,
+          "AudioLDM 2 Music": 1,
+          "MusicGen Large": 1,
+          "Stable Audio v1": 8,
+          "Stable Audio v2": 8,
+          "Suno v3": 8,
+          "Suno v3.5": 7,
+          "Udio": 7
+        },
+        "condition": {
+          "natural": 240
+        },
+        "original_path_prefix": {
+          "/var/tmp/lanjianyu-issue39-20261013": 80,
+          "/var/tmp/deepfake-universal-audio-20261012": 80,
+          "/srv/shared-data/datasets": 80
+        },
+        "duration_seconds": {
+          "n": 240,
+          "min": 0.801,
+          "p50": 4.0,
+          "p95": 8.305609374999998,
+          "p99": 14.070724374999974,
+          "max": 17.265
+        },
+        "sample_rate": {
+          "n": 240,
+          "min": 16000,
+          "p50": 16000.0,
+          "p95": 16000.0,
+          "p99": 16000.0,
+          "max": 16000
+        },
+        "channels": {
+          "n": 240,
+          "min": 1,
+          "p50": 1.0,
+          "p95": 1.0,
+          "p99": 1.0,
+          "max": 1
+        },
+        "bytes": {
+          "n": 240,
+          "min": 51322,
+          "p50": 128044.0,
+          "p95": 531616.9999999999,
+          "p99": 900584.3599999985,
+          "max": 1105018
+        }
+      },
+      "cache_files_after": [],
+      "report": {
+        "by_modality": {
+          "audio": {
+            "coverage": 1.0,
+            "failed": 0,
+            "not_run": 0,
+            "registered": 240,
+            "success": 240
+          },
+          "video": {
+            "coverage": null,
+            "failed": 0,
+            "not_run": 0,
+            "registered": 0,
+            "success": 0
+          }
+        },
+        "device": "cuda",
+        "discovered": 240,
+        "discovery_counts": {
+          "duplicate": 0,
+          "error": 0,
+          "excluded": 0,
+          "media": 240
+        },
+        "failures": 0,
+        "global_error": null,
+        "official": false,
+        "output": "/var/tmp/deepfake-offline54-20261014/profiles/audio",
+        "samples": 240,
+        "score_direction": "higher_is_fake",
+        "score_type": "raw_logit"
+      },
+      "ledger_closure": {
+        "selected": 240,
+        "discovered": 240,
+        "result_rows": 240,
+        "status_counts": {
+          "ok": 240
+        },
+        "selection_paths_equal_discovery": true,
+        "discovery_ids_equal_results": true
+      },
+      "per_row_elapsed_seconds": {
+        "n": 240,
+        "min": 0.08968340884894133,
+        "p50": 0.13611001102253795,
+        "p95": 0.16156403287313878,
+        "p99": 0.17820327176712444,
+        "max": 0.5300894761458039
+      },
+      "stage_seconds": {
+        "decode_and_preprocess": 26.735173497349024,
+        "input_validation": 0.16532200016081333,
+        "model_and_feature_scoring": 6.276480197906494,
+        "unattributed_sample_call": 0.04226641729474068
+      }
+    },
+    "video": {
+      "exit_code": 0,
+      "wall_end_to_end_seconds": 69.32161977421492,
+      "process_max_rss_kib": 1619472,
+      "gpu_memory_sampled_max_mib": null,
+      "gpu_measurement_status": "unavailable_pid_namespace_mapping",
+      "input_distributions": {
+        "domain": {
+          "video": 200
+        },
+        "generator": {
+          "HunyuanVideo": 73,
+          "unknown": 73,
+          "CogVideoX1.5-5B-I2V": 9,
+          "CogVideoX1.5-5B-T": 9,
+          "HunyuanVideo-I2V": 9,
+          "Wan2.1-T2V-1.3B": 9,
+          "Wan2.2-TI2V-5B-I": 9,
+          "Wan2.2-TI2V-5B-T": 9
+        },
+        "condition": {
+          "original_old_dev": 146,
+          "canonical_2s": 54
+        },
+        "original_path_prefix": {
+          "/var/tmp/deepfake-video-multigen-20261013": 200
+        },
+        "duration_seconds": {
+          "n": 200,
+          "min": 2.0,
+          "p50": 3.375,
+          "p95": 3.375,
+          "p99": 3.6675003299999993,
+          "max": 3.791667
+        },
+        "width": {
+          "n": 200,
+          "min": 448,
+          "p50": 456.0,
+          "p95": 456.0,
+          "p99": 456.0,
+          "max": 456
+        },
+        "height": {
+          "n": 200,
+          "min": 256,
+          "p50": 256.0,
+          "p95": 256.0,
+          "p99": 256.0,
+          "max": 256
+        },
+        "fps": {
+          "n": 200,
+          "min": 16,
+          "p50": 24.0,
+          "p95": 24.0,
+          "p99": 24.0,
+          "max": 24.0
+        },
+        "bytes": {
+          "n": 200,
+          "min": 7445,
+          "p50": 83140.5,
+          "p95": 250913.14999999994,
+          "p99": 334979.5299999999,
+          "max": 446778
+        }
+      },
+      "cache_files_after": [],
+      "report": {
+        "by_modality": {
+          "audio": {
+            "coverage": null,
+            "failed": 0,
+            "not_run": 0,
+            "registered": 0,
+            "success": 0
+          },
+          "video": {
+            "coverage": 1.0,
+            "failed": 0,
+            "not_run": 0,
+            "registered": 200,
+            "success": 200
+          }
+        },
+        "device": "cuda",
+        "discovered": 200,
+        "discovery_counts": {
+          "duplicate": 0,
+          "error": 0,
+          "excluded": 0,
+          "media": 200
+        },
+        "failures": 0,
+        "global_error": null,
+        "official": false,
+        "output": "/var/tmp/deepfake-offline54-20261014/profiles/video",
+        "samples": 200,
+        "score_direction": "higher_is_fake",
+        "score_type": "raw_logit"
+      },
+      "ledger_closure": {
+        "selected": 200,
+        "discovered": 200,
+        "result_rows": 200,
+        "status_counts": {
+          "ok": 200
+        },
+        "selection_paths_equal_discovery": true,
+        "discovery_ids_equal_results": true
+      },
+      "per_row_elapsed_seconds": {
+        "n": 200,
+        "min": 0.18068827968090773,
+        "p50": 0.2423767065629363,
+        "p95": 0.31913487347774183,
+        "p99": 0.3488622128404675,
+        "max": 1.4294463824480772
+      },
+      "stage_seconds": {
+        "decode_and_preprocess": 44.646365134976804,
+        "input_validation": 0.1354371691122651,
+        "model_and_feature_scoring": 5.595941419713199,
+        "unattributed_sample_call": 0.038034250028431416
+      }
+    }
+  },
+  "selection": {
+    "purpose": "runtime coverage and resource profile only; not authenticity generalization or final holdout evaluation",
+    "selection": "sorted IDs, per audio domain first40 real+40 fake (generator round robin outside speech); all146 old video dev + first9 dev fakes for each of six other generators",
+    "expected": {
+      "audio": 240,
+      "video": 200
+    },
+    "holdout_accessed": false,
+    "counts": {
+      "audio": 240,
+      "video": 200
+    },
+    "failures": 0
+  },
+  "relocation_probe": {
+    "cpu": {
+      "exit_code": 0,
+      "elapsed_wall_seconds": 34.74348442349583,
+      "report": {
+        "by_modality": {
+          "audio": {
+            "coverage": 1.0,
+            "failed": 0,
+            "not_run": 0,
+            "registered": 2,
+            "success": 2
+          },
+          "video": {
+            "coverage": 1.0,
+            "failed": 0,
+            "not_run": 0,
+            "registered": 2,
+            "success": 2
+          }
+        },
+        "device": "cpu",
+        "discovered": 4,
+        "discovery_counts": {
+          "duplicate": 0,
+          "error": 0,
+          "excluded": 0,
+          "media": 4
+        },
+        "failures": 0,
+        "global_error": null,
+        "official": false,
+        "output": "/var/tmp/deepfake-offline54-20261014/probe-cpu",
+        "samples": 4,
+        "score_direction": "higher_is_fake",
+        "score_type": "raw_logit"
+      },
+      "cache_files_after": [],
+      "network_probe": {
+        "checks": 8,
+        "all_eperm": true,
+        "operations": [
+          "socket",
+          "socketpair"
+        ],
+        "families": [
+          "AF_INET",
+          "AF_INET6"
+        ],
+        "types": [
+          "SOCK_STREAM",
+          "SOCK_DGRAM"
+        ]
+      }
+    },
+    "gpu": {
+      "exit_code": 0,
+      "elapsed_wall_seconds": 20.349422292783856,
+      "report": {
+        "by_modality": {
+          "audio": {
+            "coverage": 1.0,
+            "failed": 0,
+            "not_run": 0,
+            "registered": 2,
+            "success": 2
+          },
+          "video": {
+            "coverage": 1.0,
+            "failed": 0,
+            "not_run": 0,
+            "registered": 2,
+            "success": 2
+          }
+        },
+        "device": "cuda",
+        "discovered": 4,
+        "discovery_counts": {
+          "duplicate": 0,
+          "error": 0,
+          "excluded": 0,
+          "media": 4
+        },
+        "failures": 0,
+        "global_error": null,
+        "official": false,
+        "output": "/var/tmp/deepfake-offline54-20261014/probe-gpu",
+        "samples": 4,
+        "score_direction": "higher_is_fake",
+        "score_type": "raw_logit"
+      },
+      "cache_files_after": [],
+      "network_probe": {
+        "checks": 8,
+        "all_eperm": true,
+        "operations": [
+          "socket",
+          "socketpair"
+        ],
+        "families": [
+          "AF_INET",
+          "AF_INET6"
+        ],
+        "types": [
+          "SOCK_STREAM",
+          "SOCK_DGRAM"
+        ]
+      },
+      "runtime_paths_match_cpu": true
+    },
+    "cpu_gpu_score_max_abs_diff": 5.245208740234375e-06
+  },
+  "fault_and_resume": {
+    "discovery_failures": {
+      "first": {
+        "exit_code": 2,
+        "wall_seconds": 15.539982312358916,
+        "log": "/var/tmp/deepfake-offline54-20261014/failure-resume-first.log",
+        "report": {
+          "by_modality": {
+            "audio": {
+              "coverage": 1.0,
+              "failed": 0,
+              "not_run": 0,
+              "registered": 2,
+              "success": 2
+            },
+            "video": {
+              "coverage": 1.0,
+              "failed": 0,
+              "not_run": 0,
+              "registered": 2,
+              "success": 2
+            }
+          },
+          "device": "cuda",
+          "discovered": 6,
+          "discovery_counts": {
+            "duplicate": 0,
+            "error": 2,
+            "excluded": 0,
+            "media": 4
+          },
+          "failures": 2,
+          "global_error": null,
+          "official": false,
+          "output": "/var/tmp/deepfake-offline54-20261014/failure-resume-output",
+          "samples": 4,
+          "score_direction": "higher_is_fake",
+          "score_type": "raw_logit"
+        }
+      },
+      "resume": {
+        "exit_code": 2,
+        "wall_seconds": 16.336755835451186,
+        "log": "/var/tmp/deepfake-offline54-20261014/failure-resume-resume.log",
+        "report": {
+          "by_modality": {
+            "audio": {
+              "coverage": 1.0,
+              "failed": 0,
+              "not_run": 0,
+              "registered": 2,
+              "success": 2
+            },
+            "video": {
+              "coverage": 1.0,
+              "failed": 0,
+              "not_run": 0,
+              "registered": 2,
+              "success": 2
+            }
+          },
+          "device": "cuda",
+          "discovered": 6,
+          "discovery_counts": {
+            "duplicate": 0,
+            "error": 2,
+            "excluded": 0,
+            "media": 4
+          },
+          "failures": 2,
+          "global_error": null,
+          "official": false,
+          "output": "/var/tmp/deepfake-offline54-20261014/failure-resume-output",
+          "samples": 4,
+          "score_direction": "higher_is_fake",
+          "score_type": "raw_logit"
+        },
+        "scores_byte_unchanged_by_modality": {
+          "audio": true,
+          "video": true
+        }
+      },
+      "input_success_fraction": 0.6666666666666666,
+      "interpretation": "four registered media scored; two discovery errors retained separately; media coverage 100% does not mean all six inputs succeeded"
+    },
+    "interrupted": {
+      "first": {
+        "pid": 3178040,
+        "exit_code": -2,
+        "wall_seconds": 15.690231620334089,
+        "signal": "SIGINT to verified own pgid=pid",
+        "partial_rows": 3,
+        "partial_sha256": "b0886c8655273318711e78c8b71916dc0d7dc794af986dea82e25b20a39d3da7",
+        "input_metadata_retained": true,
+        "partial_ids": [
+          "2a4e135e92f4b8af1d98271ee5edc54bfd9d786f2602842678057290a2fc0851",
+          "4c4c2da4d86750e703d4fdbe6741b61b8f1b6ce433ab1ef1568a5ee927958e69",
+          "848942343e46b268f3516c352ef5af077c370cbdb7c6a4dcaab5023277eb1d32"
+        ]
+      },
+      "resume": {
+        "exit_code": 0,
+        "wall_seconds": 18.651024990715086,
+        "log": "/var/tmp/deepfake-offline54-20261014/interrupted-resume.log",
+        "report": {
+          "by_modality": {
+            "audio": {
+              "coverage": 1.0,
+              "failed": 0,
+              "not_run": 0,
+              "registered": 20,
+              "success": 20
+            },
+            "video": {
+              "coverage": null,
+              "failed": 0,
+              "not_run": 0,
+              "registered": 0,
+              "success": 0
+            }
+          },
+          "device": "cuda",
+          "discovered": 20,
+          "discovery_counts": {
+            "duplicate": 0,
+            "error": 0,
+            "excluded": 0,
+            "media": 20
+          },
+          "failures": 0,
+          "global_error": null,
+          "official": false,
+          "output": "/var/tmp/deepfake-offline54-20261014/interrupted-output",
+          "samples": 20,
+          "score_direction": "higher_is_fake",
+          "score_type": "raw_logit"
+        },
+        "partial_prefix_byte_unchanged": true,
+        "final_rows": 20,
+        "unique_ids": 20,
+        "ledger_closure": {
+          "selected": 20,
+          "discovered": 20,
+          "results": 20,
+          "selected_paths_equal_discovery": true,
+          "discovery_ids_equal_scores": true,
+          "all_results_ok": true
+        }
+      }
+    },
+    "empty_cache_files": []
+  },
+  "archive_restore": {
+    "purpose": "load new selected video candidate from persistent archive; not an accuracy or offline-network test",
+    "samples": 2,
+    "failures": 0,
+    "sample_ids": [
+      "vifbench:source_videos/Real/-0mnCHRQ-Zc_000092_000102.mp4",
+      "vifbench:source_videos/Fake/CogVideoX1.5-5B-T/-0mnCHRQ-Zc_000092_000102.mp4"
+    ],
+    "max_abs_score_difference": 0.0,
+    "config": "/var/tmp/deepfake-offline54-20261014/archive-restore-infer.json",
+    "reference_scores": "/var/tmp/deepfake-video-clip-head-20261014/runs/canonical/scores.jsonl",
+    "archive_index": "/mnt/deepfake-archive/C6-video-ufd-clip-20261014/index.json"
+  },
+  "resources": {
+    "rss": "wait4 ru_maxrss KiB for each completed inference child (and waited-for descendants), native exec wrapper PID preserved",
+    "gpu": "Unavailable: nvidia-smi reports host-namespace PIDs not mapped to current /proc inference PIDs; no per-task attribution proved. GPU values null, not zero."
+  },
+  "limitations": [
+    "440 selected real files are runtime coverage/resource evidence only, not algorithm EER or 10000-file acceptance.",
+    "Same host with two pre-existing GPU inference processes, no isolated new OS; FFmpeg/FFprobe/driver remain host dependencies.",
+    "Per-task GPU memory unavailable because host-namespace GPU PIDs could not be mapped to inference PIDs; RSS is per process and not concurrent total memory.",
+    "Existing release weights and inference unchanged; no holdout selected; all failures are retained.",
+    "Per-task GPU peak unavailable because nvidia-smi host PID namespace differs from local /proc; no unrelated process memory attributed."
+  ],
+  "host_dependencies": {
+    "ffmpeg": {
+      "path": "/usr/local/bin/ffmpeg",
+      "version": "ffmpeg version N-127271-gba987fe24d-20261010 Copyright (c) 2000-2026 the FFmpeg developers"
+    },
+    "ffprobe": {
+      "path": "/usr/local/bin/ffprobe",
+      "version": "ffprobe version N-127271-gba987fe24d-20261010 Copyright (c) 2007-2026 the FFmpeg developers"
+    },
+    "driver": "NVIDIA GeForce RTX 4090, 595.91.07"
+  },
+  "video_capacity_supply": {
+    "registered_records": 6407,
+    "maximum_sum_of_per_manifest_unique_sha256": 6393,
+    "cross_manifest_deduplicated": false,
+    "ten_thousand_actual_video_test": "not_run; registered non-reserved supply below 10000",
+    "datasets": [
+      "/var/tmp/deepfake-video-multigen-20261013/canonical-2s/manifest.jsonl",
+      "/var/tmp/lanjianyu-issue31-20261012/relocated/offline-package/manifests/vifbench-full.jsonl"
+    ],
+    "raw_zip_member_name_count": 10164,
+    "raw_zip_warning": "unregistered/excluded/possibly duplicate entries are not treated as available non-reserved inputs"
+  },
+  "artifact_sha256": {
+    "profile-selection.json": "dc43b53c4d8ba5835c072abecf4e95b7fd7b086244df2f17420204ded2efc35c",
+    "profile-summary.json": "e8032c3ecb79d0871d15f20897a585fb535f068d83272be2018d1d95bcd4df50",
+    "probe-summary.json": "d624c5723e373bcbd02644593385354fe51304cb70c5c8ea964d80fd6aef3622",
+    "failure-resume-summary.json": "0bbd07188aa31e9bee83f5326d3e10debb07c81724b545f0fcc626ddc784ce2b",
+    "archive-restore-summary.json": "232bae8353e1553bca0066929c68240a0aa7987843bb1887bdff553fd00ff607"
+  },
+  "package_runtime_paths": {
+    "executable": "/var/tmp/deepfake-offline54-20261014/relocated/deepfake-v0.1.2-rc1/runtime/python/bin/python3.12",
+    "torch_file": "/var/tmp/deepfake-offline54-20261014/relocated/deepfake-v0.1.2-rc1/runtime/site-packages/torch/__init__.py",
+    "numpy_file": "/var/tmp/deepfake-offline54-20261014/relocated/deepfake-v0.1.2-rc1/runtime/site-packages/numpy/__init__.py",
+    "media_file": "/var/tmp/deepfake-offline54-20261014/relocated/deepfake-v0.1.2-rc1/src/deepfake_detection_archive/media/__init__.py"
+  }
+}
