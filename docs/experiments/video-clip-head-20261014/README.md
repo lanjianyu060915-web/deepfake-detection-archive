@@ -78,4 +78,5 @@ scripts/devctl run python -m deepfake_detection_archive infer \
 ```
 
 重跑先更换输出目录；训练不支持 optimizer/RNG 续跑。后续新来源dev受控组已完成，
-CLIP31.33%优于七生成器ResNet39.00%；自然组和4/8帧对照由上述实验卡接续，保留部分封存。
+CLIP受控31.33%优于七生成器ResNet39.00%，自然组21.33%对43.36%；8帧31.80%无收益，
+保留4帧，下一步学习轻量时序头，保留部分封存。
