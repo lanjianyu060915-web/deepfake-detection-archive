@@ -40,6 +40,7 @@ from .features import (
     Encoder,
     extract_audio_feature_batch,
     extract_features,
+    extract_video_feature_batch,
     extract_video_frames,
     load_encoder,
     media_path,
@@ -47,7 +48,7 @@ from .features import (
 from .media import AudioConfig, VideoConfig, decode_audio, sample_audio_segments
 from .models.ast import ASTClassifier
 from .models.checkpoint import create_model, save_checkpoint, verify_sha256
-from .models.encoders import FrozenAudioEncoder
+from .models.encoders import FrozenAudioEncoder, FrozenVisionEncoder
 from .models.finetune import VideoFrameClassifier
 from .preflight import audit_training_data
 from .tracking import atomic_json, canonical_json, code_identity, object_hash, utc_now
@@ -515,9 +516,15 @@ def _prepare_cache(  # noqa: C901, PLR0912, PLR0913, PLR0915, PLR0917 -- cache a
     frame_preprocessing: dict[str, Any] | None = None,
 ) -> dict[str, list[tuple[Path, str, int]]]:
     audio_config, video_config = config.media_configs
+    clip_features = (
+        isinstance(encoder, FrozenVisionEncoder)
+        and encoder.architecture == "ufd_clip_vit_l14"
+    )
     pipeline_files = ["media/__init__.py"]
     if encoder is not None:
         pipeline_files.extend(("features.py", "models/encoders.py"))
+    if clip_features:
+        pipeline_files.append("models/ufd.py")
     if audio_preprocessor is not None:
         pipeline_files.append("models/ast.py")
     if frame_preprocessing is not None:
@@ -566,7 +573,7 @@ def _prepare_cache(  # noqa: C901, PLR0912, PLR0913, PLR0915, PLR0917 -- cache a
         max(1, config.feature_batch_size // config.segments)
         if isinstance(encoder, FrozenAudioEncoder)
         else max(1, config.num_workers)
-        if frame_preprocessing is not None
+        if frame_preprocessing is not None or clip_features
         else 1
     )
     for offset in range(0, len(records), chunk_size):
@@ -575,25 +582,36 @@ def _prepare_cache(  # noqa: C901, PLR0912, PLR0913, PLR0915, PLR0917 -- cache a
             identity = cache_identity(record)
             chunk.append((record, identity, cache / f"{object_hash(identity)}.pt"))
         prepared: dict[str, Tensor] = {}
-        if isinstance(encoder, FrozenAudioEncoder):
+        if isinstance(encoder, FrozenAudioEncoder) or clip_features:
             missing = [record for record, _, path in chunk if not path.exists()]
             if missing:
                 try:
-                    # Training AMP also applies to the frozen audio feature pass.
-                    with torch.autocast(
-                        device_type=torch.device(config.train_config.device).type,
-                        dtype=getattr(torch, config.train_config.amp_dtype),
-                        enabled=config.train_config.amp,
-                    ):
-                        tensors = extract_audio_feature_batch(
+                    if isinstance(encoder, FrozenAudioEncoder):
+                        # Audio feature extraction follows training AMP.
+                        with torch.autocast(
+                            device_type=torch.device(config.train_config.device).type,
+                            dtype=getattr(torch, config.train_config.amp_dtype),
+                            enabled=config.train_config.amp,
+                        ):
+                            tensors = extract_audio_feature_batch(
+                                missing,
+                                root,
+                                encoder,
+                                audio_config,
+                                config.segment_samples,
+                                config.segments,
+                                config.train_config.device,
+                                config.feature_batch_size,
+                            )
+                    else:
+                        tensors = extract_video_feature_batch(
                             missing,
                             root,
-                            encoder,
-                            audio_config,
-                            config.segment_samples,
-                            config.segments,
+                            cast(FrozenVisionEncoder, encoder),
+                            video_config,
                             config.train_config.device,
                             config.feature_batch_size,
+                            config.num_workers,
                         )
                     prepared = {
                         record.sample_id: tensor
@@ -605,7 +623,11 @@ def _prepare_cache(  # noqa: C901, PLR0912, PLR0913, PLR0915, PLR0917 -- cache a
                         [
                             {
                                 "sample_id": record.sample_id,
-                                "stage": "audio_feature_batch",
+                                "stage": (
+                                    "video_feature_batch"
+                                    if clip_features
+                                    else "audio_feature_batch"
+                                ),
                                 "error_type": type(exc).__name__,
                                 "error": str(exc),
                             }

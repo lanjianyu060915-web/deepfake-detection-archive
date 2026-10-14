@@ -66,6 +66,54 @@ CSV 不填充失败分数，因此不能将部分覆盖结果冒充完整提交�
 
 ## 开发与重建
 
+### 统一预测入口（当前源码）
+
+单文件、多文件、混合目录使用同一个入口，按 FFprobe 检测的实际媒体流路由。
+有非封面视频流时仅做视频检测，否则取音频流；音频封面图不作为视频，
+仅含音频的 MP4 作为音频处理。多个候选流按索引取第一个，不融合视频音轨。
+
+源码开发时显式指定已取得的本地模型包；团队服务器示例：
+
+```bash
+export DEEPFAKE_MODEL_PACKAGE=/srv/shared-data/releases/v0.1.1/deepfake-v0.1.1
+scripts/devctl run python -m deepfake_detection_archive predict --show-models
+scripts/devctl run python -m deepfake_detection_archive predict \
+  /data/clip.mp4 /data/录音.wav /data/mixed --output outputs/mixed
+# 相同输入、模型和输出目录恢复
+scripts/devctl run python -m deepfake_detection_archive predict \
+  /data/clip.mp4 /data/录音.wav /data/mixed --output outputs/mixed --resume
+```
+
+新构建的离线包将默认从包内 `configs/models.json` 加载固定模型，使用
+`./run.sh predict INPUT... --output DIR`，无需上述环境变量。此变更尚未进入已发布的
+v0.1.1 压缩包。原 `predict --config ... --input ...` 和 `infer --config ...` 保持可用。
+`--show-models` 显示模型标识、研究范围、分数方向和预处理版本，不读取输入媒体。
+统一入口提高输入便利性，音频仍是环境音研究候选，视频仍是四帧基线。
+
+训练与发布决定固定资产；预测消费本地包内资产：
+
+```mermaid
+flowchart LR
+    D[隔离 train/dev] --> T[训练与 dev 选择] --> W[本地 checkpoint]
+    W --> P[配置、权重、运行时与许可打包]
+    I[本地媒体] --> R[发现与媒体流选择] --> C[匹配预处理]
+    C --> S[固定模型评分] --> O[连续分数或失败]
+    P --> S
+```
+
+| 输出 | 用途 |
+| --- | --- |
+| `discovery.json` | 每条发现项及路径别名；媒体、重复、排除和错误均记账 |
+| `results.jsonl` | 每个登记媒体的模态、流索引、模型、连续分数或明确失败/未执行 |
+| `scores.csv` | 成功子集，包含 `sample_id,path,modality,model_id,score` |
+| `report.json` | 发现计数、各模态覆盖率和全局错误 |
+| `audio/`、`video/` | 复用原评分器的逐样本分数与恢复产物 |
+
+同一规范路径重复传入会合并并记录别名；不同路径下的相同字节仍是独立输入。
+输入 ID 根据规范绝对路径生成，移动输入后应新建输出目录。输出目录中的产物被排除，
+符号链接项记入发现账本。缺失或损坏媒体不会补造分数；失败和未执行均使退出码为2。
+恢复绑定实际输入、配置、权重和推理实现；文档或无关 CLI 修改不使已完成分数失效。
+
 源码 checkout 使用共享环境运行同一入口：
 
 ```bash
