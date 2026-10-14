@@ -58,7 +58,7 @@ class VideoConfig:
     n_frames: int = 16
     height: int = 224
     width: int = 224
-    resize_mode: Literal["pad", "center_crop"] = "pad"
+    resize_mode: Literal["pad", "center_crop", "native_center_crop"] = "pad"
     max_duration_seconds: float = 600.0
     timeout_seconds: float = 60.0
     max_source_pixels: int = 40_000_000
@@ -79,8 +79,10 @@ class VideoConfig:
                 raise ValueError(f"{name} must be a positive integer")
         _positive(self.max_duration_seconds, "max_duration_seconds")
         _positive(self.timeout_seconds, "timeout_seconds")
-        if self.resize_mode not in ("pad", "center_crop"):
-            raise ValueError("resize_mode must be pad or center_crop")
+        if self.resize_mode not in ("pad", "center_crop", "native_center_crop"):
+            raise ValueError(
+                "resize_mode must be pad, center_crop or native_center_crop"
+            )
         if self.n_frames > 1024:
             raise ValueError("n_frames cannot exceed 1024")
         if self.n_frames * self.height * self.width * 3 > self.max_output_bytes:
@@ -375,6 +377,24 @@ def decode_video(path: str | Path, config: VideoConfig | None = None) -> VideoDa
         if config.resize_mode == "pad"
         else f"crop={config.width}:{config.height}"
     )
+    spatial_filter = f"{scale},{finish}"
+    if config.resize_mode == "native_center_crop":
+        # Work in displayed dimensions after FFmpeg autorotation. PIL CenterCrop
+        # pads small images, then rounds odd center offsets with ties to even.
+        # RGB avoids chroma-subsampling rounding of crop/pad offsets.
+        crop_x = (
+            f"floor((iw-{config.width})/2)"
+            f"+mod(floor((iw-{config.width})/2),2)*mod(iw-{config.width},2)"
+        )
+        crop_y = (
+            f"floor((ih-{config.height})/2)"
+            f"+mod(floor((ih-{config.height})/2),2)*mod(ih-{config.height},2)"
+        )
+        spatial_filter = (
+            f"format=rgb24,pad='max(iw,{config.width})':'max(ih,{config.height})':"
+            "'floor((ow-iw)/2)':'floor((oh-ih)/2)':black,"
+            f"crop={config.width}:{config.height}:'{crop_x}':'{crop_y}'"
+        )
     raw = _run(
         [
             "ffmpeg",
@@ -396,7 +416,7 @@ def decode_video(path: str | Path, config: VideoConfig | None = None) -> VideoDa
             "-filter_threads",
             "1",
             "-vf",
-            f"select={selection},{scale},{finish},setsar=1",
+            f"select={selection},{spatial_filter},setsar=1",
             "-fps_mode",
             "passthrough",
             "-pix_fmt",
