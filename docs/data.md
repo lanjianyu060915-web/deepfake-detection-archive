@@ -13,6 +13,7 @@
 | 语音泛化共享发布 | `/var/tmp/deepfake-audio-generalization-20261011/` | `data`引用#19数据；`outputs`保存原始分数引用和可读评测摘要；HuBERT引用#9可读bundle |
 | HuBERT 本地 bundle | `/var/tmp/lanjianyu-issue9-20261011/hubert/models/hubert-base-ls960/` | #9 已恢复固定版本，内部语音研究 |
 | ViF Panda ZIP | `/srv/shared-data/datasets/vif-panda/` | #10 已导入并复现受控划分 |
+| 七生成器视频训练及分数 | `/var/tmp/deepfake-video-multigen-20261013/` | #40：2秒统一媒体，train3,614/dev844，双种子及Hunyuan对照；配置与结果见[实验卡](experiments/video-multigen-20261013/README.md) |
 | 受控视频资产及检测器 | `/var/tmp/lanjianyu-issue10-20261011/` | `control/`清单、`resnet18-a1/`编码器、`seed42/`与`seed43/`检测器和分数 |
 | FakeSound ZIP | `/srv/shared-data/datasets/fakesound/FakeSound.zip` | 固定原包、单类诊断，不能训练二分类 |
 | 配对环境音 | `/var/tmp/lanjianyu-issue11-20261011/doppelganger-v2/` | 462 条实际可读媒体，附 manifest/sources/provenance |
@@ -40,6 +41,7 @@
 | `tools/prepare_asv_main.py` | 既有 ASV 清单 → 训练子集；历史单条排除应显式配置 |
 | `tools/prepare_vif_panda.py` | 固定 ViF ZIP → Panda 媒体、来源与配对关系 |
 | `tools/prepare_video_control.py` | 既有 ViF 与 pilot 划分 → 受控 train/dev 与元数据对照 |
+| `tools/prepare_video_multigen.py` | 已登记Panda ZIP与既有划分 → 关联排除、配对的2秒统一媒体；保持train/dev，失败逐条记账 |
 | `tools/prepare_doppelganger.py` | 固定配对表/原媒体元数据 → 环境音研究清单 |
 | `tools/prepare_fakesound.py` | 固定 FakeSound ZIP → 诊断清单和失败记账 |
 | `tools/prepare_envsdd.py` | `import`：五成员配对环境音，排除旧研究集关联并重划分；`eval`：同一已划分原录音上的 AudioLCM/TangoFlux 诊断 |
