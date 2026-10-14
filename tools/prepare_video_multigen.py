@@ -39,7 +39,7 @@ def select_pairs(
         raise ValueError("expanded manifest requires train/dev assignments")
     for row in expanded:
         fixed_split = registered[row.sample_id].split
-        if fixed_split in ("train", "dev", "holdout") and row.split != fixed_split:
+        if fixed_split not in ("unassigned", row.split):
             raise ValueError("expanded manifest changes a registered fixed split")
     combined = {row.sample_id: row for row in exclusions}
     combined.update(registered)

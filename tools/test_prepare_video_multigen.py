@@ -97,6 +97,10 @@ class MultiGeneratorTests(unittest.TestCase):
         selected, _ = select_pairs(full, rows, [])
         self.assertEqual(selected, [])
 
+    def test_fixed_test_cannot_be_reassigned_to_train(self) -> None:
+        with self.assertRaisesRegex(ValueError, "fixed split"):
+            select_pairs(pair("clip", "test"), pair("clip", "train"), [])
+
     def test_fixed_holdout_cannot_be_reassigned_to_train(self) -> None:
         with self.assertRaisesRegex(ValueError, "fixed split"):
             select_pairs(pair("clip", "holdout"), pair("clip", "train"), [])
