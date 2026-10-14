@@ -168,7 +168,6 @@ class MultiGeneratorTests(unittest.TestCase):
             self.assertEqual(probe["sample_aspect_ratio"], "1:1")
             self.assertEqual(probe["avg_frame_rate"], "16/1")
 
-
     def test_short_canonical_fits_clips_under_two_seconds(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
