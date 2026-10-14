@@ -23,6 +23,7 @@
 | AIME扩展与混合候选 | `/var/tmp/deepfake-audio-music-20261012/` | 119个固定分片；主清单1,914条、319个描述组合；旧混合seed43及扩展seed42的权重与分数 |
 | AST时频遮挡与广播外部诊断 | `/var/tmp/deepfake-audio-regularize-20261012/` | 扩展模型第二种子、两档遮挡训练及分数；`ai-openbmat/`含246段外部探索dev；原始子集在`upstream/ai-openbmat/` |
 | 对称音乐/语音混合与匹配对照 | `/var/tmp/deepfake-audio-speech-mix-20261012/` | `mixtures/`含3,464个波形变体；`pure-replay/`、`speech-mix/`为同规模联合训练清单；固定源码、权重及九桶评分按任务保存 |
+| 语音第二种子与 In-the-Wild | `/var/tmp/lanjianyu-issue39-20261013/` | `runs/`为#39三次LogMel训练与评分；`data/release_in_the_wild/`为31,779条外部诊断媒体，`data/in-the-wild-manifest/`为测试清单 |
 | FakeSound 诊断清单 | `/var/tmp/lanjianyu-issue11-20261011/fakesound-v1/` | data_root 为其 `media/`，含缺失 real 记录 |
 
 共享原媒体和模型只读；`outputs/`、`cache/` 使用各自任务目录。
@@ -36,6 +37,7 @@
 | `tools/finalize_asvspoof2019.py` | 已完成的官方 ZIP 发布与提取 |
 | `tools/prepare_asvspoof2019.py` | 官方协议和 FLAC → 标准清单 |
 | `tools/prepare_asv_parquet.py` | 固定共享 Parquet 与官方协议 → 原始 FLAC；不重编码 |
+| `tools/prepare_in_the_wild.py` | 已解压的 In-the-Wild 发布 → 按说话人分组的 test 清单；只作冻结候选的外部诊断 |
 | `tools/prepare_asv_eval.py` | 固定官方eval协议与镜像Parquet → 未知攻击研究清单；既有发布直接复用 |
 | `tools/prepare_asv_main.py` | 既有 ASV 清单 → 训练子集；历史单条排除应显式配置 |
 | `tools/prepare_vif_panda.py` | 固定 ViF ZIP → Panda 媒体、来源与配对关系 |
@@ -165,6 +167,7 @@ AI-OpenBMAT固定128对原始成品，按共同区间准备混合152段、纯音
 | FakeSound | 媒体权利 unresolved；不批准训练/正式交付 | [诊断结论](experiments/nonspeech-20261011/README.md) |
 | EnvSDD/UrbanSound8K | 已取得原录音署名；CC BY 4.0 集合与 CC BY-NC 3.0 原媒体下的内部非商业研究，正式赛用未确认 | [来源与原始 credits](research/source/envsdd/README.md) |
 | AIME/MTG-Jamendo | 生成音乐CC BY 4.0、标签CC BY-NC-SA 4.0；真实音乐逐曲CC许可未映射，仅内部非商业研究，正式交付未批准 | [来源与用途](research/source/aime/README.md) |
+| In-the-Wild | 作者在 HuggingFace 标注 CC BY-SA 4.0，底层网络媒体权利未核实；登记 unresolved，仅外部诊断 | [实验卡](experiments/speech-robust-20261013/README.md#in-the-wild-外部诊断) |
 | AI-OpenBMAT/BAF | 发布CC BY 4.0与BAF底层素材限制衔接未解决；仅外部探索诊断，正式交付未批准 | [来源、标签与许可限制](research/source/ai-openbmat/README.md) |
 
 代码、权重、数据许可分别处理。公开可下载不代表正式比赛使用已获批；
