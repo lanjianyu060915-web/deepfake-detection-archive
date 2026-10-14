@@ -1,6 +1,6 @@
 # 项目状态
 
-更新：2026-10-12。**v0.1.1 修复环境音/视频离线研究基线**：
+更新：2026-10-13。**v0.1.1 修复环境音/视频离线研究基线**：
 带本地权重、CPython 与依赖，无标签目录→推理→连续分数导出，支持失败记账与恢复。
 这是可运行系统，尚无覆盖三域的通用音频模型；官方格式与两项权重的赛用许可仍待确认。[下载与使用](release.md)。
 后续顺序见[路线图](roadmap.md)，
@@ -15,7 +15,7 @@
 | 环境音 | Urban AST12层seed42 dev1.39%；冻结研究候选holdout已见1.43%、未见生成器6.51% | 保留冻结环境音候选；不能代表音乐或通用音频；[实验](experiments/audio-envsdd-20261011/README.md) |
 | 音乐/通用音频 | 扩展AIME无增强候选未训练音乐18.75%；事后等权分数融合14.58% | 融合尚未接离线推理，跨来源和真实混合内容仍弱；[实验](experiments/audio-ast-regularization-20261012/README.md) |
 | 音乐/语音混合 | 匹配对照中未训练路径合成混合32.55%→26.89%；真实广播混合仍50%，环境音退化 | 只保留研究结果，不替换主候选；优先独立来源与真实混合数据；[实验](experiments/audio-speech-mix-20261012/README.md) |
-| 视频 | layer4+头同域dev16.44%；全1949条统一尺寸/帧率/3.5秒后EER33.12%，冻结头33.65% | 微调受控优势仅0.54点，仍缺稳定跨来源能力；[受控诊断](experiments/release-candidates-20261012/README.md) |
+| 视频 | 七生成器train3,614/dev844，四轮训练；统一1949条EER33.12%→31.73%，未训练标签33.47%→33.14% | 原同域dev16.44%→19.18%，保留研究候选、不替换v0.1.1；仍缺独立来源泛化；[实验](experiments/video-multigen-20261013/README.md) |
 | 离线系统 | 既有研究包496/336条批量0失败；v0.1.1运行包CPU/GPU演示和18音频+12视频0失败；部分失败仍导出成功子集；OOM/缺依赖立即中止 | 预处理已对齐，依赖已按运行闭包裁剪；通用音频、官方I/O、赛用资源及万级真实容量验收仍未完成；[使用](release.md) |
 
 以上不是比赛成绩。合成混合仅单种子、音乐原曲/artist关系未知，广播片段标签纯度及底层许可有限；
@@ -25,8 +25,8 @@
 
 | 任务 | 本次已知状态 | 下一交付 |
 | --- | --- | --- |
-| [语音稳健训练 #39](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/39) | lanjianyu060915-web负责；第二种子、白噪声增强与In-the-Wild诊断已完成 | 真实场景语音数据交由三域联合训练吸收 |
-| [多生成器视频训练 #40](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/40) | 已发布，rrx59负责 | 扩展训练来源，保留固定跨生成器诊断与原候选对照 |
+| [语音稳健训练 #39](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/39) | 第二种子、白噪声增强与In-the-Wild诊断已完成 | 保留带宽seed42，停止白噪声；后续重点为独立来源泛化 |
+| [多生成器视频训练 #40](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/40) | 已完成四轮多生成器训练及Hunyuan对照 | 独立来源扩展与更强视觉表征，取舍与PR在Issue维护 |
 | [三域通用音频 #41](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/41) | 已发布，zhl-zx负责；承接已完成#32 | 语音/音乐/环境音联合训练，改善整域失效 |
 
 具体认领和进程状态在Issue更新。本页不逐轮追加运行日志或历史结果。

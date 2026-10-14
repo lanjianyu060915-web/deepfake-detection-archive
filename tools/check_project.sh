@@ -28,6 +28,7 @@ model_tools=(
   tools/prepare_audio_mixtures.py
   tools/prepare_universal_audio.py
   tools/prepare_video_control.py
+  tools/prepare_video_multigen.py
   tools/prepare_video_size_control.py
   tools/report_video_pairs.py
   tools/prepare_video_augmentation.py
@@ -38,6 +39,7 @@ model_tools=(
   tools/test_prepare_asv_eval.py
   tools/test_prepare_in_the_wild.py
   tools/test_prepare_video_control.py
+  tools/test_prepare_video_multigen.py
   tools/test_prepare_video_size_control.py
   tools/test_prepare_video_augmentation.py
 )
