@@ -1,0 +1,747 @@
+{
+  "experiment": "universal-audio-20261012",
+  "official_evaluation": false,
+  "score_direction": "higher_is_fake",
+  "selection_rule": "compare the two-seed mean domain_macro_eer per sampling ratio; a gap below 0.3 points goes to the ratio whose epochs stayed under every domain cap with smaller environment/speech spikes",
+  "release_baseline": {
+    "checkpoint": "deepfake-v0.1.1/weights/audio-ast-urban.pt",
+    "buckets": {
+      "fsd": 0.08571428571428572,
+      "music-aime96": 0.225,
+      "speech-asv200": 0.44,
+      "urban-dev": 0.01386481802426343
+    }
+  },
+  "runs": {
+    "joint-domain-equal-seed42": {
+      "config": "joint-domain-equal-seed42.json",
+      "code_commit": "8c81a385d81ef23d4dd9b4a9975176bf95d4d9e7",
+      "checkpoint_sha256": "00e6af1c1a6180a0eefb154a964c920234093ce1cf3f1a7d69f37879ddbbf831",
+      "best_epoch": 13,
+      "epochs_completed": 18,
+      "stop_reason": "early_stopping",
+      "seconds": 12202.678168982267,
+      "peak_cuda_reserved_bytes": 9890168832,
+      "dev_domain_eer": {
+        "environment": 0.016031195840554593,
+        "music": 0.0,
+        "speech": 0.00510204081632653
+      },
+      "dev_domain_samples": {
+        "environment": 2885,
+        "music": 288,
+        "speech": 24844
+      },
+      "history": [
+        {
+          "epoch": 1,
+          "dev_domain_eer": {
+            "environment": 0.033362218370883885,
+            "music": 0.008333333333333333,
+            "speech": 0.00902668759811617
+          },
+          "dev_macro_eer": 0.016907413100777795,
+          "selected": true
+        },
+        {
+          "epoch": 2,
+          "dev_domain_eer": {
+            "environment": 0.036395147313691506,
+            "music": 0.016666666666666666,
+            "speech": 0.00722102619303911
+          },
+          "dev_macro_eer": 0.020094280057799094,
+          "selected": false
+        },
+        {
+          "epoch": 3,
+          "dev_domain_eer": {
+            "environment": 0.016031195840554593,
+            "music": 0.0125,
+            "speech": 0.00706436420722135
+          },
+          "dev_macro_eer": 0.011865186682591981,
+          "selected": true
+        },
+        {
+          "epoch": 4,
+          "dev_domain_eer": {
+            "environment": 0.02772963604852686,
+            "music": 0.0125,
+            "speech": 0.00510204081632653
+          },
+          "dev_macro_eer": 0.01511055895495113,
+          "selected": false
+        },
+        {
+          "epoch": 5,
+          "dev_domain_eer": {
+            "environment": 0.01386481802426343,
+            "music": 0.0125,
+            "speech": 0.0043171114599686025
+          },
+          "dev_macro_eer": 0.010227309828077345,
+          "selected": true
+        },
+        {
+          "epoch": 6,
+          "dev_domain_eer": {
+            "environment": 0.01559792027729636,
+            "music": 0.0125,
+            "speech": 0.003532182103610675
+          },
+          "dev_macro_eer": 0.010543367460302345,
+          "selected": false
+        },
+        {
+          "epoch": 7,
+          "dev_domain_eer": {
+            "environment": 0.02079722703639515,
+            "music": 0.0125,
+            "speech": 0.0031397174254317113
+          },
+          "dev_macro_eer": 0.012145648153942286,
+          "selected": false
+        },
+        {
+          "epoch": 8,
+          "dev_domain_eer": {
+            "environment": 0.012998266897746967,
+            "music": 0.016666666666666666,
+            "speech": 0.004709576138147566
+          },
+          "dev_macro_eer": 0.011458169900853734,
+          "selected": false
+        },
+        {
+          "epoch": 9,
+          "dev_domain_eer": {
+            "environment": 0.010398613518197574,
+            "music": 0.008333333333333333,
+            "speech": 0.004709576138147566
+          },
+          "dev_macro_eer": 0.007813840996559492,
+          "selected": true
+        },
+        {
+          "epoch": 10,
+          "dev_domain_eer": {
+            "environment": 0.012998266897746967,
+            "music": 0.004166666666666667,
+            "speech": 0.004709576138147566
+          },
+          "dev_macro_eer": 0.007291503234187067,
+          "selected": true
+        },
+        {
+          "epoch": 11,
+          "dev_domain_eer": {
+            "environment": 0.018197573656845753,
+            "music": 0.008333333333333333,
+            "speech": 0.0043171114599686025
+          },
+          "dev_macro_eer": 0.010282672816715896,
+          "selected": false
+        },
+        {
+          "epoch": 12,
+          "dev_domain_eer": {
+            "environment": 0.01733102253032929,
+            "music": 0.004166666666666667,
+            "speech": 0.020631503408683173
+          },
+          "dev_macro_eer": 0.014043064201893043,
+          "selected": false
+        },
+        {
+          "epoch": 13,
+          "dev_domain_eer": {
+            "environment": 0.016031195840554593,
+            "music": 0.0,
+            "speech": 0.00510204081632653
+          },
+          "dev_macro_eer": 0.007044412218960374,
+          "selected": true
+        },
+        {
+          "epoch": 14,
+          "dev_domain_eer": {
+            "environment": 0.019064124783362217,
+            "music": 0.008333333333333333,
+            "speech": 0.005516684607104414
+          },
+          "dev_macro_eer": 0.010971380907933322,
+          "selected": false
+        },
+        {
+          "epoch": 15,
+          "dev_domain_eer": {
+            "environment": 0.01559792027729636,
+            "music": 0.0,
+            "speech": 0.0066718995290423865
+          },
+          "dev_macro_eer": 0.007423273268779583,
+          "selected": false
+        },
+        {
+          "epoch": 16,
+          "dev_domain_eer": {
+            "environment": 0.026863084922010397,
+            "music": 0.020833333333333332,
+            "speech": 0.0043171114599686025
+          },
+          "dev_macro_eer": 0.017337843238437445,
+          "selected": false
+        },
+        {
+          "epoch": 17,
+          "dev_domain_eer": {
+            "environment": 0.016897746967071057,
+            "music": 0.008333333333333333,
+            "speech": 0.003857194115536419
+          },
+          "dev_macro_eer": 0.00969609147198027,
+          "selected": false
+        },
+        {
+          "epoch": 18,
+          "dev_domain_eer": {
+            "environment": 0.019064124783362217,
+            "music": 0.0,
+            "speech": 0.003924646781789639
+          },
+          "dev_macro_eer": 0.007662923855050618,
+          "selected": false
+        }
+      ],
+      "frozen_buckets": {
+        "urban-dev": {
+          "fullset_eer": 0.016031195840554593,
+          "sample_count": 2885,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "scores_sha256": "2a62e41b93e799fe8c370be16a853986ae3c8f9c856e5dd5e65878c6b242aa71"
+        },
+        "fsd": {
+          "fullset_eer": 0.05714285714285714,
+          "sample_count": 70,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "scores_sha256": "79aed07057d735824fd974d595e4002838c5df1adb168c38a5f89c245db3dad3"
+        },
+        "music-aime96": {
+          "fullset_eer": 0.0,
+          "sample_count": 96,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "scores_sha256": "d0d66790bc316b455539023a49f322f780a5b99a8492c231dda9a8f3161cf93c"
+        },
+        "speech-asv200": {
+          "fullset_eer": 0.0,
+          "sample_count": 200,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "scores_sha256": "bcab6c10a70d6ff7f251d29b39fd5266e2ba729173bee02d47c7615369e590ea"
+        }
+      }
+    },
+    "joint-speech-down-seed42": {
+      "config": "joint-speech-40pct-seed42.json",
+      "code_commit": "8c81a385d81ef23d4dd9b4a9975176bf95d4d9e7",
+      "checkpoint_sha256": "ae2d8351a0ff7881fcd214c9e43decbe21066155ef4ea5034d99ebfade14257b",
+      "best_epoch": 6,
+      "epochs_completed": 11,
+      "stop_reason": "early_stopping",
+      "seconds": 8573.769012500532,
+      "peak_cuda_reserved_bytes": 9890168832,
+      "dev_domain_eer": {
+        "environment": 0.012131715771230503,
+        "music": 0.008333333333333333,
+        "speech": 0.003632938643702906
+      },
+      "dev_domain_samples": {
+        "environment": 2885,
+        "music": 288,
+        "speech": 24844
+      },
+      "history": [
+        {
+          "epoch": 1,
+          "dev_domain_eer": {
+            "environment": 0.030329289428076257,
+            "music": 0.008333333333333333,
+            "speech": 0.012423753139576606
+          },
+          "dev_macro_eer": 0.0170287919669954,
+          "selected": true
+        },
+        {
+          "epoch": 2,
+          "dev_domain_eer": {
+            "environment": 0.025996533795493933,
+            "music": 0.008333333333333333,
+            "speech": 0.00510204081632653
+          },
+          "dev_macro_eer": 0.013143969315051266,
+          "selected": true
+        },
+        {
+          "epoch": 3,
+          "dev_domain_eer": {
+            "environment": 0.025996533795493933,
+            "music": 0.020833333333333332,
+            "speech": 0.005494505494505495
+          },
+          "dev_macro_eer": 0.01744145754111092,
+          "selected": false
+        },
+        {
+          "epoch": 4,
+          "dev_domain_eer": {
+            "environment": 0.04852686308492201,
+            "music": 0.0125,
+            "speech": 0.0049336203803372804
+          },
+          "dev_macro_eer": 0.021986827821753097,
+          "selected": false
+        },
+        {
+          "epoch": 5,
+          "dev_domain_eer": {
+            "environment": 0.019064124783362217,
+            "music": 0.004166666666666667,
+            "speech": 0.006144599928238249
+          },
+          "dev_macro_eer": 0.009791797126089045,
+          "selected": true
+        },
+        {
+          "epoch": 6,
+          "dev_domain_eer": {
+            "environment": 0.012131715771230503,
+            "music": 0.008333333333333333,
+            "speech": 0.003632938643702906
+          },
+          "dev_macro_eer": 0.008032662582755581,
+          "selected": true
+        },
+        {
+          "epoch": 7,
+          "dev_domain_eer": {
+            "environment": 0.016464471403812825,
+            "music": 0.004166666666666667,
+            "speech": 0.00510204081632653
+          },
+          "dev_macro_eer": 0.008577726295602007,
+          "selected": false
+        },
+        {
+          "epoch": 8,
+          "dev_domain_eer": {
+            "environment": 0.01559792027729636,
+            "music": 0.004166666666666667,
+            "speech": 0.01726844583987441
+          },
+          "dev_macro_eer": 0.012344344261279146,
+          "selected": false
+        },
+        {
+          "epoch": 9,
+          "dev_domain_eer": {
+            "environment": 0.05199306759098787,
+            "music": 0.0125,
+            "speech": 0.021585557299843013
+          },
+          "dev_macro_eer": 0.028692874963610292,
+          "selected": false
+        },
+        {
+          "epoch": 10,
+          "dev_domain_eer": {
+            "environment": 0.008665511265164644,
+            "music": 0.020833333333333332,
+            "speech": 0.010596546310832025
+          },
+          "dev_macro_eer": 0.01336513030311,
+          "selected": false
+        },
+        {
+          "epoch": 11,
+          "dev_domain_eer": {
+            "environment": 0.01559792027729636,
+            "music": 0.0125,
+            "speech": 0.019230769230769232
+          },
+          "dev_macro_eer": 0.015776229836021866,
+          "selected": false
+        }
+      ],
+      "frozen_buckets": {
+        "urban-dev": {
+          "fullset_eer": 0.012131715771230503,
+          "sample_count": 2885,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "scores_sha256": "ce7c47ec4f8582104bd153d2bd2e9021b0e041221bfd84f5e401eeeb9e164fac"
+        },
+        "fsd": {
+          "fullset_eer": 0.05714285714285714,
+          "sample_count": 70,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "scores_sha256": "500bfb283292e2db7ae0810d749c114647000d7461313269098629b0f3d7b0c0"
+        },
+        "music-aime96": {
+          "fullset_eer": 0.0,
+          "sample_count": 96,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "scores_sha256": "0023db9e139367e78385c6fdf09c2af6924579218c7cb766ea41bfa505e3d01a"
+        },
+        "speech-asv200": {
+          "fullset_eer": 0.0,
+          "sample_count": 200,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "scores_sha256": "c8df6a38170aea925893c0d066d5c74ea51705e6d840afdd89164ff67b0a054b"
+        }
+      }
+    },
+    "joint-domain-equal-seed43": {
+      "config": "joint-domain-equal-seed43.json",
+      "code_commit": "49a0efd25c5bc11d08d94a49b426f04fe8bc849e",
+      "checkpoint_sha256": "18f60bc2e42ab4977e76b4ff59916f2a011f88892dd6b880e9b5d19786674755",
+      "best_epoch": 3,
+      "epochs_completed": 8,
+      "stop_reason": "early_stopping",
+      "seconds": 9025.99616275169,
+      "peak_cuda_reserved_bytes": 9890168832,
+      "dev_domain_eer": {
+        "environment": 0.012131715771230503,
+        "music": 0.004166666666666667,
+        "speech": 0.007983494797273054
+      },
+      "dev_domain_samples": {
+        "environment": 2885,
+        "music": 288,
+        "speech": 24844
+      },
+      "history": [
+        {
+          "epoch": 1,
+          "dev_domain_eer": {
+            "environment": 0.029896013864818025,
+            "music": 0.020833333333333332,
+            "speech": 0.008634222919937205
+          },
+          "dev_macro_eer": 0.019787856706029523,
+          "selected": true
+        },
+        {
+          "epoch": 2,
+          "dev_domain_eer": {
+            "environment": 0.01733102253032929,
+            "music": 0.020833333333333332,
+            "speech": 0.00510204081632653
+          },
+          "dev_macro_eer": 0.014422132226663052,
+          "selected": true
+        },
+        {
+          "epoch": 3,
+          "dev_domain_eer": {
+            "environment": 0.012131715771230503,
+            "music": 0.004166666666666667,
+            "speech": 0.007983494797273054
+          },
+          "dev_macro_eer": 0.008093959078390075,
+          "selected": true
+        },
+        {
+          "epoch": 4,
+          "dev_domain_eer": {
+            "environment": 0.03466204506065858,
+            "music": 0.004166666666666667,
+            "speech": 0.005494505494505495
+          },
+          "dev_macro_eer": 0.014774405740610246,
+          "selected": false
+        },
+        {
+          "epoch": 5,
+          "dev_domain_eer": {
+            "environment": 0.019064124783362217,
+            "music": 0.008333333333333333,
+            "speech": 0.003924646781789639
+          },
+          "dev_macro_eer": 0.010440701632828397,
+          "selected": false
+        },
+        {
+          "epoch": 6,
+          "dev_domain_eer": {
+            "environment": 0.01993067590987868,
+            "music": 0.0,
+            "speech": 0.00706436420722135
+          },
+          "dev_macro_eer": 0.008998346705700011,
+          "selected": false
+        },
+        {
+          "epoch": 7,
+          "dev_domain_eer": {
+            "environment": 0.018197573656845753,
+            "music": 0.004166666666666667,
+            "speech": 0.003532182103610675
+          },
+          "dev_macro_eer": 0.008632140809041032,
+          "selected": false
+        },
+        {
+          "epoch": 8,
+          "dev_domain_eer": {
+            "environment": 0.01993067590987868,
+            "music": 0.0125,
+            "speech": 0.008028345891639756
+          },
+          "dev_macro_eer": 0.013486340600506146,
+          "selected": false
+        }
+      ],
+      "frozen_buckets": {
+        "urban-dev": {
+          "fullset_eer": 0.012131715771230503,
+          "sample_count": 2885,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "scores_sha256": "414a58d8965e129e14233389f95c7997fac099f2b8535f7bd391c8eb4e2d1d97"
+        },
+        "fsd": {
+          "fullset_eer": 0.05714285714285714,
+          "sample_count": 70,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "scores_sha256": "10011a3c775354429ecd85efec53698b195465cdfa2dd666a79fc4ba62074368"
+        },
+        "music-aime96": {
+          "fullset_eer": 0.0,
+          "sample_count": 96,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "scores_sha256": "db32a94a8dc23948445aa99482bbb8923a20822d5aa5bc9dcdd5fadb8e115d62"
+        },
+        "speech-asv200": {
+          "fullset_eer": 0.0,
+          "sample_count": 200,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "scores_sha256": "739c707bb82012cab7f1d28e6da567e31f64c54ebb193d32513236498b4cad5c"
+        }
+      }
+    },
+    "joint-speech-40pct-seed43": {
+      "config": "joint-speech-40pct-seed43.json",
+      "code_commit": "49a0efd25c5bc11d08d94a49b426f04fe8bc849e",
+      "checkpoint_sha256": "ff2ad30be4cd7f78b0b9e8e538a0daddb31500bc0c53aa53f2c52de0c05e4072",
+      "best_epoch": 2,
+      "epochs_completed": 7,
+      "stop_reason": "early_stopping",
+      "seconds": 3105.6815045988187,
+      "peak_cuda_reserved_bytes": 9890168832,
+      "dev_domain_eer": {
+        "environment": 0.01733102253032929,
+        "music": 0.004166666666666667,
+        "speech": 0.005494505494505495
+      },
+      "dev_domain_samples": {
+        "environment": 2885,
+        "music": 288,
+        "speech": 24844
+      },
+      "history": [
+        {
+          "epoch": 1,
+          "dev_domain_eer": {
+            "environment": 0.03076256499133449,
+            "music": 0.004166666666666667,
+            "speech": 0.011773940345368918
+          },
+          "dev_macro_eer": 0.015567724001123358,
+          "selected": true
+        },
+        {
+          "epoch": 2,
+          "dev_domain_eer": {
+            "environment": 0.01733102253032929,
+            "music": 0.004166666666666667,
+            "speech": 0.005494505494505495
+          },
+          "dev_macro_eer": 0.008997398230500483,
+          "selected": true
+        },
+        {
+          "epoch": 3,
+          "dev_domain_eer": {
+            "environment": 0.02729636048526863,
+            "music": 0.004166666666666667,
+            "speech": 0.003532182103610675
+          },
+          "dev_macro_eer": 0.011665069751848658,
+          "selected": false
+        },
+        {
+          "epoch": 4,
+          "dev_domain_eer": {
+            "environment": 0.029462738301559793,
+            "music": 0.004166666666666667,
+            "speech": 0.005830642267671331
+          },
+          "dev_macro_eer": 0.013153349078632597,
+          "selected": false
+        },
+        {
+          "epoch": 5,
+          "dev_domain_eer": {
+            "environment": 0.058925476603119586,
+            "music": 0.0,
+            "speech": 0.005494505494505495
+          },
+          "dev_macro_eer": 0.021473327365875025,
+          "selected": false
+        },
+        {
+          "epoch": 6,
+          "dev_domain_eer": {
+            "environment": 0.03292894280762565,
+            "music": 0.0,
+            "speech": 0.003532182103610675
+          },
+          "dev_macro_eer": 0.012153708303745443,
+          "selected": false
+        },
+        {
+          "epoch": 7,
+          "dev_domain_eer": {
+            "environment": 0.033795493934142114,
+            "music": 0.0,
+            "speech": 0.0026013634732687477
+          },
+          "dev_macro_eer": 0.012132285802470286,
+          "selected": false
+        }
+      ],
+      "frozen_buckets": {
+        "urban-dev": {
+          "fullset_eer": 0.01733102253032929,
+          "sample_count": 2885,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "scores_sha256": "78553ec666c7d3c2bf66513d51e6748238e029d82e0f616dea1b06f6164adb52"
+        },
+        "fsd": {
+          "fullset_eer": 0.08571428571428572,
+          "sample_count": 70,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "scores_sha256": "44d90ba00b2003ec5d02a82671401dfcc8a6d604ceef7eec1a34f0bb202f9303"
+        },
+        "music-aime96": {
+          "fullset_eer": 0.0,
+          "sample_count": 96,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "scores_sha256": "28b8790bba9bde7504af6d5b2cef8baa04b0808c968282bd8e65184115d73346"
+        },
+        "speech-asv200": {
+          "fullset_eer": 0.01,
+          "sample_count": 200,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "scores_sha256": "49b6b5e75f04200b66d03906373a55ad87390ec99bf8799d36229e1da143c853"
+        }
+      }
+    }
+  },
+  "frozen": {
+    "main": {
+      "run": "joint-domain-equal-seed42",
+      "schema_version": 1,
+      "tag": "frozen-joint-equal-seed42",
+      "checkpoint": "/var/tmp/lanjianyu-issue41-20261013/runs/joint-domain-equal-seed42/training/best.pt",
+      "checkpoint_sha256": "00e6af1c1a6180a0eefb154a964c920234093ce1cf3f1a7d69f37879ddbbf831",
+      "bundle": "/var/tmp/deepfake-release-review-20261012/deepfake-v0.1.1",
+      "buckets": {
+        "fsd-holdout": {
+          "manifest": "/var/tmp/deepfake-audio-ast-20261011/holdout-manifest.jsonl",
+          "frozen_audit": true,
+          "fullset_eer": 0.08571428571428572,
+          "failures": 0,
+          "samples": 70,
+          "seconds": 9.98,
+          "exit_code": 0,
+          "scores_sha256": "03195ca717a512d80550e8f12b27be3467f5c0f3488d5ae8d8f4e9963547f962"
+        },
+        "music-holdout": {
+          "manifest": "/var/tmp/lanjianyu-issue41-20261013/freeze/manifests/holdout-music.jsonl",
+          "frozen_audit": true,
+          "fullset_eer": 0.020833333333333332,
+          "failures": 0,
+          "samples": 288,
+          "seconds": 13.91,
+          "exit_code": 0,
+          "scores_sha256": "d93673340f0fd7dc90d9ccfa0ddb797b04cd7f145b59802177614ff869214fdb"
+        },
+        "in-the-wild": {
+          "manifest": "/var/tmp/lanjianyu-issue39-20261013/data/in-the-wild-manifest/manifest.jsonl",
+          "frozen_audit": false,
+          "fullset_eer": 0.24856127285037238,
+          "failures": 0,
+          "samples": 31779,
+          "seconds": 565.87,
+          "exit_code": 0,
+          "scores_sha256": "1b78a449e6b5c33b38d4da3936e3636858b5594b2bb0b7c9a17205f81844759b"
+        }
+      }
+    },
+    "backup": {
+      "run": "joint-domain-equal-seed43",
+      "schema_version": 1,
+      "tag": "frozen-joint-equal-seed43",
+      "checkpoint": "/var/tmp/lanjianyu-issue41-20261013/runs/joint-domain-equal-seed43/training/best.pt",
+      "checkpoint_sha256": "18f60bc2e42ab4977e76b4ff59916f2a011f88892dd6b880e9b5d19786674755",
+      "bundle": "/var/tmp/deepfake-release-review-20261012/deepfake-v0.1.1",
+      "buckets": {
+        "fsd-holdout": {
+          "manifest": "/var/tmp/deepfake-audio-ast-20261011/holdout-manifest.jsonl",
+          "frozen_audit": true,
+          "fullset_eer": 0.05714285714285714,
+          "failures": 0,
+          "samples": 70,
+          "seconds": 10.02,
+          "exit_code": 0,
+          "scores_sha256": "8f8d46c479f106a2bfee1aa240597b25cc11e08f1fae1273f34654b73eaec760"
+        },
+        "music-holdout": {
+          "manifest": "/var/tmp/lanjianyu-issue41-20261013/freeze/manifests/holdout-music.jsonl",
+          "frozen_audit": true,
+          "fullset_eer": 0.020833333333333332,
+          "failures": 0,
+          "samples": 288,
+          "seconds": 13.74,
+          "exit_code": 0,
+          "scores_sha256": "eec623da463c2f69e0e18bfb1fd48e89eace9f5a14979c2f00a8747a2a59bb8a"
+        },
+        "in-the-wild": {
+          "manifest": "/var/tmp/lanjianyu-issue39-20261013/data/in-the-wild-manifest/manifest.jsonl",
+          "frozen_audit": false,
+          "fullset_eer": 0.19741521815358412,
+          "failures": 0,
+          "samples": 31779,
+          "seconds": 589.2,
+          "exit_code": 0,
+          "scores_sha256": "d57b002f4ff0c79ddb509e14a33dc7a935028711a42e871b23ac5bae5522fdb0"
+        }
+      }
+    }
+  }
+}
