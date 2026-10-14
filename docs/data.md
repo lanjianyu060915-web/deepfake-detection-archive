@@ -56,16 +56,18 @@ cd /mnt/deepfake-archive && sha256sum -c SHA256SUMS
 ```
 
 恢复演练：三域AST seed42从归档权重经发布包 `infer` 重评两桶各40条，与原分数逐位一致；
-七生成器视频 `paired-seed43` 从归档权重与基座经仓库源码入口重评20条，最大差4.9e-3，
-来自原评分缓存批量64与本次批量8的CUDA数值差。发布包v0.1.1不能加载该视频权重
+七生成器视频 `paired-seed43` 从完整归档权重经仓库源码入口重评20条，最大差4.9e-3。
+对照同时改变了缓存/直接解码路径和批量64/8，差异可能与这些条件有关，尚未单独确认原因。发布包v0.1.1不能加载该视频权重
 （缺少 `temporal_kernel_size` 字段），需要仓库源码入口。
 
-各候选的加载契约在 [`configs/release/candidates.json`](../configs/release/candidates.json)：
+各候选的归档资产与前端快照在 [`configs/release/candidates.json`](../configs/release/candidates.json)：
 完整鉴伪权重或所需基座的归档路径与SHA-256、代码版本、适用范围、研究/发布状态，以及
 从当前环境实际读出的有效预处理（AST频谱前端常量、LogMel前端、视频帧采样与RGB mean/std）。
 约束：AST前端依赖环境中**没有** torchaudio（装上后 transformers 会静默改用 kaldi fbank）；
 视频缩放裁剪全部由 ffmpeg 完成，不能再叠加 timm 的 `crop_pct`；ffmpeg 由主机提供。
-统一入口 #57 从这里读取，不在别处重复维护参数。
+该文件仅记录本次归档时的事实，不作为运行配置。统一入口 #57 由
+`configs/release/models.json` 及其引用的推理配置选择模型；完整 checkpoint 包含模型参数，
+视频 ResNet18 基座仅用于训练初始化，恢复推理无需额外加载基座。
 
 网盘为 `fuse.fx`：`chgrp` 不生效（gid固定为2000），文件统一 0444 全员可读；
 `du` 显示为0，大小以 `index.json` 或 `stat` 为准。原始媒体与特征缓存仍只在实例上，需按各工具重建。
