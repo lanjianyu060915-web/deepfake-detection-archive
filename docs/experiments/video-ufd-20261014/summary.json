@@ -1,0 +1,319 @@
+{
+  "experiment": "video-ufd-20261014",
+  "code_commit": "f7585e9",
+  "official_evaluation": false,
+  "research_only": true,
+  "ufd_commit": "030495aea3300a8b54c0ec37ec7fe1dd7e63c619",
+  "checkpoint_sha256": "81907988948ab62e4ab20adc33f7eff6bee14f1067cf47e1e712525e0010d7f7",
+  "selection": "none: evaluate fixed public detector; do not use these diagnostics to change its score direction, head or release default",
+  "precision": "FP32, NVIDIA_TF32_OVERRIDE=0",
+  "sampling": "same four video timestamps as existing candidates; each model keeps its own spatial preprocessing; mean raw frame logits",
+  "conditions": {
+    "canonical": {
+      "manifest": "/var/tmp/deepfake-release-review-20261012/video-canonical/video_h264_crf23_448x256_16fps_3p5s/manifest.jsonl",
+      "scores": "/var/tmp/deepfake-video-ufd-20261014/runs/canonical/scores.jsonl",
+      "scores_sha256": "72ab2d3ae7cc66ef252a05e55b9010039aa54c6f2bb11f92f1e9773fea2d0822",
+      "ufd": {
+        "sample_count": 1949,
+        "real_count": 104,
+        "fake_count": 1845,
+        "fullset_eer": 0.4775067750677507,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "published": {
+        "sample_count": 1949,
+        "real_count": 104,
+        "fake_count": 1845,
+        "fullset_eer": 0.3311653116531165,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "multigen": {
+        "sample_count": 1949,
+        "real_count": 104,
+        "fake_count": 1845,
+        "fullset_eer": 0.3173076923076923,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "timing": {
+        "startup_seconds": 38.915242014452815,
+        "preflight_seconds": 2.0743615655228496,
+        "current_session_sample_call_seconds": 478.3313326705247,
+        "current_session_stage_seconds": {
+          "decode_and_preprocess": 420.0361896743998,
+          "input_validation": 1.395247908309102,
+          "model_and_feature_scoring": 56.67995940055698,
+          "unattributed_sample_call": 0.2199356872588396
+        },
+        "samples_per_second": 4.074581502154018
+      },
+      "seen_labels": {
+        "sample_count": 727,
+        "real_count": 104,
+        "fake_count": 623,
+        "fullset_eer": 0.42696629213483145,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "unseen_labels": {
+        "sample_count": 1326,
+        "real_count": 104,
+        "fake_count": 1222,
+        "fullset_eer": 0.5,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "paired_generators": {
+        "CogVideoX1.5-5B-T": {
+          "sample_count": 208,
+          "real_count": 104,
+          "fake_count": 104,
+          "fullset_eer": 0.2980769230769231,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "HunyuanVideo": {
+          "sample_count": 206,
+          "real_count": 103,
+          "fake_count": 103,
+          "fullset_eer": 0.5048543689320388,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "HunyuanVideo-I2V": {
+          "sample_count": 208,
+          "real_count": 104,
+          "fake_count": 104,
+          "fullset_eer": 0.5096153846153846,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "LTX-Video-13B-I": {
+          "sample_count": 204,
+          "real_count": 102,
+          "fake_count": 102,
+          "fullset_eer": 0.5098039215686274,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "LTX-Video-13B-T": {
+          "sample_count": 200,
+          "real_count": 100,
+          "fake_count": 100,
+          "fullset_eer": 0.36,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "SkyReels-V2": {
+          "sample_count": 208,
+          "real_count": 104,
+          "fake_count": 104,
+          "fullset_eer": 0.5384615384615384,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "SkyReels-V2-I2V-14B-540P": {
+          "sample_count": 206,
+          "real_count": 103,
+          "fake_count": 103,
+          "fullset_eer": 0.49514563106796117,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "Wan2.1-T2V-1.3B": {
+          "sample_count": 208,
+          "real_count": 104,
+          "fake_count": 104,
+          "fullset_eer": 0.38461538461538464,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "Wan2.1-VACE-1.3B-T": {
+          "sample_count": 208,
+          "real_count": 104,
+          "fake_count": 104,
+          "fullset_eer": 0.375,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "Wan2.2-I2V-14B": {
+          "sample_count": 208,
+          "real_count": 104,
+          "fake_count": 104,
+          "fullset_eer": 0.4807692307692308,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "Wan2.2-T2V-14B": {
+          "sample_count": 208,
+          "real_count": 104,
+          "fake_count": 104,
+          "fullset_eer": 0.5769230769230769,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "Wan2.2-TI2V-5B-I": {
+          "sample_count": 208,
+          "real_count": 104,
+          "fake_count": 104,
+          "fullset_eer": 0.47115384615384615,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "Wan2.2-TI2V-5B-T": {
+          "sample_count": 208,
+          "real_count": 104,
+          "fake_count": 104,
+          "fullset_eer": 0.38461538461538464,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "gen4-turbo": {
+          "sample_count": 128,
+          "real_count": 64,
+          "fake_count": 64,
+          "fullset_eer": 0.5625,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "hailuo": {
+          "sample_count": 162,
+          "real_count": 81,
+          "fake_count": 81,
+          "fullset_eer": 0.5308641975308642,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "kling-v1": {
+          "sample_count": 160,
+          "real_count": 80,
+          "fake_count": 80,
+          "fullset_eer": 0.5375,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "pika-v2": {
+          "sample_count": 180,
+          "real_count": 90,
+          "fake_count": 90,
+          "fullset_eer": 0.36666666666666664,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "pixverse-v4-5": {
+          "sample_count": 184,
+          "real_count": 92,
+          "fake_count": 92,
+          "fullset_eer": 0.6521739130434783,
+          "failure_count": 0,
+          "coverage": 1.0
+        },
+        "sora-2": {
+          "sample_count": 188,
+          "real_count": 94,
+          "fake_count": 94,
+          "fullset_eer": 0.5851063829787234,
+          "failure_count": 0,
+          "coverage": 1.0
+        }
+      }
+    },
+    "old-dev": {
+      "manifest": "/var/tmp/deepfake-video-multigen-20261013/old-dev/manifest.jsonl",
+      "scores": "/var/tmp/deepfake-video-ufd-20261014/runs/old-dev/scores.jsonl",
+      "scores_sha256": "386685b29c046787e78a0a03203e9bb5bb71320a49ea32beeae180b4bbeb1f64",
+      "ufd": {
+        "sample_count": 146,
+        "real_count": 73,
+        "fake_count": 73,
+        "fullset_eer": 0.4931506849315068,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "published": {
+        "sample_count": 146,
+        "real_count": 73,
+        "fake_count": 73,
+        "fullset_eer": 0.1643835616438356,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "multigen": {
+        "sample_count": 146,
+        "real_count": 73,
+        "fake_count": 73,
+        "fullset_eer": 0.1917808219178082,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "timing": {
+        "startup_seconds": 39.39758297428489,
+        "preflight_seconds": 1.5644244784489274,
+        "current_session_sample_call_seconds": 53.48754997458309,
+        "current_session_stage_seconds": {
+          "decode_and_preprocess": 48.89565886091441,
+          "input_validation": 0.06891341041773558,
+          "model_and_feature_scoring": 4.494820799678564,
+          "unattributed_sample_call": 0.028156903572380543
+        },
+        "samples_per_second": 2.7296071715638157
+      }
+    },
+    "crf35": {
+      "manifest": "/var/tmp/deepfake-video-temporal-20261012/diagnostic/size-control/canonical/video_h264_crf35_448x256/manifest.jsonl",
+      "scores": "/var/tmp/deepfake-video-ufd-20261014/runs/crf35/scores.jsonl",
+      "scores_sha256": "fe8de92ef8c3702f8837033ee9c79eff934bbeaa962125ea20efc7246d572e3b",
+      "ufd": {
+        "sample_count": 310,
+        "real_count": 89,
+        "fake_count": 221,
+        "fullset_eer": 0.5842696629213483,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "published": {
+        "sample_count": 310,
+        "real_count": 89,
+        "fake_count": 221,
+        "fullset_eer": 0.3258426966292135,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "multigen": {
+        "sample_count": 310,
+        "real_count": 89,
+        "fake_count": 221,
+        "fullset_eer": 0.3212669683257919,
+        "failure_count": 0,
+        "coverage": 1.0
+      },
+      "timing": {
+        "startup_seconds": 39.07461422402412,
+        "preflight_seconds": 1.5854155384004116,
+        "current_session_sample_call_seconds": 91.25284559372813,
+        "current_session_stage_seconds": {
+          "decode_and_preprocess": 81.71258987486362,
+          "input_validation": 0.144960081204772,
+          "model_and_feature_scoring": 9.345468661747873,
+          "unattributed_sample_call": 0.0498269759118557
+        },
+        "samples_per_second": 3.3971543351115674
+      }
+    }
+  },
+  "author_parity": {
+    "artifact": "/var/tmp/deepfake-video-ufd-20261014/author-parity.json",
+    "videos": 4,
+    "frames": 16,
+    "max_frame_logit_abs_difference": 1.239776611328125e-05,
+    "max_video_logit_abs_difference": 6.67572021484375e-06,
+    "precision": "float32, TF32 disabled",
+    "tolerance": {
+      "atol": 0.0001,
+      "rtol": 0.0001
+    }
+  },
+  "decision": "retain as negative pretrained-head baseline; no release replacement; next bounded comparison is local head adaptation and independent-source development before further branches"
+}

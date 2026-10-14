@@ -24,6 +24,7 @@ from .models import (
     AASISTLite,
     LogMelCNN,
     MediaFeatureClassifier,
+    UFDVideoClassifier,
     VideoFrameClassifier,
     load_checkpoint,
     pool_media_scores,
@@ -50,7 +51,9 @@ def _validate_media_executables(config: InferenceConfig, audio: AudioConfig) -> 
 class OfflineScorer:
     """Load resources once; media errors are recorded by the outer runner."""
 
-    def __init__(self, config: InferenceConfig, base_dir: Path) -> None:
+    def __init__(  # noqa: PLR0912
+        self, config: InferenceConfig, base_dir: Path
+    ) -> None:
         os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
         self.config = config
         self.root = resolve_path(base_dir, config.data_root).resolve(strict=True)
@@ -68,14 +71,21 @@ class OfflineScorer:
         self.model.to(self.device).eval()
         self.frame_preprocessing: dict[str, Any] | None = None
         if config.model_kind == "video_frames":
-            if not isinstance(self.model, VideoFrameClassifier):
+            if not isinstance(self.model, (VideoFrameClassifier, UFDVideoClassifier)):
                 raise ValueError(
-                    "video_frames requires a video_frame_finetune_v1 checkpoint"
+                    "video_frames requires a video_frame_finetune_v1 or ufd_video_v1 "
+                    "checkpoint"
                 )
             if self.model.config.aggregation != config.aggregation:
                 raise ValueError(
                     "head aggregation and inference configuration disagree"
                 )
+            if isinstance(self.model, UFDVideoClassifier) and (
+                self.video.resize_mode != "native_center_crop"
+                or self.model.preprocessing["input_size"]
+                != (3, self.video.height, self.video.width)
+            ):
+                raise ValueError("UFD requires native_center_crop at its input size")
             self.encoder = None
             self.frame_preprocessing = self.model.preprocessing
         elif config.model_kind == "audio_waveform":
