@@ -24,6 +24,7 @@ from .models import (
     AASISTLite,
     LogMelCNN,
     MediaFeatureClassifier,
+    UFDVideoClassifier,
     VideoFrameClassifier,
     load_checkpoint,
     pool_media_scores,
@@ -50,7 +51,9 @@ def _validate_media_executables(config: InferenceConfig, audio: AudioConfig) -> 
 class OfflineScorer:
     """Load resources once; media errors are recorded by the outer runner."""
 
-    def __init__(self, config: InferenceConfig, base_dir: Path) -> None:
+    def __init__(  # noqa: PLR0912
+        self, config: InferenceConfig, base_dir: Path
+    ) -> None:
         os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
         self.config = config
         self.root = resolve_path(base_dir, config.data_root).resolve(strict=True)
@@ -68,14 +71,21 @@ class OfflineScorer:
         self.model.to(self.device).eval()
         self.frame_preprocessing: dict[str, Any] | None = None
         if config.model_kind == "video_frames":
-            if not isinstance(self.model, VideoFrameClassifier):
+            if not isinstance(self.model, (VideoFrameClassifier, UFDVideoClassifier)):
                 raise ValueError(
-                    "video_frames requires a video_frame_finetune_v1 checkpoint"
+                    "video_frames requires a video_frame_finetune_v1 or ufd_video_v1 "
+                    "checkpoint"
                 )
             if self.model.config.aggregation != config.aggregation:
                 raise ValueError(
                     "head aggregation and inference configuration disagree"
                 )
+            if isinstance(self.model, UFDVideoClassifier) and (
+                self.video.resize_mode != "native_center_crop"
+                or self.model.preprocessing["input_size"]
+                != (3, self.video.height, self.video.width)
+            ):
+                raise ValueError("UFD requires native_center_crop at its input size")
             self.encoder = None
             self.frame_preprocessing = self.model.preprocessing
         elif config.model_kind == "audio_waveform":
@@ -104,23 +114,40 @@ class OfflineScorer:
             self.encoder = load_encoder(config.encoder, base_dir, str(self.device))
 
     @torch.inference_mode()
-    def __call__(self, record: SampleRecord) -> float:
+    def __call__(
+        self,
+        record: SampleRecord,
+        *,
+        audio_config: AudioConfig | None = None,
+        video_config: VideoConfig | None = None,
+    ) -> float:
         try:
-            return self._score(record)
+            return self._score(
+                record, audio_config=audio_config, video_config=video_config
+            )
         except RuntimeError as exc:
             # PyTorch's CPU allocator raises RuntimeError rather than OutOfMemoryError.
             if "DefaultCPUAllocator: can't allocate memory" in str(exc):
                 raise MemoryError(str(exc)) from exc
             raise
 
-    def _score(self, record: SampleRecord) -> float:
+    def _score(
+        self,
+        record: SampleRecord,
+        *,
+        audio_config: AudioConfig | None = None,
+        video_config: VideoConfig | None = None,
+    ) -> float:
         if record.status != "available":
             raise MediaError(record.status, record.failure_reason)
         if record.modality != self.config.modality:
             raise MediaError("wrong_modality", "sample differs from run modality")
         if self.frame_preprocessing is not None:
             frames = extract_video_frames(
-                record, self.root, self.video, self.frame_preprocessing
+                record,
+                self.root,
+                video_config or self.video,
+                self.frame_preprocessing,
             )
             with inference_stage("model_and_feature_scoring"):
                 frame_result: Tensor = self.model(frames[None, ...].to(self.device))
@@ -130,8 +157,8 @@ class OfflineScorer:
                 record,
                 self.root,
                 self.encoder,
-                self.audio,
-                self.video,
+                audio_config or self.audio,
+                video_config or self.video,
                 self.config.segment_samples,
                 self.config.segments,
                 str(self.device),
@@ -142,7 +169,10 @@ class OfflineScorer:
                 return float(result[0].float().cpu())
         path = media_path(record, self.root)
         with inference_stage("decode_and_preprocess"):
-            decoded = decode_audio(path, self.audio)
+            decoded = decode_audio(
+                path,
+                audio_config or self.audio,
+            )
             if isinstance(self.model, ASTClassifier):
                 observations = self.model.prepare_audio(
                     decoded.waveform,

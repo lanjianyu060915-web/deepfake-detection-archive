@@ -115,6 +115,16 @@ def source_identity(source: Path) -> dict[str, object]:
     return {"git_head": head.stdout.strip(), "dirty": bool(status.stdout.strip())}
 
 
+def checkpoint_ast_frontend(path: Path) -> str:
+    """Read the checkpoint's explicit frontend; legacy weights use NumPy."""
+    import torch  # noqa: PLC0415
+
+    from deepfake_detection_archive.models.ast import ASTConfig  # noqa: PLC0415
+
+    payload = torch.load(path, map_location="cpu", weights_only=True, mmap=True)
+    return ASTConfig(**payload["config"]).frontend
+
+
 def build_release(  # noqa: PLR0913, PLR0917 -- explicit local build inputs
     output: Path,
     site_packages: Path,
@@ -130,12 +140,8 @@ def build_release(  # noqa: PLR0913, PLR0917 -- explicit local build inputs
     output.mkdir(parents=True, exist_ok=False)
     builder = Builder(output, output, 1)
     roots: tuple[str, ...] = RUNTIME_ROOTS
-    installed = {
-        dist.metadata["Name"].lower()
-        for dist in importlib.metadata.distributions(path=[str(site_packages)])
-    }
-    # AST uses Kaldi features when torchaudio is available: preserve that choice.
-    if "torchaudio" in installed:
+    ast_frontend = checkpoint_ast_frontend(audio_weight)
+    if ast_frontend == "torchaudio_kaldi_v1":
         roots += ("torchaudio",)
     builder.copy_dependencies(
         REPOSITORY / "uv.lock", site_packages.resolve(), source, runtime_roots=roots
@@ -161,6 +167,9 @@ def build_release(  # noqa: PLR0913, PLR0917 -- explicit local build inputs
         (output / "configs" / path.name).write_text(
             json.dumps(config, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
         )
+    shutil.copyfile(
+        REPOSITORY / "configs/release/models.json", output / "configs/models.json"
+    )
     shutil.copyfile(REPOSITORY / "docs/release.md", output / "README.md")
     licenses = output / "licenses"
     licenses.mkdir()
@@ -205,6 +214,7 @@ def build_release(  # noqa: PLR0913, PLR0917 -- explicit local build inputs
     metadata = {
         "version": version,
         "runtime_dependencies": distributions,
+        "ast_frontend": ast_frontend,
         "python": json.loads(python_info.stdout),
         "torch": distributions["torch"],
         "checkpoint_sha256": hashes,

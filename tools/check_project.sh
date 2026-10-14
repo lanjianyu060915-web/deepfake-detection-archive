@@ -12,6 +12,7 @@ done
 model_tools=(
   tools/profile_models.py
   tools/prepare_pretrained.py
+  tools/prepare_ufd.py
   tools/prepare_asvspoof2019.py
   tools/prepare_asv_parquet.py
   tools/prepare_asv_eval.py

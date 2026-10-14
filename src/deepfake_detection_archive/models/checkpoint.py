@@ -21,6 +21,7 @@ from .core import (
     MediaFeatureConfig,
 )
 from .finetune import VideoFrameClassifier, VideoFrameConfig
+from .ufd import UFDConfig, UFDVideoClassifier
 
 
 SCHEMA_VERSION = 1
@@ -43,7 +44,7 @@ def verify_sha256(path: Path, expected_sha256: str) -> None:
         raise ValueError(f"SHA-256 mismatch: {path}")
 
 
-def create_model(architecture: str, config: dict[str, Any]) -> nn.Module:
+def create_model(architecture: str, config: dict[str, Any]) -> nn.Module:  # noqa: PLR0911
     """Instantiate only built-in architectures; never resolve arbitrary classes."""
     if architecture == "logmel_cnn_v1":
         return LogMelCNN(LogMelConfig(**config))
@@ -53,6 +54,8 @@ def create_model(architecture: str, config: dict[str, Any]) -> nn.Module:
         return MediaFeatureClassifier(MediaFeatureConfig(**config))
     if architecture == "video_frame_finetune_v1":
         return VideoFrameClassifier(VideoFrameConfig(**config))
+    if architecture == "ufd_video_v1":
+        return UFDVideoClassifier(UFDConfig(**config))
     if architecture == "aasist_l_v1" and config == {}:
         return AASISTLite()
     if architecture == "audio_ast_v1":
@@ -60,7 +63,7 @@ def create_model(architecture: str, config: dict[str, Any]) -> nn.Module:
     raise ValueError(f"unsupported architecture/config: {architecture}")
 
 
-def model_spec(model: nn.Module) -> tuple[str, dict[str, Any]]:
+def model_spec(model: nn.Module) -> tuple[str, dict[str, Any]]:  # noqa: PLR0911
     if type(model) is LogMelCNN:
         return "logmel_cnn_v1", asdict(model.config)
     if type(model) is FeatureHead:
@@ -69,6 +72,8 @@ def model_spec(model: nn.Module) -> tuple[str, dict[str, Any]]:
         return "media_feature_head_v1", asdict(model.config)
     if type(model) is VideoFrameClassifier:
         return "video_frame_finetune_v1", asdict(model.config)
+    if type(model) is UFDVideoClassifier:
+        return "ufd_video_v1", asdict(model.config)
     if type(model) is AASISTLite:
         return "aasist_l_v1", {}
     if type(model) is ASTClassifier:

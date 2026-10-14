@@ -13,6 +13,7 @@ from .core import (
 )
 from .encoders import FrozenAudioEncoder, FrozenVisionEncoder
 from .finetune import VideoFrameClassifier, VideoFrameConfig
+from .ufd import UFDConfig, UFDVideoClassifier
 
 
 __all__ = [
@@ -25,6 +26,8 @@ __all__ = [
     "LogMelConfig",
     "MediaFeatureClassifier",
     "MediaFeatureConfig",
+    "UFDConfig",
+    "UFDVideoClassifier",
     "VideoFrameClassifier",
     "VideoFrameConfig",
     "create_model",

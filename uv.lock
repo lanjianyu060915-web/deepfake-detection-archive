@@ -14,7 +14,8 @@ resolution-markers = [
     "python_full_version >= '3.15' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-26-deepfake-detection-archive-cpu' and extra != 'extra-26-deepfake-detection-archive-cu132'",
     "python_full_version == '3.14.*' and sys_platform == 'win32' and extra != 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132'",
     "python_full_version == '3.14.*' and sys_platform == 'emscripten' and extra != 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132'",
-    "python_full_version == '3.14.*' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132'",
+    "python_full_version == '3.14.*' and sys_platform != 'darwin' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132'",
+    "python_full_version == '3.14.*' and sys_platform == 'darwin' and extra != 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132'",
     "python_full_version == '3.14.*' and sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra != 'extra-26-deepfake-detection-archive-cu132'",
     "python_full_version == '3.14.*' and sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra != 'extra-26-deepfake-detection-archive-cu132'",
     "python_full_version == '3.14.*' and sys_platform != 'darwin' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra != 'extra-26-deepfake-detection-archive-cu132'",
@@ -24,7 +25,8 @@ resolution-markers = [
     "python_full_version == '3.14.*' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-26-deepfake-detection-archive-cpu' and extra != 'extra-26-deepfake-detection-archive-cu132'",
     "python_full_version < '3.14' and sys_platform == 'win32' and extra != 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132'",
     "python_full_version < '3.14' and sys_platform == 'emscripten' and extra != 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132'",
-    "python_full_version < '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132'",
+    "python_full_version < '3.14' and sys_platform != 'darwin' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132'",
+    "python_full_version < '3.14' and sys_platform == 'darwin' and extra != 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132'",
     "python_full_version < '3.14' and sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra != 'extra-26-deepfake-detection-archive-cu132'",
     "python_full_version < '3.14' and sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra != 'extra-26-deepfake-detection-archive-cu132'",
     "python_full_version < '3.14' and sys_platform != 'darwin' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra != 'extra-26-deepfake-detection-archive-cu132'",
@@ -619,6 +621,8 @@ cpu = [
     { name = "timm" },
     { name = "torch", version = "2.14.1", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform == 'darwin' and extra == 'extra-26-deepfake-detection-archive-cpu') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
     { name = "torch", version = "2.14.1+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform != 'darwin' and extra == 'extra-26-deepfake-detection-archive-cpu') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "torchaudio", version = "2.11.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version < '3.15' and sys_platform == 'darwin' and extra == 'extra-26-deepfake-detection-archive-cpu') or (python_full_version >= '3.15' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'darwin' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "torchaudio", version = "2.11.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version >= '3.15' and extra == 'extra-26-deepfake-detection-archive-cpu') or (python_full_version < '3.15' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'darwin' and extra == 'extra-26-deepfake-detection-archive-cpu')" },
     { name = "torchvision", version = "0.29.1", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform == 'darwin' and extra == 'extra-26-deepfake-detection-archive-cpu') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
     { name = "torchvision", version = "0.29.1+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(sys_platform != 'darwin' and extra == 'extra-26-deepfake-detection-archive-cpu') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
     { name = "transformers" },
@@ -626,6 +630,8 @@ cpu = [
 cu132 = [
     { name = "timm" },
     { name = "torch", version = "2.14.1+cu132", source = { registry = "https://download.pytorch.org/whl/cu132" } },
+    { name = "torchaudio", version = "2.11.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version < '3.15' and sys_platform == 'darwin' and extra == 'extra-26-deepfake-detection-archive-cu132') or (python_full_version >= '3.15' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'darwin' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "torchaudio", version = "2.11.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "(python_full_version >= '3.15' and extra == 'extra-26-deepfake-detection-archive-cu132') or (python_full_version < '3.15' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'darwin' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
     { name = "torchvision", version = "0.29.1+cu132", source = { registry = "https://download.pytorch.org/whl/cu132" } },
     { name = "transformers" },
 ]
@@ -662,6 +668,8 @@ requires-dist = [
     { name = "timm", marker = "extra == 'cu132'", specifier = ">=1.0.30,<1.1" },
     { name = "torch", marker = "extra == 'cpu'", specifier = "==2.14.1", index = "https://download.pytorch.org/whl/cpu", conflict = { package = "deepfake-detection-archive", extra = "cpu" } },
     { name = "torch", marker = "extra == 'cu132'", specifier = "==2.14.1", index = "https://download.pytorch.org/whl/cu132", conflict = { package = "deepfake-detection-archive", extra = "cu132" } },
+    { name = "torchaudio", marker = "extra == 'cpu'", specifier = "==2.11.0", index = "https://download.pytorch.org/whl/cpu" },
+    { name = "torchaudio", marker = "extra == 'cu132'", specifier = "==2.11.0", index = "https://download.pytorch.org/whl/cpu" },
     { name = "torchvision", marker = "extra == 'cpu'", specifier = "==0.29.1", index = "https://download.pytorch.org/whl/cpu", conflict = { package = "deepfake-detection-archive", extra = "cpu" } },
     { name = "torchvision", marker = "extra == 'cu132'", specifier = "==0.29.1", index = "https://download.pytorch.org/whl/cu132", conflict = { package = "deepfake-detection-archive", extra = "cu132" } },
     { name = "transformers", marker = "extra == 'cpu'", specifier = ">=5.19,<5.20" },
@@ -1858,7 +1866,7 @@ name = "nvidia-cufft"
 version = "12.2.0.57"
 source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
-    { name = "nvidia-nvjitlink", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "nvidia-nvjitlink", marker = "(python_full_version >= '3.15' and sys_platform == 'darwin' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'darwin' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'darwin' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
 ]
 wheels = [
     { url = "https://pypi.tuna.tsinghua.edu.cn/packages/07/8d/f650e6d527f9d22b5ded906c000eaebb037721c06d4ecd906df62f300979/nvidia_cufft-12.2.0.57-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:1ed438568ae1088ba2c25789d10205d4104b8b140b7bd942e39a787947a0fb74", size = 218244742, upload-time = "2026-07-16T09:47:08.76Z" },
@@ -1890,9 +1898,9 @@ name = "nvidia-cusolver"
 version = "12.2.0.11"
 source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
-    { name = "nvidia-cublas", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "nvidia-cusparse", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "nvidia-nvjitlink", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "nvidia-cublas", marker = "(python_full_version >= '3.15' and sys_platform == 'darwin' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'darwin' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'darwin' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "nvidia-cusparse", marker = "(python_full_version >= '3.15' and sys_platform == 'darwin' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'darwin' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'darwin' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "nvidia-nvjitlink", marker = "(python_full_version >= '3.15' and sys_platform == 'darwin' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'darwin' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'darwin' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
 ]
 wheels = [
     { url = "https://pypi.tuna.tsinghua.edu.cn/packages/60/df/9e6b603f1d64040ce3e076e9bce1b78e2d588d0aabc9783f351cecd861ab/nvidia_cusolver-12.2.0.11-py3-none-manylinux_2_27_aarch64.whl", hash = "sha256:8be097fca28de6be0990ab216ee9b804dd51077e1d1d83acf6c9850650bdc64d", size = 250383075, upload-time = "2026-07-16T09:50:16.355Z" },
@@ -1905,7 +1913,7 @@ name = "nvidia-cusparse"
 version = "12.7.10.12"
 source = { registry = "https://pypi.tuna.tsinghua.edu.cn/simple" }
 dependencies = [
-    { name = "nvidia-nvjitlink", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "nvidia-nvjitlink", marker = "(python_full_version >= '3.15' and sys_platform == 'darwin' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'darwin' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'darwin' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
 ]
 wheels = [
     { url = "https://pypi.tuna.tsinghua.edu.cn/packages/60/35/abbd278fb6d039fcfb5175efa10a21007a11878bec59920d84854b47d766/nvidia_cusparse-12.7.10.12-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:597eff2cd83e3ab1d1e3a0dce9c9c879d77cf64ec2659bfdb5af6a5d02e7aaa9", size = 169043093, upload-time = "2026-07-16T09:51:37.058Z" },
@@ -3065,10 +3073,12 @@ resolution-markers = [
     "python_full_version >= '3.15' and sys_platform != 'emscripten' and sys_platform != 'win32'",
     "python_full_version == '3.14.*' and sys_platform == 'win32'",
     "python_full_version == '3.14.*' and sys_platform == 'emscripten'",
-    "python_full_version == '3.14.*' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+    "python_full_version == '3.14.*' and sys_platform != 'darwin' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+    "python_full_version == '3.14.*' and sys_platform == 'darwin'",
     "python_full_version < '3.14' and sys_platform == 'win32'",
     "python_full_version < '3.14' and sys_platform == 'emscripten'",
-    "python_full_version < '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+    "python_full_version < '3.14' and sys_platform != 'darwin' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+    "python_full_version < '3.14' and sys_platform == 'darwin'",
 ]
 dependencies = [
     { name = "cuda-bindings", marker = "(python_full_version < '3.15' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (python_full_version >= '3.15' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
@@ -3105,6 +3115,65 @@ wheels = [
     { url = "https://download-r2.pytorch.org/whl/cu132/torch-2.14.1%2Bcu132-cp315-cp315t-manylinux_2_28_aarch64.whl", hash = "sha256:ddba245d885de5f49c150a7e790e13a4b438d412d94621f97f803e485fc3ec4f", upload-time = "2026-09-30T21:22:19Z" },
     { url = "https://download-r2.pytorch.org/whl/cu132/torch-2.14.1%2Bcu132-cp315-cp315t-manylinux_2_28_x86_64.whl", hash = "sha256:3d1c1cab6d415385a2e70e9e8f4ce51273c6be9f0f295cbd583cf70f689d8604", upload-time = "2026-09-30T21:22:44Z" },
     { url = "https://download-r2.pytorch.org/whl/cu132/torch-2.14.1%2Bcu132-cp315-cp315t-win_amd64.whl", hash = "sha256:24fea67e9b9946e99e6eca2cd8e88d049508a66fb7d753cf6153e769d8406c22", upload-time = "2026-09-30T21:23:48Z" },
+]
+
+[[package]]
+name = "torchaudio"
+version = "2.11.0"
+source = { registry = "https://download.pytorch.org/whl/cpu" }
+resolution-markers = [
+    "python_full_version == '3.14.*' and sys_platform == 'darwin'",
+    "python_full_version < '3.14' and sys_platform == 'darwin'",
+]
+wheels = [
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchaudio-2.11.0-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:a1cf1acc883bee9cb906a933572fed6a8a933f86ef34e9ea7d803f72317e8c1b", upload-time = "2026-03-23T15:50:10Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchaudio-2.11.0-cp313-cp313-macosx_12_0_arm64.whl", hash = "sha256:e3f9696a9ef1d49acc452159b052370c636406d072e9d8f10895fda87b591ea9", upload-time = "2026-03-23T15:50:10Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchaudio-2.11.0-cp313-cp313t-macosx_12_0_arm64.whl", hash = "sha256:bda09ea630ae7207384fb0f28c35e4f8c0d82dd6eba020b6b335ad0caa9fed49", upload-time = "2026-03-23T15:50:10Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchaudio-2.11.0-cp314-cp314-macosx_12_0_arm64.whl", hash = "sha256:cc09cd1f6015b8549e7fe255fb1be5346b57e7fee06541d3f3dbb012d8c4715f", upload-time = "2026-03-23T15:50:10Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchaudio-2.11.0-cp314-cp314t-macosx_12_0_arm64.whl", hash = "sha256:da2725e250866da42a12934c9a6552f65a18b7187fd7a6221387f0e605fb3b96", upload-time = "2026-03-23T15:50:10Z" },
+]
+
+[[package]]
+name = "torchaudio"
+version = "2.11.0+cpu"
+source = { registry = "https://download.pytorch.org/whl/cpu" }
+resolution-markers = [
+    "python_full_version >= '3.15' and sys_platform == 'win32' and extra != 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132'",
+    "python_full_version >= '3.15' and sys_platform == 'emscripten' and extra != 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132'",
+    "python_full_version >= '3.15' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132'",
+    "python_full_version >= '3.15' and sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra != 'extra-26-deepfake-detection-archive-cu132'",
+    "python_full_version >= '3.15' and sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra != 'extra-26-deepfake-detection-archive-cu132'",
+    "python_full_version >= '3.15' and sys_platform != 'darwin' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra != 'extra-26-deepfake-detection-archive-cu132'",
+    "python_full_version >= '3.15' and sys_platform == 'darwin' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra != 'extra-26-deepfake-detection-archive-cu132'",
+    "python_full_version == '3.14.*' and sys_platform == 'win32' and extra != 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132'",
+    "python_full_version == '3.14.*' and sys_platform == 'emscripten' and extra != 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132'",
+    "python_full_version == '3.14.*' and sys_platform != 'darwin' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132'",
+    "python_full_version == '3.14.*' and sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra != 'extra-26-deepfake-detection-archive-cu132'",
+    "python_full_version == '3.14.*' and sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra != 'extra-26-deepfake-detection-archive-cu132'",
+    "python_full_version == '3.14.*' and sys_platform != 'darwin' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra != 'extra-26-deepfake-detection-archive-cu132'",
+    "python_full_version < '3.14' and sys_platform == 'win32' and extra != 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132'",
+    "python_full_version < '3.14' and sys_platform == 'emscripten' and extra != 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132'",
+    "python_full_version < '3.14' and sys_platform != 'darwin' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra != 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132'",
+    "python_full_version < '3.14' and sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra != 'extra-26-deepfake-detection-archive-cu132'",
+    "python_full_version < '3.14' and sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra != 'extra-26-deepfake-detection-archive-cu132'",
+    "python_full_version < '3.14' and sys_platform != 'darwin' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra != 'extra-26-deepfake-detection-archive-cu132'",
+]
+wheels = [
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchaudio-2.11.0%2Bcpu-cp312-cp312-manylinux_2_28_aarch64.whl", hash = "sha256:b9dd2c6ac144001dc6dac38b564c1de73ac26ef0c195d5037c4a94990b0e2b5a", upload-time = "2026-03-23T15:50:10Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchaudio-2.11.0%2Bcpu-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:2354248848d06a9ae1e7a12165f800f0dda7df60ecac9fca892322b722b922c0", upload-time = "2026-03-23T15:50:10Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchaudio-2.11.0%2Bcpu-cp312-cp312-win_amd64.whl", hash = "sha256:95d517bd1a0a28dacd1c37550ced95cab64f3a7a4ef9b8219b41049388a71163", upload-time = "2026-03-23T15:50:10Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchaudio-2.11.0%2Bcpu-cp313-cp313-manylinux_2_28_aarch64.whl", hash = "sha256:2faa8d8f251d1fa44813765b00791048b617e9dc06e6cd9222aba81023929119", upload-time = "2026-03-23T15:50:10Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchaudio-2.11.0%2Bcpu-cp313-cp313-manylinux_2_28_x86_64.whl", hash = "sha256:3c0175d0ed054bf0dc3b154a744b1a127c94291b3f3b7bdd0639b4b238c89445", upload-time = "2026-03-23T15:50:10Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchaudio-2.11.0%2Bcpu-cp313-cp313-win_amd64.whl", hash = "sha256:fa0c22f58f60c3537b7d28ed2501e0995acb2a65d9af2708f21edaad67186cd8", upload-time = "2026-03-23T15:50:10Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchaudio-2.11.0%2Bcpu-cp313-cp313t-manylinux_2_28_aarch64.whl", hash = "sha256:5d665234def325e22c15518c581b0107a651c9f843176e3192360b092ebcb656", upload-time = "2026-03-23T15:50:10Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchaudio-2.11.0%2Bcpu-cp313-cp313t-manylinux_2_28_x86_64.whl", hash = "sha256:a3df9c41706a22de0f43fe2734f54db31cb5a7314cc92ecc84657a8492b3ff8d", upload-time = "2026-03-23T15:50:10Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchaudio-2.11.0%2Bcpu-cp313-cp313t-win_amd64.whl", hash = "sha256:18818a326b779abc7bfd5cfb9fe88501916dde144cb1944fc9e7b4fb6208dfc7", upload-time = "2026-03-23T15:50:10Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchaudio-2.11.0%2Bcpu-cp314-cp314-manylinux_2_28_aarch64.whl", hash = "sha256:591ed8279f0170ef28933873f65e9f5f8c439287088ef6285cda65988b0ba614", upload-time = "2026-03-23T15:50:10Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchaudio-2.11.0%2Bcpu-cp314-cp314-manylinux_2_28_x86_64.whl", hash = "sha256:34c5dcd704e17a2b01c097b4fe3b5f83c5cdbc42b9f2abd095e026c588f873d4", upload-time = "2026-03-23T15:50:10Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchaudio-2.11.0%2Bcpu-cp314-cp314-win_amd64.whl", hash = "sha256:be19f467eb7a173264653369426e7ecc4745e28d15f9c52eea2ad5316ec685eb", upload-time = "2026-03-23T15:50:10Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchaudio-2.11.0%2Bcpu-cp314-cp314t-manylinux_2_28_aarch64.whl", hash = "sha256:ad3e6141c1078c5c9c8ae7c3cdf6c80eb35612c99c8cf3f76fe295845f45bb9d", upload-time = "2026-03-23T15:50:10Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchaudio-2.11.0%2Bcpu-cp314-cp314t-manylinux_2_28_x86_64.whl", hash = "sha256:69db7c3d86af1bc8224f7053395ace3e2bd8c56b0c3922bc7b798114440c88e5", upload-time = "2026-03-23T15:50:10Z" },
+    { url = "https://download-r2.pytorch.org/whl/cpu/torchaudio-2.11.0%2Bcpu-cp314-cp314t-win_amd64.whl", hash = "sha256:b6bfca873bd67d02fbbaa254312283be48dc1ca5532013152527210db432ef8c", upload-time = "2026-03-23T15:50:10Z" },
 ]
 
 [[package]]
@@ -3181,10 +3250,12 @@ resolution-markers = [
     "python_full_version >= '3.15' and sys_platform != 'emscripten' and sys_platform != 'win32'",
     "python_full_version == '3.14.*' and sys_platform == 'win32'",
     "python_full_version == '3.14.*' and sys_platform == 'emscripten'",
-    "python_full_version == '3.14.*' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+    "python_full_version == '3.14.*' and sys_platform != 'darwin' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+    "python_full_version == '3.14.*' and sys_platform == 'darwin'",
     "python_full_version < '3.14' and sys_platform == 'win32'",
     "python_full_version < '3.14' and sys_platform == 'emscripten'",
-    "python_full_version < '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+    "python_full_version < '3.14' and sys_platform != 'darwin' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+    "python_full_version < '3.14' and sys_platform == 'darwin'",
 ]
 dependencies = [
     { name = "numpy", marker = "extra == 'extra-26-deepfake-detection-archive-cu132'" },

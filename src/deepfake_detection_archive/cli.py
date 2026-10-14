@@ -243,6 +243,32 @@ def _infer_records(  # noqa: PLR0913 -- parsed inputs and explicit run controls
 def _predict(args: argparse.Namespace) -> dict[str, object]:
     from .submission.adapter import export_scores  # noqa: PLC0415
 
+    if args.paths or args.show_models:
+        if args.config is not None or args.input is not None:
+            raise ValueError(
+                "positional media cannot be combined with --config/--input"
+            )
+        from .unified_predict import default_models, predict_media  # noqa: PLC0415
+
+        if args.show_models:
+            if args.paths:
+                raise ValueError("--show-models does not take media inputs")
+            folder, catalog = default_models()
+            return {
+                "models": catalog,
+                "inference_configs": {
+                    modality: load_inference_config(folder / entry["config"]).to_dict()
+                    for modality, entry in catalog["models"].items()
+                },
+                "failures": 0,
+            }
+        return predict_media(
+            args.paths, args.output, args.device or "auto", resume=args.resume
+        )
+    if args.config is None or args.input is None or args.output is None:
+        raise ValueError("provide media paths, or --config --input --output")
+    if args.device == "auto":
+        raise ValueError("--device auto is supported by positional media mode")
     started = time.perf_counter()
     template = load_inference_config(args.config)
     base = args.config.resolve().parent
@@ -376,10 +402,12 @@ def parser() -> argparse.ArgumentParser:
             command.add_argument("--resume", action="store_true")
             command.add_argument("--frozen-audit", action="store_true")
     command = commands.add_parser("predict")
-    command.add_argument("--config", type=Path, required=True)
-    command.add_argument("--input", type=Path, required=True)
-    command.add_argument("--output", type=Path, required=True)
-    command.add_argument("--device", choices=("cpu", "cuda"))
+    command.add_argument("paths", nargs="*", type=Path)
+    command.add_argument("--show-models", action="store_true")
+    command.add_argument("--config", type=Path)
+    command.add_argument("--input", type=Path)
+    command.add_argument("--output", type=Path)
+    command.add_argument("--device", choices=("auto", "cpu", "cuda"))
     command.add_argument("--resume", action="store_true")
     command = commands.add_parser("index")
     command.add_argument("--root", type=Path, required=True)

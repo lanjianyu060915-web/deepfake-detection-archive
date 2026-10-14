@@ -29,7 +29,7 @@ def release_module(monkeypatch: pytest.MonkeyPatch) -> ModuleType:
     return module
 
 
-def test_build_layout_and_launcher_after_relocation(
+def test_build_layout_and_launcher_after_relocation(  # noqa: PLR0915
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, release_module: ModuleType
 ) -> None:
     repo = tmp_path / "repo"
@@ -40,6 +40,7 @@ def test_build_layout_and_launcher_after_relocation(
         "docs/release.md",
         "docs/release-licenses.md",
         "docs/license.txt",
+        "configs/release/models.json",
     ):
         (repo / filename).write_text(filename)
     (repo / "src/demo/__init__.py").write_text("value = 1\n")
@@ -76,15 +77,21 @@ def test_build_layout_and_launcher_after_relocation(
         )
     monkeypatch.setattr(release_module, "REPOSITORY", repo)
     monkeypatch.setattr(release_module, "generate_examples", lambda output: None)
+    monkeypatch.setattr(
+        release_module, "checkpoint_ast_frontend", lambda path: "numpy_spectrogram_v1"
+    )
     output = tmp_path / "build"
     args = (output, runtime, python_home, weights, weights, repo / "src")
     release_module.build_release(*args, version="0.1.1")
+    assert (output / "configs/models.json").read_text() == "configs/release/models.json"
     with pytest.raises(FileExistsError):
         release_module.build_release(*args, version="0.1.1")
+    assert (output / "configs/models.json").read_text() == "configs/release/models.json"
     assert (output / "licenses/upstream/license.txt").read_text() == "docs/license.txt"
     assert (output / "runtime/site-packages/torch-2.0.dist-info/LICENSE").is_file()
     assert (output / "runtime/python/bin/python").readlink() == Path("python3.12")
     metadata = json.loads((output / "release.json").read_text())
+    assert metadata["ast_frontend"] == "numpy_spectrogram_v1"
     assert metadata["torch"] == "2.0"
     assert metadata["version"] == "0.1.1"
     assert metadata["runtime_dependencies"] == {"torch": "2.0"}
@@ -164,3 +171,20 @@ def test_generated_examples_decode_with_expected_media_properties(
         if kind == "audio":
             assert stream["sample_rate"] == rate
             assert stream["channels"] == channels
+
+
+@pytest.mark.parametrize(
+    "frontend", [None, "numpy_spectrogram_v1", "torchaudio_kaldi_v1"]
+)
+def test_release_frontend_comes_from_checkpoint(
+    tmp_path: Path, release_module: ModuleType, frontend: str | None
+) -> None:
+    torch = pytest.importorskip("torch")
+    path = tmp_path / "ast.pt"
+    config: dict[str, object] = {"backbone_config": {}}
+    if frontend is not None:
+        config["frontend"] = frontend
+    torch.save({"config": config}, path)
+    assert release_module.checkpoint_ast_frontend(path) == (
+        frontend or "numpy_spectrogram_v1"
+    )

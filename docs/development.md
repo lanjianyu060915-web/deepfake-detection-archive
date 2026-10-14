@@ -14,6 +14,12 @@ scripts/devctl run python -m deepfake_detection_archive --help
 
 新服务器或确需安装/更新依赖时由维护者执行 `scripts/devctl sync`。
 该入口使用锁文件，不向共享环境安装某个 checkout，运行时优先当前 `src/`。
+锁定 Torch 2.14.1、torchvision 0.29.1；CPU/cu132 两组均包含官方 CPU wheel 的
+`torchaudio 2.11.0`。其 [stable ABI 支持 Torch 2.11 及以后](https://docs.pytorch.org/audio/stable/installation.html)，
+Kaldi fbank 无需另装 TorchCodec 或更换 CUDA/驱动。
+AST 模型配置的 `frontend` 默认 `numpy_spectrogram_v1`，旧 checkpoint 同样按此恢复；
+需要新 Kaldi 实验时显式选 `torchaudio_kaldi_v1`，并用独立缓存与输出，不把旧权重改成新前端。
+前端实现版本进入缓存身份，旧 AST 缓存在下次训练首次使用新身份时重建，按实际实验需要生成。
 当前全局 FFmpeg/ffprobe 在 `/usr/local/bin`，要求支持 `-fps_mode`。
 `doctor` 用于初次安装或故障诊断，不是每轮实验的步骤。
 
@@ -128,9 +134,11 @@ UV_PROJECT_ENVIRONMENT="$PWD/.venv-cpu" scripts/devctl check
 
 ## 推理与 EER
 
-无标签媒体可直接 `predict --config MODEL_CONFIG --input DIR --output DIR`，
-音频/视频发布配置和完整启动方式见[发布版运行](release.md)。
-该入口复用下面的推理与导出逻辑，无需先手写 manifest。
+无标签媒体可直接 `predict INPUT... --output DIR`，支持文件与音视频混合目录；
+源码运行先通过 `DEEPFAKE_MODEL_PACKAGE` 指定本地模型包，
+见[统一预测入口](release.md#统一预测入口当前源码)。
+原 `predict --config MODEL_CONFIG --input DIR --output DIR` 继续用于显式模型配置。
+两种入口复用现有推理逻辑，无需先手写 manifest。
 
 准备与 checkpoint 对应的实值配置；以下示例使用 `data/audio-dev.jsonl`，
 推理配置的 `output_dir` 设为 `../outputs/audio-dev`：
