@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "manifest": "/var/tmp/lanjianyu-issue59-20261014/configs/new-dev-only.jsonl",
+  "data_root": "/var/tmp/deepfake-video-multigen-20261013/canonical-2s",
+  "output_dir": "/var/tmp/lanjianyu-issue59-20261014/scores/waverep-cli/new-dev",
+  "modality": "video",
+  "model_kind": "video_frames",
+  "checkpoint": "/var/tmp/lanjianyu-issue59-20261014/models/waverep-g1.pt",
+  "checkpoint_sha256": "35659dbdec097790a82bfb1d9bfeb761215870ac05d7d693761eb8be15da4ce8",
+  "device": "cuda",
+  "video": {
+    "n_frames": 4,
+    "height": 504,
+    "width": 504,
+    "resize_mode": "native_center_crop"
+  },
+  "batch_size": 8,
+  "aggregation": "mean",
+  "seed": 43
+}
