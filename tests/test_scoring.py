@@ -1,6 +1,7 @@
 """Torch allocation failures abort inference without swallowing model errors."""
 
 import json
+from dataclasses import replace
 from pathlib import Path
 from unittest.mock import Mock
 
@@ -46,6 +47,26 @@ def make_scorer(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> OfflineScore
 
 def records() -> list[SampleRecord]:
     return [SampleRecord(str(i), f"{i}.mp4", "video", i % 2, "test") for i in range(3)]
+
+
+def test_frame_scorer_passes_cpu_frames_and_configured_batch(monkeypatch, tmp_path):
+    scorer = make_scorer(monkeypatch, tmp_path)
+    scorer.config = replace(scorer.config, batch_size=3)
+    # Device transfer belongs to the model's bounded frame batches.
+    scorer.device = torch.device("cuda")
+    frames = torch.randn(7, 3, 2, 2)
+    monkeypatch.setattr(
+        "deepfake_detection_archive.scoring.extract_video_frames",
+        Mock(return_value=frames),
+    )
+    scorer.model = Mock(return_value=torch.tensor([0.25]))
+    assert scorer(records()[0]) == 0.25
+    scorer.model.assert_called_once()
+    images = scorer.model.call_args.args[0]
+    assert images.shape == (1, 7, 3, 2, 2)
+    assert images.device.type == "cpu"
+    assert images.data_ptr() == frames.data_ptr()
+    assert scorer.model.call_args.kwargs == {"frame_batch_size": 3}
 
 
 def test_cpu_allocator_failure_aborts_and_preserves_prefix(
