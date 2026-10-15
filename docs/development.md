@@ -5,41 +5,42 @@
 
 ## 环境
 
-Python 3.12、uv、FFmpeg/ffprobe。当前共享 GPU 环境为 `/opt/venvs/deepfake-cu132`，
-日常无需激活或重新同步：
+项目支持Linux x86_64、Python3.12；需要uv和宿主FFmpeg/ffprobe，FFmpeg须支持`-fps_mode`。
+在仓库根目录建立独立环境，锁文件固定依赖；这里的media/research组用于源码开发，
+不是最小推理安装闭包：
 
 ```bash
-scripts/devctl run python -m deepfake_detection_archive --help
+export UV_PROJECT_ENVIRONMENT="$PWD/.venv-cpu"
+uv sync --locked --group dev --group media --group research --extra cpu
+uv run --no-sync python -m deepfake_detection_archive --help
 ```
 
-新服务器或确需安装/更新依赖时由维护者执行 `scripts/devctl sync`。
-该入口使用锁文件，不向共享环境安装某个 checkout，运行时优先当前 `src/`。
-锁定 Torch 2.14.1、torchvision 0.29.1；CPU/cu132 两组均包含官方 CPU wheel 的
-`torchaudio 2.11.0`。其 [stable ABI 支持 Torch 2.11 及以后](https://docs.pytorch.org/audio/stable/installation.html)，
-Kaldi fbank 无需另装 TorchCodec 或更换 CUDA/驱动。
-AST 模型配置的 `frontend` 默认 `numpy_spectrogram_v1`，旧 checkpoint 同样按此恢复；
-需要新 Kaldi 实验时显式选 `torchaudio_kaldi_v1`，并用独立缓存与输出，不把旧权重改成新前端。
-前端实现版本进入缓存身份，旧 AST 缓存在下次训练首次使用新身份时重建，按实际实验需要生成。
-当前全局 FFmpeg/ffprobe 在 `/usr/local/bin`，要求支持 `-fps_mode`。
-`doctor` 用于初次安装或故障诊断，不是每轮实验的步骤。
+CPU调试配置将`device`设为`cpu`、`amp`设为`false`。NVIDIA GPU源码开发使用独立目录，
+将上述`--extra cpu`换成`--extra cu132`，先确认宿主驱动可运行该构建；不使用`--all-extras`。
+当前锁定Torch2.14.1、torchvision0.29.1，两个后端均包含官方CPU wheel的torchaudio2.11.0。
+其[stable ABI支持Torch2.11及以后](https://docs.pytorch.org/audio/stable/installation.html)，
+Kaldi fbank无需另装TorchCodec。其他CUDA构建及最小wheel安装闭包仍由#65后续部分验证，
+本轮不宣称任意CUDA/平台已受支持。普通预编译wheel不要求指定nvcc位置。
 
-CPU 环境独立建立，不能用 `--all-extras` 或把共享 cu132 环境切成 CPU：
+AST的`frontend`默认`numpy_spectrogram_v1`，旧checkpoint同样按此恢复；
+新Kaldi实验显式选`torchaudio_kaldi_v1`，使用独立缓存和输出，不把旧权重改成新前端。
+安装torchaudio不会改变旧模型有效前端；当前语义已由#67固定，不重复改实现。
 
-```bash
-UV_PROJECT_ENVIRONMENT="$PWD/.venv-cpu" uv sync --locked --no-install-project \
-  --group media --group research --extra cpu
-UV_PROJECT_ENVIRONMENT="$PWD/.venv-cpu" scripts/devctl run \
-  python -m deepfake_detection_archive --help
-```
+配置及资源的相对路径继续以配置文件所在目录解析。统一预测的模型包根通过
+`DEEPFAKE_MODEL_PACKAGE`选择，须包含`configs/models.json`。该根相对当前工作目录，
+支持`~`并在入口解析为绝对路径；显式目录缺失/不完整时明确失败，不回退到源码注册表。
+无显式选择时，源码checkout使用`configs/release/models.json`，完整离线包使用包内
+`configs/models.json`。安装后的wheel不携带默认权重，需明确指定已有模型包。
 
-可选 direnv：审阅 `.envrc` 后 `direnv allow .`；非交互任务继续用 `devctl run`。
+以下命令沿用已选环境，不触发自动同步。共享服务器和可选`devctl`/direnv说明见
+[团队环境](team-environment.md)；公共源码运行不依赖服务器的`/opt`目录或全局激活脚本。
 
 ## 数据准备
 
 已有来源优先使用[数据导入工具](data.md#导入与训练清单)。通用媒体可先建立索引：
 
 ```bash
-scripts/devctl run python -m deepfake_detection_archive index \
+uv run --no-sync python -m deepfake_detection_archive index \
   --root data/audio --modality audio --source YOUR_SOURCE \
   --output data/audio-index.jsonl
 ```
@@ -59,7 +60,7 @@ prompt 标签隔离，不能替代 artist/原曲关系；这些组及关联派�
 
 ```bash
 cp configs/train-logmel.example.json configs/train-logmel.local.json
-scripts/devctl run python -m deepfake_detection_archive train \
+uv run --no-sync python -m deepfake_detection_archive train \
   --config configs/train-logmel.local.json
 ```
 
@@ -79,7 +80,7 @@ scripts/devctl run python -m deepfake_detection_archive train \
 | 视频主干微调 | ResNet18 layer4+头：[实际训练配置](experiments/video-finetune-20261011/seed42.json) |
 
 训练只消费 train/dev，dev 早停并选择最佳 checkpoint；holdout 不进入模型选择。
-当前视频支持末端主干微调，尚无时序模型，帧均值不能当作时序学习。
+当前视频支持末端主干微调及轻量时序头；帧均值本身不能当作时序学习。
 CUDA 支持 BF16/FP16 AMP、梯度累积；新方法先用一次小 profile 确定 batch 和输入规模。
 `balanced_sampling` 仅用于 train 的类别平衡；同时开启 `balance_sources` 后，
 已存在的来源与类别组合等权抽样，避免小来源被淹没。它不改变 dev 选模指标；
@@ -122,9 +123,9 @@ AST 使用 `architecture="audio_ast_v1"`，`model_config.trainable_layers` 指�
 在已安装锁定依赖的独立 CPU 环境中，可离线跑合成媒体和小随机模型回归：
 
 ```bash
-UV_PROJECT_ENVIRONMENT="$PWD/.venv-cpu" scripts/devctl run python -m pytest -q \
+UV_PROJECT_ENVIRONMENT="$PWD/.venv-cpu" uv run --no-sync python -m pytest -q \
   tests/test_experiments.py tests/test_offline_dual_branch.py
-UV_PROJECT_ENVIRONMENT="$PWD/.venv-cpu" scripts/devctl check
+UV_PROJECT_ENVIRONMENT="$PWD/.venv-cpu" bash tools/check_project.sh
 ```
 
 第一条覆盖 train/dev→缓存→小模型训练→checkpoint→离线评分、音视频包搬迁以及禁止
@@ -144,9 +145,9 @@ UV_PROJECT_ENVIRONMENT="$PWD/.venv-cpu" scripts/devctl check
 推理配置的 `output_dir` 设为 `../outputs/audio-dev`：
 
 ```bash
-scripts/devctl run python -m deepfake_detection_archive infer \
+uv run --no-sync python -m deepfake_detection_archive infer \
   --config configs/infer-audio-waveform.local.json
-scripts/devctl run python -m deepfake_detection_archive evaluate \
+uv run --no-sync python -m deepfake_detection_archive evaluate \
   --scores outputs/audio-dev/scores.jsonl --manifest data/audio-dev.jsonl \
   --output outputs/audio-dev/evaluation.json
 ```
@@ -181,11 +182,11 @@ CUDA 调用异常时尚未完成的异步工作可能落在后续调用中。
 先取得有价值候选，再对同一批 dev 做配对条件：
 
 ```bash
-scripts/devctl run python tools/prepare_robustness.py \
+uv run --no-sync python tools/prepare_robustness.py \
   --manifest data/audio-dev.jsonl --data-root data/audio \
   --output-dir outputs/robustness/audio-dev \
   --condition audio_aac64k --condition audio_bandlimit8k
-scripts/devctl run python tools/prepare_robustness.py \
+uv run --no-sync python tools/prepare_robustness.py \
   --manifest data/video-dev.jsonl --data-root data/video \
   --output-dir outputs/robustness/video-dev \
   --condition video_h264_crf23 --condition video_h264_crf35
@@ -196,7 +197,7 @@ scripts/devctl run python tools/prepare_robustness.py \
 音频比较统一使用 FFmpeg 后端。得到两份分数后：
 
 ```bash
-scripts/devctl run python tools/compare_scores.py \
+uv run --no-sync python tools/compare_scores.py \
   --baseline-scores outputs/audio-original/scores.jsonl \
   --candidate-scores outputs/audio-aac64k/scores.jsonl \
   --output outputs/audio-aac64k/comparison.json
@@ -210,13 +211,13 @@ scripts/devctl run python tools/compare_scores.py \
 模型冻结后导出本地连续分数，并打包显式列出的代码、配置、权重、依赖与许可：
 
 ```bash
-scripts/devctl run python -m deepfake_detection_archive export \
+uv run --no-sync python -m deepfake_detection_archive export \
   --config configs/adapter.local.json --scores outputs/audio-dev/scores.jsonl \
   --output outputs/audio-dev/results.csv
 uv build --no-sources
-scripts/devctl run python -m deepfake_detection_archive package \
+uv run --no-sync python -m deepfake_detection_archive package \
   --config configs/package.local.json
-scripts/devctl run python -m deepfake_detection_archive verify-package \
+uv run --no-sync python -m deepfake_detection_archive verify-package \
   --bundle outputs/candidate.zip --sha256 ACTUAL_BUNDLE_SHA256 \
   --extract-to outputs/candidate-verified
 ```
@@ -233,7 +234,7 @@ PR 给出实际改动、必要测试、样本数和算法结果；无收益实�
 
 ```bash
 # 改动先跑相关测试；提交前运行一次标准检查
-scripts/devctl check
+bash tools/check_project.sh
 ```
 
 标准检查范围只在 `tools/check_project.sh` 维护，本地与 CI 共用；覆盖 Ruff、严格 mypy、
