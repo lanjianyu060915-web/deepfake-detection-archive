@@ -1,0 +1,936 @@
+{
+  "schema_version": 1,
+  "source": {
+    "code_sha256": "b9cc8f093c5077631b4b16a8b2e3b5e6f4ff7fe38d545ba05bafc0373a984b81",
+    "commit": "134443e1cb337cdedc9e98bdf498d8790584152d",
+    "dirty": false
+  },
+  "primary": "seed43",
+  "replication": "seed42",
+  "init_head_sha256": "7dc0283f0975b2c373956e670138e4f870ed64fda78d2863183655af49037bdf",
+  "encoder_sha256": "81907988948ab62e4ab20adc33f7eff6bee14f1067cf47e1e712525e0010d7f7",
+  "data": {
+    "revision": "bf48acaa4920990af3dd2a511ea88e63354df305",
+    "new_train": 600,
+    "new_dev": 200,
+    "old_train": 3614,
+    "old_dev": 844,
+    "new_group_count": 400,
+    "split_counts": {
+      "train": {
+        "Real": 300,
+        "SEINE": 150,
+        "Open-Sora": 150
+      },
+      "dev": {
+        "Real": 100,
+        "SEINE": 50,
+        "Open-Sora": 50
+      }
+    },
+    "manifest_sha256": "19321465fa2169ad724762ea8b52bd5ee859aaf9b7c0141e109035dd89c74a31",
+    "exclusion": {
+      "official_val": {
+        "valid_rows": 2999,
+        "invalid_unknown_rows": 1,
+        "skipped_other_split_rows": 0
+      },
+      "official_test": {
+        "valid_rows": 3000,
+        "invalid_unknown_rows": 0,
+        "skipped_other_split_rows": 0
+      },
+      "registered_dev_holdout": {
+        "valid_rows": 3120,
+        "invalid_unknown_rows": 640,
+        "skipped_other_split_rows": 0
+      }
+    },
+    "panda_overlap": "unknown original YouTube IDs; no zero-overlap claim"
+  },
+  "models": {
+    "baseline-clip43": {
+      "training_dev": {
+        "old": {
+          "sample_count": 844,
+          "success_count": 844,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.24644549763033174,
+          "fullset_reason": null,
+          "real_count": 422,
+          "fake_count": 422
+        },
+        "new": {
+          "sample_count": 200,
+          "success_count": 200,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.34,
+          "fullset_reason": null,
+          "real_count": 100,
+          "fake_count": 100
+        },
+        "source_macro_eer": 0.29322274881516586,
+        "pooled": {
+          "sample_count": 1044,
+          "success_count": 1044,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.27011494252873564,
+          "fullset_reason": null,
+          "real_count": 522,
+          "fake_count": 522
+        }
+      },
+      "external_seen_dev": {
+        "pooled": {
+          "sample_count": 1880,
+          "success_count": 1880,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.31333333333333335,
+          "fullset_reason": null,
+          "real_count": 600,
+          "fake_count": 1280
+        },
+        "without_Open-Sora": {
+          "sample_count": 1280,
+          "success_count": 1280,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.2985294117647059,
+          "fullset_reason": null,
+          "real_count": 600,
+          "fake_count": 680
+        },
+        "without_trained_AIGVD_generators": {
+          "sample_count": 1240,
+          "success_count": 1240,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.2921875,
+          "fullset_reason": null,
+          "real_count": 600,
+          "fake_count": 640
+        },
+        "Open-Sora_paired": {
+          "sample_count": 1200,
+          "success_count": 1200,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.3283333333333333,
+          "fullset_reason": null,
+          "real_count": 600,
+          "fake_count": 600
+        },
+        "per_generator_with_shared_600_reals": {
+          "AccVideo": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.25666666666666665,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "AnimateDiff": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.225,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "EasyAnimate": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.325,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "Gen2": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.325,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "Gen3": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.35,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "IPOC": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.20833333333333334,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "Jimeng": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.3,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "Luma": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.425,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "Open-Sora": {
+            "sample_count": 1200,
+            "success_count": 1200,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.3283333333333333,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 600
+          },
+          "Opensora": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.33666666666666667,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "Pyramid-Flow": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.25,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "RepVideo": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.325,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "SEINE": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.425,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "SVD": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.35,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "Sora": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.31333333333333335,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "VideoCrafter": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.22,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "causvid_24fps": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.27,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "vidu": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.35,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          }
+        }
+      }
+    },
+    "seed43": {
+      "training_dev": {
+        "old": {
+          "sample_count": 844,
+          "success_count": 844,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.25829383886255924,
+          "fullset_reason": null,
+          "real_count": 422,
+          "fake_count": 422
+        },
+        "new": {
+          "sample_count": 200,
+          "success_count": 200,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.16,
+          "fullset_reason": null,
+          "real_count": 100,
+          "fake_count": 100
+        },
+        "source_macro_eer": 0.2091469194312796,
+        "pooled": {
+          "sample_count": 1044,
+          "success_count": 1044,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.2413793103448276,
+          "fullset_reason": null,
+          "real_count": 522,
+          "fake_count": 522
+        }
+      },
+      "external_seen_dev": {
+        "pooled": {
+          "sample_count": 1880,
+          "success_count": 1880,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.2125,
+          "fullset_reason": null,
+          "real_count": 600,
+          "fake_count": 1280
+        },
+        "without_Open-Sora": {
+          "sample_count": 1280,
+          "success_count": 1280,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.2426470588235294,
+          "fullset_reason": null,
+          "real_count": 600,
+          "fake_count": 680
+        },
+        "without_trained_AIGVD_generators": {
+          "sample_count": 1240,
+          "success_count": 1240,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.24,
+          "fullset_reason": null,
+          "real_count": 600,
+          "fake_count": 640
+        },
+        "Open-Sora_paired": {
+          "sample_count": 1200,
+          "success_count": 1200,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.18,
+          "fullset_reason": null,
+          "real_count": 600,
+          "fake_count": 600
+        },
+        "per_generator_with_shared_600_reals": {
+          "AccVideo": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.26,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "AnimateDiff": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.16833333333333333,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "EasyAnimate": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.31166666666666665,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "Gen2": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.29,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "Gen3": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.2916666666666667,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "IPOC": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.15,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "Jimeng": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.2966666666666667,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "Luma": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.3,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "Open-Sora": {
+            "sample_count": 1200,
+            "success_count": 1200,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.18,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 600
+          },
+          "Opensora": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.275,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "Pyramid-Flow": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.125,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "RepVideo": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.25,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "SEINE": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.275,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "SVD": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.2,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "Sora": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.275,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "VideoCrafter": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.15333333333333332,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "causvid_24fps": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.11833333333333333,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "vidu": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.23,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          }
+        }
+      },
+      "training": {
+        "best_epoch": 18,
+        "epochs_completed": 24,
+        "checkpoint_sha256": "96f3a6245447cabc9cbed39b0254c87399a1b27d13ec183dd7562905b67d6e9c",
+        "best_selection_value": 0.2091469194312796,
+        "stop_reason": "early_stopping",
+        "head_seconds": 23.523441983386874
+      }
+    },
+    "seed42": {
+      "training_dev": {
+        "old": {
+          "sample_count": 844,
+          "success_count": 844,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.2559241706161137,
+          "fullset_reason": null,
+          "real_count": 422,
+          "fake_count": 422
+        },
+        "new": {
+          "sample_count": 200,
+          "success_count": 200,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.17,
+          "fullset_reason": null,
+          "real_count": 100,
+          "fake_count": 100
+        },
+        "source_macro_eer": 0.21296208530805688,
+        "pooled": {
+          "sample_count": 1044,
+          "success_count": 1044,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.23754789272030652,
+          "fullset_reason": null,
+          "real_count": 522,
+          "fake_count": 522
+        }
+      },
+      "external_seen_dev": {
+        "pooled": {
+          "sample_count": 1880,
+          "success_count": 1880,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.21,
+          "fullset_reason": null,
+          "real_count": 600,
+          "fake_count": 1280
+        },
+        "without_Open-Sora": {
+          "sample_count": 1280,
+          "success_count": 1280,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.23676470588235293,
+          "fullset_reason": null,
+          "real_count": 600,
+          "fake_count": 680
+        },
+        "without_trained_AIGVD_generators": {
+          "sample_count": 1240,
+          "success_count": 1240,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.23333333333333334,
+          "fullset_reason": null,
+          "real_count": 600,
+          "fake_count": 640
+        },
+        "Open-Sora_paired": {
+          "sample_count": 1200,
+          "success_count": 1200,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "fullset_eer": 0.17833333333333334,
+          "fullset_reason": null,
+          "real_count": 600,
+          "fake_count": 600
+        },
+        "per_generator_with_shared_600_reals": {
+          "AccVideo": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.275,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "AnimateDiff": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.175,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "EasyAnimate": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.35,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "Gen2": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.25,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "Gen3": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.2866666666666667,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "IPOC": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.15,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "Jimeng": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.2683333333333333,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "Luma": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.275,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "Open-Sora": {
+            "sample_count": 1200,
+            "success_count": 1200,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.17833333333333334,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 600
+          },
+          "Opensora": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.25,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "Pyramid-Flow": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.145,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "RepVideo": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.25,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "SEINE": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.24833333333333332,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "SVD": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.18833333333333332,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "Sora": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.275,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "VideoCrafter": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.15,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "causvid_24fps": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.10666666666666667,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          },
+          "vidu": {
+            "sample_count": 640,
+            "success_count": 640,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "fullset_eer": 0.25,
+            "fullset_reason": null,
+            "real_count": 600,
+            "fake_count": 40
+          }
+        }
+      },
+      "training": {
+        "best_epoch": 8,
+        "epochs_completed": 14,
+        "checkpoint_sha256": "4296b3d1d68ba6d55bce0722a2afc2f8deb3e3dd51dd19f7a476770ed0a6280b",
+        "best_selection_value": 0.21296208530805688,
+        "stop_reason": "early_stopping",
+        "head_seconds": 18.346412722952664
+      }
+    }
+  },
+  "resources": {
+    "acquisition": {
+      "status": "complete",
+      "plan_records": 800,
+      "ledger_records": 800,
+      "successful": 800,
+      "failed": 0,
+      "media_bytes": 2099127914,
+      "failure_records": [],
+      "elapsed_seconds_this_run": 537.8,
+      "plan_path": "/var/tmp/deepfake-video-cross-source-20261016/plan.jsonl",
+      "selection_path": "/var/tmp/deepfake-video-cross-source-20261016/selection.json",
+      "ledger_path": "/var/tmp/deepfake-video-cross-source-20261016/downloads.jsonl",
+      "media_root": "/var/tmp/deepfake-video-cross-source-20261016/media",
+      "counts": {
+        "train": {
+          "Real": 300,
+          "SEINE": 150,
+          "Open-Sora": 150
+        },
+        "dev": {
+          "Real": 100,
+          "SEINE": 50,
+          "Open-Sora": 50
+        }
+      },
+      "plan_sha256": "91ad45f0b16f4b41ae7d5bd584b1aa6d712ca1888fad950a8f6aee57b74c1b4e",
+      "revision": "bf48acaa4920990af3dd2a511ea88e63354df305"
+    },
+    "feature_preparation": {
+      "cuda_peak_allocated_bytes": 1920588288,
+      "cuda_peak_reserved_bytes": 2118123520,
+      "new_cache": "/var/tmp/deepfake-video-cross-source-20261016/cache-new",
+      "new_samples": 800,
+      "old_cache_metadata_rewritten": false,
+      "old_extraction_commit": "865a2c9eae8bb4a1803b6ee643f5f4c73878b7cb",
+      "old_pipeline_sha256": [
+        "50ff2794eb04a40b283e8e41a07cd5e81a724898e84eab245987dc64f3dc6e94"
+      ],
+      "old_samples": 4458,
+      "old_unique_tensors": 4455,
+      "profile_reused": true,
+      "seconds": 56.02121536806226,
+      "source": {
+        "code_sha256": "b9cc8f093c5077631b4b16a8b2e3b5e6f4ff7fe38d545ba05bafc0373a984b81",
+        "commit": "134443e1cb337cdedc9e98bdf498d8790584152d",
+        "dirty": false
+      }
+    },
+    "training": {
+      "dev": 1044,
+      "holdout_consumed": false,
+      "primary_seed": 43,
+      "replication_seed": 42,
+      "seconds": 111.64504372701049,
+      "source": {
+        "code_sha256": "b9cc8f093c5077631b4b16a8b2e3b5e6f4ff7fe38d545ba05bafc0373a984b81",
+        "commit": "134443e1cb337cdedc9e98bdf498d8790584152d",
+        "dirty": false
+      },
+      "train": 4214
+    },
+    "external_diagnostic": {
+      "baseline_and_candidates_share_identical_features": true,
+      "cuda_peak_allocated_bytes": 1920588288,
+      "cuda_peak_reserved_bytes": 2118123520,
+      "feature_seconds": 105.3722377307713,
+      "holdout_consumed": false,
+      "max_rss_kib": 3296780,
+      "samples": 1880,
+      "scope": "cached-feature diagnostic; not public CLI end-to-end capacity",
+      "selection": "primary43,replication42; checkpoints frozen before this diagnostic; no external early stopping or refit",
+      "source": {
+        "code_sha256": "b9cc8f093c5077631b4b16a8b2e3b5e6f4ff7fe38d545ba05bafc0373a984b81",
+        "commit": "134443e1cb337cdedc9e98bdf498d8790584152d",
+        "dirty": false
+      },
+      "total_seconds": 117.94254281930625
+    }
+  },
+  "scope": {
+    "holdout_consumed": false,
+    "external_dev_previously_seen": true,
+    "no_external_epoch_or_seed_selection": true,
+    "same_external_features_for_all_three_heads": true,
+    "new_SEINE_and_Open-Sora_are_now_trained_generators": true,
+    "internal_research_only": true,
+    "release_default_unchanged": true,
+    "old_WaveRep_fusion_not_recalibrated": true
+  }
+}

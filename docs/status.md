@@ -18,8 +18,9 @@
 | 视频 | 七生成器train3,614/dev844，四轮训练；统一1949条EER33.12%→31.73%，未训练标签33.47%→33.14% | 原同域dev16.44%→19.18%，保留研究候选、不替换v0.1.1；仍缺独立来源泛化与更强视觉表征；[实验](experiments/video-multigen-20261013/README.md) |
 | WaveRep与固定研究融合 | G1新来源受控dev31.41%；仅原dev844拟合的CLIP43+WaveRep为26.48% | 原研究路径结果；标准融合入口及其全量结果见下方，冻结保留与许可待确认；[PR #70](https://github.com/lanjianyu060915-web/deepfake-detection-archive/pull/70) |
 | 强视频公开权重对照 | UFD完整1949条47.75%、未训练标签50.00%、旧dev49.32%、CRF35 58.43%；共2405条全覆盖、零失败 | 作者数值已对齐；停止直接采用公开检测头，不替换现候选，继续有限适配与独立来源比较；[实验](experiments/video-ufd-20261014/README.md) |
-| 冻结CLIP视频头 | 双种子dev24.88%/24.64%；冻结seed43统一1949条26.56%、未训练标签27.88%、CRF35 25.84% | 优于七生成器ResNet，原同域dev20.55%仍退化；新来源受控dev1880条31.33%（ResNet39.00%）、自然组21.33%（ResNet43.36%），8帧31.80%无收益、保留4帧，作为后续视频研究主候选；母媒体独立性及许可未确认，不替换release；[新来源实验](experiments/video-aigvdbench-20261014/README.md) |
+| 冻结CLIP视频头 | 双种子dev24.88%/24.64%；冻结seed43统一1949条26.56%、未训练标签27.88%、CRF35 25.84% | 优于七生成器ResNet，原同域dev20.55%仍退化；新来源受控dev1880条31.33%（ResNet39.00%）、自然组21.33%（ResNet43.36%），8帧31.80%无收益、保留4帧，保留为原冻结对照，跨来源适配见下方；母媒体独立性及许可未确认，不替换release；[新来源实验](experiments/video-aigvdbench-20261014/README.md) |
 | 冻结CLIP轻量时序头 | 双seed原dev23.93%/24.41%，选42；新来源受控31.17%，去Open-Sora30.29% | 较MLP43 pooled仅改善0.16点、去Open-Sora退化0.44点；不替换候选，停止轻头/帧数调参；[实验](experiments/video-clip-temporal-20261014/README.md) |
+| CLIP跨来源训练（#77） | 新增officialtrain的600train/200dev，与旧域回放；主43外部受控dev31.33%→21.25%、复现42为21.00%；去本轮新增两标签29.22%→24.00%/23.33% | 固定主43作为后续训练研究候选；旧域24.64%→25.83%略退；同AIGVD已见dev、非盲测，许可及最终保留未完成，不替换release；[实验](experiments/video-cross-source-20261016/README.md) |
 | 固定CLIP＋WaveRep融合 | 真实标准入口受控dev1880/1880、零失败；EER26.41%（CLIP31.33%）、去Open-Sora21.32%；18个生成器均优于CLIP；CLI调用803.54秒、显存allocated峰值1.80GB | 已接入infer/predict、单checkpoint与搬移wheel；仅研究候选，dev已见、旧母媒体交集未知，冻结保留验收及赛用许可待确认；[实验](experiments/video-fusion-20261016/README.md) |
 | 离线系统 | 统一入口RC包搬移、CPU/GPU演示及440条profile成功；真实唯一语音10,000/10,000、零失败，端到端1,800.67秒；中断恢复20/20 | 仍用原研究默认，未重发Release；可用已登记视频不足万条，新环境/完整容量/官方I/O及赛用资源仍待完成；[实验](experiments/offline-entry-20261014/README.md) |
 
@@ -40,8 +41,9 @@ In-the-Wild及多轮使用的dev已见，不能再作为未来盲测；正式交
 | LogMel带宽 seed42冻结/seed43 | 完成 | 语音对照 | seed43经#55复核，seed42仅自评 | #37、#55 | 否 | 是 | 仓库源码入口 |
 | 七生成器视频 paired-seed43 | 完成 | 研究候选 | #48复核 | #48 | 否 | 是 | 发布包不兼容（`temporal_kernel_size`），仓库源码入口20条最大差4.9e-3 |
 | 视频时序头 seed43 | 完成 | 研究候选 | 复核目录团队不可读 | #43 | 否 | 是（原权重root 0600，归档副本可读） | 未演练 |
-| 冻结CLIP视频头 seed43 | 完成 | 后续研究主候选 | 未独立重跑完整集 | #61、#64 | 否 | 是（C6） | 标准infer可加载；C6两条恢复分数一致 |
-| CLIP43＋WaveRep固定融合 | 标准dev1880完成 | 研究候选 | 实验记录独立核对；未独立重跑 | #76已合入功能父分支，集成PR待合入main | 否 | 是（C8） | infer全量、非editable wheel统一入口2音频＋2视频成功 |
+| 冻结CLIP视频头 seed43 | 完成 | 原冻结对照 | 未独立重跑完整集 | #61、#64 | 否 | 是（C6） | 标准infer可加载；C6两条恢复分数一致 |
+| CLIP跨来源训练 seed43主/seed42复现 | 完成 | 后续训练研究主候选 | 产物/统计独立核对，未独立重训 | 本轮交付，见#77 | 否 | 是（C9） | 持久权重标准infer 4/4加载，完整外部诊断为共同特征评分 |
+| CLIP43＋WaveRep固定融合 | 标准dev1880完成 | 研究候选 | 实验记录独立核对；未独立重跑 | #76及补集成#78已合入main | 否 | 是（C8） | infer全量、非editable wheel统一入口2音频＋2视频成功 |
 
 所有候选的正式赛用许可均未确认。三域AST两种子与时序头为脏工作区产物，LogMel seed43未记录commit
 （实际为#55分支`2fabb61`），代码以 `code_sha256` 追溯。
@@ -55,7 +57,8 @@ In-the-Wild及多轮使用的dev已见，不能再作为未来盲测；正式交
 - 独立来源数据与评测隔离：[#51](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/51)。
 - 更强视频基线：[#52](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/52)；语音SSL对照：[#53](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/53)。
 - 统一媒体预测入口：[#57](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/57)已完成，经#62/#64合入main；实际交付由#54继续。
-- 视频固定融合：[#72](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/72)标准入口已完成；后续优先独立数据与困难内容，不据已见dev继续调系数。CPU/cu126安装与固定帧分批分别由#73/#74、#75交付，#74/#75/#76已合入各自功能父分支；本次集成PR待合入main。
+- 视频固定融合：[#72](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/72)标准入口已完成；后续优先独立数据与困难内容，不据已见dev继续调系数。CPU/cu126安装与固定帧分批分别由#73/#74、#75交付，#74/#75/#76经#78补集成到main。
+- 跨来源视频训练：[#77](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/77)完成新数据、双种子适配与冻结诊断；优先扩充困难内容及真实来源，不继续扫描已见dev。
 - 共享资产持久保存：[#50](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/50)已完成；离线兼容与容量：[#54](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/54)。
 
 RTX4090按实际负载共享，任务输出独立。联合音频候选位于
