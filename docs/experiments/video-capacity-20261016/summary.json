@@ -1,0 +1,222 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "scope": "runtime capacity only; unlabeled file inputs; no EER computed; frozen v0.1.2-rc1 CLI and v0.1.1 video weights, visual-only four-frame model; host FFmpeg/FFprobe and NVIDIA driver required; not official submission or generalization acceptance",
+  "package": {
+    "version": "0.1.2-rc1",
+    "source": {
+      "git_head": "3783dc02feb7f1f4e5491d022402684a08cf6243",
+      "dirty": false
+    },
+    "video_checkpoint_sha256": "21fdd4e547a5ae7c7a24162eaf2cb526379b7d152e36aa4546891657ae48f115",
+    "release_sha256": "3dcadb3d142ed31b1f60ac8aaa178111243d1be5e486f534e347d43ba6419bb1"
+  },
+  "capacity": {
+    "inputs": 10000,
+    "unique_input_sha256": 10000,
+    "success": 10000,
+    "failures": 0,
+    "missing_results": 0,
+    "exit_code": 0,
+    "wall_end_to_end_seconds": 2317.9546552076936,
+    "files_per_second": 4.314148241654873,
+    "process_max_rss_kib": 1652616,
+    "cuda_peak_allocated_bytes": 110129664,
+    "cuda_peak_reserved_bytes": 161480704
+  },
+  "wall_scope": "immediately before spawn through wait4 reap; includes Python startup, discovery, identity checks, model loading, decode, scoring, all CLI writes and runtime capture",
+  "rss_scope": "Linux wait4 ru_maxrss of CLI child and waited-for descendants; not simultaneous total process-tree RSS",
+  "allocator_scope": "torch default CUDA device peak since CLI initialization; not driver or total system GPU memory",
+  "input": {
+    "count": 10000,
+    "inventory_records": 10585,
+    "inventory_unique_sha256": 10571,
+    "selection_method": "deduplicate registered canonical SHA; choose smallest original sample_id per SHA; sort sha256(capacity54-video-oct16: + SHA), take first10000",
+    "selection_sha256": "d4eef4cd30fa56c3529792d182e2e0cdd5bf0b9bd5ffc1fdd7b735597ef58d73",
+    "files_bytes": 698764633,
+    "hardlinks": 0,
+    "media_bytes_copied": 698764633,
+    "input_distributions": {
+      "codec": {
+        "h264": 10000
+      },
+      "container": {
+        "mp4": 10000
+      },
+      "duration_seconds": {
+        "known": 10000,
+        "max": 3.5,
+        "min": 1.25,
+        "missing": 0,
+        "p50": 2.0,
+        "p95": 3.5,
+        "p99": 3.5
+      },
+      "frame_rate": {
+        "16": 10000
+      },
+      "generator": {
+        "AccVideo": 329,
+        "AnimateDiff": 39,
+        "CogVideoX1.5-5B-I2V": 348,
+        "CogVideoX1.5-5B-T": 436,
+        "EasyAnimate": 324,
+        "Gen2": 40,
+        "Gen3": 37,
+        "HunyuanVideo": 455,
+        "HunyuanVideo-I2V": 456,
+        "IPOC": 38,
+        "Jimeng": 38,
+        "LTX-Video-13B-I": 99,
+        "LTX-Video-13B-T": 87,
+        "Luma": 37,
+        "Open-Sora": 755,
+        "Opensora": 40,
+        "Pyramid-Flow": 38,
+        "RepVideo": 37,
+        "SEINE": 230,
+        "SVD": 329,
+        "SkyReels-V2": 97,
+        "SkyReels-V2-I2V-14B-540P": 100,
+        "Sora": 39,
+        "VideoCrafter": 37,
+        "Wan2.1-T2V-1.3B": 453,
+        "Wan2.1-VACE-1.3B-T": 97,
+        "Wan2.2-I2V-14B": 98,
+        "Wan2.2-T2V-14B": 100,
+        "Wan2.2-TI2V-5B-I": 249,
+        "Wan2.2-TI2V-5B-T": 291,
+        "causvid_24fps": 39,
+        "gen4-turbo": 63,
+        "hailuo": 73,
+        "kling-v1": 75,
+        "pika-v2": 85,
+        "pixverse-v4-5": 88,
+        "sora-2": 90,
+        "unknown": 3696,
+        "vidu": 38
+      },
+      "label": {
+        "0": 3696,
+        "1": 6304
+      },
+      "source": {
+        "aigvdbench-first-batch": 1782,
+        "aigvdbench-officialtrain-research-20261016": 2179,
+        "vif-bench-cross-generator-evaluation": 1839,
+        "vif-panda70m-local-noncommercial-research": 4200
+      }
+    },
+    "manifests": {
+      "/var/tmp/deepfake-video-clip-adapt-20261016/diagnostic-aigvd-manifest.jsonl": "007ecd2caff563b40f638a91f066dde4e9f7ab7203b33fee3417335230a3734e",
+      "/var/tmp/deepfake-video-clip-adapt-20261016/diagnostic-vif-manifest.jsonl": "408e1f2da3709759a206b31c1c85385add899ae3c3cab88d016332d19cb5d0ef",
+      "/var/tmp/deepfake-video-coverage-20261016/expanded-manifest.jsonl": "d9dfe6f01e444d1de362d8c45f10b877f162ed29bcc8c1d06eed92e81c710b5d"
+    },
+    "holdout_consumed": false,
+    "model_selection_or_eer": false
+  },
+  "hardware": {
+    "snapshot_utc": "2026-10-16T11:25:16.165242+00:00",
+    "visible_gpu_name_memory_driver": "NVIDIA GeForce RTX 4090, 24564 MiB, 595.91.07",
+    "scope": "visible GPU identity; allocator peaks separately captured within inference process"
+  },
+  "runtime": {
+    "sys_executable": "/var/tmp/deepfake-offline54-20261014/relocated/deepfake-v0.1.2-rc1/runtime/python/bin/python3.12",
+    "python_version": "3.12.15 (main, Oct  9 2026, 15:22:32) [Clang 22.1.3 ]",
+    "isolated": 1,
+    "no_site": 1,
+    "package_entrypoint": "/var/tmp/deepfake-offline54-20261014/relocated/deepfake-v0.1.2-rc1/run.py",
+    "package_module_file": "/var/tmp/deepfake-offline54-20261014/relocated/deepfake-v0.1.2-rc1/src/deepfake_detection_archive/__init__.py",
+    "torch_file": "/var/tmp/deepfake-offline54-20261014/relocated/deepfake-v0.1.2-rc1/runtime/site-packages/torch/__init__.py",
+    "torch_version": "2.14.1+cu132",
+    "cuda_available": true,
+    "cuda_initialized": true,
+    "max_memory_allocated_bytes": 110129664,
+    "max_memory_reserved_bytes": 161480704
+  },
+  "media_tools": {
+    "ffmpeg": {
+      "path": "/opt/ffmpeg/btbn-628033703/bin/ffmpeg",
+      "sha256": "c4a9d1d1d966f66d16977f4469045f46d63263548de98c73809eb3e3a007c2b6",
+      "exit_code": 0,
+      "version": "ffmpeg version N-127271-gba987fe24d-20261010 Copyright (c) 2000-2026 the FFmpeg developers",
+      "stderr": ""
+    },
+    "ffprobe": {
+      "path": "/opt/ffmpeg/btbn-628033703/bin/ffprobe",
+      "sha256": "0184db2ce663585617222f912a9aa92ba7206c048c4cf6ef09838323b9cbcdb9",
+      "exit_code": 0,
+      "version": "ffprobe version N-127271-gba987fe24d-20261010 Copyright (c) 2007-2026 the FFmpeg developers",
+      "stderr": ""
+    }
+  },
+  "network_filter": {
+    "path": "/var/tmp/deepfake-offline54-20261014/offline_probe",
+    "sha256": "480c7f5d581dcf15161ec8a20dce9452a7f609853d689b60ae42a2686eeba317",
+    "condition": "existing seccomp denies new AF_INET/AF_INET6 socket/socketpair; no new probe"
+  },
+  "empty_model_cache_files_after": [],
+  "per_sample_elapsed_seconds": {
+    "n": 10000,
+    "min": 0.14116816688328981,
+    "p50": 0.18351021967828274,
+    "p95": 0.2243665621150285,
+    "p99": 0.26416565317660573,
+    "max": 0.6503724465146661
+  },
+  "timing": {
+    "T10k_raw_seconds": 1875.3599620340392,
+    "T10k_safe_seconds": 2344.199952542549,
+    "current_session_elapsed_seconds_before_report_write": 1876.4479834064841,
+    "current_session_instrumented_rows": 10000,
+    "current_session_new_rows": 10000,
+    "current_session_report_build_seconds": 0.11432423070073128,
+    "current_session_sample_call_seconds": 1869.6509204097092,
+    "current_session_scope": "runner entry through report preparation; excludes caller preflight/model startup, final report write and lock release; stage timings cover only newly processed rows, including sample failures; uninstrumented work is unattributed",
+    "current_session_setup_seconds": 0.23886164464056492,
+    "current_session_stage_seconds": {
+      "decode_and_preprocess": 1798.5331141641364,
+      "input_validation": 6.0745926490053535,
+      "model_and_feature_scoring": 63.68367376085371,
+      "unattributed_sample_call": 1.3595398357138038
+    },
+    "current_session_write_seconds": 5.709041624329984,
+    "projection_scope": "sample calls and current measured row writes; excludes model startup",
+    "representative": false,
+    "representativeness_reason": "duration_content_distribution_not_verified",
+    "sample_call_seconds": 1869.6509204097092,
+    "samples_per_second": 5.348592023696398,
+    "stage_clock": "host wall clock, no added CUDA synchronization; built-in successful scoring includes blocking CPU feature/score copies, transfers and pooling, not kernel-only time; failed CUDA calls may leave asynchronous work pending",
+    "startup_seconds": null,
+    "write_estimate_available": true
+  },
+  "coverage": {
+    "discovery_status_counts": {
+      "media": 10000
+    },
+    "result_status_counts": {
+      "ok": 10000
+    },
+    "score_status_counts": {
+      "ok": 10000
+    },
+    "all_identity_coverage_checks_passed": true
+  },
+  "archive": {
+    "destination": "/mnt/deepfake-archive/C12-video-capacity-20261016",
+    "files": 28,
+    "bytes": 46582989,
+    "stat_sizes_and_read_permissions_verified": true
+  },
+  "limits": [
+    "same cloud host and existing relocated package; no independent OS test",
+    "all clips controlled H264/MP4/16fps, duration1.25-3.5s; not full formats or long video",
+    "OS page cache not cleared; empty HF/Torch/XDG caches do not establish new-host cold startup",
+    "capacity only, no EER or candidate selection; no holdout media read",
+    "host media tools/driver required; not complete tool closure or official competition acceptance"
+  ],
+  "temporary_input_copies": {
+    "removed_after_completed_archival_and_verification": true,
+    "bytes_reclaimed": 698764633
+  }
+}

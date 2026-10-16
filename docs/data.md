@@ -16,7 +16,7 @@
 | 三生成器扩展（#80） | `/var/tmp/deepfake-video-coverage-20261016/` | 新增1500条原媒体，整组排除训练2条后实际train5412/dev1344；control43/expanded43/42与两套完整诊断，内部研究，持久副本C10；[实验](experiments/video-generator-coverage-20261016/README.md) |
 | CLIP跨来源训练（#77） | `/var/tmp/deepfake-video-cross-source-20261016/` | 新增800条officialtrain媒体、600train/200dev，与旧域回放的双种子头及完整分数；内部研究，持久副本C9；[实验](experiments/video-cross-source-20261016/README.md) |
 | 固定视频融合（#72） | `/var/tmp/deepfake-video-fusion-20261016/` | CLIP43＋WaveRep自包含checkpoint、受控dev1880标准分数、搬移wheel研究模型包；[实验](experiments/video-fusion-20261016/README.md)，持久副本C8，正式赛用未确认 |
-| 统一入口研究包 | `/var/tmp/deepfake-offline54-20261014/relocated/deepfake-v0.1.2-rc1/` | 真实v0.1.1权重、包内解释器和依赖；搬移、440条profile及真实语音万级已完成，未重发Release |
+| 统一入口研究包 | `/var/tmp/deepfake-offline54-20261014/relocated/deepfake-v0.1.2-rc1/` | 真实v0.1.1权重、包内解释器和依赖；搬移、440条profile及语音/视频双万级已完成，未重发Release |
 | 三域联合音频冻结候选 | `/srv/shared-data/candidates/audio-universal-20261014/` | seed42主/seed43备权重、sidecar、原始配置/历史、完整dev与冻结评分；文件0444、目录2755，研究用途 |
 | 音频补充诊断媒体 | `/srv/shared-data/datasets/audio-review-20261014/` | AIME未训练路径154条、AI-OpenBMAT纯音乐94/混合152条；原清单与媒体哈希保留，只作已见研究诊断 |
 | ASVspoof LA Parquet | `/srv/shared-data/datasets/asvspoof2019-la/` | 官方 train/dev 物化输入；#9 已接入协议与 FLAC |
@@ -61,6 +61,7 @@
 | `C9-video-cross-source-20261016/` | 双种子最佳头、配置/历史/完整选择及诊断分数、来源/选择/小适配器；新增800条原媒体仅保存一次`raw-media.tar`，骨干复用C6，受控媒体/缓存可重建 |
 | `C10-video-generator-coverage-20261016/` | 三个最佳头、配置/历史/完整分数、来源/排除及小适配器；新增1500原媒体单份tar，骨干复用C6、前轮数据/适配器复用C9，缓存和派生媒体不归档 |
 | `C11-video-clip-adapt-20261016/` | 三个自包含最佳checkpoint、配置/历史/完整分数、来源清单、摘要和必要适配器；不复制C6/C9/C10原媒体、初始权重或tokens，完整权重可独立加载 |
+| `C12-video-capacity-20261016/` | 真实10000视频完整CLI输出/分数/CSV、选择映射、资源/配置和必要测量器；28文件46,582,989字节，原媒体/权重/运行时不重复归档 |
 | `shared/` | `resnet18-a1/encoder.pt`（视频共享基座）与`ast-audioset/`（AST预训练基座） |
 
 原C1–C5与shared共396个内容文件、约3.07GiB，不含原始媒体、特征缓存和可再生的发布分片。
@@ -107,8 +108,8 @@ C6的CLIP特征头则需要显式加载同批保存的视觉编码器。以持�
 `du` 显示为0，大小以 `index.json` 或 `stat` 为准。除C9/C10新增原媒体外，其余原媒体与特征缓存仍只在实例上，需按各工具重建。
 
 当前已运行的C10 train/dev6756、AIGVD诊断1880、ViF诊断1949合计10,585条ID；
-按受控媒体SHA去重后为**10,571个文件**，均在本轮完成解码。可用于#54万级视频
-容量任务，不需要为凑数复制媒体。文件字节唯一不证明母媒体独立；这些已见数据
+按受控媒体SHA去重后为**10,571个文件**，均在本轮完成解码。已用于#54万级视频
+容量：10000/10000成功、零失败、完整2317.95秒，见[实测](experiments/video-capacity-20261016/README.md)。文件字节唯一不证明母媒体独立；这些已见数据
 仅作运行容量与研究诊断，不能当新盲测，holdout继续封存。
 
 ## 导入与训练清单
