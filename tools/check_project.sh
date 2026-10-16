@@ -14,6 +14,7 @@ model_tools=(
   tools/prepare_pretrained.py
   tools/prepare_ufd.py
   tools/prepare_waverep.py
+  tools/prepare_video_fusion.py
   tools/prepare_asvspoof2019.py
   tools/prepare_asv_parquet.py
   tools/prepare_asv_eval.py
