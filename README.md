@@ -28,15 +28,23 @@
 命令与输出见[统一预测入口](docs/release.md#统一预测入口当前源码)。
 已发布的 v0.1.1 压缩包仍使用上面的显式配置命令。
 
-## 环境
+## 源码开发环境
 
-Python 3.12、uv、FFmpeg/ffprobe。当前 RTX 4090 服务器共享环境已就绪：
+Python 3.12、uv、FFmpeg/ffprobe。在仓库根目录建立独立CPU环境：
 
 ```bash
-scripts/devctl run python -m deepfake_detection_archive --help
+export UV_PROJECT_ENVIRONMENT="$PWD/.venv-cpu"
+uv sync --locked --group dev --group media --group research --extra cpu
+uv run --no-sync python -m deepfake_detection_archive --help
 ```
 
-新机器安装、CPU 环境和共享环境维护见[开发指南](docs/development.md#环境)。
+源码环境运行统一预测时，另将`DEEPFAKE_MODEL_PACKAGE`设为已有本地模型包目录；
+其下须有`configs/models.json`及引用的配置/权重。相对模型包路径从当前工作目录解析，
+支持`~`；显式错误目录会报错，不借用源码目录的另一份注册表。
+模型不随Git或项目wheel分发。已发布离线包直接使用其`run.sh`，无需源码开发环境。
+
+CPU/cu132后端互斥；CUDA环境、前端一致性和训练参数见[开发指南](docs/development.md#环境)。
+现有RTX4090共享环境的`devctl`兼容入口和权限见[团队环境](docs/team-environment.md)。
 日常运行不重新同步依赖或做全量环境检查。
 
 ## 数据 → 训练 → 推理 → 评测
@@ -47,14 +55,15 @@ scripts/devctl run python -m deepfake_detection_archive --help
 
 ```bash
 cp configs/train-logmel.example.json configs/train-logmel.local.json
-scripts/devctl run python -m deepfake_detection_archive train \
+# 填写数据路径；CPU调试同时设置 training.device="cpu"、training.amp=false
+uv run --no-sync python -m deepfake_detection_archive train \
   --config configs/train-logmel.local.json
 
 # 填写选定 checkpoint、哈希和 dev 清单，output_dir 设为 ../outputs/audio-dev
 cp configs/infer-audio-waveform.example.json configs/infer-audio-waveform.local.json
-scripts/devctl run python -m deepfake_detection_archive infer \
+uv run --no-sync python -m deepfake_detection_archive infer \
   --config configs/infer-audio-waveform.local.json
-scripts/devctl run python -m deepfake_detection_archive evaluate \
+uv run --no-sync python -m deepfake_detection_archive evaluate \
   --scores outputs/audio-dev/scores.jsonl \
   --manifest data/audio-dev.jsonl --output outputs/audio-dev/evaluation.json
 ```
@@ -87,6 +96,6 @@ archive/                        冻结的旧项目，独立于比赛代码
 | [比赛要求](docs/competition/requirements.md) | 已知规则及待适配的官方接口 |
 | [方法参考](docs/research/literature.md) | 音频、视频候选与采用依据 |
 
-代码变更先跑对应测试，提交前运行一次 `scripts/devctl check`。
+代码变更先跑对应测试，提交前在所选环境运行一次 `bash tools/check_project.sh`。
 任务在 GitHub Issues 管理，分支与 PR 交付；数据和权重共享只读，输出与缓存按任务独立。
 Git 保存代码、配置、必要来源和简洁实验结论；日志、逐样本大分数和临时工作记录留在运行目录。

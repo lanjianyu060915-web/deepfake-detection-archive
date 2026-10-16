@@ -16,6 +16,7 @@ from deepfake_detection_archive.models import LogMelCNN, LogMelConfig, save_chec
 from deepfake_detection_archive.scoring import OfflineScorer
 from deepfake_detection_archive.unified_predict import (
     _validate_ast_frontend,
+    default_models,
     discover,
     predict_media,
     probe_media,
@@ -217,6 +218,59 @@ def test_default_bundle_can_be_relocated(audio, bundle, tmp_path, monkeypatch):
         ]
         == 0
     )
+
+
+@pytest.mark.parametrize("create_directory", [False, True])
+def test_explicit_model_root_never_reads_checkout_registry(
+    tmp_path, monkeypatch, create_directory
+):
+    root = tmp_path / "missing model package"
+    if create_directory:
+        (root / "configs").mkdir(parents=True)
+    monkeypatch.setenv("DEEPFAKE_MODEL_PACKAGE", str(root))
+    with pytest.raises(FileNotFoundError, match="DEEPFAKE_MODEL_PACKAGE"):
+        default_models()
+
+
+def test_checkout_default_registry_remains_available(monkeypatch):
+    monkeypatch.delenv("DEEPFAKE_MODEL_PACKAGE", raising=False)
+    folder, registry = default_models()
+    assert folder == Path(__file__).resolve().parents[1] / "configs/release"
+    assert set(registry["models"]) == {"audio", "video"}
+
+
+def test_offline_bundle_default_is_relative_to_its_code(bundle, monkeypatch, tmp_path):
+    monkeypatch.delenv("DEEPFAKE_MODEL_PACKAGE")
+    monkeypatch.setattr(
+        "deepfake_detection_archive.unified_predict.__file__",
+        str(bundle / "src/deepfake_detection_archive/unified_predict.py"),
+    )
+    monkeypatch.chdir(tmp_path)
+    folder, registry = default_models()
+    assert folder == bundle / "configs"
+    assert registry["models"]["audio"]["architecture"] == "logmel_cnn_v1"
+
+
+def test_installed_package_requires_an_explicit_model_root(tmp_path, monkeypatch):
+    monkeypatch.delenv("DEEPFAKE_MODEL_PACKAGE", raising=False)
+    monkeypatch.setattr(
+        "deepfake_detection_archive.unified_predict.__file__",
+        str(tmp_path / "site-packages/deepfake_detection_archive/unified_predict.py"),
+    )
+    with pytest.raises(FileNotFoundError, match="DEEPFAKE_MODEL_PACKAGE"):
+        default_models()
+
+
+def test_relative_and_home_model_roots_resolve_before_config_loading(
+    bundle, monkeypatch, tmp_path
+):
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setenv("DEEPFAKE_MODEL_PACKAGE", bundle.name)
+    relative = default_models()
+    monkeypatch.setenv("HOME", str(tmp_path))
+    monkeypatch.setenv("DEEPFAKE_MODEL_PACKAGE", f"~/{bundle.name}")
+    assert default_models() == relative
+    assert relative[0] == bundle / "configs"
 
 
 def test_output_is_excluded_through_parent_symlink(audio, tmp_path):

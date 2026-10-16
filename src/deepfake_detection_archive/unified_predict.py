@@ -65,15 +65,26 @@ MEDIA_SUFFIXES = {
 
 
 def default_models() -> tuple[Path, dict[str, Any]]:
-    """Resolve a relocatable bundle; a checkout may point to an installed bundle."""
-    checkout = Path(__file__).resolve().parents[2]
-    root = Path(os.environ.get("DEEPFAKE_MODEL_PACKAGE", checkout))
-    folder = root / "configs"
+    """Use one model package; only source layouts have an implicit default."""
+    selected = os.environ.get("DEEPFAKE_MODEL_PACKAGE")
+    if selected is not None:
+        folder = Path(selected).expanduser().resolve() / "configs"
+    else:
+        module = Path(__file__).resolve()
+        if module.parent.parent.name != "src":
+            raise FileNotFoundError(
+                "Set DEEPFAKE_MODEL_PACKAGE to a local model package containing "
+                "configs/models.json; the installed wheel does not include weights"
+            )
+        folder = module.parents[2] / "configs"
+        if not (folder / "models.json").is_file():
+            folder = folder / "release"
     registry_path = folder / "models.json"
-    if not registry_path.exists():
-        registry_path = checkout / "configs/release/models.json"
-        if root == checkout:
-            folder = registry_path.parent
+    if not registry_path.is_file():
+        raise FileNotFoundError(
+            f"Model registry not found: {registry_path}; "
+            "DEEPFAKE_MODEL_PACKAGE must point to a package containing configs/models.json"
+        )
     registry = load_object(registry_path)
     if registry.get("schema_version") != 1 or set(
         cast(dict[str, Any], registry.get("models", {}))

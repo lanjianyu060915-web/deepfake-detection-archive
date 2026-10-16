@@ -55,3 +55,4 @@ htmlcov/
 
 # Machine-specific paths and experimental overrides.
 /configs/*.local.json
+/.envrc.local
