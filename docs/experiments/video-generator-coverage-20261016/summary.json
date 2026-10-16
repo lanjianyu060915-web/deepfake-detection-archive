@@ -1,0 +1,1265 @@
+{
+  "schema_version": 1,
+  "source": {
+    "code_sha256": "b9cc8f093c5077631b4b16a8b2e3b5e6f4ff7fe38d545ba05bafc0373a984b81",
+    "commit": "35de6a61b43ff895cf911ab55fa69b445e36407a",
+    "dirty": false
+  },
+  "primary": "expanded43",
+  "replication": "expanded42",
+  "control": "control43",
+  "data": {
+    "new_media": 1500,
+    "new_train": 1198,
+    "new_dev": 300,
+    "train_total": 5412,
+    "dev_total": 1344,
+    "added_generators": [
+      "AccVideo",
+      "EasyAnimate",
+      "SVD"
+    ],
+    "new_train_groups_selected": 600,
+    "new_train_groups_used": 599,
+    "previous_dev_groups_retained": 100,
+    "license_scope": "internal research only; underlying rights and competition use unconfirmed"
+  },
+  "training_exclusions": {
+    "reason": "confirmed canonical byte duplicate across train/dev; retain dev, exclude entire train original group",
+    "canonical_sha256": "0cee5f13e6e54b392f8564b5b2555ea5565fece5320c259b0a1c1dd8483730ab",
+    "duplicates": [
+      {
+        "sample_id": "aigvdb-cross-source:AccVideo:K0XTykJIsZ0_32_0to225",
+        "split": "train",
+        "sha256": "151df21be0bb9040f1d83bd58a0f9a2230b9917d27d0abb13dc74865ab126a9a",
+        "bytes": 111065
+      },
+      {
+        "sample_id": "aigvdb-cross-source:AccVideo:c0bnCKKuPlM_1_70to507",
+        "split": "dev",
+        "sha256": "151df21be0bb9040f1d83bd58a0f9a2230b9917d27d0abb13dc74865ab126a9a",
+        "bytes": 111065
+      }
+    ],
+    "excluded_train_group": "aigvdbench:youtube:K0XTykJIsZ0",
+    "excluded_sample_ids": [
+      "aigvdb-cross-source:AccVideo:K0XTykJIsZ0_32_0to225",
+      "aigvdb-cross-source:Real:K0XTykJIsZ0_32_0to225"
+    ],
+    "excluded_training_samples": 2,
+    "new_train_used": 1198,
+    "new_train_groups_used": 599,
+    "train_total": 5412,
+    "dev_total": 1344,
+    "samples_per_epoch_unchanged": 5414,
+    "control_retrained": false,
+    "replacement_samples": 0,
+    "control_adapter_sha256": "bf87bf56620c9b3c32ff076321cf1b8827597164e7e90374ad1a876268ace9c8",
+    "expanded_adapter_sha256": "f2cf97ef28295f7961d2b173807a95dc74a32eb7030d2689685ce17284718380"
+  },
+  "training": {
+    "control43": {
+      "checkpoint_sha256": "9c7b46e36e214bd9a57009318d5e8b6ac3c05397fefb37ed5e287e540a31e1b1",
+      "best_epoch": 13,
+      "epochs_completed": 20,
+      "source_macro_eer": 0.22796208530805687,
+      "head_seconds": 23.656585043296218,
+      "budget": {
+        "epochs": 20,
+        "optimizer_updates": 860,
+        "sample_draws": 108280,
+        "skipped_updates": 0
+      }
+    },
+    "expanded43": {
+      "checkpoint_sha256": "916f57f547c83265528f033919f41f189161b207a20b57116fa8f6ce71e4f2fc",
+      "best_epoch": 14,
+      "epochs_completed": 20,
+      "source_macro_eer": 0.21440758293838863,
+      "head_seconds": 35.823878078721464,
+      "budget": {
+        "epochs": 20,
+        "optimizer_updates": 860,
+        "sample_draws": 108280,
+        "skipped_updates": 0
+      }
+    },
+    "expanded42": {
+      "checkpoint_sha256": "ca9f01d4b981709a97e8fff41210172207eb5bffdc69dee512c8a8c5e16802e3",
+      "best_epoch": 10,
+      "epochs_completed": 20,
+      "source_macro_eer": 0.2120379146919431,
+      "head_seconds": 23.33924187347293,
+      "budget": {
+        "epochs": 20,
+        "optimizer_updates": 860,
+        "sample_draws": 108280,
+        "skipped_updates": 0
+      }
+    }
+  },
+  "views": {
+    "dev_old844": {
+      "samples": 844,
+      "real": 422,
+      "fake": 422,
+      "eer": {
+        "baseline-original43": 0.24644549763033174,
+        "baseline-previous77": 0.25829383886255924,
+        "control43": 0.2559241706161137,
+        "expanded43": 0.24881516587677724,
+        "expanded42": 0.24407582938388625
+      },
+      "failures": {
+        "baseline-original43": 0,
+        "baseline-previous77": 0,
+        "control43": 0,
+        "expanded43": 0,
+        "expanded42": 0
+      }
+    },
+    "dev_new500": {
+      "samples": 500,
+      "real": 100,
+      "fake": 400,
+      "eer": {
+        "baseline-original43": 0.2825,
+        "baseline-previous77": 0.24,
+        "control43": 0.2,
+        "expanded43": 0.18,
+        "expanded42": 0.18
+      },
+      "failures": {
+        "baseline-original43": 0,
+        "baseline-previous77": 0,
+        "control43": 0,
+        "expanded43": 0,
+        "expanded42": 0
+      }
+    },
+    "dev_previous_new200": {
+      "samples": 200,
+      "real": 100,
+      "fake": 100,
+      "eer": {
+        "baseline-original43": 0.34,
+        "baseline-previous77": 0.16,
+        "control43": 0.19,
+        "expanded43": 0.18,
+        "expanded42": 0.17
+      },
+      "failures": {
+        "baseline-original43": 0,
+        "baseline-previous77": 0,
+        "control43": 0,
+        "expanded43": 0,
+        "expanded42": 0
+      }
+    },
+    "dev_added_generators400": {
+      "samples": 400,
+      "real": 100,
+      "fake": 300,
+      "eer": {
+        "baseline-original43": 0.27,
+        "baseline-previous77": 0.25,
+        "control43": 0.21333333333333335,
+        "expanded43": 0.18,
+        "expanded42": 0.18333333333333332
+      },
+      "failures": {
+        "baseline-original43": 0,
+        "baseline-previous77": 0,
+        "control43": 0,
+        "expanded43": 0,
+        "expanded42": 0
+      }
+    },
+    "dev_pooled1344": {
+      "samples": 1344,
+      "real": 522,
+      "fake": 822,
+      "eer": {
+        "baseline-original43": 0.24939172749391728,
+        "baseline-previous77": 0.2547892720306513,
+        "control43": 0.25287356321839083,
+        "expanded43": 0.22506082725060828,
+        "expanded42": 0.22030651340996169
+      },
+      "failures": {
+        "baseline-original43": 0,
+        "baseline-previous77": 0,
+        "control43": 0,
+        "expanded43": 0,
+        "expanded42": 0
+      }
+    },
+    "aigvd_pooled1880": {
+      "samples": 1880,
+      "real": 600,
+      "fake": 1280,
+      "eer": {
+        "baseline-original43": 0.31333333333333335,
+        "baseline-previous77": 0.2125,
+        "control43": 0.21666666666666667,
+        "expanded43": 0.18828125,
+        "expanded42": 0.2
+      },
+      "failures": {
+        "baseline-original43": 0,
+        "baseline-previous77": 0,
+        "control43": 0,
+        "expanded43": 0,
+        "expanded42": 0
+      }
+    },
+    "aigvd_without_Open-Sora1280": {
+      "samples": 1280,
+      "real": 600,
+      "fake": 680,
+      "eer": {
+        "baseline-original43": 0.2985294117647059,
+        "baseline-previous77": 0.2426470588235294,
+        "control43": 0.23833333333333334,
+        "expanded43": 0.21333333333333335,
+        "expanded42": 0.21333333333333335
+      },
+      "failures": {
+        "baseline-original43": 0,
+        "baseline-previous77": 0,
+        "control43": 0,
+        "expanded43": 0,
+        "expanded42": 0
+      }
+    },
+    "aigvd_without_five_training_labels1120": {
+      "samples": 1120,
+      "real": 600,
+      "fake": 520,
+      "eer": {
+        "baseline-original43": 0.29,
+        "baseline-previous77": 0.23461538461538461,
+        "control43": 0.22833333333333333,
+        "expanded43": 0.21,
+        "expanded42": 0.21333333333333335
+      },
+      "failures": {
+        "baseline-original43": 0,
+        "baseline-previous77": 0,
+        "control43": 0,
+        "expanded43": 0,
+        "expanded42": 0
+      }
+    },
+    "vif_pooled1949": {
+      "samples": 1949,
+      "real": 104,
+      "fake": 1845,
+      "eer": {
+        "baseline-original43": 0.26558265582655827,
+        "baseline-previous77": 0.2775067750677507,
+        "control43": 0.26991869918699185,
+        "expanded43": 0.25907859078590784,
+        "expanded42": 0.2601626016260163
+      },
+      "failures": {
+        "baseline-original43": 0,
+        "baseline-previous77": 0,
+        "control43": 0,
+        "expanded43": 0,
+        "expanded42": 0
+      }
+    },
+    "vif_without_original_training_labels": {
+      "samples": 1326,
+      "real": 104,
+      "fake": 1222,
+      "eer": {
+        "baseline-original43": 0.27884615384615385,
+        "baseline-previous77": 0.2995090016366612,
+        "control43": 0.3076923076923077,
+        "expanded43": 0.29214402618657936,
+        "expanded42": 0.2896890343698854
+      },
+      "failures": {
+        "baseline-original43": 0,
+        "baseline-previous77": 0,
+        "control43": 0,
+        "expanded43": 0,
+        "expanded42": 0
+      }
+    }
+  },
+  "per_generator": {
+    "aigvd": {
+      "AccVideo": {
+        "samples": 640,
+        "real": 600,
+        "fake": 40,
+        "eer": {
+          "baseline-original43": 0.25666666666666665,
+          "baseline-previous77": 0.26,
+          "control43": 0.2733333333333333,
+          "expanded43": 0.155,
+          "expanded42": 0.175
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "AnimateDiff": {
+        "samples": 640,
+        "real": 600,
+        "fake": 40,
+        "eer": {
+          "baseline-original43": 0.225,
+          "baseline-previous77": 0.16833333333333333,
+          "control43": 0.175,
+          "expanded43": 0.125,
+          "expanded42": 0.15
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "EasyAnimate": {
+        "samples": 640,
+        "real": 600,
+        "fake": 40,
+        "eer": {
+          "baseline-original43": 0.325,
+          "baseline-previous77": 0.31166666666666665,
+          "control43": 0.345,
+          "expanded43": 0.20333333333333334,
+          "expanded42": 0.225
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "Gen2": {
+        "samples": 640,
+        "real": 600,
+        "fake": 40,
+        "eer": {
+          "baseline-original43": 0.325,
+          "baseline-previous77": 0.29,
+          "control43": 0.25333333333333335,
+          "expanded43": 0.25166666666666665,
+          "expanded42": 0.245
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "Gen3": {
+        "samples": 640,
+        "real": 600,
+        "fake": 40,
+        "eer": {
+          "baseline-original43": 0.35,
+          "baseline-previous77": 0.2916666666666667,
+          "control43": 0.28833333333333333,
+          "expanded43": 0.24833333333333332,
+          "expanded42": 0.265
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "IPOC": {
+        "samples": 640,
+        "real": 600,
+        "fake": 40,
+        "eer": {
+          "baseline-original43": 0.20833333333333334,
+          "baseline-previous77": 0.15,
+          "control43": 0.16333333333333333,
+          "expanded43": 0.1,
+          "expanded42": 0.075
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "Jimeng": {
+        "samples": 640,
+        "real": 600,
+        "fake": 40,
+        "eer": {
+          "baseline-original43": 0.3,
+          "baseline-previous77": 0.2966666666666667,
+          "control43": 0.3,
+          "expanded43": 0.25,
+          "expanded42": 0.23
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "Luma": {
+        "samples": 640,
+        "real": 600,
+        "fake": 40,
+        "eer": {
+          "baseline-original43": 0.425,
+          "baseline-previous77": 0.3,
+          "control43": 0.275,
+          "expanded43": 0.28833333333333333,
+          "expanded42": 0.3
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "Open-Sora": {
+        "samples": 1200,
+        "real": 600,
+        "fake": 600,
+        "eer": {
+          "baseline-original43": 0.3283333333333333,
+          "baseline-previous77": 0.18,
+          "control43": 0.19333333333333333,
+          "expanded43": 0.16166666666666665,
+          "expanded42": 0.175
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "Opensora": {
+        "samples": 640,
+        "real": 600,
+        "fake": 40,
+        "eer": {
+          "baseline-original43": 0.33666666666666667,
+          "baseline-previous77": 0.275,
+          "control43": 0.25,
+          "expanded43": 0.25,
+          "expanded42": 0.24166666666666667
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "Pyramid-Flow": {
+        "samples": 640,
+        "real": 600,
+        "fake": 40,
+        "eer": {
+          "baseline-original43": 0.25,
+          "baseline-previous77": 0.125,
+          "control43": 0.15666666666666668,
+          "expanded43": 0.125,
+          "expanded42": 0.125
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "RepVideo": {
+        "samples": 640,
+        "real": 600,
+        "fake": 40,
+        "eer": {
+          "baseline-original43": 0.325,
+          "baseline-previous77": 0.25,
+          "control43": 0.255,
+          "expanded43": 0.185,
+          "expanded42": 0.2
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "SEINE": {
+        "samples": 640,
+        "real": 600,
+        "fake": 40,
+        "eer": {
+          "baseline-original43": 0.425,
+          "baseline-previous77": 0.275,
+          "control43": 0.25,
+          "expanded43": 0.28,
+          "expanded42": 0.2783333333333333
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "SVD": {
+        "samples": 640,
+        "real": 600,
+        "fake": 40,
+        "eer": {
+          "baseline-original43": 0.35,
+          "baseline-previous77": 0.2,
+          "control43": 0.22333333333333333,
+          "expanded43": 0.175,
+          "expanded42": 0.2
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "Sora": {
+        "samples": 640,
+        "real": 600,
+        "fake": 40,
+        "eer": {
+          "baseline-original43": 0.31333333333333335,
+          "baseline-previous77": 0.275,
+          "control43": 0.275,
+          "expanded43": 0.24166666666666667,
+          "expanded42": 0.25
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "VideoCrafter": {
+        "samples": 640,
+        "real": 600,
+        "fake": 40,
+        "eer": {
+          "baseline-original43": 0.22,
+          "baseline-previous77": 0.15333333333333332,
+          "control43": 0.125,
+          "expanded43": 0.15,
+          "expanded42": 0.15
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "causvid_24fps": {
+        "samples": 640,
+        "real": 600,
+        "fake": 40,
+        "eer": {
+          "baseline-original43": 0.27,
+          "baseline-previous77": 0.11833333333333333,
+          "control43": 0.125,
+          "expanded43": 0.105,
+          "expanded42": 0.12
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "vidu": {
+        "samples": 640,
+        "real": 600,
+        "fake": 40,
+        "eer": {
+          "baseline-original43": 0.35,
+          "baseline-previous77": 0.23,
+          "control43": 0.25,
+          "expanded43": 0.255,
+          "expanded42": 0.25
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      }
+    },
+    "vif": {
+      "CogVideoX1.5-5B-T": {
+        "samples": 208,
+        "real": 104,
+        "fake": 104,
+        "eer": {
+          "baseline-original43": 0.18269230769230768,
+          "baseline-previous77": 0.17307692307692307,
+          "control43": 0.15384615384615385,
+          "expanded43": 0.15384615384615385,
+          "expanded42": 0.15384615384615385
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "HunyuanVideo": {
+        "samples": 207,
+        "real": 104,
+        "fake": 103,
+        "eer": {
+          "baseline-original43": 0.19230769230769232,
+          "baseline-previous77": 0.20388349514563106,
+          "control43": 0.18446601941747573,
+          "expanded43": 0.17475728155339806,
+          "expanded42": 0.17307692307692307
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "HunyuanVideo-I2V": {
+        "samples": 208,
+        "real": 104,
+        "fake": 104,
+        "eer": {
+          "baseline-original43": 0.3557692307692308,
+          "baseline-previous77": 0.3557692307692308,
+          "control43": 0.36538461538461536,
+          "expanded43": 0.3557692307692308,
+          "expanded42": 0.34615384615384615
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "LTX-Video-13B-I": {
+        "samples": 206,
+        "real": 104,
+        "fake": 102,
+        "eer": {
+          "baseline-original43": 0.39215686274509803,
+          "baseline-previous77": 0.37254901960784315,
+          "control43": 0.37254901960784315,
+          "expanded43": 0.375,
+          "expanded42": 0.3557692307692308
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "LTX-Video-13B-T": {
+        "samples": 204,
+        "real": 104,
+        "fake": 100,
+        "eer": {
+          "baseline-original43": 0.25,
+          "baseline-previous77": 0.3076923076923077,
+          "control43": 0.26,
+          "expanded43": 0.22,
+          "expanded42": 0.22
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "SkyReels-V2": {
+        "samples": 208,
+        "real": 104,
+        "fake": 104,
+        "eer": {
+          "baseline-original43": 0.20192307692307693,
+          "baseline-previous77": 0.25,
+          "control43": 0.2403846153846154,
+          "expanded43": 0.21153846153846154,
+          "expanded42": 0.22115384615384615
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "SkyReels-V2-I2V-14B-540P": {
+        "samples": 207,
+        "real": 104,
+        "fake": 103,
+        "eer": {
+          "baseline-original43": 0.34615384615384615,
+          "baseline-previous77": 0.34951456310679613,
+          "control43": 0.36538461538461536,
+          "expanded43": 0.36538461538461536,
+          "expanded42": 0.375
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "Wan2.1-T2V-1.3B": {
+        "samples": 208,
+        "real": 104,
+        "fake": 104,
+        "eer": {
+          "baseline-original43": 0.14423076923076922,
+          "baseline-previous77": 0.1346153846153846,
+          "control43": 0.125,
+          "expanded43": 0.11538461538461539,
+          "expanded42": 0.09615384615384616
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "Wan2.1-VACE-1.3B-T": {
+        "samples": 208,
+        "real": 104,
+        "fake": 104,
+        "eer": {
+          "baseline-original43": 0.375,
+          "baseline-previous77": 0.375,
+          "control43": 0.38461538461538464,
+          "expanded43": 0.34615384615384615,
+          "expanded42": 0.36538461538461536
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "Wan2.2-I2V-14B": {
+        "samples": 208,
+        "real": 104,
+        "fake": 104,
+        "eer": {
+          "baseline-original43": 0.36538461538461536,
+          "baseline-previous77": 0.38461538461538464,
+          "control43": 0.38461538461538464,
+          "expanded43": 0.375,
+          "expanded42": 0.375
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "Wan2.2-T2V-14B": {
+        "samples": 208,
+        "real": 104,
+        "fake": 104,
+        "eer": {
+          "baseline-original43": 0.20192307692307693,
+          "baseline-previous77": 0.25961538461538464,
+          "control43": 0.25,
+          "expanded43": 0.2403846153846154,
+          "expanded42": 0.2403846153846154
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "Wan2.2-TI2V-5B-I": {
+        "samples": 208,
+        "real": 104,
+        "fake": 104,
+        "eer": {
+          "baseline-original43": 0.36538461538461536,
+          "baseline-previous77": 0.3557692307692308,
+          "control43": 0.34615384615384615,
+          "expanded43": 0.34615384615384615,
+          "expanded42": 0.34615384615384615
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "Wan2.2-TI2V-5B-T": {
+        "samples": 208,
+        "real": 104,
+        "fake": 104,
+        "eer": {
+          "baseline-original43": 0.15384615384615385,
+          "baseline-previous77": 0.16346153846153846,
+          "control43": 0.14423076923076922,
+          "expanded43": 0.14423076923076922,
+          "expanded42": 0.1346153846153846
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "gen4-turbo": {
+        "samples": 168,
+        "real": 104,
+        "fake": 64,
+        "eer": {
+          "baseline-original43": 0.3557692307692308,
+          "baseline-previous77": 0.359375,
+          "control43": 0.3557692307692308,
+          "expanded43": 0.36538461538461536,
+          "expanded42": 0.375
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "hailuo": {
+        "samples": 185,
+        "real": 104,
+        "fake": 81,
+        "eer": {
+          "baseline-original43": 0.23076923076923078,
+          "baseline-previous77": 0.25961538461538464,
+          "control43": 0.25,
+          "expanded43": 0.25961538461538464,
+          "expanded42": 0.2839506172839506
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "kling-v1": {
+        "samples": 184,
+        "real": 104,
+        "fake": 80,
+        "eer": {
+          "baseline-original43": 0.22115384615384615,
+          "baseline-previous77": 0.2,
+          "control43": 0.175,
+          "expanded43": 0.2125,
+          "expanded42": 0.21153846153846154
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "pika-v2": {
+        "samples": 194,
+        "real": 104,
+        "fake": 90,
+        "eer": {
+          "baseline-original43": 0.11538461538461539,
+          "baseline-previous77": 0.1,
+          "control43": 0.10576923076923077,
+          "expanded43": 0.1111111111111111,
+          "expanded42": 0.09615384615384616
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "pixverse-v4-5": {
+        "samples": 196,
+        "real": 104,
+        "fake": 92,
+        "eer": {
+          "baseline-original43": 0.25961538461538464,
+          "baseline-previous77": 0.2826086956521739,
+          "control43": 0.29347826086956524,
+          "expanded43": 0.2391304347826087,
+          "expanded42": 0.25961538461538464
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      },
+      "sora-2": {
+        "samples": 198,
+        "real": 104,
+        "fake": 94,
+        "eer": {
+          "baseline-original43": 0.2872340425531915,
+          "baseline-previous77": 0.2980769230769231,
+          "control43": 0.3173076923076923,
+          "expanded43": 0.3076923076923077,
+          "expanded42": 0.3269230769230769
+        },
+        "failures": {
+          "baseline-original43": 0,
+          "baseline-previous77": 0,
+          "control43": 0,
+          "expanded43": 0,
+          "expanded42": 0
+        }
+      }
+    }
+  },
+  "resources": {
+    "acquisition": {
+      "status": "complete",
+      "plan_records": 1500,
+      "ledger_records": 1500,
+      "successful": 1500,
+      "failed": 0,
+      "media_bytes": 3010025217,
+      "failure_records": [],
+      "elapsed_seconds_this_run": 820.7063496233895,
+      "counts": {
+        "train": {
+          "Real": 600,
+          "AccVideo": 200,
+          "EasyAnimate": 200,
+          "SVD": 200
+        },
+        "dev": {
+          "Real": 0,
+          "AccVideo": 100,
+          "EasyAnimate": 100,
+          "SVD": 100
+        }
+      },
+      "plan_sha256": "4588b18b67f75aab123f1d826f7ac6d61186bb93370f08540047013cbe967443",
+      "revision": "bf48acaa4920990af3dd2a511ea88e63354df305",
+      "implementation_sha256": "e6d2e3ea855d0c995663dbdca62de7f321106b904bb5c7a835ddc5677a2311fa",
+      "download_method": "bounded coalesced member Range, 12 workers; dev first",
+      "resumed_successful_records": 211
+    },
+    "preparation": {
+      "counts": {
+        "dev": 300,
+        "train": 1200
+      },
+      "failures": 0,
+      "holdout_consumed": false,
+      "panda_original_media_overlap": "unknown",
+      "preprocessing": "video_h264_crf23_448x256_16fps_1p25s",
+      "samples": 1500,
+      "plan_sha256": "4588b18b67f75aab123f1d826f7ac6d61186bb93370f08540047013cbe967443",
+      "raw_media_bytes": 3010025217,
+      "canonical_media_bytes": 76353255,
+      "counts_by_generator": {
+        "train:AccVideo": 200,
+        "dev:AccVideo": 100,
+        "train:EasyAnimate": 200,
+        "dev:EasyAnimate": 100,
+        "train:unknown": 600,
+        "train:SVD": 200,
+        "dev:SVD": 100
+      },
+      "all_media_readonly": true,
+      "download_failures": 0,
+      "acquisition_wall_seconds_from_frozen_plan": 1177.7869760990143,
+      "canonical_manifest_sha256": "c4cdbc6a743e48f1d2a614c74b3771fa83338fa2fe7afc8fb464d2d0c30fa93a",
+      "raw_manifest_sha256": "21e6df623de6384f5867b400e1a1e984b8a644fbae10a12bea5d3baba26b808e",
+      "wrapper_sha256": {
+        "acquisition.py": "e6d2e3ea855d0c995663dbdca62de7f321106b904bb5c7a835ddc5677a2311fa",
+        "prepare_canonical.py": "d40efdcae4c49dde4c2a4f02c6c04ab8f256d09355cb0f57129d596f97953262"
+      }
+    },
+    "reference_features": {
+      "cuda_peak_allocated_bytes": 1920588288,
+      "cuda_peak_reserved_bytes": 2118123520,
+      "holdout_consumed": false,
+      "max_rss_kib": 3297452,
+      "samples": 1949,
+      "scope": "historical dev features only; candidates scored after training",
+      "scores_computed": false,
+      "seconds": 120.89612655807287,
+      "source": {
+        "code_sha256": "b9cc8f093c5077631b4b16a8b2e3b5e6f4ff7fe38d545ba05bafc0373a984b81",
+        "commit": "35de6a61b43ff895cf911ab55fa69b445e36407a",
+        "dirty": false
+      }
+    },
+    "control_stage": {
+      "control": "control43",
+      "dev_samples": 1344,
+      "dev_source_label_counts": {
+        "aigvdbench-officialtrain-research-20261016:0": 100,
+        "aigvdbench-officialtrain-research-20261016:1": 400,
+        "vif-panda70m-local-noncommercial-research:0": 422,
+        "vif-panda70m-local-noncommercial-research:1": 422
+      },
+      "frozen_checkpoints": {
+        "control43": {
+          "best_epoch": 13,
+          "budget": {
+            "epochs": 20,
+            "optimizer_updates": 860,
+            "sample_draws": 108280,
+            "skipped_updates": 0
+          },
+          "path": "/var/tmp/deepfake-video-coverage-20261016/control43/training/best.pt",
+          "sha256": "9c7b46e36e214bd9a57009318d5e8b6ac3c05397fefb37ed5e287e540a31e1b1"
+        }
+      },
+      "holdout_consumed": false,
+      "primary": "expanded43",
+      "replication": "expanded42",
+      "seconds": 68.96953913196921,
+      "source": {
+        "code_sha256": "b9cc8f093c5077631b4b16a8b2e3b5e6f4ff7fe38d545ba05bafc0373a984b81",
+        "commit": "35de6a61b43ff895cf911ab55fa69b445e36407a",
+        "dirty": false
+      }
+    },
+    "expanded_stage": {
+      "control": "control43",
+      "dev_samples": 1344,
+      "dev_source_label_counts": {
+        "aigvdbench-officialtrain-research-20261016:0": 100,
+        "aigvdbench-officialtrain-research-20261016:1": 400,
+        "vif-panda70m-local-noncommercial-research:0": 422,
+        "vif-panda70m-local-noncommercial-research:1": 422
+      },
+      "frozen_checkpoints": {
+        "control43": {
+          "best_epoch": 13,
+          "budget": {
+            "epochs": 20,
+            "optimizer_updates": 860,
+            "sample_draws": 108280,
+            "skipped_updates": 0
+          },
+          "path": "/var/tmp/deepfake-video-coverage-20261016/control43/training/best.pt",
+          "sha256": "9c7b46e36e214bd9a57009318d5e8b6ac3c05397fefb37ed5e287e540a31e1b1"
+        },
+        "expanded42": {
+          "best_epoch": 10,
+          "budget": {
+            "epochs": 20,
+            "optimizer_updates": 860,
+            "sample_draws": 108280,
+            "skipped_updates": 0
+          },
+          "path": "/var/tmp/deepfake-video-coverage-20261016/expanded42/training/best.pt",
+          "sha256": "ca9f01d4b981709a97e8fff41210172207eb5bffdc69dee512c8a8c5e16802e3"
+        },
+        "expanded43": {
+          "best_epoch": 14,
+          "budget": {
+            "epochs": 20,
+            "optimizer_updates": 860,
+            "sample_draws": 108280,
+            "skipped_updates": 0
+          },
+          "path": "/var/tmp/deepfake-video-coverage-20261016/expanded43/training/best.pt",
+          "sha256": "916f57f547c83265528f033919f41f189161b207a20b57116fa8f6ce71e4f2fc"
+        }
+      },
+      "holdout_consumed": false,
+      "primary": "expanded43",
+      "replication": "expanded42",
+      "seconds": 145.61842834483832,
+      "source": {
+        "code_sha256": "b9cc8f093c5077631b4b16a8b2e3b5e6f4ff7fe38d545ba05bafc0373a984b81",
+        "commit": "35de6a61b43ff895cf911ab55fa69b445e36407a",
+        "dirty": false
+      }
+    },
+    "diagnostic": {
+      "baseline_and_candidates_share_identical_features": true,
+      "cuda_peak_allocated_bytes": 13049856,
+      "cuda_peak_reserved_bytes": 23068672,
+      "frozen_checkpoints": {
+        "control43": {
+          "best_epoch": 13,
+          "budget": {
+            "epochs": 20,
+            "optimizer_updates": 860,
+            "sample_draws": 108280,
+            "skipped_updates": 0
+          },
+          "path": "/var/tmp/deepfake-video-coverage-20261016/control43/training/best.pt",
+          "sha256": "9c7b46e36e214bd9a57009318d5e8b6ac3c05397fefb37ed5e287e540a31e1b1"
+        },
+        "expanded42": {
+          "best_epoch": 10,
+          "budget": {
+            "epochs": 20,
+            "optimizer_updates": 860,
+            "sample_draws": 108280,
+            "skipped_updates": 0
+          },
+          "path": "/var/tmp/deepfake-video-coverage-20261016/expanded42/training/best.pt",
+          "sha256": "ca9f01d4b981709a97e8fff41210172207eb5bffdc69dee512c8a8c5e16802e3"
+        },
+        "expanded43": {
+          "best_epoch": 14,
+          "budget": {
+            "epochs": 20,
+            "optimizer_updates": 860,
+            "sample_draws": 108280,
+            "skipped_updates": 0
+          },
+          "path": "/var/tmp/deepfake-video-coverage-20261016/expanded43/training/best.pt",
+          "sha256": "916f57f547c83265528f033919f41f189161b207a20b57116fa8f6ce71e4f2fc"
+        }
+      },
+      "holdout_consumed": false,
+      "max_rss_kib": 1073436,
+      "scope": "cached-feature diagnostic; excludes decoding/backbone/public CLI capacity",
+      "seconds": 29.659285054542124,
+      "selection": "primary expanded43 fixed before diagnosis; no external selection or refit",
+      "source": {
+        "code_sha256": "b9cc8f093c5077631b4b16a8b2e3b5e6f4ff7fe38d545ba05bafc0373a984b81",
+        "commit": "35de6a61b43ff895cf911ab55fa69b445e36407a",
+        "dirty": false
+      },
+      "views": {
+        "aigvd": {
+          "producer": {
+            "cache": "/var/tmp/deepfake-video-cross-source-20261016/cache-new",
+            "pipeline_sha256": [
+              "26694db08f117db3501ecc558b8feef10c020ecc62cbb6a7a94fd2b706e677dc"
+            ]
+          },
+          "samples": 1880,
+          "scoring_seconds": 14.192178714089096,
+          "source_label_counts": {
+            "aigvdbench-first-batch:0": 600,
+            "aigvdbench-first-batch:1": 1280
+          }
+        },
+        "vif": {
+          "producer": {
+            "cuda_peak_allocated_bytes": 1920588288,
+            "cuda_peak_reserved_bytes": 2118123520,
+            "holdout_consumed": false,
+            "max_rss_kib": 3297452,
+            "samples": 1949,
+            "scope": "historical dev features only; candidates scored after training",
+            "scores_computed": false,
+            "seconds": 120.89612655807287,
+            "source": {
+              "code_sha256": "b9cc8f093c5077631b4b16a8b2e3b5e6f4ff7fe38d545ba05bafc0373a984b81",
+              "commit": "35de6a61b43ff895cf911ab55fa69b445e36407a",
+              "dirty": false
+            }
+          },
+          "samples": 1949,
+          "scoring_seconds": 13.635636741295457,
+          "source_label_counts": {
+            "vif-bench-cross-generator-evaluation:0": 104,
+            "vif-bench-cross-generator-evaluation:1": 1845
+          }
+        }
+      }
+    }
+  },
+  "scope": {
+    "epoch_selection": "only old844/new500 source macro dev EER",
+    "matched_budget": "all three run20 complete epochs/860 updates/108280 draws; selected epochs may differ",
+    "external_selection_or_refit": false,
+    "diagnostics_previously_seen": true,
+    "unknown_Panda_parent_overlap": true,
+    "holdout_consumed": false,
+    "release_default_unchanged": true,
+    "fusion_recalibrated": false
+  }
+}
