@@ -68,7 +68,7 @@ extra的精确构建标签用于拒绝错误组合，下载索引仍须显式提
 10份实际解码/前端/视频输入张量完全一致；CPU重复运行分数一致。
 cu126实机为RTX4060 Laptop 8188MiB、驱动617.42，
 PyTorch峰值allocated402.92MiB、reserved486MiB；torchvision CUDA算子和CPU Kaldi fbank均运行通过。
-这是相同权重的小批推理兼容结果，训练容量、批量自适应和其他平台仍需分别验证；
+这是该次相同权重的小批推理兼容结果，未覆盖训练容量或批量自适应；
 该次安装使用CPU torchaudio，不能作为GPU torchaudio已验证的证据。
 当前依赖已迁移到完整cu126三件套，新的GPU TorchAudio算子及同权重CPU/GPU回归已通过，见[实测](experiments/offline-runtime-20261016/README.md)；
 历史cu132整包的既有服务器结果见[发布说明](release.md)。
@@ -85,6 +85,8 @@ AST的`frontend`默认`numpy_spectrogram_v1`，旧checkpoint同样按此恢复�
 支持`~`并在入口解析为绝对路径；显式目录缺失/不完整时明确失败，不回退到源码注册表。
 无显式选择时，源码checkout使用`configs/release/models.json`，完整离线包使用包内
 `configs/models.json`。安装后的wheel不携带默认权重，需明确指定已有模型包。
+默认模型注册表、配置、运行时元数据与权重均限制在该包根内，`--show-models`使用同一边界。
+未传`--output`时，临时结果目录遵循`TMPDIR`。
 
 以下命令沿用已选环境，不触发自动同步。共享服务器和可选`devctl`/direnv说明见
 [团队环境](team-environment.md)；公共源码运行不依赖服务器的`/opt`目录或全局激活脚本。
@@ -198,8 +200,23 @@ UV_PROJECT_ENVIRONMENT="$PWD/.venv-cpu" bash tools/check_project.sh
 推理配置的`batch_size`控制执行批量。`video_frames`的ResNet18、UFD和WaveRep
 按该值分批把独立帧送入主干；全部特征或帧分数按原顺序恢复后，一次运行完整时序头和
 文件级聚合。CPU保留完整预处理帧，GPU逐批接收；帧数、时间点、分辨率和精度由原配置决定。
-该参数不表示跨文件批量，训练继续使用训练配置的batch。更换执行batch时使用新输出目录。
-当前是固定批量执行，资源自适应和有界OOM重试尚未接入，内存故障沿用全局中止行为。
+该参数不表示跨文件批量，训练继续使用训练配置的batch。统一入口也可用`--batch-size`覆盖。
+`execution_mode`默认`reference`，按指定批量执行；显式选择`adaptive`后，按当前CPU亲和性与
+cgroup配额限制线程，worker固定为1，在CUDA上对首个未写入结果的文件做有界profile：
+最多3次，每次调用前检查累计10秒预算，单次模型调用不承诺中断。仅CUDA OOM会触发
+批量减半重试，最多3次；已经写出的成功记录保留，其他异常维持原失败语义。
+两种模式均保持原采样、预处理、FP32与文件级聚合，不自动改变帧数或精度。
+
+```bash
+scripts/devctl run python -m deepfake_detection_archive predict /data/media \
+  --execution-mode adaptive --batch-size 8 --output outputs/adaptive
+```
+
+`execution.json`记录资源、profile、实际批量、OOM缩减与显存峰值。恢复同时绑定执行计划、
+设备与浮点设置，改变模式或批量时使用新输出目录。训练资源规划不复用该推理策略。
+RC3在RTX4090上完成音频/视频各10000条的实际并行运行，均零失败；
+新Ubuntu24用户态20条和CPU/GPU回归见[本轮结果](experiments/runtime-completion-20261016/README.md)。
+此前RTX4060 8GiB固定批量结果不能作为自适应模式在8GiB设备上的实机证明。
 
 现有CLIP特征缓存身份包含整个`models/ufd.py`；此次分类器推理修改会改变缓存键，
 首次新实验将重提取，旧缓存和元数据保留。冻结编码器仍直接调用原backbone，

@@ -98,6 +98,11 @@ scripts/devctl run python -m deepfake_detection_archive predict \
 v0.1.1 压缩包。原 `predict --config ... --input ...` 和 `infer --config ...` 保持可用。
 `--show-models` 显示模型标识、研究范围、分数方向和预处理版本，不读取输入媒体。
 统一入口提高输入便利性，音频仍是环境音研究候选，视频仍是四帧基线。
+默认注册表、配置、运行时元数据及权重限制在选择的模型包根内；`--show-models`同样遵循该边界。
+未指定`--output`时按`TMPDIR`创建临时目录。当前源码默认`--execution-mode reference`，
+显式`--execution-mode adaptive`启用资源profile及有界CUDA OOM批量缩减；
+`--batch-size`控制实际推理批量，不改变采样、模型、FP32或聚合。恢复须保持执行计划、设备与
+浮点设置一致，详见[开发说明](development.md#推理与-eer)。
 
 训练与发布决定固定资产；预测消费本地包内资产：
 
@@ -136,15 +141,16 @@ scripts/devctl run python -m deepfake_detection_archive predict \
 
 ```bash
 scripts/devctl run python tools/build_release.py \
-  --version 0.1.2-rc2 \
-  --output outputs/releases/deepfake-v0.1.2-rc2 \
+  --version 0.1.2-rc3 \
+  --output outputs/releases/deepfake-v0.1.2-rc3 \
   --site-packages /opt/venvs/deepfake-cu126/lib/python3.12/site-packages \
   --python-home /opt/uv/python/cpython-3.12.15-linux-x86_64-gnu \
+  --media-tools /path/to/new-media-tools \
   --audio-weight /path/to/v0.1.1/weights/audio-ast-urban.pt \
   --video-weight /path/to/v0.1.1/weights/video-resnet18.pt
-tar -C outputs/releases -czf outputs/releases/deepfake-v0.1.2-rc2-linux-x86_64.tar.gz deepfake-v0.1.2-rc2
-split -b 1900M -d outputs/releases/deepfake-v0.1.2-rc2-linux-x86_64.tar.gz \
-  outputs/releases/deepfake-v0.1.2-rc2-linux-x86_64.tar.gz.part-
+tar -C outputs/releases -czf outputs/releases/deepfake-v0.1.2-rc3-linux-x86_64.tar.gz deepfake-v0.1.2-rc3
+split -b 1900M -d outputs/releases/deepfake-v0.1.2-rc3-linux-x86_64.tar.gz \
+  outputs/releases/deepfake-v0.1.2-rc3-linux-x86_64.tar.gz.part-
 ```
 
 包内 `release.json` 标识版本、构建源码、平台、权重及实际运行依赖版本，
@@ -177,8 +183,10 @@ bash tools/build_media_tools.sh ffmpeg-ba987fe24d.tar.gz /path/to/new-media-tool
 ```
 
 `containers/Dockerfile.offline` 固定已核对的 Ubuntu 24.04 amd64 manifest digest，
-只复制构建好的 `package/`，不在推理时安装或下载。构建目录仅放该包和 Dockerfile，
-预先加载基座；CPU/cu126 以包内实际依赖为准，不能仅改镜像标签。
+只复制构建好的 `package/`，不在推理时安装或下载。默认`offline` target保留完整包；
+`--target runtime`只装运行库、源码、入口与许可，不包含权重、模型配置或输入媒体，
+通过只读`/models`挂载提供`configs/`、`weights/`及`release.json`。
+构建目录仅放该包和 Dockerfile，预先加载基座；CPU/cu126以包内实际依赖为准，不能仅改镜像标签。
 
 ```bash
 docker build --network=none -f Dockerfile.offline -t deepfake:research .
@@ -193,8 +201,21 @@ docker image load -i deepfake-research-image.tar
 ```
 
 输出与缓存挂载目录须允许所选 UID/GID 写入；不需要 privileged、Docker socket 或 chmod777。
-GPU 仍依赖宿主驱动和 NVIDIA Container Toolkit。当前服务器没有 Docker/Podman，
-**镜像 build/run/save/load 尚未实测**；Dockerfile 不算已交付镜像，也不替代非 Docker 包。
+GPU仍依赖宿主驱动和NVIDIA Container Toolkit。当前云机不具备可用Docker隔离运行条件；
+[Actions镜像演练](https://github.com/lanjianyu060915-web/deepfake-detection-archive/actions/runs/38916789385)
+已完成CPU/cu126两个运行时镜像的build/run/save/load，在无GPU宿主以CPU模式执行4条无标签样例、
+断网/非root/只读根/空缓存推理及save/load复测，按相对路径与媒体SHA对齐，容差`1e-4`。
+两路均4/4、零失败，host/container/save-load分数最大差0；镜像配置digest在save/load后不变。
+镜像及小结果artifact不含权重或训练数据，保留1天；C16保存小结果，镜像持久复制进行中（见数据说明）。
+昂贵镜像构建在相关源码/发布环境变更合入main后运行，也可手动触发；PR使用标准检查，避免文档同步反复重建镜像。
+GPU容器及万级容器容量未实测，Ubuntu24 rootfs演练共享宿主内核，不能代替这些证据。
+
+新RC3（clean `2e8388a`）已在RTX4090完成非Docker实际音频/视频各10000条、零失败，
+两任务并行，端到端耗时分别1046.83秒与1613.32秒；不与旧串行计时宣称加速。
+使用原v0.1.1研究权重、cu126与同源码LGPL工具，未消费holdout或计算EER。
+20输入同设备旧/新实现分数差0，CPU/GPU最大差7.63e-6，新Ubuntu24用户名
+`contest_runner`（UID1002）20/20，30个前端张量差0；见[本轮结果](experiments/runtime-completion-20261016/README.md)。
+这些是工程兼容与容量结果，正式赛用许可、平台I/O及新Release仍待完成。
 
 ## v0.1.1 变更与算法范围
 
