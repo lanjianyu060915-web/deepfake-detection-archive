@@ -1,0 +1,1115 @@
+{
+  "schema_version": 1,
+  "source": {
+    "code_sha256": "23c17c3a6e7d065b91a2a4a6fe7e0ebce13ba6d910813fd9560d42a93e2134aa",
+    "commit": "b2ef85761930fc5aa84fa89785078ae0a36a423d",
+    "dirty": false
+  },
+  "primary": "tuned43",
+  "replication": "tuned42",
+  "control": "control43",
+  "baseline": "baseline-C10; expanded43 frozen without further training",
+  "data": {
+    "aigvd_training_generator_labels": [
+      "AccVideo",
+      "EasyAnimate",
+      "Open-Sora",
+      "SEINE",
+      "SVD"
+    ],
+    "dev_total": 1344,
+    "license_scope": "internal research only; underlying rights and competition use unconfirmed",
+    "new_media_downloaded": false,
+    "old_training_generator_labels": [
+      "CogVideoX1.5-5B-I2V",
+      "CogVideoX1.5-5B-T",
+      "HunyuanVideo",
+      "HunyuanVideo-I2V",
+      "Wan2.1-T2V-1.3B",
+      "Wan2.2-TI2V-5B-I",
+      "Wan2.2-TI2V-5B-T"
+    ],
+    "train_total": 5412
+  },
+  "scope": {
+    "adoption_conclusion": "requires separate interpretation; this report does not select a winner",
+    "diagnostic_capacity": "cached-prefix FP32 suffix scores, not public CLI end-to-end capacity",
+    "diagnostics_previously_seen": true,
+    "epoch_selection": "only common old844/new500 source macro dev EER",
+    "external_selection_or_refit": false,
+    "fusion_recalibrated": false,
+    "holdout_consumed": false,
+    "matched_budget": {
+      "epochs": 8,
+      "optimizer_updates": 344,
+      "sample_draws": 43296,
+      "skipped_updates": 0
+    },
+    "primary_fixed_before_training": "tuned43; tuned42 replication",
+    "release_default_unchanged": true,
+    "unknown_Panda_parent_overlap": true
+  },
+  "decision": {
+    "adoption": "research-only; retain C10 as general video main candidate",
+    "reason": "tuned43 improves AIGVD/old-dev/untrained-view, ViF pooled flat; replication worsens ViF; no external seed re-selection",
+    "next": "independent real sources and hard content; stop this seen-dev hyperparameter sweep"
+  },
+  "training": {
+    "control43": {
+      "best_epoch": 3,
+      "budget": {
+        "epochs": 8,
+        "optimizer_updates": 344,
+        "sample_draws": 43296,
+        "skipped_updates": 0
+      },
+      "checkpoint_sha256": "b5278a501aa5d593ba63d473b446d049174ba00476c7e84d26b2393461ac23dd",
+      "cuda_peak_allocated_bytes": 11482937344,
+      "cuda_peak_reserved_bytes": 14478737408,
+      "epochs_completed": 8,
+      "max_rss_kib": 12240532,
+      "seconds": 377.93556666933,
+      "source_macro_eer": 0.21440758293838863
+    },
+    "tuned42": {
+      "best_epoch": 2,
+      "budget": {
+        "epochs": 8,
+        "optimizer_updates": 344,
+        "sample_draws": 43296,
+        "skipped_updates": 0
+      },
+      "checkpoint_sha256": "4bdbc3930a9cc34f251cbe550f204a6f13dfcb2e240fee21af9fd07bf089da8e",
+      "cuda_peak_allocated_bytes": 13784926720,
+      "cuda_peak_reserved_bytes": 19656605696,
+      "epochs_completed": 8,
+      "max_rss_kib": 12275840,
+      "seconds": 386.2353131910786,
+      "source_macro_eer": 0.2059182464454976
+    },
+    "tuned43": {
+      "best_epoch": 4,
+      "budget": {
+        "epochs": 8,
+        "optimizer_updates": 344,
+        "sample_draws": 43296,
+        "skipped_updates": 0
+      },
+      "checkpoint_sha256": "a67f615f1e1e2f45bf059cc19b2962edc3df5b7085f7f82505ab96cb35361cbf",
+      "cuda_peak_allocated_bytes": 13784926720,
+      "cuda_peak_reserved_bytes": 19656605696,
+      "epochs_completed": 8,
+      "max_rss_kib": 12240532,
+      "seconds": 400.1584458881989,
+      "source_macro_eer": 0.20611374407582939
+    }
+  },
+  "views": {
+    "aigvd_pooled1880": {
+      "eer": {
+        "baseline-C10": 0.18828125,
+        "control43": 0.18515625,
+        "tuned42": 0.1875,
+        "tuned43": 0.17833333333333334
+      },
+      "failures": {
+        "baseline-C10": 0,
+        "control43": 0,
+        "tuned42": 0,
+        "tuned43": 0
+      },
+      "fake": 1280,
+      "real": 600,
+      "samples": 1880
+    },
+    "aigvd_without_Open-Sora1280": {
+      "eer": {
+        "baseline-C10": 0.21333333333333335,
+        "control43": 0.20833333333333334,
+        "tuned42": 0.21166666666666667,
+        "tuned43": 0.19666666666666666
+      },
+      "failures": {
+        "baseline-C10": 0,
+        "control43": 0,
+        "tuned42": 0,
+        "tuned43": 0
+      },
+      "fake": 680,
+      "real": 600,
+      "samples": 1280
+    },
+    "aigvd_without_five_training_labels1120": {
+      "eer": {
+        "baseline-C10": 0.21,
+        "control43": 0.2076923076923077,
+        "tuned42": 0.2076923076923077,
+        "tuned43": 0.19333333333333333
+      },
+      "failures": {
+        "baseline-C10": 0,
+        "control43": 0,
+        "tuned42": 0,
+        "tuned43": 0
+      },
+      "fake": 520,
+      "real": 600,
+      "samples": 1120
+    },
+    "dev_added_generators400": {
+      "eer": {
+        "baseline-C10": 0.18,
+        "control43": 0.18,
+        "tuned42": 0.17,
+        "tuned43": 0.18
+      },
+      "failures": {
+        "baseline-C10": 0,
+        "control43": 0,
+        "tuned42": 0,
+        "tuned43": 0
+      },
+      "fake": 300,
+      "real": 100,
+      "samples": 400
+    },
+    "dev_new500": {
+      "eer": {
+        "baseline-C10": 0.18,
+        "control43": 0.18,
+        "tuned42": 0.1725,
+        "tuned43": 0.18
+      },
+      "failures": {
+        "baseline-C10": 0,
+        "control43": 0,
+        "tuned42": 0,
+        "tuned43": 0
+      },
+      "fake": 400,
+      "real": 100,
+      "samples": 500
+    },
+    "dev_old844": {
+      "eer": {
+        "baseline-C10": 0.24881516587677724,
+        "control43": 0.24881516587677724,
+        "tuned42": 0.23933649289099526,
+        "tuned43": 0.23222748815165878
+      },
+      "failures": {
+        "baseline-C10": 0,
+        "control43": 0,
+        "tuned42": 0,
+        "tuned43": 0
+      },
+      "fake": 422,
+      "real": 422,
+      "samples": 844
+    },
+    "dev_pooled1344": {
+      "eer": {
+        "baseline-C10": 0.22506082725060828,
+        "control43": 0.23371647509578544,
+        "tuned42": 0.2164750957854406,
+        "tuned43": 0.21455938697318008
+      },
+      "failures": {
+        "baseline-C10": 0,
+        "control43": 0,
+        "tuned42": 0,
+        "tuned43": 0
+      },
+      "fake": 822,
+      "real": 522,
+      "samples": 1344
+    },
+    "dev_previous_new200": {
+      "eer": {
+        "baseline-C10": 0.18,
+        "control43": 0.18,
+        "tuned42": 0.18,
+        "tuned43": 0.18
+      },
+      "failures": {
+        "baseline-C10": 0,
+        "control43": 0,
+        "tuned42": 0,
+        "tuned43": 0
+      },
+      "fake": 100,
+      "real": 100,
+      "samples": 200
+    },
+    "vif_pooled1949": {
+      "eer": {
+        "baseline-C10": 0.25907859078590784,
+        "control43": 0.26395663956639565,
+        "tuned42": 0.2692307692307692,
+        "tuned43": 0.25961538461538464
+      },
+      "failures": {
+        "baseline-C10": 0,
+        "control43": 0,
+        "tuned42": 0,
+        "tuned43": 0
+      },
+      "fake": 1845,
+      "real": 104,
+      "samples": 1949
+    },
+    "vif_without_original_training_labels1326": {
+      "eer": {
+        "baseline-C10": 0.29214402618657936,
+        "control43": 0.29132569558101473,
+        "tuned42": 0.30360065466448444,
+        "tuned43": 0.2864157119476268
+      },
+      "failures": {
+        "baseline-C10": 0,
+        "control43": 0,
+        "tuned42": 0,
+        "tuned43": 0
+      },
+      "fake": 1222,
+      "real": 104,
+      "samples": 1326
+    }
+  },
+  "per_generator": {
+    "aigvd": {
+      "AccVideo": {
+        "eer": {
+          "baseline-C10": 0.155,
+          "control43": 0.16,
+          "tuned42": 0.15,
+          "tuned43": 0.125
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 40,
+        "real": 600,
+        "samples": 640
+      },
+      "AnimateDiff": {
+        "eer": {
+          "baseline-C10": 0.125,
+          "control43": 0.13333333333333333,
+          "tuned42": 0.15,
+          "tuned43": 0.125
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 40,
+        "real": 600,
+        "samples": 640
+      },
+      "EasyAnimate": {
+        "eer": {
+          "baseline-C10": 0.20333333333333334,
+          "control43": 0.23,
+          "tuned42": 0.225,
+          "tuned43": 0.2
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 40,
+        "real": 600,
+        "samples": 640
+      },
+      "Gen2": {
+        "eer": {
+          "baseline-C10": 0.25166666666666665,
+          "control43": 0.25,
+          "tuned42": 0.25,
+          "tuned43": 0.25
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 40,
+        "real": 600,
+        "samples": 640
+      },
+      "Gen3": {
+        "eer": {
+          "baseline-C10": 0.24833333333333332,
+          "control43": 0.24166666666666667,
+          "tuned42": 0.25,
+          "tuned43": 0.25
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 40,
+        "real": 600,
+        "samples": 640
+      },
+      "IPOC": {
+        "eer": {
+          "baseline-C10": 0.1,
+          "control43": 0.1,
+          "tuned42": 0.1,
+          "tuned43": 0.095
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 40,
+        "real": 600,
+        "samples": 640
+      },
+      "Jimeng": {
+        "eer": {
+          "baseline-C10": 0.25,
+          "control43": 0.25,
+          "tuned42": 0.25,
+          "tuned43": 0.25
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 40,
+        "real": 600,
+        "samples": 640
+      },
+      "Luma": {
+        "eer": {
+          "baseline-C10": 0.28833333333333333,
+          "control43": 0.28833333333333333,
+          "tuned42": 0.29,
+          "tuned43": 0.275
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 40,
+        "real": 600,
+        "samples": 640
+      },
+      "Open-Sora": {
+        "eer": {
+          "baseline-C10": 0.16166666666666665,
+          "control43": 0.16,
+          "tuned42": 0.15,
+          "tuned43": 0.15
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 600,
+        "real": 600,
+        "samples": 1200
+      },
+      "Opensora": {
+        "eer": {
+          "baseline-C10": 0.25,
+          "control43": 0.25,
+          "tuned42": 0.23666666666666666,
+          "tuned43": 0.23166666666666666
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 40,
+        "real": 600,
+        "samples": 640
+      },
+      "Pyramid-Flow": {
+        "eer": {
+          "baseline-C10": 0.125,
+          "control43": 0.125,
+          "tuned42": 0.125,
+          "tuned43": 0.1
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 40,
+        "real": 600,
+        "samples": 640
+      },
+      "RepVideo": {
+        "eer": {
+          "baseline-C10": 0.185,
+          "control43": 0.18166666666666667,
+          "tuned42": 0.2,
+          "tuned43": 0.19333333333333333
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 40,
+        "real": 600,
+        "samples": 640
+      },
+      "SEINE": {
+        "eer": {
+          "baseline-C10": 0.28,
+          "control43": 0.275,
+          "tuned42": 0.275,
+          "tuned43": 0.275
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 40,
+        "real": 600,
+        "samples": 640
+      },
+      "SVD": {
+        "eer": {
+          "baseline-C10": 0.175,
+          "control43": 0.175,
+          "tuned42": 0.175,
+          "tuned43": 0.18166666666666667
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 40,
+        "real": 600,
+        "samples": 640
+      },
+      "Sora": {
+        "eer": {
+          "baseline-C10": 0.24166666666666667,
+          "control43": 0.25333333333333335,
+          "tuned42": 0.26166666666666666,
+          "tuned43": 0.25
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 40,
+        "real": 600,
+        "samples": 640
+      },
+      "VideoCrafter": {
+        "eer": {
+          "baseline-C10": 0.15,
+          "control43": 0.125,
+          "tuned42": 0.125,
+          "tuned43": 0.11666666666666667
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 40,
+        "real": 600,
+        "samples": 640
+      },
+      "causvid_24fps": {
+        "eer": {
+          "baseline-C10": 0.105,
+          "control43": 0.1,
+          "tuned42": 0.125,
+          "tuned43": 0.10833333333333334
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 40,
+        "real": 600,
+        "samples": 640
+      },
+      "vidu": {
+        "eer": {
+          "baseline-C10": 0.255,
+          "control43": 0.25,
+          "tuned42": 0.225,
+          "tuned43": 0.25
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 40,
+        "real": 600,
+        "samples": 640
+      }
+    },
+    "vif": {
+      "CogVideoX1.5-5B-T": {
+        "eer": {
+          "baseline-C10": 0.15384615384615385,
+          "control43": 0.15384615384615385,
+          "tuned42": 0.16346153846153846,
+          "tuned43": 0.14423076923076922
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 104,
+        "real": 104,
+        "samples": 208
+      },
+      "HunyuanVideo": {
+        "eer": {
+          "baseline-C10": 0.17475728155339806,
+          "control43": 0.18269230769230768,
+          "tuned42": 0.17307692307692307,
+          "tuned43": 0.18446601941747573
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 103,
+        "real": 104,
+        "samples": 207
+      },
+      "HunyuanVideo-I2V": {
+        "eer": {
+          "baseline-C10": 0.3557692307692308,
+          "control43": 0.34615384615384615,
+          "tuned42": 0.34615384615384615,
+          "tuned43": 0.3269230769230769
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 104,
+        "real": 104,
+        "samples": 208
+      },
+      "LTX-Video-13B-I": {
+        "eer": {
+          "baseline-C10": 0.375,
+          "control43": 0.36538461538461536,
+          "tuned42": 0.375,
+          "tuned43": 0.35294117647058826
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 102,
+        "real": 104,
+        "samples": 206
+      },
+      "LTX-Video-13B-T": {
+        "eer": {
+          "baseline-C10": 0.22,
+          "control43": 0.22115384615384615,
+          "tuned42": 0.20192307692307693,
+          "tuned43": 0.21
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 100,
+        "real": 104,
+        "samples": 204
+      },
+      "SkyReels-V2": {
+        "eer": {
+          "baseline-C10": 0.21153846153846154,
+          "control43": 0.19230769230769232,
+          "tuned42": 0.20192307692307693,
+          "tuned43": 0.17307692307692307
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 104,
+        "real": 104,
+        "samples": 208
+      },
+      "SkyReels-V2-I2V-14B-540P": {
+        "eer": {
+          "baseline-C10": 0.36538461538461536,
+          "control43": 0.36538461538461536,
+          "tuned42": 0.375,
+          "tuned43": 0.34615384615384615
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 103,
+        "real": 104,
+        "samples": 207
+      },
+      "Wan2.1-T2V-1.3B": {
+        "eer": {
+          "baseline-C10": 0.11538461538461539,
+          "control43": 0.11538461538461539,
+          "tuned42": 0.125,
+          "tuned43": 0.09615384615384616
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 104,
+        "real": 104,
+        "samples": 208
+      },
+      "Wan2.1-VACE-1.3B-T": {
+        "eer": {
+          "baseline-C10": 0.34615384615384615,
+          "control43": 0.34615384615384615,
+          "tuned42": 0.36538461538461536,
+          "tuned43": 0.3269230769230769
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 104,
+        "real": 104,
+        "samples": 208
+      },
+      "Wan2.2-I2V-14B": {
+        "eer": {
+          "baseline-C10": 0.375,
+          "control43": 0.38461538461538464,
+          "tuned42": 0.375,
+          "tuned43": 0.375
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 104,
+        "real": 104,
+        "samples": 208
+      },
+      "Wan2.2-T2V-14B": {
+        "eer": {
+          "baseline-C10": 0.2403846153846154,
+          "control43": 0.2403846153846154,
+          "tuned42": 0.21153846153846154,
+          "tuned43": 0.22115384615384615
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 104,
+        "real": 104,
+        "samples": 208
+      },
+      "Wan2.2-TI2V-5B-I": {
+        "eer": {
+          "baseline-C10": 0.34615384615384615,
+          "control43": 0.34615384615384615,
+          "tuned42": 0.34615384615384615,
+          "tuned43": 0.33653846153846156
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 104,
+        "real": 104,
+        "samples": 208
+      },
+      "Wan2.2-TI2V-5B-T": {
+        "eer": {
+          "baseline-C10": 0.14423076923076922,
+          "control43": 0.14423076923076922,
+          "tuned42": 0.1346153846153846,
+          "tuned43": 0.1346153846153846
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 104,
+        "real": 104,
+        "samples": 208
+      },
+      "gen4-turbo": {
+        "eer": {
+          "baseline-C10": 0.36538461538461536,
+          "control43": 0.359375,
+          "tuned42": 0.375,
+          "tuned43": 0.359375
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 64,
+        "real": 104,
+        "samples": 168
+      },
+      "hailuo": {
+        "eer": {
+          "baseline-C10": 0.25961538461538464,
+          "control43": 0.25961538461538464,
+          "tuned42": 0.2839506172839506,
+          "tuned43": 0.25961538461538464
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 81,
+        "real": 104,
+        "samples": 185
+      },
+      "kling-v1": {
+        "eer": {
+          "baseline-C10": 0.2125,
+          "control43": 0.2125,
+          "tuned42": 0.21153846153846154,
+          "tuned43": 0.2
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 80,
+        "real": 104,
+        "samples": 184
+      },
+      "pika-v2": {
+        "eer": {
+          "baseline-C10": 0.1111111111111111,
+          "control43": 0.10576923076923077,
+          "tuned42": 0.1,
+          "tuned43": 0.07777777777777778
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 90,
+        "real": 104,
+        "samples": 194
+      },
+      "pixverse-v4-5": {
+        "eer": {
+          "baseline-C10": 0.2391304347826087,
+          "control43": 0.2403846153846154,
+          "tuned42": 0.2608695652173913,
+          "tuned43": 0.2608695652173913
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 92,
+        "real": 104,
+        "samples": 196
+      },
+      "sora-2": {
+        "eer": {
+          "baseline-C10": 0.3076923076923077,
+          "control43": 0.3269230769230769,
+          "tuned42": 0.33653846153846156,
+          "tuned43": 0.2980769230769231
+        },
+        "failures": {
+          "baseline-C10": 0,
+          "control43": 0,
+          "tuned42": 0,
+          "tuned43": 0
+        },
+        "fake": 94,
+        "real": 104,
+        "samples": 198
+      }
+    }
+  },
+  "resources": {
+    "preparation": {
+      "cache_bytes": 28451327667,
+      "cuda_peak_allocated_bytes": 1886189568,
+      "cuda_peak_reserved_bytes": 2753560576,
+      "decode_failures": [],
+      "dtype": "float32",
+      "holdout_consumed": false,
+      "identity": {
+        "backbone_sha256": "81907988948ab62e4ab20adc33f7eff6bee14f1067cf47e1e712525e0010d7f7",
+        "dtype": "float32",
+        "kind": "clip_prefix_tokens_v1",
+        "prefix_implementation_sha256": "68845ea0ea19d2943fafd8e63715a6b619bb45647464e1b68e868c108a58754f",
+        "prefix_layers": 23,
+        "preprocessing": {
+          "input_size": [
+            3,
+            224,
+            224
+          ],
+          "mean": [
+            0.48145466,
+            0.4578275,
+            0.40821073
+          ],
+          "resize_mode": "native_center_crop",
+          "std": [
+            0.26862954,
+            0.26130258,
+            0.27577711
+          ]
+        },
+        "video": {
+          "height": 224,
+          "max_duration_seconds": 600.0,
+          "max_output_bytes": 536870912,
+          "max_source_frames": 100000,
+          "max_source_pixels": 40000000,
+          "n_frames": 4,
+          "resize_mode": "native_center_crop",
+          "stream_index": null,
+          "timeout_seconds": 60.0,
+          "width": 224
+        }
+      },
+      "max_rss_kib": 4150764,
+      "samples": 6756,
+      "seconds": 428.6524643469602,
+      "shape": [
+        4,
+        257,
+        1024
+      ],
+      "source": {
+        "code_sha256": "23c17c3a6e7d065b91a2a4a6fe7e0ebce13ba6d910813fd9560d42a93e2134aa",
+        "commit": "b2ef85761930fc5aa84fa89785078ae0a36a423d",
+        "dirty": false
+      },
+      "unique_new_tensors": 6625
+    },
+    "profile": {
+      "accumulation_steps": 1,
+      "adapter_sha256": "e98644076e577a5089a9c459b21e4627d1e7eedc7199dafb76b369916b7d238e",
+      "allocated_memory_budget_bytes": 20000000000,
+      "common_sha256": "956564064d77ed2ccfcca2b97fd4c2f80c13c1e59cfdbbe4be8c958efa0a2b58",
+      "effective_batch_size": 128,
+      "holdout_consumed": false,
+      "precision": "FP32 frozen-prefix tokens / BF16 suffix training / TF32 disabled",
+      "profiles": [
+        {
+          "batch_size": 32,
+          "cuda_peak_allocated_bytes": 4474577408,
+          "cuda_peak_reserved_bytes": 6155141120,
+          "last_loss": 0.00029331445693969727,
+          "status": "ok",
+          "step_seconds": [
+            0.04481261316686869,
+            0.04468747694045305,
+            0.04438844323158264
+          ],
+          "videos_per_second": 717.0143522074493
+        },
+        {
+          "batch_size": 64,
+          "cuda_peak_allocated_bytes": 7577328128,
+          "cuda_peak_reserved_bytes": 10477371392,
+          "last_loss": 0.007016283925622702,
+          "status": "ok",
+          "step_seconds": [
+            0.08602745365351439,
+            0.08605096861720085,
+            0.08596090879291296
+          ],
+          "videos_per_second": 744.0726156302738
+        },
+        {
+          "batch_size": 128,
+          "cuda_peak_allocated_bytes": 13784926720,
+          "cuda_peak_reserved_bytes": 19654508544,
+          "last_loss": 0.07439756393432617,
+          "status": "ok",
+          "step_seconds": [
+            0.16840557008981705,
+            0.1680570226162672,
+            0.16814277414232492
+          ],
+          "videos_per_second": 760.9907171585022
+        }
+      ],
+      "raw_cached_equivalence": {
+        "atol": 1e-05,
+        "max_absolute_logit_difference": 0.0,
+        "rtol": 0.0001,
+        "sample_ids": [
+          "aigvdb-cross-source:Real:--cowpkViOk_227_0to124",
+          "aigvdb-cross-source:Real:-5PNHZFsUrU_7_0to189",
+          "aigvdb-cross-source:AccVideo:--cowpkViOk_227_0to124",
+          "aigvdb-cross-source:AccVideo:-LDnKfqfINw_10_68to177",
+          "vif:source_videos/Panda-70M/real/CogVideoX1.5-5B-I2V/-EgW0xV1fsE-2.mp4",
+          "vif:source_videos/Panda-70M/real/CogVideoX1.5-5B-I2V/-WICXywEp-o-2.mp4",
+          "vif:source_videos/Panda-70M/fake/CogVideoX1.5-5B-I2V/-EgW0xV1fsE-2.mp4",
+          "vif:source_videos/Panda-70M/fake/CogVideoX1.5-5B-I2V/-WICXywEp-o-2.mp4"
+        ],
+        "samples": 8
+      },
+      "selected_batch_size": 128,
+      "source": {
+        "code_sha256": "23c17c3a6e7d065b91a2a4a6fe7e0ebce13ba6d910813fd9560d42a93e2134aa",
+        "commit": "b2ef85761930fc5aa84fa89785078ae0a36a423d",
+        "dirty": false
+      },
+      "tokens_adapter_sha256": "e3bae346e12b30755bbd07be8c3bb15f87682ac9974c0964f2b1a49825dba086",
+      "train_only_samples": 128,
+      "training": {
+        "accumulation_steps": 1,
+        "amp": true,
+        "amp_dtype": "bfloat16",
+        "backbone_lr_scale": 0.1,
+        "deterministic": true,
+        "device": "cuda",
+        "frequency_mask_width": 0,
+        "learning_rate": 0.0001,
+        "max_epochs": 20,
+        "max_grad_norm": 1.0,
+        "max_seconds": null,
+        "min_delta": 0.0,
+        "patience": 5,
+        "seed": 42,
+        "time_mask_width": 0,
+        "weight_decay": 0.0001
+      }
+    },
+    "training_stage_seconds": 1702.1034262198955,
+    "diagnostic_seconds": 428.77532249037176,
+    "diagnostic_views": {
+      "aigvd": {
+        "samples": 1880,
+        "seconds": 207.36004015989602,
+        "preparation_seconds": 136.5449355924502,
+        "cuda_peak_allocated_bytes": 11475057152,
+        "cuda_peak_reserved_bytes": 13650362368
+      },
+      "vif": {
+        "samples": 1949,
+        "seconds": 218.18122695293278,
+        "preparation_seconds": 146.4853692818433,
+        "cuda_peak_allocated_bytes": 11475057152,
+        "cuda_peak_reserved_bytes": 13650362368
+      }
+    },
+    "standard_smoke": {
+      "checkpoint": {
+        "best_epoch": 4,
+        "budget": {
+          "epochs": 8,
+          "optimizer_updates": 344,
+          "sample_draws": 43296,
+          "skipped_updates": 0
+        },
+        "path": "/var/tmp/deepfake-video-clip-adapt-20261016/tuned43/training/best.pt",
+        "sha256": "a67f615f1e1e2f45bf059cc19b2962edc3df5b7085f7f82505ab96cb35361cbf"
+      },
+      "config_sha256": "c35b821503c5ff0e307c6f12a8dd1896962fe2692fae1bf5f929991124a0b949",
+      "failures": 0,
+      "holdout_consumed": false,
+      "maximum_absolute_logit_difference": 4.649162292480469e-06,
+      "sample_ids": [
+        "aigvdb-cross-source:AccVideo:-VqaY3OiY-Y_14_1111to1272",
+        "aigvdb-cross-source:Real:-VqaY3OiY-Y_14_1111to1272",
+        "vif:source_videos/Panda-70M/fake/CogVideoX1.5-5B-I2V/-qZM-qxiMQk-0.mp4",
+        "vif:source_videos/Panda-70M/real/CogVideoX1.5-5B-I2V/-qZM-qxiMQk-0.mp4"
+      ],
+      "samples": 4,
+      "scope": "4 real local videos; full self-contained checkpoint loaded by public infer; compared with selected cached-prefix FP32 dev scores; not full capacity acceptance"
+    },
+    "temporary_training_cache": {
+      "removed_after_completion": true,
+      "bytes_reclaimed": 28451327667,
+      "rebuild": "C11 fixed adapters; C6/C9/C10 source assets"
+    }
+  }
+}

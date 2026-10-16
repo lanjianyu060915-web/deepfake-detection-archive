@@ -41,6 +41,11 @@ optimizer/RNG 恢复；中断后在新输出目录重启。
 504 原生中心裁剪与归一化评分。`batch_size` 只控制独立帧主干批量，不改变帧数或融合。
 准备工具为 `tools/prepare_video_fusion.py`；WaveRep 正式赛用许可未确认，仅供研究。
 
+CLIP最后block适配的完整权重使用 `clip_adapt_video_v1`，推理设置
+`model_kind="video_frames"`、4帧224 `native_center_crop`，不需要额外encoder。
+实际配置及固定预算训练入口见[适配实验](../docs/experiments/video-clip-adapt-20261016/README.md)；
+本轮训练通过任务适配器调用现有trainer，公共train CLI暂不接受该架构。
+
 AudioSet AST部分主干微调的实值配置见[环境音AST实验](../docs/experiments/audio-ast-20261011/README.md)。
 它复用波形推理模板，checkpoint自包含前端配置和全部权重；预训练来源只在初始化时加载。
 新4秒 AST 实验按[开发指南](../docs/development.md#训练)显式设置

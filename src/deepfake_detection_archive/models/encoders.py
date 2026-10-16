@@ -103,7 +103,7 @@ class FrozenVisionEncoder(_FrozenEncoder):
             if not isinstance(model, UFDVideoClassifier):
                 raise ValueError("ufd_clip_vit_l14 requires a ufd_video_v1 checkpoint")
             self.backbone: nn.Module = model.backbone
-            self.feature_dim = model.head.in_features
+            self.feature_dim = int(model.backbone.config.projection_dim)
             self.preprocessing: dict[str, Any] = dict(model.preprocessing)
             self._freeze()
             return
