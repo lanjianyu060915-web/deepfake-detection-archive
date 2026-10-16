@@ -1,0 +1,744 @@
+{
+  "source_commit": "ed18da6",
+  "checkpoint_sha256": "068a079949e0e5764c649986ebe7ae6e2eaea56a9329101da380b9cc77130f31",
+  "manifest_path": "/var/tmp/lanjianyu-issue51-20261014/aigvdbench/controlled-1p25s/video_h264_crf23_448x256_16fps_1p25s/manifest.jsonl",
+  "manifest_sha256": "79a1f9cb9fa7ffcffd985b8f5ca818bffdee3081d83e02b3e68caa6e613fd072",
+  "scores_path": "/var/tmp/deepfake-video-fusion-20261016/controlled/scores.jsonl",
+  "scores_sha256": "847fb0cdc8ade80fb701f8d4dfde7afd2969649117923f3259b3825b0987bfdc",
+  "baseline_clip_scores": "/var/tmp/deepfake-video-independent-20261014/runs/controlled/scores.jsonl",
+  "baseline_clip_scores_sha256": "aceda4c5ac620993740e4db4d60606bae95af1819f708af5170d550d6ab54004",
+  "research_wave_scores": "/mnt/deepfake-archive/issue59-generator-forensics/scores/waverep-g1-pipeline/aigvdbench-controlled/scores.jsonl",
+  "research_wave_scores_sha256": "d9a6a5955214cfaf55584032168a8321ddf165a0d774c37be68b9aff92553719",
+  "calibration": {
+    "mean": [
+      0.6499799112061048,
+      -5.7335910216048065
+    ],
+    "std": [
+      3.2967671720293046,
+      2.5814849859556146
+    ],
+    "coef": [
+      1.3668461443051254,
+      0.5686207697389872
+    ],
+    "intercept": 0.04395778566979127
+  },
+  "standard_fusion": {
+    "pooled": {
+      "sample_count": 1880,
+      "success_count": 1880,
+      "failure_count": 0,
+      "coverage": 1.0,
+      "fullset_eer": 0.2640625,
+      "fullset_reason": null
+    },
+    "without_Open-Sora": {
+      "sample_count": 1280,
+      "success_count": 1280,
+      "failure_count": 0,
+      "coverage": 1.0,
+      "fullset_eer": 0.21323529411764705,
+      "fullset_reason": null
+    },
+    "without_Pyramid-Flow": {
+      "sample_count": 1840,
+      "success_count": 1840,
+      "failure_count": 0,
+      "coverage": 1.0,
+      "fullset_eer": 0.27,
+      "fullset_reason": null
+    },
+    "paired_Open-Sora_real": {
+      "sample_count": 1200,
+      "success_count": 1200,
+      "failure_count": 0,
+      "coverage": 1.0,
+      "fullset_eer": 0.31333333333333335,
+      "fullset_reason": null
+    },
+    "per_generator_against_all_600_real": {
+      "AccVideo": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.19,
+        "fullset_reason": null
+      },
+      "AnimateDiff": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.18166666666666667,
+        "fullset_reason": null
+      },
+      "EasyAnimate": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.22833333333333333,
+        "fullset_reason": null
+      },
+      "Gen2": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.19333333333333333,
+        "fullset_reason": null
+      },
+      "Gen3": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.25833333333333336,
+        "fullset_reason": null
+      },
+      "IPOC": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.16,
+        "fullset_reason": null
+      },
+      "Jimeng": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.225,
+        "fullset_reason": null
+      },
+      "Luma": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.255,
+        "fullset_reason": null
+      },
+      "Open-Sora": {
+        "sample_count": 1200,
+        "success_count": 1200,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.31333333333333335,
+        "fullset_reason": null
+      },
+      "Opensora": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.15,
+        "fullset_reason": null
+      },
+      "Pyramid-Flow": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.125,
+        "fullset_reason": null
+      },
+      "RepVideo": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.25,
+        "fullset_reason": null
+      },
+      "SEINE": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.4,
+        "fullset_reason": null
+      },
+      "SVD": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.24166666666666667,
+        "fullset_reason": null
+      },
+      "Sora": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.225,
+        "fullset_reason": null
+      },
+      "VideoCrafter": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.125,
+        "fullset_reason": null
+      },
+      "causvid_24fps": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.07833333333333334,
+        "fullset_reason": null
+      },
+      "vidu": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.275,
+        "fullset_reason": null
+      }
+    }
+  },
+  "baseline_standard_clip43": {
+    "pooled": {
+      "sample_count": 1880,
+      "success_count": 1880,
+      "failure_count": 0,
+      "coverage": 1.0,
+      "fullset_eer": 0.31333333333333335,
+      "fullset_reason": null
+    },
+    "without_Open-Sora": {
+      "sample_count": 1280,
+      "success_count": 1280,
+      "failure_count": 0,
+      "coverage": 1.0,
+      "fullset_eer": 0.2985294117647059,
+      "fullset_reason": null
+    },
+    "without_Pyramid-Flow": {
+      "sample_count": 1840,
+      "success_count": 1840,
+      "failure_count": 0,
+      "coverage": 1.0,
+      "fullset_eer": 0.3185483870967742,
+      "fullset_reason": null
+    },
+    "paired_Open-Sora_real": {
+      "sample_count": 1200,
+      "success_count": 1200,
+      "failure_count": 0,
+      "coverage": 1.0,
+      "fullset_eer": 0.32666666666666666,
+      "fullset_reason": null
+    },
+    "per_generator_against_all_600_real": {
+      "AccVideo": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.25666666666666665,
+        "fullset_reason": null
+      },
+      "AnimateDiff": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.225,
+        "fullset_reason": null
+      },
+      "EasyAnimate": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.325,
+        "fullset_reason": null
+      },
+      "Gen2": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.325,
+        "fullset_reason": null
+      },
+      "Gen3": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.35,
+        "fullset_reason": null
+      },
+      "IPOC": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.20666666666666667,
+        "fullset_reason": null
+      },
+      "Jimeng": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.3,
+        "fullset_reason": null
+      },
+      "Luma": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.425,
+        "fullset_reason": null
+      },
+      "Open-Sora": {
+        "sample_count": 1200,
+        "success_count": 1200,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.32666666666666666,
+        "fullset_reason": null
+      },
+      "Opensora": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.33666666666666667,
+        "fullset_reason": null
+      },
+      "Pyramid-Flow": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.25,
+        "fullset_reason": null
+      },
+      "RepVideo": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.325,
+        "fullset_reason": null
+      },
+      "SEINE": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.425,
+        "fullset_reason": null
+      },
+      "SVD": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.35,
+        "fullset_reason": null
+      },
+      "Sora": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.31333333333333335,
+        "fullset_reason": null
+      },
+      "VideoCrafter": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.22166666666666668,
+        "fullset_reason": null
+      },
+      "causvid_24fps": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.2683333333333333,
+        "fullset_reason": null
+      },
+      "vidu": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.35,
+        "fullset_reason": null
+      }
+    }
+  },
+  "research_fusion_reconstructed": {
+    "pooled": {
+      "sample_count": 1880,
+      "success_count": 1880,
+      "failure_count": 0,
+      "coverage": 1.0,
+      "fullset_eer": 0.26484375,
+      "fullset_reason": null
+    },
+    "without_Open-Sora": {
+      "sample_count": 1280,
+      "success_count": 1280,
+      "failure_count": 0,
+      "coverage": 1.0,
+      "fullset_eer": 0.21323529411764705,
+      "fullset_reason": null
+    },
+    "without_Pyramid-Flow": {
+      "sample_count": 1840,
+      "success_count": 1840,
+      "failure_count": 0,
+      "coverage": 1.0,
+      "fullset_eer": 0.2701612903225806,
+      "fullset_reason": null
+    },
+    "paired_Open-Sora_real": {
+      "sample_count": 1200,
+      "success_count": 1200,
+      "failure_count": 0,
+      "coverage": 1.0,
+      "fullset_eer": 0.31333333333333335,
+      "fullset_reason": null
+    },
+    "per_generator_against_all_600_real": {
+      "AccVideo": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.19,
+        "fullset_reason": null
+      },
+      "AnimateDiff": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.18166666666666667,
+        "fullset_reason": null
+      },
+      "EasyAnimate": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.225,
+        "fullset_reason": null
+      },
+      "Gen2": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.19333333333333333,
+        "fullset_reason": null
+      },
+      "Gen3": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.25833333333333336,
+        "fullset_reason": null
+      },
+      "IPOC": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.16,
+        "fullset_reason": null
+      },
+      "Jimeng": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.225,
+        "fullset_reason": null
+      },
+      "Luma": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.255,
+        "fullset_reason": null
+      },
+      "Open-Sora": {
+        "sample_count": 1200,
+        "success_count": 1200,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.31333333333333335,
+        "fullset_reason": null
+      },
+      "Opensora": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.15,
+        "fullset_reason": null
+      },
+      "Pyramid-Flow": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.12333333333333334,
+        "fullset_reason": null
+      },
+      "RepVideo": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.25,
+        "fullset_reason": null
+      },
+      "SEINE": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.40166666666666667,
+        "fullset_reason": null
+      },
+      "SVD": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.24166666666666667,
+        "fullset_reason": null
+      },
+      "Sora": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.225,
+        "fullset_reason": null
+      },
+      "VideoCrafter": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.125,
+        "fullset_reason": null
+      },
+      "causvid_24fps": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.07833333333333334,
+        "fullset_reason": null
+      },
+      "vidu": {
+        "sample_count": 640,
+        "success_count": 640,
+        "failure_count": 0,
+        "coverage": 1.0,
+        "fullset_eer": 0.275,
+        "fullset_reason": null
+      }
+    }
+  },
+  "research_difference": {
+    "max_abs_score": 0.04936577413618437,
+    "mean_abs_score": 0.003607645514500692,
+    "interpretation": "Top-three WaveRep inputs match exactly; recomputing same model on them agrees with current scores. Historical CLIP logits differ about 0.08-0.114; enabling cuDNN TF32 alone does not reproduce old values. Execution differences not fully isolated; no refit and no extra algorithm-gain claim for 0.078125 percentage points."
+  },
+  "resources": {
+    "exit_code": 0,
+    "wall_seconds": 803.5441488754004,
+    "cuda_peak_allocated_bytes": 1801065472,
+    "cuda_peak_reserved_bytes": 1935671296,
+    "max_rss_kib": 3998792,
+    "precision": "float32; matmul/cuDNN TF32 disabled"
+  },
+  "profile": {
+    "exit_code": 0,
+    "wall_seconds": 16.500595785677433,
+    "cuda_peak_allocated_bytes": 1801065472,
+    "cuda_peak_reserved_bytes": 1935671296,
+    "max_rss_kib": 3994336,
+    "precision": "float32; matmul/cuDNN TF32 disabled"
+  },
+  "installed_wheel_entry": {
+    "resources": {
+      "exit_code": 0,
+      "wall_seconds": 18.240038079209626,
+      "cuda_peak_allocated_bytes": 1940189184,
+      "cuda_peak_reserved_bytes": 2195718144,
+      "max_rss_kib": 4677128,
+      "imported_package": "/var/tmp/deepfake-video-fusion-20261016/installed/deepfake_detection_archive/__init__.py",
+      "model_package": "/var/tmp/deepfake-video-fusion-20261016/搬移 model package",
+      "cwd": "/var/tmp/deepfake-video-fusion-20261016/中文 cwd",
+      "isolated_python": true,
+      "precision": "float32; matmul/cuDNN TF32 disabled"
+    },
+    "report": {
+      "by_modality": {
+        "audio": {
+          "coverage": 1.0,
+          "failed": 0,
+          "not_run": 0,
+          "registered": 2,
+          "success": 2
+        },
+        "video": {
+          "coverage": 1.0,
+          "failed": 0,
+          "not_run": 0,
+          "registered": 2,
+          "success": 2
+        }
+      },
+      "device": "cuda",
+      "discovered": 4,
+      "discovery_counts": {
+        "duplicate": 0,
+        "error": 0,
+        "excluded": 0,
+        "media": 4
+      },
+      "failures": 0,
+      "global_error": null,
+      "official": false,
+      "output": "/var/tmp/deepfake-video-fusion-20261016/installed-wheel-predict",
+      "samples": 4,
+      "score_direction": "higher_is_fake",
+      "score_type": "raw_logit"
+    }
+  },
+  "runner_timing": {
+    "T10k_raw_seconds": 4210.60221062343,
+    "T10k_safe_seconds": 5263.252763279288,
+    "current_session_elapsed_seconds_before_report_write": 788.6444649165496,
+    "current_session_instrumented_rows": 1880,
+    "current_session_new_rows": 1880,
+    "current_session_report_build_seconds": 0.06163870170712471,
+    "current_session_sample_call_seconds": 787.1797206774354,
+    "current_session_scope": "runner entry through report preparation; excludes caller preflight/model startup, final report write and lock release; stage timings cover only newly processed rows, including sample failures; uninstrumented work is unattributed",
+    "current_session_setup_seconds": 0.0714362757280469,
+    "current_session_stage_seconds": {
+      "decode_and_preprocess": 656.7363036153838,
+      "input_validation": 0.9771837443113327,
+      "model_and_feature_scoring": 129.08934848755598,
+      "unattributed_sample_call": 0.3768848301842809
+    },
+    "current_session_write_seconds": 1.232887178659439,
+    "preflight_seconds": 0.5040428312495351,
+    "preflight_seconds_per_sample": 0.0002681078889625187,
+    "projection_scope": "model startup, media/config preflight per sample, sample calls, and row writes",
+    "representative": false,
+    "representativeness_reason": "duration_content_distribution_not_verified",
+    "sample_call_seconds": 787.1797206774354,
+    "samples_per_second": 2.3882729072112014,
+    "stage_clock": "host wall clock, no added CUDA synchronization; built-in successful scoring includes blocking CPU feature/score copies, transfers and pooling, not kernel-only time; failed CUDA calls may leave asynchronous work pending",
+    "startup_seconds": 14.237047392874956,
+    "write_estimate_available": true
+  },
+  "protocol": {
+    "split": "seen_dev",
+    "holdout_consumed": false,
+    "refit": false,
+    "old_Panda_mother_media_overlap": "unknown",
+    "WaveRep_training_generator_Pyramid-Flow_present": true,
+    "release_default_changed": false,
+    "competition_use": "unconfirmed; research_only",
+    "data_metadata_revision": "bf48acaa4920990af3dd2a511ea88e63354df305"
+  },
+  "path_diagnostic": {
+    "selection": "three largest absolute fused-score differences; diagnostic only, no fitting",
+    "samples": [
+      {
+        "sample_id": "aigvdb:RepVideo:RLnAOn-rxTk_6_17to159",
+        "cudnn_tf32_enabled_clip": 6.4683732986450195,
+        "cudnn_tf32_enabled_wave": -5.667934417724609,
+        "cudnn_tf32_enabled_fusion": 2.4707374572753906,
+        "standard_fusion": 2.4707374572753906,
+        "saved_fusion": 2.4707374572753906,
+        "standard_clip": 6.4683732986450195,
+        "saved_standard_clip": 6.582303524017334,
+        "standard_wave": -5.667934417724609,
+        "saved_research_wave": -5.6582629680633545,
+        "same_model_on_research_frames": -5.667968273162842,
+        "research_indices": [
+          0,
+          6,
+          13,
+          19
+        ],
+        "research_inputs_equal_standard": true,
+        "input_max_abs": 0.0,
+        "different_input_values": 0
+      },
+      {
+        "sample_id": "aigvdb:RepVideo:_cwD50F_RWw_51_60to331",
+        "cudnn_tf32_enabled_clip": -0.08398638665676117,
+        "cudnn_tf32_enabled_wave": -6.211082458496094,
+        "cudnn_tf32_enabled_fusion": -0.365522563457489,
+        "standard_fusion": -0.365522563457489,
+        "saved_fusion": -0.365522563457489,
+        "standard_clip": -0.08398638665676117,
+        "saved_standard_clip": -0.17490866780281067,
+        "standard_wave": -6.211082458496094,
+        "saved_research_wave": -6.209118604660034,
+        "same_model_on_research_frames": -6.211096286773682,
+        "research_indices": [
+          0,
+          6,
+          13,
+          19
+        ],
+        "research_inputs_equal_standard": true,
+        "input_max_abs": 0.0,
+        "different_input_values": 0
+      },
+      {
+        "sample_id": "aigvdb:real:JmDgJbVX7xc_11_0to466",
+        "cudnn_tf32_enabled_clip": -3.0560269355773926,
+        "cudnn_tf32_enabled_wave": -7.186958312988281,
+        "cudnn_tf32_enabled_fusion": -1.812691569328308,
+        "standard_fusion": -1.812691569328308,
+        "saved_fusion": -1.812691569328308,
+        "standard_clip": -3.0560269355773926,
+        "saved_standard_clip": -2.9762983322143555,
+        "standard_wave": -7.186958312988281,
+        "saved_research_wave": -7.183865666389465,
+        "same_model_on_research_frames": -7.186962127685547,
+        "research_indices": [
+          0,
+          6,
+          13,
+          19
+        ],
+        "research_inputs_equal_standard": true,
+        "input_max_abs": 0.0,
+        "different_input_values": 0
+      }
+    ]
+  }
+}
