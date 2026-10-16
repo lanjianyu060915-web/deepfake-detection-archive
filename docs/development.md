@@ -16,9 +16,11 @@ uv run --no-sync python -m deepfake_detection_archive --help
 
 仅推理使用`uv sync --locked --no-dev --extra cpu`，不安装上述三个组。
 CPU调试配置将`device`设为`cpu`、`amp`设为`false`。NVIDIA GPU使用独立目录，
-将`--extra cpu`换成`--extra cu126`或`--extra cu132`，先确认宿主驱动可运行该构建。
-三种后端互斥，不使用`--all-extras`。当前锁定Torch2.14.1、torchvision0.29.1，
-标准wheel元数据同时固定`+cpu`/`+cu126`/`+cu132`构建标签；三个后端共用CPU torchaudio2.11.0。
+将`--extra cpu`换成`--extra cu126`，先确认宿主驱动可运行该构建。
+CPU/cu126后端互斥，不使用`--all-extras`。当前锁定Torch2.14.1、torchvision0.29.1，
+标准wheel元数据固定`+cpu`或`+cu126`构建标签；torchaudio2.11.0使用同后端构建。
+`devctl`默认使用共享环境`/opt/venvs/deepfake-cu126`，CPU使用独立`.venv-cpu`；
+可通过`UV_PROJECT_ENVIRONMENT`显式选择环境。旧cu132仅保留为历史回退，不再是可选运行后端。
 默认AST前端的NumPy2.5.3、Transformers5.19.0同时固定在安装元数据中，
 避免普通pip安装解析到与发布权重契约不符的补丁版本。
 其[stable ABI支持Torch2.11及以后](https://docs.pytorch.org/audio/stable/installation.html)，
@@ -42,8 +44,8 @@ python -m deepfake_detection_archive --help
 ```
 
 cu126使用官方`https://download.pytorch.org/whl/cu126`安装`torch==2.14.1+cu126`
-和`torchvision==0.29.1+cu126`；torchaudio仍单独从CPU索引安装，最后安装`wheel[cu126]`。
-cu132同理，替换torch/vision的构建标签、索引和项目extra。pip不读取`tool.uv.sources`，
+、`torchvision==0.29.1+cu126`和`torchaudio==2.11.0+cu126`，
+最后安装`wheel[cu126]`。pip不读取`tool.uv.sources`，
 extra的精确构建标签用于拒绝错误组合，下载索引仍须显式提供；
 不靠`--extra-index-url`选择优先级。数据导入、绘图及开发工具不属于wheel运行依赖。
 
@@ -60,14 +62,16 @@ extra的精确构建标签用于拒绝错误组合，下载索引仍须显式提
 | --- | ---: | ---: | ---: |
 | 锁定最小CPU + 非editable wheel | 42 | 6/0 | 0 |
 | 上述pip命令 + CPU wheel | 43（含pip） | 6/0 | 0 |
-| 锁定cu126 + 非editable wheel | 61 | 6/0 | 0.00001240 |
+| 历史cu126（CPU torchaudio） + 非editable wheel | 61 | 6/0 | 0.00001240 |
 
 源码已暂时移开，安装代码和模型只读，从中文空格CWD运行并使用空HF缓存。
 10份实际解码/前端/视频输入张量完全一致；CPU重复运行分数一致。
 cu126实机为RTX4060 Laptop 8188MiB、驱动617.42，
 PyTorch峰值allocated402.92MiB、reserved486MiB；torchvision CUDA算子和CPU Kaldi fbank均运行通过。
 这是相同权重的小批推理兼容结果，训练容量、批量自适应和其他平台仍需分别验证；
-已发布cu132整包的既有服务器结果见[发布说明](release.md)。
+该次安装使用CPU torchaudio，不能作为GPU torchaudio已验证的证据。
+当前依赖已迁移到完整cu126三件套，新的GPU torchaudio运行证据单独记录；
+历史cu132整包的既有服务器结果见[发布说明](release.md)。
 
 ### 模型与前端
 

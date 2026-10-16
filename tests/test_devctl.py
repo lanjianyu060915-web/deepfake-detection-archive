@@ -94,7 +94,7 @@ def test_devctl_sync_uses_explicit_environment_without_installing_project(
         "--python",
         "3.12",
         "--extra",
-        "cu132",
+        "cu126",
         "--group",
         "dev",
         "--group",
@@ -184,10 +184,10 @@ def test_devctl_preserves_caller_toolchain_environment(
     }
 
 
-@pytest.mark.parametrize("backend", ["cpu", "cu126"])
 def test_devctl_local_sync_can_initialize_explicit_environment(
-    isolated_env: dict[str, str], tmp_path: Path, backend: str
+    isolated_env: dict[str, str], tmp_path: Path
 ) -> None:
+    backend = "cpu"
     target = tmp_path / "new-env"
     isolated_env.update(DEEPFAKE_BACKEND=backend, UV_PROJECT_ENVIRONMENT=str(target))
     subprocess.run(
@@ -202,10 +202,10 @@ def test_devctl_local_sync_can_initialize_explicit_environment(
     assert call["args"][call["args"].index("--extra") + 1] == backend
 
 
-@pytest.mark.parametrize("backend", ["cpu", "cu126"])
 def test_devctl_local_backend_defaults_to_checkout_environment(
-    isolated_env: dict[str, str], tmp_path: Path, backend: str
+    isolated_env: dict[str, str], tmp_path: Path
 ) -> None:
+    backend = "cpu"
     checkout = tmp_path / "checkout"
     (checkout / "scripts").mkdir(parents=True)
     shutil.copyfile(ROOT / "scripts/devctl", checkout / "scripts/devctl")
@@ -306,12 +306,22 @@ def test_envrc_activates_explicit_local_environment(
     assert result.stdout.splitlines() == [target, str(Path(target) / "bin/python")]
 
 
-@pytest.mark.parametrize("backend", ["cpu", "cu126"])
+@pytest.mark.parametrize(
+    ("backend", "shared"),
+    [
+        ("cpu", "/opt/venvs/deepfake-cu126"),
+        ("cpu", "/opt/venvs/deepfake-cu132"),
+        ("cu126", "/opt/venvs/deepfake-cu132"),
+    ],
+)
 @pytest.mark.parametrize("target_kind", ["direct", "trailing_slash", "symlink"])
 def test_local_sync_rejects_shared_cuda_environment(
-    isolated_env: dict[str, str], tmp_path: Path, target_kind: str, backend: str
+    isolated_env: dict[str, str],
+    tmp_path: Path,
+    target_kind: str,
+    backend: str,
+    shared: str,
 ) -> None:
-    shared = "/opt/venvs/deepfake-cu132"
     target = shared
     if target_kind == "trailing_slash":
         target += "/"
@@ -329,4 +339,50 @@ def test_local_sync_rejects_shared_cuda_environment(
     )
     assert result.returncode == 3
     assert "独立" in result.stderr
+    assert not Path(isolated_env["UV_TEST_LOG"]).exists()
+
+
+def test_devctl_defaults_to_shared_cu126(isolated_env: dict[str, str]) -> None:
+    isolated_env.pop("UV_PROJECT_ENVIRONMENT")
+    subprocess.run(
+        ["bash", str(ROOT / "scripts/devctl"), "lock-check"],
+        env=isolated_env,
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    call = json.loads(Path(isolated_env["UV_TEST_LOG"]).read_text())
+    assert call["environment"] == "/opt/venvs/deepfake-cu126"
+
+
+@pytest.mark.parametrize("backend", ["cu132", "unknown"])
+def test_devctl_rejects_removed_or_unknown_backend(
+    isolated_env: dict[str, str], backend: str
+) -> None:
+    isolated_env["DEEPFAKE_BACKEND"] = backend
+    result = subprocess.run(
+        ["bash", str(ROOT / "scripts/devctl"), "run", "python", "-V"],
+        env=isolated_env,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 2
+    assert "应为 cpu 或 cu126" in result.stderr
+    assert not Path(isolated_env["UV_TEST_LOG"]).exists()
+
+
+def test_devctl_cu126_sync_rejects_missing_environment(
+    isolated_env: dict[str, str], tmp_path: Path
+) -> None:
+    isolated_env["UV_PROJECT_ENVIRONMENT"] = str(tmp_path / "missing")
+    result = subprocess.run(
+        ["bash", str(ROOT / "scripts/devctl"), "sync"],
+        env=isolated_env,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 3
+    assert "没有写权限" in result.stderr
     assert not Path(isolated_env["UV_TEST_LOG"]).exists()

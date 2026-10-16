@@ -15,7 +15,6 @@ resolution-markers = [
 conflicts = [[
     { package = "deepfake-detection-archive", extra = "cpu" },
     { package = "deepfake-detection-archive", extra = "cu126" },
-    { package = "deepfake-detection-archive", extra = "cu132" },
 ]]
 
 [[package]]
@@ -136,7 +135,7 @@ name = "cffi"
 version = "2.1.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "pycparser", marker = "implementation_name != 'PyPy' or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "pycparser", marker = "implementation_name != 'PyPy' or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/9e/ef/008a1939e372c06329a3fce4279c02f328488f3526744906eeec3da7ad5f/cffi-2.1.1.tar.gz", hash = "sha256:dd31f52ea1086513bb9df30f8fcee9b8918323ae067a3d5b78bc826a000712be", size = 530807, upload-time = "2026-08-03T21:21:18.939Z" }
 wheels = [
@@ -467,12 +466,8 @@ wheels = [
 name = "cuda-bindings"
 version = "12.9.9"
 source = { registry = "https://pypi.org/simple" }
-resolution-markers = [
-    "python_full_version == '3.14.*' and sys_platform != 'emscripten' and sys_platform != 'win32'",
-    "python_full_version < '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32'",
-]
 dependencies = [
-    { name = "cuda-pathfinder", marker = "(python_full_version < '3.15' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-26-deepfake-detection-archive-cu126') or (python_full_version >= '3.15' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "cuda-pathfinder", marker = "extra == 'extra-26-deepfake-detection-archive-cu126'" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/15/d5/572ced1aecc8c8f3e617c3af58d3b1ed5378ed71531c607c960a3e48b516/cuda_bindings-12.9.9-cp312-cp312-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:88c41afe5be41acb17e57977dd534e335f86d0c96d284d71457168525f6327c0", size = 7063842, upload-time = "2026-09-23T03:20:45.94Z" },
@@ -490,36 +485,6 @@ wheels = [
 ]
 
 [[package]]
-name = "cuda-bindings"
-version = "13.4.3"
-source = { registry = "https://pypi.org/simple" }
-resolution-markers = [
-    "python_full_version == '3.14.*' and sys_platform != 'emscripten' and sys_platform != 'win32'",
-    "python_full_version < '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32'",
-]
-dependencies = [
-    { name = "cuda-pathfinder", marker = "(python_full_version < '3.15' and sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-26-deepfake-detection-archive-cu132') or (python_full_version >= '3.15' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-]
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/65/11/1293429c1c3a3e19b551275e65efddd122a905bbe7e368816a59f3ef2a41/cuda_bindings-13.4.3-cp312-cp312-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:bfbd3f7d4ac04dd41dc49121b9e408c8283992f47124c2290ecb79bbbadcca8e", size = 6488226, upload-time = "2026-09-23T02:22:00.578Z" },
-    { url = "https://files.pythonhosted.org/packages/b8/c3/efb6bbb7307bf5c83dc4acca650280b210c67ed1a1a60f898a90e7c82e38/cuda_bindings-13.4.3-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:d5f72bcfcdf3be23e1da3c792f68f508586f48d037bca8b10f552c4cca5971f2", size = 7172185, upload-time = "2026-09-23T02:22:03.114Z" },
-    { url = "https://files.pythonhosted.org/packages/2d/87/353cfe267b988b6d0a3565eb872845747bcd01cc2299f616cde72f1e95cc/cuda_bindings-13.4.3-cp312-cp312-win_amd64.whl", hash = "sha256:f8519603001c92bf83e7095df3b8211e3999a9c4ded096b57de0f3ff52b66368", size = 6332748, upload-time = "2026-09-23T02:22:05.344Z" },
-    { url = "https://files.pythonhosted.org/packages/fe/ca/66449cfe64edb26586957f8d648cf56049b2914bc1720001fd7150a65eae/cuda_bindings-13.4.3-cp312-cp312-win_arm64.whl", hash = "sha256:130ff1daae550db2cef559ba477f3a63d040756bd135f5deba4b5bdc4e110252", size = 5548436, upload-time = "2026-09-23T02:22:07.348Z" },
-    { url = "https://files.pythonhosted.org/packages/f8/a9/c83eb5aa055a4b0c3776d83f6f88b9e778a6fe0415210977c889c6a0bb8a/cuda_bindings-13.4.3-cp313-cp313-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:d7c6c9f46fca7f3fc61959ef9a2398ac656172145b43f408e0a6492360cf1c0c", size = 6316533, upload-time = "2026-09-23T02:22:09.694Z" },
-    { url = "https://files.pythonhosted.org/packages/8a/24/9c01edfd2210737ee9471b47db857a079e5a23f2677e5d9778c0ff23d099/cuda_bindings-13.4.3-cp313-cp313-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:1fd7d8459b364aedc11f3e59703453ced823135f78a9111ca70feef8d56d4d21", size = 6929124, upload-time = "2026-09-23T02:22:11.765Z" },
-    { url = "https://files.pythonhosted.org/packages/4b/e5/419504c3a930e7c4d326551133e01d22284eee22d44a0bc2e05351f0effb/cuda_bindings-13.4.3-cp313-cp313-win_amd64.whl", hash = "sha256:81eef62bbb95cb4a705fb423b2ad1c63d716edb352ee2af0c28bf8a29cc8258c", size = 6291733, upload-time = "2026-09-23T02:22:13.848Z" },
-    { url = "https://files.pythonhosted.org/packages/54/23/37d3edb8e5cf58ac9cc9992801c1b1ac0ff6ed8a3af75322e42350b88024/cuda_bindings-13.4.3-cp313-cp313-win_arm64.whl", hash = "sha256:c2af7e69d2557fdb4e5fc1169159fd08da7e861aa84fb83307a1a0396b6b0973", size = 5512368, upload-time = "2026-09-23T02:22:16.463Z" },
-    { url = "https://files.pythonhosted.org/packages/ab/e6/3c094ef0eb00a7b0ff69a3915327e2c2d14e712ebe471a2217bf7f020f33/cuda_bindings-13.4.3-cp314-cp314-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:4796864ce829bd95ef2ef0d23c6ba21bb64e08f7fab0a377302ed1affb6605c7", size = 6407948, upload-time = "2026-09-23T02:22:18.484Z" },
-    { url = "https://files.pythonhosted.org/packages/a3/49/7a3769c43e432b0434dd46424058b47af4347167f0dfca1ecb27e2de92a1/cuda_bindings-13.4.3-cp314-cp314-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:bbacde6f75665b197016b986164cfdaa33b17515e5e635a63ddb75926aaa71c3", size = 6978955, upload-time = "2026-09-23T02:22:20.535Z" },
-    { url = "https://files.pythonhosted.org/packages/05/99/4b8669be2274138131fcd1a828284901e718a862e8f65371a175f9e6995f/cuda_bindings-13.4.3-cp314-cp314-win_amd64.whl", hash = "sha256:0deff5b22462bb410859684299b1fc6a621780c43a4729342aa6ec28783485b4", size = 6437578, upload-time = "2026-09-23T02:22:22.623Z" },
-    { url = "https://files.pythonhosted.org/packages/eb/a5/178165f9960178ec28d15a51b49cac1d7105b80e6f7633078b201e14f995/cuda_bindings-13.4.3-cp314-cp314-win_arm64.whl", hash = "sha256:145cc9b02dfb7bcc3288701b6f19c69c590e4451c62916ba0a8a3db9a64a91a8", size = 5622104, upload-time = "2026-09-23T02:22:24.927Z" },
-    { url = "https://files.pythonhosted.org/packages/0a/ca/2c4419ca787278f65faf0f0155791a80fa141f39a628e97e4663e2ba09fa/cuda_bindings-13.4.3-cp314-cp314t-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:d6eb969920e28f66f8fc3b0b3afcb6e09381cc96bf8e8158d774e9488ae89980", size = 6314272, upload-time = "2026-09-23T02:22:26.785Z" },
-    { url = "https://files.pythonhosted.org/packages/29/9c/f878de5de8e6d1a64d55096539b7b72821e6dc62682d5968e842b95d97df/cuda_bindings-13.4.3-cp314-cp314t-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:7e11cfe8fec4c85ce79feda18124971c52596f0cbd642a94f5dafc257124a4b3", size = 6865978, upload-time = "2026-09-23T02:22:29.041Z" },
-    { url = "https://files.pythonhosted.org/packages/b2/7a/fb0995b1ecb0285949b5302692e8ca41796e479e5b27c088fcde2fbb12f7/cuda_bindings-13.4.3-cp314-cp314t-win_amd64.whl", hash = "sha256:6c6bb1a4c4f7520e062669c6f3605a7016b2e65ba51b8922f92edd91d5fadf8d", size = 7336746, upload-time = "2026-09-23T02:22:31.348Z" },
-    { url = "https://files.pythonhosted.org/packages/91/e4/83b1b086fbebe15b529993101c79922f5406e51e3e9cc8dc14e4184b45d1/cuda_bindings-13.4.3-cp314-cp314t-win_arm64.whl", hash = "sha256:044c03b056dcc5cecfad426a071187dd9e1e6817fbb363bc2f3a7520170b3e67", size = 5645612, upload-time = "2026-09-23T02:22:33.895Z" },
-]
-
-[[package]]
 name = "cuda-pathfinder"
 version = "1.8.3"
 source = { registry = "https://pypi.org/simple" }
@@ -531,99 +496,40 @@ wheels = [
 name = "cuda-toolkit"
 version = "12.6.3"
 source = { registry = "https://pypi.org/simple" }
-resolution-markers = [
-    "python_full_version >= '3.15' and sys_platform != 'emscripten' and sys_platform != 'win32'",
-    "python_full_version == '3.14.*' and sys_platform != 'emscripten' and sys_platform != 'win32'",
-    "python_full_version < '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32'",
-]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/ad/88/2dbc37975fffb874418b14380418a1b99cb36f2101fd1d08c54e06ee8c95/cuda_toolkit-12.6.3-py2.py3-none-any.whl", hash = "sha256:79d8605baeb6c2f695761e0efb54bc62dbc3c9e32eb0742df7669c07befaa8f7", size = 2288, upload-time = "2025-08-13T02:03:05.283Z" },
 ]
 
 [package.optional-dependencies]
 cublas = [
-    { name = "nvidia-cublas-cu12", marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "nvidia-cublas-cu12", marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126')" },
 ]
 cudart = [
-    { name = "nvidia-cuda-runtime-cu12", marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "nvidia-cuda-runtime-cu12", marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126')" },
 ]
 cufft = [
-    { name = "nvidia-cufft-cu12", marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "nvidia-cufft-cu12", marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126')" },
 ]
 cufile = [
-    { name = "nvidia-cufile-cu12", marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "nvidia-cufile-cu12", marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126')" },
 ]
 cupti = [
-    { name = "nvidia-cuda-cupti-cu12", marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "nvidia-cuda-cupti-cu12", marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126')" },
 ]
 curand = [
-    { name = "nvidia-curand-cu12", marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "nvidia-curand-cu12", marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126')" },
 ]
 cusolver = [
-    { name = "nvidia-cusolver-cu12", marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "nvidia-cusolver-cu12", marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126')" },
 ]
 cusparse = [
-    { name = "nvidia-cusparse-cu12", marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "nvidia-cusparse-cu12", marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126')" },
 ]
 nvrtc = [
-    { name = "nvidia-cuda-nvrtc-cu12", marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "nvidia-cuda-nvrtc-cu12", marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126')" },
 ]
 nvtx = [
-    { name = "nvidia-nvtx-cu12", marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-]
-
-[[package]]
-name = "cuda-toolkit"
-version = "13.2.2"
-source = { registry = "https://pypi.org/simple" }
-resolution-markers = [
-    "python_full_version >= '3.15' and sys_platform != 'emscripten' and sys_platform != 'win32'",
-    "python_full_version == '3.14.*' and sys_platform != 'emscripten' and sys_platform != 'win32'",
-    "python_full_version < '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32'",
-]
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/3d/62/854e4a141f5e87e5425513bad2a742a6260acfe06ef148001b5362148f31/cuda_toolkit-13.2.2-py2.py3-none-any.whl", hash = "sha256:d12edc1aad1356236a2ee10c0d794b1aff5d3e79bfeca54867c3bb8e5afd87b0", size = 2607, upload-time = "2026-07-16T10:13:01.07Z" },
-]
-
-[package.optional-dependencies]
-cublas = [
-    { name = "nvidia-cublas", marker = "(platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'aarch64' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'aarch64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine == 'aarch64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine == 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "nvidia-cuda-nvrtc", marker = "(platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'aarch64' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'aarch64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine == 'aarch64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine == 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-]
-cudart = [
-    { name = "nvidia-cuda-runtime", marker = "(platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'aarch64' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'aarch64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine == 'aarch64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine == 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-]
-cufft = [
-    { name = "nvidia-cufft", marker = "(platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'aarch64' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'aarch64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine == 'aarch64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine == 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "nvidia-nvjitlink", marker = "(platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'aarch64' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'aarch64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine == 'aarch64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine == 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-]
-cufile = [
-    { name = "nvidia-cufile", marker = "(platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'aarch64' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'aarch64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine == 'aarch64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine == 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-]
-cupti = [
-    { name = "nvidia-cuda-cupti", marker = "(platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'aarch64' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'aarch64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine == 'aarch64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine == 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-]
-curand = [
-    { name = "nvidia-curand", marker = "(platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'aarch64' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'aarch64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine == 'aarch64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine == 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-]
-cusolver = [
-    { name = "nvidia-cublas", marker = "(platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'aarch64' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'aarch64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine == 'aarch64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine == 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "nvidia-cusolver", marker = "(platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'aarch64' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'aarch64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine == 'aarch64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine == 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "nvidia-cusparse", marker = "(platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'aarch64' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'aarch64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine == 'aarch64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine == 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "nvidia-nvjitlink", marker = "(platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'aarch64' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'aarch64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine == 'aarch64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine == 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-]
-cusparse = [
-    { name = "nvidia-cusparse", marker = "(platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'aarch64' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'aarch64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine == 'aarch64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine == 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "nvidia-nvjitlink", marker = "(platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'aarch64' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'aarch64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine == 'aarch64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine == 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-]
-nvjitlink = [
-    { name = "nvidia-nvjitlink", marker = "(platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'aarch64' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'aarch64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine == 'aarch64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine == 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-]
-nvrtc = [
-    { name = "nvidia-cuda-nvrtc", marker = "(platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'aarch64' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'aarch64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine == 'aarch64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine == 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-]
-nvtx = [
-    { name = "nvidia-nvtx", marker = "(platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine != 'aarch64' and platform_machine != 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'aarch64' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'x86_64' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'aarch64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine == 'aarch64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (platform_machine == 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (platform_machine == 'x86_64' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "nvidia-nvtx-cu12", marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126')" },
 ]
 
 [[package]]
@@ -682,22 +588,15 @@ dependencies = [
 cpu = [
     { name = "timm" },
     { name = "torch", version = "2.14.1+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" } },
-    { name = "torchaudio" },
+    { name = "torchaudio", version = "2.11.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" } },
     { name = "torchvision", version = "0.29.1+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" } },
     { name = "transformers" },
 ]
 cu126 = [
     { name = "timm" },
     { name = "torch", version = "2.14.1+cu126", source = { registry = "https://download.pytorch.org/whl/cu126" } },
-    { name = "torchaudio" },
+    { name = "torchaudio", version = "2.11.0+cu126", source = { registry = "https://download.pytorch.org/whl/cu126" } },
     { name = "torchvision", version = "0.29.1+cu126", source = { registry = "https://download.pytorch.org/whl/cu126" } },
-    { name = "transformers" },
-]
-cu132 = [
-    { name = "timm" },
-    { name = "torch", version = "2.14.1+cu132", source = { registry = "https://download.pytorch.org/whl/cu132" } },
-    { name = "torchaudio" },
-    { name = "torchvision", version = "0.29.1+cu132", source = { registry = "https://download.pytorch.org/whl/cu132" } },
     { name = "transformers" },
 ]
 
@@ -731,21 +630,16 @@ requires-dist = [
     { name = "soundfile", specifier = ">=0.14,<0.15" },
     { name = "timm", marker = "extra == 'cpu'", specifier = ">=1.0.30,<1.1" },
     { name = "timm", marker = "extra == 'cu126'", specifier = ">=1.0.30,<1.1" },
-    { name = "timm", marker = "extra == 'cu132'", specifier = ">=1.0.30,<1.1" },
     { name = "torch", marker = "extra == 'cpu'", specifier = "==2.14.1+cpu", index = "https://download.pytorch.org/whl/cpu", conflict = { package = "deepfake-detection-archive", extra = "cpu" } },
     { name = "torch", marker = "extra == 'cu126'", specifier = "==2.14.1+cu126", index = "https://download.pytorch.org/whl/cu126", conflict = { package = "deepfake-detection-archive", extra = "cu126" } },
-    { name = "torch", marker = "extra == 'cu132'", specifier = "==2.14.1+cu132", index = "https://download.pytorch.org/whl/cu132", conflict = { package = "deepfake-detection-archive", extra = "cu132" } },
-    { name = "torchaudio", marker = "extra == 'cpu'", specifier = "==2.11.0+cpu", index = "https://download.pytorch.org/whl/cpu" },
-    { name = "torchaudio", marker = "extra == 'cu126'", specifier = "==2.11.0+cpu", index = "https://download.pytorch.org/whl/cpu" },
-    { name = "torchaudio", marker = "extra == 'cu132'", specifier = "==2.11.0+cpu", index = "https://download.pytorch.org/whl/cpu" },
+    { name = "torchaudio", marker = "extra == 'cpu'", specifier = "==2.11.0+cpu", index = "https://download.pytorch.org/whl/cpu", conflict = { package = "deepfake-detection-archive", extra = "cpu" } },
+    { name = "torchaudio", marker = "extra == 'cu126'", specifier = "==2.11.0+cu126", index = "https://download.pytorch.org/whl/cu126", conflict = { package = "deepfake-detection-archive", extra = "cu126" } },
     { name = "torchvision", marker = "extra == 'cpu'", specifier = "==0.29.1+cpu", index = "https://download.pytorch.org/whl/cpu", conflict = { package = "deepfake-detection-archive", extra = "cpu" } },
     { name = "torchvision", marker = "extra == 'cu126'", specifier = "==0.29.1+cu126", index = "https://download.pytorch.org/whl/cu126", conflict = { package = "deepfake-detection-archive", extra = "cu126" } },
-    { name = "torchvision", marker = "extra == 'cu132'", specifier = "==0.29.1+cu132", index = "https://download.pytorch.org/whl/cu132", conflict = { package = "deepfake-detection-archive", extra = "cu132" } },
     { name = "transformers", marker = "extra == 'cpu'", specifier = "==5.19.0" },
     { name = "transformers", marker = "extra == 'cu126'", specifier = "==5.19.0" },
-    { name = "transformers", marker = "extra == 'cu132'", specifier = "==5.19.0" },
 ]
-provides-extras = ["cpu", "cu126", "cu132"]
+provides-extras = ["cpu", "cu126"]
 
 [package.metadata.requires-dev]
 dev = [
@@ -985,7 +879,7 @@ name = "ipykernel"
 version = "7.4.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "appnope", marker = "sys_platform == 'darwin' or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "appnope", marker = "sys_platform == 'darwin' or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126')" },
     { name = "comm" },
     { name = "debugpy" },
     { name = "ipython" },
@@ -1008,13 +902,13 @@ name = "ipython"
 version = "9.17.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "colorama", marker = "sys_platform == 'win32' or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "colorama", marker = "sys_platform == 'win32' or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126')" },
     { name = "ipython-pygments-lexers" },
     { name = "jedi" },
     { name = "matplotlib-inline" },
-    { name = "pexpect", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "pexpect", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126')" },
     { name = "prompt-toolkit" },
-    { name = "psutil", marker = "(sys_platform != 'cygwin' and sys_platform != 'emscripten') or (sys_platform == 'cygwin' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform == 'cygwin' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'cygwin' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "psutil", marker = "(sys_platform != 'cygwin' and sys_platform != 'emscripten') or (sys_platform == 'cygwin' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126')" },
     { name = "pygments" },
     { name = "stack-data" },
     { name = "traitlets" },
@@ -1681,7 +1575,7 @@ version = "2.4.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "ast-serialize" },
-    { name = "librt", marker = "platform_python_implementation != 'PyPy' or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "librt", marker = "platform_python_implementation != 'PyPy' or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126')" },
     { name = "mypy-extensions" },
     { name = "pathspec" },
     { name = "typing-extensions" },
@@ -1874,19 +1768,6 @@ wheels = [
 ]
 
 [[package]]
-name = "nvidia-cublas"
-version = "13.4.1.3"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "nvidia-cuda-nvrtc", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-]
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/d0/a0/5cd9d4b08a8320f7ca150ee0d66c97e98092922e338336cb4b62da7500c3/nvidia_cublas-13.4.1.3-py3-none-manylinux_2_27_aarch64.whl", hash = "sha256:4eb1472bf92b741e7cf24da7978dde251b58ddec2092d9f6a04f3623eb4e9a15", size = 513048232, upload-time = "2026-07-16T09:45:07.751Z" },
-    { url = "https://files.pythonhosted.org/packages/e1/97/d483a41da34df5c88727c57319576967f6d7befba5028d70928d2999635e/nvidia_cublas-13.4.1.3-py3-none-manylinux_2_27_x86_64.whl", hash = "sha256:a5917cb642cfb07f4a0231ee16aec7e2e0357d8cb8b1b78a0c9c68dba3e6afc7", size = 404870805, upload-time = "2026-07-16T09:46:05.62Z" },
-    { url = "https://files.pythonhosted.org/packages/bc/0f/8982a363ab246d22876f3eb8baccce81f0da6304d39f86d63b67389c5457/nvidia_cublas-13.4.1.3-py3-none-win_amd64.whl", hash = "sha256:7e7f780caf07bde7b36b0d25bdad29e8ccbacfc4b75066907bdb601af1e6d4aa", size = 388920654, upload-time = "2026-07-16T10:05:36.737Z" },
-]
-
-[[package]]
 name = "nvidia-cublas-cu12"
 version = "12.6.4.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1894,16 +1775,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/af/eb/ff4b8c503fa1f1796679dce648854d58751982426e4e4b37d6fce49d259c/nvidia_cublas_cu12-12.6.4.1-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:08ed2686e9875d01b58e3cb379c6896df8e76c75e0d4a7f7dace3d7b6d9ef8eb", size = 393138322, upload-time = "2024-11-20T17:40:25.65Z" },
     { url = "https://files.pythonhosted.org/packages/97/0d/f1f0cadbf69d5b9ef2e4f744c9466cb0a850741d08350736dfdb4aa89569/nvidia_cublas_cu12-12.6.4.1-py3-none-manylinux_2_27_aarch64.whl", hash = "sha256:235f728d6e2a409eddf1df58d5b0921cf80cfa9e72b9f2775ccb7b4a87984668", size = 390794615, upload-time = "2024-11-20T17:39:52.715Z" },
     { url = "https://files.pythonhosted.org/packages/84/f7/985e9bdbe3e0ac9298fcc8cfa51a392862a46a0ffaccbbd56939b62a9c83/nvidia_cublas_cu12-12.6.4.1-py3-none-win_amd64.whl", hash = "sha256:9e4fa264f4d8a4eb0cdbd34beadc029f453b3bafae02401e999cf3d5a5af75f8", size = 434535301, upload-time = "2024-11-20T17:50:41.681Z" },
-]
-
-[[package]]
-name = "nvidia-cuda-cupti"
-version = "13.2.86"
-source = { registry = "https://pypi.org/simple" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/e1/ab/52414925ea803a5f86b994ae97d951e5943ed27a6f1da4a5c4ac09e308af/nvidia_cuda_cupti-13.2.86-py3-none-manylinux_2_25_aarch64.whl", hash = "sha256:d9a5c133f73fcb9013f3ada0da6fb54d4117618d81f3f5a0419417ea6ee829d4", size = 11760263, upload-time = "2026-07-16T09:35:34.643Z" },
-    { url = "https://files.pythonhosted.org/packages/b4/76/a10d9fb5d9a0e46d5f95e5520bd1b2d8ad22a9c0a09d2f8c20c5ee842a96/nvidia_cuda_cupti-13.2.86-py3-none-manylinux_2_25_x86_64.whl", hash = "sha256:8fa29f15dd8336181f961764d9d95236fc6b931dd0c8fcf8cd70aab0c310b586", size = 11988600, upload-time = "2026-07-16T09:36:06.061Z" },
-    { url = "https://files.pythonhosted.org/packages/fd/7a/7dadeb6faa141c07e608d9ed1dcb355c97b11b42f61106e41937e10da643/nvidia_cuda_cupti-13.2.86-py3-none-win_amd64.whl", hash = "sha256:10837e2910753a7726c0243aa113e2bd65c0edee6f6f3e097db1757a8eac2c9e", size = 8175943, upload-time = "2026-07-16T10:00:42.314Z" },
 ]
 
 [[package]]
@@ -1919,16 +1790,6 @@ wheels = [
 ]
 
 [[package]]
-name = "nvidia-cuda-nvrtc"
-version = "13.2.86"
-source = { registry = "https://pypi.org/simple" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/1e/39/c58835ec8392a91b8d7bad83760eafc3085f64788b722ec2b44a27b3ca3e/nvidia_cuda_nvrtc-13.2.86-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl", hash = "sha256:8111c5130e967b78222ea2124145f8efe9ce201b752b2579a2513100a53be1c5", size = 47018468, upload-time = "2026-07-16T09:40:35.085Z" },
-    { url = "https://files.pythonhosted.org/packages/13/95/029e91026e1d378cba9fb2cdb62394bb15d06de7586bab73d76397df6b7f/nvidia_cuda_nvrtc-13.2.86-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:1e5d7b411a2eb83f5c71c98d58133a763fc9fa86a4241ee320c5c4782d9ad1fd", size = 44755454, upload-time = "2026-07-16T09:39:59.909Z" },
-    { url = "https://files.pythonhosted.org/packages/dd/4e/2a19f2aa79ffc822c0d2be7c161fcac5a8b43aebd554c79ff982bb44071e/nvidia_cuda_nvrtc-13.2.86-py3-none-win_amd64.whl", hash = "sha256:bf070582c2d8b03f681cea8d34a9de900d808607deb813a826ecb3a585606f9a", size = 40818138, upload-time = "2026-07-16T10:02:27.876Z" },
-]
-
-[[package]]
 name = "nvidia-cuda-nvrtc-cu12"
 version = "12.6.85"
 source = { registry = "https://pypi.org/simple" }
@@ -1936,16 +1797,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/f5/31/ffb400c5ae99daf09687aa6c42831c5d824f71c4851363ed2a4a1ac52bab/nvidia_cuda_nvrtc_cu12-12.6.85-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl", hash = "sha256:800927308ccc5dd6246d3f61f7fcef2ed7ec4e59e199090d360d3293f78bd5a2", size = 23649944, upload-time = "2024-11-20T17:38:06.511Z" },
     { url = "https://files.pythonhosted.org/packages/48/ab/476146f59ff5ef5bd6e62c187097d859ea78b5752d19c6c3f9be5f90dafc/nvidia_cuda_nvrtc_cu12-12.6.85-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:3f3134f50963882373063901657554f230bedf6039d30b09f6be55c64c993a37", size = 23162872, upload-time = "2024-11-20T17:37:42.967Z" },
     { url = "https://files.pythonhosted.org/packages/0c/f7/472414aee887d626373d0b2140a59ac4308e3eaed815060e5410fc83305a/nvidia_cuda_nvrtc_cu12-12.6.85-py3-none-win_amd64.whl", hash = "sha256:a419e2c95e75b88b602f8bb66f82a6c5651e8475a509841c958486b1b71510bf", size = 39026436, upload-time = "2024-11-20T17:49:13.633Z" },
-]
-
-[[package]]
-name = "nvidia-cuda-runtime"
-version = "13.2.86"
-source = { registry = "https://pypi.org/simple" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/89/d4/fa981071e3d9f29158ca16c69ee617831cd6df4dd47024149c16eec717f8/nvidia_cuda_runtime-13.2.86-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:37844957894bfdecf90243568d21a2cb251b66106915b71459a23c8e6ef2da69", size = 2341433, upload-time = "2026-07-16T09:33:00.116Z" },
-    { url = "https://files.pythonhosted.org/packages/70/c6/8f8c5e893d183082ea78f973aebc7ebc845ee219d68bddac73b0f62490fe/nvidia_cuda_runtime-13.2.86-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:3498247680dfddce31bad102af7e3e26fc795342a3cac64722bb0fa95e7f60f0", size = 2323576, upload-time = "2026-07-16T09:33:28.652Z" },
-    { url = "https://files.pythonhosted.org/packages/1f/7f/0849696e8ea074fd6c30864a235ab232683c71cb8e6a88186d48fc62120f/nvidia_cuda_runtime-13.2.86-py3-none-win_amd64.whl", hash = "sha256:b26f5dd86e67f0eb404ae679185e1c49fe546fa9a47b32dee31312f65ccfe764", size = 3154679, upload-time = "2026-07-16T10:00:09.778Z" },
 ]
 
 [[package]]
@@ -1965,7 +1816,7 @@ name = "nvidia-cudnn-cu12"
 version = "9.10.2.21"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "nvidia-cublas-cu12", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "nvidia-cublas-cu12", marker = "extra == 'extra-26-deepfake-detection-archive-cu126'" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/fa/41/e79269ce215c857c935fd86bcfe91a451a584dfc27f1e068f568b9ad1ab7/nvidia_cudnn_cu12-9.10.2.21-py3-none-manylinux_2_27_aarch64.whl", hash = "sha256:c9132cc3f8958447b4910a1720036d9eff5928cc3179b0a51fb6d167c6cc87d8", size = 705026878, upload-time = "2025-06-06T21:52:51.348Z" },
@@ -1974,37 +1825,11 @@ wheels = [
 ]
 
 [[package]]
-name = "nvidia-cudnn-cu13"
-version = "9.24.0.43"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "nvidia-cublas", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-]
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/ca/30/7c257e3d5cb4fecb147b93895c66e29c93f8e76d74b45bb418ff0587c4ec/nvidia_cudnn_cu13-9.24.0.43-py3-none-manylinux_2_27_aarch64.whl", hash = "sha256:a6812a554a1ff0413e9c52b84c26c050380649ab9615f9c16bded368ce9f421f", size = 650976863, upload-time = "2026-07-02T16:23:39.248Z" },
-    { url = "https://files.pythonhosted.org/packages/5c/ba/791cffd048fe5b044e620df55267e3e95c0e6e07d50b41e377c03dfc910f/nvidia_cudnn_cu13-9.24.0.43-py3-none-manylinux_2_27_x86_64.whl", hash = "sha256:71f181cd810e90f9b6023b01186fe82d13d65f0ec098581ee201d39fad769e4b", size = 553099438, upload-time = "2026-07-02T16:27:42.58Z" },
-    { url = "https://files.pythonhosted.org/packages/31/23/1dd3aa15cc4ab62c8fc88f8049ef137bc44c17892f5577bc80d994941f77/nvidia_cudnn_cu13-9.24.0.43-py3-none-win_amd64.whl", hash = "sha256:67a7273b5cf062f9446fd76cf464351a1c0f66501e6cd78f6675c0d604d8ac87", size = 412314771, upload-time = "2026-07-02T16:31:07.973Z" },
-]
-
-[[package]]
-name = "nvidia-cufft"
-version = "12.2.0.57"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "nvidia-nvjitlink", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-]
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/07/8d/f650e6d527f9d22b5ded906c000eaebb037721c06d4ecd906df62f300979/nvidia_cufft-12.2.0.57-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:1ed438568ae1088ba2c25789d10205d4104b8b140b7bd942e39a787947a0fb74", size = 218244742, upload-time = "2026-07-16T09:47:08.76Z" },
-    { url = "https://files.pythonhosted.org/packages/41/28/868ed0c6ade5e6a75b25166b3cf191f4a2ff58ad618c1e40befb776c97c5/nvidia_cufft-12.2.0.57-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:34da27fadf3979b0b042c43823f0530be8408b86df31ee0108e1ca0b621d4ef6", size = 218258101, upload-time = "2026-07-16T09:47:50.978Z" },
-    { url = "https://files.pythonhosted.org/packages/b2/48/4a943a66093ec0e9e077bf584462d35d9feed297a76078a78582841985f2/nvidia_cufft-12.2.0.57-py3-none-win_amd64.whl", hash = "sha256:89b78b2b60d6ca1fb7dab7d1a4af135d69d586d18a216ca84e51db5901cd41d0", size = 217463602, upload-time = "2026-07-16T10:06:13.575Z" },
-]
-
-[[package]]
 name = "nvidia-cufft-cu12"
 version = "11.3.0.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "nvidia-nvjitlink-cu12", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "nvidia-nvjitlink-cu12", marker = "extra == 'extra-26-deepfake-detection-archive-cu126'" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/1f/37/c50d2b2f2c07e146776389e3080f4faf70bcc4fa6e19d65bb54ca174ebc3/nvidia_cufft_cu12-11.3.0.4-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:d16079550df460376455cba121db6564089176d9bac9e4f360493ca4741b22a6", size = 200164144, upload-time = "2024-11-20T17:40:58.288Z" },
@@ -2015,31 +1840,12 @@ wheels = [
 ]
 
 [[package]]
-name = "nvidia-cufile"
-version = "1.17.1.22"
-source = { registry = "https://pypi.org/simple" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/fe/fd/4b4157512a131a51e1514d40d0199b1c5b7b10c6856db274ff22e5fe15be/nvidia_cufile-1.17.1.22-py3-none-manylinux_2_27_aarch64.whl", hash = "sha256:bec33d7f1f12691dce330275246587569c2ed90b1ce43b0f94b3e1ce9268744b", size = 1226736, upload-time = "2026-04-13T09:52:40.142Z" },
-    { url = "https://files.pythonhosted.org/packages/23/c5/661a73a9042fc5f81cdd5fe6e89f4170b3b33f7962e709987e2b5e5f1381/nvidia_cufile-1.17.1.22-py3-none-manylinux_2_27_x86_64.whl", hash = "sha256:87feaf8c3ad20d3d03a01933181801ff6892bace5c8f0b1e4b48f319d3e62d36", size = 1387670, upload-time = "2026-04-13T09:52:57.783Z" },
-]
-
-[[package]]
 name = "nvidia-cufile-cu12"
 version = "1.11.1.6"
 source = { registry = "https://pypi.org/simple" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/b2/66/cc9876340ac68ae71b15c743ddb13f8b30d5244af344ec8322b449e35426/nvidia_cufile_cu12-1.11.1.6-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:cc23469d1c7e52ce6c1d55253273d32c565dd22068647f3aa59b3c6b005bf159", size = 1142103, upload-time = "2024-11-20T17:42:11.83Z" },
     { url = "https://files.pythonhosted.org/packages/17/bf/cc834147263b929229ce4aadd62869f0b195e98569d4c28b23edc72b85d9/nvidia_cufile_cu12-1.11.1.6-py3-none-manylinux_2_27_aarch64.whl", hash = "sha256:8f57a0051dcf2543f6dc2b98a98cb2719c37d3cee1baba8965d57f3bbc90d4db", size = 1066155, upload-time = "2024-11-20T17:41:49.376Z" },
-]
-
-[[package]]
-name = "nvidia-curand"
-version = "10.4.2.66"
-source = { registry = "https://pypi.org/simple" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/18/d1/c34def6ae1bb7276cea19e2bcba8a0bb08db8ddbf4fa71f7fd30ab6442f4/nvidia_curand-10.4.2.66-py3-none-manylinux_2_27_aarch64.whl", hash = "sha256:cb61a0bb7e7a7446b25bf5ff93aa560009dd738b48ed52f57ae764a4cae37381", size = 62415161, upload-time = "2026-07-16T09:49:12.804Z" },
-    { url = "https://files.pythonhosted.org/packages/c9/ca/9701cd19be422d6c1e1a1473c89b20c88c97a53be9cda3afd9627b482427/nvidia_curand-10.4.2.66-py3-none-manylinux_2_27_x86_64.whl", hash = "sha256:9bb3796a2f6223454b2e326e3d7572c1500cfa4d629de827676b4eeecd30ab0c", size = 59954122, upload-time = "2026-07-16T09:49:35.277Z" },
-    { url = "https://files.pythonhosted.org/packages/14/e4/523ea56942c34395f2bafea23c734785d7f7f52680e4fe6b0103404f09a5/nvidia_curand-10.4.2.66-py3-none-win_amd64.whl", hash = "sha256:d74b0afb1da0d78c777b11141d2d539dc224126eb6f5b2fe9c1746aa45630460", size = 55524944, upload-time = "2026-07-16T10:06:46.655Z" },
 ]
 
 [[package]]
@@ -2055,28 +1861,13 @@ wheels = [
 ]
 
 [[package]]
-name = "nvidia-cusolver"
-version = "12.2.0.11"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "nvidia-cublas", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "nvidia-cusparse", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "nvidia-nvjitlink", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-]
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/60/df/9e6b603f1d64040ce3e076e9bce1b78e2d588d0aabc9783f351cecd861ab/nvidia_cusolver-12.2.0.11-py3-none-manylinux_2_27_aarch64.whl", hash = "sha256:8be097fca28de6be0990ab216ee9b804dd51077e1d1d83acf6c9850650bdc64d", size = 250383075, upload-time = "2026-07-16T09:50:16.355Z" },
-    { url = "https://files.pythonhosted.org/packages/e4/a4/90f7ade9992190788658c3c285f196fdb9bcc3a5bb93a325c245121d22fd/nvidia_cusolver-12.2.0.11-py3-none-manylinux_2_27_x86_64.whl", hash = "sha256:fab5778f6769947389a1a6abc07e635576825a08c0ffc68c3ae7f1392c794b42", size = 227913465, upload-time = "2026-07-16T09:50:56.976Z" },
-    { url = "https://files.pythonhosted.org/packages/02/12/c5c52523ec7970b193837b79f4b892122c24dc5ee5a6b1fae26dae1a31ca/nvidia_cusolver-12.2.0.11-py3-none-win_amd64.whl", hash = "sha256:364511c9974ef1fcde2ca197caebfe0994ece2cb33bc27117eeb88b8cee5c46d", size = 217690140, upload-time = "2026-07-16T10:07:33.457Z" },
-]
-
-[[package]]
 name = "nvidia-cusolver-cu12"
 version = "11.7.1.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "nvidia-cublas-cu12", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "nvidia-cusparse-cu12", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "nvidia-nvjitlink-cu12", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "nvidia-cublas-cu12", marker = "extra == 'extra-26-deepfake-detection-archive-cu126'" },
+    { name = "nvidia-cusparse-cu12", marker = "extra == 'extra-26-deepfake-detection-archive-cu126'" },
+    { name = "nvidia-nvjitlink-cu12", marker = "extra == 'extra-26-deepfake-detection-archive-cu126'" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/93/17/dbe1aa865e4fdc7b6d4d0dd308fdd5aaab60f939abfc0ea1954eac4fb113/nvidia_cusolver_cu12-11.7.1.2-py3-none-manylinux2014_aarch64.whl", hash = "sha256:0ce237ef60acde1efc457335a2ddadfd7610b892d94efee7b776c64bb1cac9e0", size = 157833628, upload-time = "2024-10-01T17:05:05.591Z" },
@@ -2087,24 +1878,11 @@ wheels = [
 ]
 
 [[package]]
-name = "nvidia-cusparse"
-version = "12.7.10.12"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "nvidia-nvjitlink", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-]
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/60/35/abbd278fb6d039fcfb5175efa10a21007a11878bec59920d84854b47d766/nvidia_cusparse-12.7.10.12-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:597eff2cd83e3ab1d1e3a0dce9c9c879d77cf64ec2659bfdb5af6a5d02e7aaa9", size = 169043093, upload-time = "2026-07-16T09:51:37.058Z" },
-    { url = "https://files.pythonhosted.org/packages/bc/46/3a9700cc13f30c9279af9a862363535c814fa27597199b21fd93cad66237/nvidia_cusparse-12.7.10.12-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:25907c75e4db1581685f06f61cc6cdecc04611765516a52373e0a18ebd69fa00", size = 150999307, upload-time = "2026-07-16T09:52:17.727Z" },
-    { url = "https://files.pythonhosted.org/packages/2c/28/355676e73dd07d1a41cc33904a8b4fbb22b6fe97662e5ec47c535fe7e9e3/nvidia_cusparse-12.7.10.12-py3-none-win_amd64.whl", hash = "sha256:6b1e82056a0865c5b4f5da6adbebb15244e9a2b8aeea0838a9cf725e16523c53", size = 149276551, upload-time = "2026-07-16T10:08:16.871Z" },
-]
-
-[[package]]
 name = "nvidia-cusparse-cu12"
 version = "12.5.4.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "nvidia-nvjitlink-cu12", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "nvidia-nvjitlink-cu12", marker = "extra == 'extra-26-deepfake-detection-archive-cu126'" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/eb/eb/6681efd0aa7df96b4f8067b3ce7246833dd36830bb4cec8896182773db7d/nvidia_cusparse_cu12-12.5.4.2-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:d25b62fb18751758fe3c93a4a08eff08effedfe4edf1c6bb5afd0890fe88f887", size = 216451147, upload-time = "2024-11-20T17:44:18.055Z" },
@@ -2125,42 +1903,12 @@ wheels = [
 ]
 
 [[package]]
-name = "nvidia-cusparselt-cu13"
-version = "0.8.1"
-source = { registry = "https://pypi.org/simple" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/46/e1/cdc1797eadf82d3a9a575a19b33fdc871a97edbec42c00b5b5e914f4aff4/nvidia_cusparselt_cu13-0.8.1-py3-none-manylinux2014_aarch64.whl", hash = "sha256:4dca476c50bf4780d46cd0bfbd82e2bc10a08e4fef7950917ce8d7578d22a23f", size = 221051344, upload-time = "2025-09-05T18:49:51.289Z" },
-    { url = "https://files.pythonhosted.org/packages/34/7d/2661f2fb3ac4302f3a246f5fc030213ac60c1fe0bce84f9783dbd831dbb7/nvidia_cusparselt_cu13-0.8.1-py3-none-manylinux2014_x86_64.whl", hash = "sha256:786ce87568c303fadb5afcc7102d454cd3040d75f6f8626f5db460d1871f4dd0", size = 170148586, upload-time = "2025-09-05T18:50:50.248Z" },
-    { url = "https://files.pythonhosted.org/packages/31/83/f3647ce26916c94a6ca4ff1810623e2c405cff2dea6e78d29516b2514df9/nvidia_cusparselt_cu13-0.8.1-py3-none-win_amd64.whl", hash = "sha256:dccbd362f91a7b9024d1f55ee9f548ac065027ff15d8c8b0db889ab3a8f31215", size = 156885108, upload-time = "2025-09-05T18:51:35.958Z" },
-]
-
-[[package]]
 name = "nvidia-nccl-cu12"
 version = "2.29.3"
 source = { registry = "https://pypi.org/simple" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/28/cf/bcf8bb0c0030b1b9a345331f6281c37d2a8669758521eb93c382f6f87c8f/nvidia_nccl_cu12-2.29.3-py3-none-manylinux_2_18_aarch64.whl", hash = "sha256:6351b79dc7d2cc3d654ea1523616b9eeded71fe9c8da66b71eef9a5d1b2adad4", size = 289708535, upload-time = "2026-02-03T21:10:58.804Z" },
     { url = "https://files.pythonhosted.org/packages/31/5a/cac7d231f322b66caa16fd4b136ebc8e4b18b2805811c2d58dc47210cdea/nvidia_nccl_cu12-2.29.3-py3-none-manylinux_2_18_x86_64.whl", hash = "sha256:35ad42e7d5d722a83c36a3a478e281c20a5646383deaf1b9ed1a9ab7d61bed53", size = 289760316, upload-time = "2026-02-03T21:11:37.899Z" },
-]
-
-[[package]]
-name = "nvidia-nccl-cu13"
-version = "2.30.7"
-source = { registry = "https://pypi.org/simple" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/d1/21/a73174c6157101bdf1ffc22b517f76ff0082613989dd9bc8f43e8034caac/nvidia_nccl_cu13-2.30.7-py3-none-manylinux_2_18_aarch64.whl", hash = "sha256:ca786ffa5a647c75d4d1f5cc72a6c4f537947e2ba8823d7c8aaf768e7a7b9f77", size = 215983881, upload-time = "2026-06-09T03:23:15.633Z" },
-    { url = "https://files.pythonhosted.org/packages/3f/34/c500f90c7ae641b8e0f98965b36b8a7ac79cc8b296e8d251fe3eb592ee54/nvidia_nccl_cu13-2.30.7-py3-none-manylinux_2_18_x86_64.whl", hash = "sha256:cefa7fdb9710efd0f39c5f1be1d61ff6fc9a996c451265bd7fbdcf9455ed4b50", size = 215965170, upload-time = "2026-06-09T03:23:39.73Z" },
-]
-
-[[package]]
-name = "nvidia-nvjitlink"
-version = "13.4.92"
-source = { registry = "https://pypi.org/simple" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/1d/6b/eef7a9e32872b8f41e145bf10cddc9af26e153c338852811fe9a9baddf9e/nvidia_nvjitlink-13.4.92-py3-none-manylinux2010_x86_64.manylinux_2_12_x86_64.whl", hash = "sha256:e0391f24ed94ec879b84e3da4d4ec320c879aff681f2c7a638462f7199284323", size = 42452378, upload-time = "2026-09-16T20:45:29.042Z" },
-    { url = "https://files.pythonhosted.org/packages/1f/a8/1cbd4014898af8b419e69b0d7dbc63da2121ee92d92b47d59f4fe9075349/nvidia_nvjitlink-13.4.92-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:25f74fad0d654271c921ac4dca614bd6258bc21791242fc7b2289dad7ae9c099", size = 40420120, upload-time = "2026-09-16T20:45:19.163Z" },
-    { url = "https://files.pythonhosted.org/packages/72/7c/c44bd7277afafed9de262a23baec4dc8dcf7ecbb1b9ecb228821442d1e9b/nvidia_nvjitlink-13.4.92-py3-none-win_amd64.whl", hash = "sha256:b286f3a4f227a9363efdec263c7b91788cef1478d2b8a5fa8bab7f3e82ff82fd", size = 39053950, upload-time = "2026-09-16T20:52:54.244Z" },
-    { url = "https://files.pythonhosted.org/packages/3a/8e/afaa7687fac05a507d10765f6097937e99735f835c5b262276d1e2d2cad5/nvidia_nvjitlink-13.4.92-py3-none-win_arm64.whl", hash = "sha256:9e4a7ff4f0cafa8c624917055b863dc11f5c2912ead23c462889e166f3b0e57d", size = 35981621, upload-time = "2026-09-16T20:56:30.819Z" },
 ]
 
 [[package]]
@@ -2180,25 +1928,6 @@ source = { registry = "https://pypi.org/simple" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/1d/6a/03aa43cc9bd3ad91553a88b5f6fb25ed6a3752ae86ce2180221962bc2aa5/nvidia_nvshmem_cu12-3.4.5-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:0b48363fc6964dede448029434c6abed6c5e37f823cb43c3bcde7ecfc0457e15", size = 138936938, upload-time = "2025-09-06T00:32:05.589Z" },
     { url = "https://files.pythonhosted.org/packages/b5/09/6ea3ea725f82e1e76684f0708bbedd871fc96da89945adeba65c3835a64c/nvidia_nvshmem_cu12-3.4.5-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:042f2500f24c021db8a06c5eec2539027d57460e1c1a762055a6554f72c369bd", size = 139103095, upload-time = "2025-09-06T00:32:31.266Z" },
-]
-
-[[package]]
-name = "nvidia-nvshmem-cu13"
-version = "3.4.5"
-source = { registry = "https://pypi.org/simple" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/dc/0f/05cc9c720236dcd2db9c1ab97fff629e96821be2e63103569da0c9b72f19/nvidia_nvshmem_cu13-3.4.5-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:6dc2a197f38e5d0376ad52cd1a2a3617d3cdc150fd5966f4aee9bcebb1d68fe9", size = 60215947, upload-time = "2025-09-06T00:32:20.022Z" },
-    { url = "https://files.pythonhosted.org/packages/3c/35/a9bf80a609e74e3b000fef598933235c908fcefcef9026042b8e6dfde2a9/nvidia_nvshmem_cu13-3.4.5-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:290f0a2ee94c9f3687a02502f3b9299a9f9fe826e6d0287ee18482e78d495b80", size = 60412546, upload-time = "2025-09-06T00:32:41.564Z" },
-]
-
-[[package]]
-name = "nvidia-nvtx"
-version = "13.2.86"
-source = { registry = "https://pypi.org/simple" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/49/ee/16bde09927e7ffacd50b117cd7d1dc764d145f03249fc41fdf6dfba3301f/nvidia_nvtx-13.2.86-py3-none-manylinux1_x86_64.manylinux_2_5_x86_64.whl", hash = "sha256:968ce72baee2a01791c7d3254000eac81f24677b0b91c62d21b449a1f309c245", size = 153463, upload-time = "2026-07-16T09:41:23.242Z" },
-    { url = "https://files.pythonhosted.org/packages/52/5f/74e2d29240de30a971d59ca20f4a3c4f2720cd49752809eeb4177d385c2c/nvidia_nvtx-13.2.86-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:1c6ae1be92fba569dd271f7b9b3056f99f5642726dc6c53d1b93ae4110c398fb", size = 154292, upload-time = "2026-07-16T09:40:53.791Z" },
-    { url = "https://files.pythonhosted.org/packages/df/b3/00239b7a93d2f44dabce1c2b5579d275e83678d6699727ec43de427523ac/nvidia_nvtx-13.2.86-py3-none-win_amd64.whl", hash = "sha256:7f3f430a87bb1e2db3371832d21a5c1efcf77bef7cacfd772fd71649e121cd58", size = 142533, upload-time = "2026-07-16T10:03:02.777Z" },
 ]
 
 [[package]]
@@ -2248,7 +1977,7 @@ source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "numpy" },
     { name = "python-dateutil" },
-    { name = "tzdata", marker = "sys_platform == 'emscripten' or sys_platform == 'win32' or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "tzdata", marker = "sys_platform == 'emscripten' or sys_platform == 'win32' or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/e2/17/d7b106e05bfa642e8694451e7d3d759c6a241c5386a5d962e4f66c047e06/pandas-3.0.6.tar.gz", hash = "sha256:66b07ef7315a31bfe1089cd3d71a7de781c9dca986762d0b4fe7c0ef17465d10", size = 4667686, upload-time = "2026-09-17T23:23:18.345Z" }
 wheels = [
@@ -2326,7 +2055,7 @@ name = "pexpect"
 version = "4.9.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "ptyprocess", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "ptyprocess", marker = "(sys_platform != 'emscripten' and sys_platform != 'win32') or (sys_platform == 'emscripten' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform == 'win32' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/42/92/cc564bf6381ff43ce1f4d06852fc19a2f11d180f23dc32d9588bee2f149d/pexpect-4.9.0.tar.gz", hash = "sha256:ee7d41123f3c9911050ea2c2dac107568dc43b2d3b0c7557a33212c398ead30f", size = 166450, upload-time = "2023-11-25T09:07:26.339Z" }
 wheels = [
@@ -2585,7 +2314,7 @@ name = "pytest"
 version = "9.1.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "colorama", marker = "sys_platform == 'win32' or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "colorama", marker = "sys_platform == 'win32' or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126')" },
     { name = "iniconfig" },
     { name = "packaging" },
     { name = "pluggy" },
@@ -2724,7 +2453,7 @@ name = "pyzmq"
 version = "27.2.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "cffi", marker = "implementation_name == 'pypy' or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "cffi", marker = "implementation_name == 'pypy' or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/e7/8d/5b3d5631c2f4b4b8862f64cd0c9eb777b5710eeb5125b4be8dd0a200a4c0/pyzmq-27.2.0.tar.gz", hash = "sha256:54d4259d1bfae24ecdb5ca79f7acc2eac6c286a02d6a0ae617797cb45f0726d3", size = 292316, upload-time = "2026-08-20T19:08:21.19Z" }
 wheels = [
@@ -3182,12 +2911,10 @@ dependencies = [
     { name = "huggingface-hub" },
     { name = "pyyaml" },
     { name = "safetensors" },
-    { name = "torch", version = "2.14.1+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "extra == 'extra-26-deepfake-detection-archive-cpu' or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "torch", version = "2.14.1+cu126", source = { registry = "https://download.pytorch.org/whl/cu126" }, marker = "extra == 'extra-26-deepfake-detection-archive-cu126' or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "torch", version = "2.14.1+cu132", source = { registry = "https://download.pytorch.org/whl/cu132" }, marker = "(extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra != 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra != 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "torchvision", version = "0.29.1+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "extra == 'extra-26-deepfake-detection-archive-cpu' or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "torchvision", version = "0.29.1+cu126", source = { registry = "https://download.pytorch.org/whl/cu126" }, marker = "extra == 'extra-26-deepfake-detection-archive-cu126' or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "torchvision", version = "0.29.1+cu132", source = { registry = "https://download.pytorch.org/whl/cu132" }, marker = "(extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra != 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra != 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "torch", version = "2.14.1+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "extra == 'extra-26-deepfake-detection-archive-cpu'" },
+    { name = "torch", version = "2.14.1+cu126", source = { registry = "https://download.pytorch.org/whl/cu126" }, marker = "extra == 'extra-26-deepfake-detection-archive-cu126'" },
+    { name = "torchvision", version = "0.29.1+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "extra == 'extra-26-deepfake-detection-archive-cpu'" },
+    { name = "torchvision", version = "0.29.1+cu126", source = { registry = "https://download.pytorch.org/whl/cu126" }, marker = "extra == 'extra-26-deepfake-detection-archive-cu126'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/0e/ab/49041213990e48edcb6013463b18ef86d8d3c5d6ac5b408802c480443025/timm-1.0.30.tar.gz", hash = "sha256:1444a3af7e17fdba5440ac2bcf6e4b728da96dd62289ed9e1bcba31a545f5935", size = 2534738, upload-time = "2026-09-22T20:46:13.9Z" }
 wheels = [
@@ -3244,13 +2971,13 @@ resolution-markers = [
     "python_full_version < '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32'",
 ]
 dependencies = [
-    { name = "filelock", marker = "extra == 'extra-26-deepfake-detection-archive-cpu' or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "fsspec", marker = "extra == 'extra-26-deepfake-detection-archive-cpu' or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "jinja2", marker = "extra == 'extra-26-deepfake-detection-archive-cpu' or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "networkx", marker = "extra == 'extra-26-deepfake-detection-archive-cpu' or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "setuptools", marker = "extra == 'extra-26-deepfake-detection-archive-cpu' or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "sympy", marker = "extra == 'extra-26-deepfake-detection-archive-cpu' or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "typing-extensions", marker = "extra == 'extra-26-deepfake-detection-archive-cpu' or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "filelock", marker = "extra == 'extra-26-deepfake-detection-archive-cpu'" },
+    { name = "fsspec", marker = "extra == 'extra-26-deepfake-detection-archive-cpu'" },
+    { name = "jinja2", marker = "extra == 'extra-26-deepfake-detection-archive-cpu'" },
+    { name = "networkx", marker = "extra == 'extra-26-deepfake-detection-archive-cpu'" },
+    { name = "setuptools", marker = "extra == 'extra-26-deepfake-detection-archive-cpu'" },
+    { name = "sympy", marker = "extra == 'extra-26-deepfake-detection-archive-cpu'" },
+    { name = "typing-extensions", marker = "extra == 'extra-26-deepfake-detection-archive-cpu'" },
 ]
 wheels = [
     { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.14.1%2Bcpu-cp312-cp312-linux_s390x.whl", hash = "sha256:6b06a7f6275c5fdecaf1dbf5546f0820b024a97785575bb99e3d9930d83cd86b", upload-time = "2026-09-30T19:47:30Z" },
@@ -3295,21 +3022,21 @@ resolution-markers = [
     "python_full_version < '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32'",
 ]
 dependencies = [
-    { name = "cuda-bindings", version = "12.9.9", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version < '3.15' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (python_full_version >= '3.15' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "cuda-toolkit", version = "12.6.3", source = { registry = "https://pypi.org/simple" }, extra = ["cublas", "cudart", "cufft", "cufile", "cupti", "curand", "cusolver", "cusparse", "nvrtc", "nvtx"], marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "filelock", marker = "extra == 'extra-26-deepfake-detection-archive-cu126' or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "fsspec", marker = "extra == 'extra-26-deepfake-detection-archive-cu126' or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "jinja2", marker = "extra == 'extra-26-deepfake-detection-archive-cu126' or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "networkx", marker = "extra == 'extra-26-deepfake-detection-archive-cu126' or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "nvidia-cudnn-cu12", marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "nvidia-cusparselt-cu12", marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "nvidia-nccl-cu12", marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "nvidia-nvjitlink-cu12", marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "nvidia-nvshmem-cu12", marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "setuptools", marker = "extra == 'extra-26-deepfake-detection-archive-cu126' or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "sympy", marker = "extra == 'extra-26-deepfake-detection-archive-cu126' or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "triton", marker = "(python_full_version < '3.15' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (python_full_version >= '3.15' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "typing-extensions", marker = "extra == 'extra-26-deepfake-detection-archive-cu126' or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "cuda-bindings", marker = "(python_full_version < '3.15' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (python_full_version >= '3.15' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126')" },
+    { name = "cuda-toolkit", extra = ["cublas", "cudart", "cufft", "cufile", "cupti", "curand", "cusolver", "cusparse", "nvrtc", "nvtx"], marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126')" },
+    { name = "filelock", marker = "extra == 'extra-26-deepfake-detection-archive-cu126'" },
+    { name = "fsspec", marker = "extra == 'extra-26-deepfake-detection-archive-cu126'" },
+    { name = "jinja2", marker = "extra == 'extra-26-deepfake-detection-archive-cu126'" },
+    { name = "networkx", marker = "extra == 'extra-26-deepfake-detection-archive-cu126'" },
+    { name = "nvidia-cudnn-cu12", marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126')" },
+    { name = "nvidia-cusparselt-cu12", marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126')" },
+    { name = "nvidia-nccl-cu12", marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126')" },
+    { name = "nvidia-nvjitlink-cu12", marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126')" },
+    { name = "nvidia-nvshmem-cu12", marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126')" },
+    { name = "setuptools", marker = "extra == 'extra-26-deepfake-detection-archive-cu126'" },
+    { name = "sympy", marker = "extra == 'extra-26-deepfake-detection-archive-cu126'" },
+    { name = "triton", marker = "(python_full_version < '3.15' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126') or (python_full_version >= '3.15' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126')" },
+    { name = "typing-extensions", marker = "extra == 'extra-26-deepfake-detection-archive-cu126'" },
 ]
 wheels = [
     { url = "https://download-r2.pytorch.org/whl/cu126/torch-2.14.1%2Bcu126-cp312-cp312-manylinux_2_28_aarch64.whl", hash = "sha256:d5ec05cc53a2e756f12d938a029d88e54e761a4bc0e2cdd56ccf51475625fd24", upload-time = "2026-09-30T19:57:19Z" },
@@ -3333,9 +3060,9 @@ wheels = [
 ]
 
 [[package]]
-name = "torch"
-version = "2.14.1+cu132"
-source = { registry = "https://download.pytorch.org/whl/cu132" }
+name = "torchaudio"
+version = "2.11.0+cpu"
+source = { registry = "https://download.pytorch.org/whl/cpu" }
 resolution-markers = [
     "python_full_version >= '3.15' and sys_platform == 'win32'",
     "python_full_version >= '3.15' and sys_platform == 'emscripten'",
@@ -3347,47 +3074,6 @@ resolution-markers = [
     "python_full_version < '3.14' and sys_platform == 'emscripten'",
     "python_full_version < '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32'",
 ]
-dependencies = [
-    { name = "cuda-bindings", version = "13.4.3", source = { registry = "https://pypi.org/simple" }, marker = "(python_full_version < '3.15' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (python_full_version >= '3.15' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "cuda-toolkit", version = "13.2.2", source = { registry = "https://pypi.org/simple" }, extra = ["cublas", "cudart", "cufft", "cufile", "cupti", "curand", "cusolver", "cusparse", "nvjitlink", "nvrtc", "nvtx"], marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "filelock", marker = "(extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra != 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra != 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "fsspec", marker = "(extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra != 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra != 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "jinja2", marker = "(extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra != 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra != 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "networkx", marker = "(extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra != 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra != 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "nvidia-cudnn-cu13", marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "nvidia-cusparselt-cu13", marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "nvidia-nccl-cu13", marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "nvidia-nvshmem-cu13", marker = "(sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "setuptools", marker = "(extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra != 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra != 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "sympy", marker = "(extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra != 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra != 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "triton", marker = "(python_full_version < '3.15' and sys_platform == 'linux' and extra == 'extra-26-deepfake-detection-archive-cu132') or (python_full_version >= '3.15' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (sys_platform != 'linux' and extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "typing-extensions", marker = "(extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra != 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra != 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-]
-wheels = [
-    { url = "https://download-r2.pytorch.org/whl/cu132/torch-2.14.1%2Bcu132-cp312-cp312-manylinux_2_28_aarch64.whl", hash = "sha256:2ac1397f72096bd31740e2f0c2d9477111d32dbcec54e1f308063365a9dcc7b5", upload-time = "2026-09-30T20:44:50Z" },
-    { url = "https://download-r2.pytorch.org/whl/cu132/torch-2.14.1%2Bcu132-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:1a04331546dcd9d30c7d6ac10fd3e6d2be9ca2ed31de488a1d079af846488865", upload-time = "2026-09-30T20:45:17Z" },
-    { url = "https://download-r2.pytorch.org/whl/cu132/torch-2.14.1%2Bcu132-cp312-cp312-win_amd64.whl", hash = "sha256:882a670a7e2a17f2eb351406dc4a235455fd9256ac737752de5f1279e2a1df8c", upload-time = "2026-09-30T21:10:37Z" },
-    { url = "https://download-r2.pytorch.org/whl/cu132/torch-2.14.1%2Bcu132-cp313-cp313-manylinux_2_28_aarch64.whl", hash = "sha256:b7c689c28eb093830b520a52ecd5ecd347998a9270d932e45f519e6160570dc0", upload-time = "2026-09-30T21:11:49Z" },
-    { url = "https://download-r2.pytorch.org/whl/cu132/torch-2.14.1%2Bcu132-cp313-cp313-manylinux_2_28_x86_64.whl", hash = "sha256:9d4dcfe64262b74228d5f7f59d4fa04cb940b6bbd840f7de7d76b8d4279018c3", upload-time = "2026-09-30T21:12:20Z" },
-    { url = "https://download-r2.pytorch.org/whl/cu132/torch-2.14.1%2Bcu132-cp313-cp313-win_amd64.whl", hash = "sha256:4d682f3fc2911a6d6538a340a23e2372ae539acae1b6b50f3299214021386860", upload-time = "2026-09-30T21:13:32Z" },
-    { url = "https://download-r2.pytorch.org/whl/cu132/torch-2.14.1%2Bcu132-cp314-cp314-manylinux_2_28_aarch64.whl", hash = "sha256:13839d536fbc5bf2e1b6fcbf9e257b6c810c55a5dfe01f36483d9913d17a8c90", upload-time = "2026-09-30T21:14:34Z" },
-    { url = "https://download-r2.pytorch.org/whl/cu132/torch-2.14.1%2Bcu132-cp314-cp314-manylinux_2_28_x86_64.whl", hash = "sha256:346efb6a763971279094a4fc53e8f9d68d49fca98901b616e6315f94756416fe", upload-time = "2026-09-30T21:14:59Z" },
-    { url = "https://download-r2.pytorch.org/whl/cu132/torch-2.14.1%2Bcu132-cp314-cp314-win_amd64.whl", hash = "sha256:bfdad3796cb2e4c781bd53b58724b2d28e237023267a8453264d64230e7520a4", upload-time = "2026-09-30T21:16:10Z" },
-    { url = "https://download-r2.pytorch.org/whl/cu132/torch-2.14.1%2Bcu132-cp314-cp314t-manylinux_2_28_aarch64.whl", hash = "sha256:9a70b509f93612cc0dbf7b7d1376b0a3cc9aa88f4e2a4f3c315e5726231dd1a0", upload-time = "2026-09-30T21:17:10Z" },
-    { url = "https://download-r2.pytorch.org/whl/cu132/torch-2.14.1%2Bcu132-cp314-cp314t-manylinux_2_28_x86_64.whl", hash = "sha256:f03cc9616b356ecc24edf66dd21ecc96e31e87342a6fd80960428b7fe4866e24", upload-time = "2026-09-30T21:17:35Z" },
-    { url = "https://download-r2.pytorch.org/whl/cu132/torch-2.14.1%2Bcu132-cp314-cp314t-win_amd64.whl", hash = "sha256:958850ea601510c2568650640eafb17867a5d3c8a5b201d0bd6d6d117c2cfd15", upload-time = "2026-09-30T21:18:41Z" },
-    { url = "https://download-r2.pytorch.org/whl/cu132/torch-2.14.1%2Bcu132-cp315-cp315-manylinux_2_28_aarch64.whl", hash = "sha256:46c88e663bc8e5555993fec6c6ed95746e54c4e8b273c57ebdf7d0d07699e20b", upload-time = "2026-09-30T21:19:41Z" },
-    { url = "https://download-r2.pytorch.org/whl/cu132/torch-2.14.1%2Bcu132-cp315-cp315-manylinux_2_28_x86_64.whl", hash = "sha256:8fb164b031e0bdb340b074f623de2c639f04436d8eb1c0e4602d4f9df8e03a25", upload-time = "2026-09-30T21:20:08Z" },
-    { url = "https://download-r2.pytorch.org/whl/cu132/torch-2.14.1%2Bcu132-cp315-cp315-win_amd64.whl", hash = "sha256:f9a7336a67a7a4a29cb568adecc8aef2b9cbb6bbd1d0efc2a52b9e8f7b5fb66b", upload-time = "2026-09-30T21:21:17Z" },
-    { url = "https://download-r2.pytorch.org/whl/cu132/torch-2.14.1%2Bcu132-cp315-cp315t-manylinux_2_28_aarch64.whl", hash = "sha256:ddba245d885de5f49c150a7e790e13a4b438d412d94621f97f803e485fc3ec4f", upload-time = "2026-09-30T21:22:19Z" },
-    { url = "https://download-r2.pytorch.org/whl/cu132/torch-2.14.1%2Bcu132-cp315-cp315t-manylinux_2_28_x86_64.whl", hash = "sha256:3d1c1cab6d415385a2e70e9e8f4ce51273c6be9f0f295cbd583cf70f689d8604", upload-time = "2026-09-30T21:22:44Z" },
-    { url = "https://download-r2.pytorch.org/whl/cu132/torch-2.14.1%2Bcu132-cp315-cp315t-win_amd64.whl", hash = "sha256:24fea67e9b9946e99e6eca2cd8e88d049508a66fb7d753cf6153e769d8406c22", upload-time = "2026-09-30T21:23:48Z" },
-]
-
-[[package]]
-name = "torchaudio"
-version = "2.11.0+cpu"
-source = { registry = "https://download.pytorch.org/whl/cpu" }
 wheels = [
     { url = "https://download-r2.pytorch.org/whl/cpu/torchaudio-2.11.0%2Bcpu-cp312-cp312-manylinux_2_28_aarch64.whl", hash = "sha256:b9dd2c6ac144001dc6dac38b564c1de73ac26ef0c195d5037c4a94990b0e2b5a", upload-time = "2026-03-23T15:50:10Z" },
     { url = "https://download-r2.pytorch.org/whl/cpu/torchaudio-2.11.0%2Bcpu-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:2354248848d06a9ae1e7a12165f800f0dda7df60ecac9fca892322b722b922c0", upload-time = "2026-03-23T15:50:10Z" },
@@ -3407,6 +3093,39 @@ wheels = [
 ]
 
 [[package]]
+name = "torchaudio"
+version = "2.11.0+cu126"
+source = { registry = "https://download.pytorch.org/whl/cu126" }
+resolution-markers = [
+    "python_full_version >= '3.15' and sys_platform == 'win32'",
+    "python_full_version >= '3.15' and sys_platform == 'emscripten'",
+    "python_full_version >= '3.15' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+    "python_full_version == '3.14.*' and sys_platform == 'win32'",
+    "python_full_version == '3.14.*' and sys_platform == 'emscripten'",
+    "python_full_version == '3.14.*' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+    "python_full_version < '3.14' and sys_platform == 'win32'",
+    "python_full_version < '3.14' and sys_platform == 'emscripten'",
+    "python_full_version < '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32'",
+]
+wheels = [
+    { url = "https://download-r2.pytorch.org/whl/cu126/torchaudio-2.11.0%2Bcu126-cp312-cp312-manylinux_2_28_aarch64.whl", hash = "sha256:2ccbbe4555d17c6a7d9bddf76a9c608d6e4ed9b9ecb63cc02f4c4bcf4ae8f05b", upload-time = "2026-03-23T15:50:21Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu126/torchaudio-2.11.0%2Bcu126-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:fe8ba48c690cacc58087603c4d853580006e3d1c0ebe22c0d75f99a004bc981a", upload-time = "2026-03-23T15:50:21Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu126/torchaudio-2.11.0%2Bcu126-cp312-cp312-win_amd64.whl", hash = "sha256:ca5b7815c6952c79c65dce9a78eb96be8b73a8b291f82ca473812a910cdc9fbc", upload-time = "2026-03-23T15:50:21Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu126/torchaudio-2.11.0%2Bcu126-cp313-cp313-manylinux_2_28_aarch64.whl", hash = "sha256:6899f8f5f2e4cb046417da52ef0fa10f19551327d8ba4b5f874ad64883860be5", upload-time = "2026-03-23T15:50:21Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu126/torchaudio-2.11.0%2Bcu126-cp313-cp313-manylinux_2_28_x86_64.whl", hash = "sha256:641f84f2dd1aebf7f1cc6043a70ebae51182b216b5a7a251c6d51949cee762b5", upload-time = "2026-03-23T15:50:21Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu126/torchaudio-2.11.0%2Bcu126-cp313-cp313-win_amd64.whl", hash = "sha256:bb5d55842b8b52ab7a67a6bd0ec23b56dfca4f163e8d2e053d6a24a8192f46c0", upload-time = "2026-03-23T15:50:21Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu126/torchaudio-2.11.0%2Bcu126-cp313-cp313t-manylinux_2_28_aarch64.whl", hash = "sha256:aa117dcaab59e3dd295a54b6423430d0bfba4011b80e4cff65fb03086abc0a15", upload-time = "2026-03-23T15:50:21Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu126/torchaudio-2.11.0%2Bcu126-cp313-cp313t-manylinux_2_28_x86_64.whl", hash = "sha256:67e8f380d0d2c5861e5fc135780c2939c9f40b02431ebcb61d996562d8f57682", upload-time = "2026-03-23T15:50:21Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu126/torchaudio-2.11.0%2Bcu126-cp313-cp313t-win_amd64.whl", hash = "sha256:7ab11a044dd5cdf72e9ed90be1874fa31460dfd120cfb475addc8a92abc50c4b", upload-time = "2026-03-23T15:50:21Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu126/torchaudio-2.11.0%2Bcu126-cp314-cp314-manylinux_2_28_aarch64.whl", hash = "sha256:218948655e79cd5cbdba4d6763d29465405401b95e52aee2edb56b05b0428c93", upload-time = "2026-03-23T15:50:21Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu126/torchaudio-2.11.0%2Bcu126-cp314-cp314-manylinux_2_28_x86_64.whl", hash = "sha256:08800408b1ab0a1992aea704b788103285703d009e232228886f9efa3cbc6a1b", upload-time = "2026-03-23T15:50:21Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu126/torchaudio-2.11.0%2Bcu126-cp314-cp314-win_amd64.whl", hash = "sha256:6c13443d27de1297ebbf37b84c2b6a1f0cfe36459fc7740fe28cced68264b1ee", upload-time = "2026-03-23T15:50:21Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu126/torchaudio-2.11.0%2Bcu126-cp314-cp314t-manylinux_2_28_aarch64.whl", hash = "sha256:8aa73ae00e0e0bbf901015089141c25e4080216f56bb9b33367ac209890af7d3", upload-time = "2026-03-23T15:50:21Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu126/torchaudio-2.11.0%2Bcu126-cp314-cp314t-manylinux_2_28_x86_64.whl", hash = "sha256:7fb725b644927fff30b0b23cbd2de155016b759382efd7b02a33ec77372072f5", upload-time = "2026-03-23T15:50:21Z" },
+    { url = "https://download-r2.pytorch.org/whl/cu126/torchaudio-2.11.0%2Bcu126-cp314-cp314t-win_amd64.whl", hash = "sha256:589a66aacbb183db71b64ed05c46f08b3ce3b15ceefd51e3935ffab16905ef11", upload-time = "2026-03-23T15:50:22Z" },
+]
+
+[[package]]
 name = "torchvision"
 version = "0.29.1+cpu"
 source = { registry = "https://download.pytorch.org/whl/cpu" }
@@ -3422,9 +3141,9 @@ resolution-markers = [
     "python_full_version < '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32'",
 ]
 dependencies = [
-    { name = "numpy", marker = "extra == 'extra-26-deepfake-detection-archive-cpu' or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "pillow", marker = "extra == 'extra-26-deepfake-detection-archive-cpu' or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "torch", version = "2.14.1+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "extra == 'extra-26-deepfake-detection-archive-cpu' or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "numpy", marker = "extra == 'extra-26-deepfake-detection-archive-cpu'" },
+    { name = "pillow", marker = "extra == 'extra-26-deepfake-detection-archive-cpu'" },
+    { name = "torch", version = "2.14.1+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "extra == 'extra-26-deepfake-detection-archive-cpu'" },
 ]
 wheels = [
     { url = "https://download-r2.pytorch.org/whl/cpu/torchvision-0.29.1%2Bcpu-cp312-cp312-manylinux_2_28_aarch64.whl", hash = "sha256:3058f855e65089330ec987b8cac1ccf5e7a26cd475f8cab20597b5577ddc8767", upload-time = "2026-09-30T15:46:11Z" },
@@ -3463,9 +3182,9 @@ resolution-markers = [
     "python_full_version < '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32'",
 ]
 dependencies = [
-    { name = "numpy", marker = "extra == 'extra-26-deepfake-detection-archive-cu126' or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "pillow", marker = "extra == 'extra-26-deepfake-detection-archive-cu126' or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "torch", version = "2.14.1+cu126", source = { registry = "https://download.pytorch.org/whl/cu126" }, marker = "extra == 'extra-26-deepfake-detection-archive-cu126' or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "numpy", marker = "extra == 'extra-26-deepfake-detection-archive-cu126'" },
+    { name = "pillow", marker = "extra == 'extra-26-deepfake-detection-archive-cu126'" },
+    { name = "torch", version = "2.14.1+cu126", source = { registry = "https://download.pytorch.org/whl/cu126" }, marker = "extra == 'extra-26-deepfake-detection-archive-cu126'" },
 ]
 wheels = [
     { url = "https://download-r2.pytorch.org/whl/cu126/torchvision-0.29.1%2Bcu126-cp312-cp312-manylinux_2_28_aarch64.whl", hash = "sha256:00ec6517420091214edd608e40d82ff6c0357d1a24399dde27ed64ca3a66e022", upload-time = "2026-09-30T15:46:21Z" },
@@ -3486,47 +3205,6 @@ wheels = [
     { url = "https://download-r2.pytorch.org/whl/cu126/torchvision-0.29.1%2Bcu126-cp315-cp315t-manylinux_2_28_aarch64.whl", hash = "sha256:59a00d3d69baa43bd01f547bd559b2cfbea53b387f07c45cd79fde4164326046", upload-time = "2026-09-30T15:46:22Z" },
     { url = "https://download-r2.pytorch.org/whl/cu126/torchvision-0.29.1%2Bcu126-cp315-cp315t-manylinux_2_28_x86_64.whl", hash = "sha256:8c278a7545d631ad71013edff80543989978c952c1470609793ea384bea91533", upload-time = "2026-09-30T15:46:22Z" },
     { url = "https://download-r2.pytorch.org/whl/cu126/torchvision-0.29.1%2Bcu126-cp315-cp315t-win_amd64.whl", hash = "sha256:3a827403f7fe07d9eeaeb9fbe5df744fe0ef88e0cd62704868188ad4c35c1eed", upload-time = "2026-09-30T15:46:22Z" },
-]
-
-[[package]]
-name = "torchvision"
-version = "0.29.1+cu132"
-source = { registry = "https://download.pytorch.org/whl/cu132" }
-resolution-markers = [
-    "python_full_version >= '3.15' and sys_platform == 'win32'",
-    "python_full_version >= '3.15' and sys_platform == 'emscripten'",
-    "python_full_version >= '3.15' and sys_platform != 'emscripten' and sys_platform != 'win32'",
-    "python_full_version == '3.14.*' and sys_platform == 'win32'",
-    "python_full_version == '3.14.*' and sys_platform == 'emscripten'",
-    "python_full_version == '3.14.*' and sys_platform != 'emscripten' and sys_platform != 'win32'",
-    "python_full_version < '3.14' and sys_platform == 'win32'",
-    "python_full_version < '3.14' and sys_platform == 'emscripten'",
-    "python_full_version < '3.14' and sys_platform != 'emscripten' and sys_platform != 'win32'",
-]
-dependencies = [
-    { name = "numpy", marker = "(extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra != 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra != 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "pillow", marker = "(extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra != 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra != 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-    { name = "torch", version = "2.14.1+cu132", source = { registry = "https://download.pytorch.org/whl/cu132" }, marker = "(extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra != 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra != 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
-]
-wheels = [
-    { url = "https://download-r2.pytorch.org/whl/cu132/torchvision-0.29.1%2Bcu132-cp312-cp312-manylinux_2_28_aarch64.whl", hash = "sha256:fa9f736052a7350575a64079150932da6d130d6cb6a704956162df40b3c7e4e9", upload-time = "2026-09-30T15:46:28Z" },
-    { url = "https://download-r2.pytorch.org/whl/cu132/torchvision-0.29.1%2Bcu132-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:fe6499909524d17e70a9a46012bc9dedc305004ce915918da224c85b4e6aae2e", upload-time = "2026-09-30T15:46:28Z" },
-    { url = "https://download-r2.pytorch.org/whl/cu132/torchvision-0.29.1%2Bcu132-cp312-cp312-win_amd64.whl", hash = "sha256:05013c2718b25d6019f4a01fbcafca84553247e0591201aa24b1e11fdc63d0ad", upload-time = "2026-09-30T15:46:28Z" },
-    { url = "https://download-r2.pytorch.org/whl/cu132/torchvision-0.29.1%2Bcu132-cp313-cp313-manylinux_2_28_aarch64.whl", hash = "sha256:902a012641cf8ca4353616cfd35f16b7756378f8c8052018f87276b6d74c7d21", upload-time = "2026-09-30T15:46:28Z" },
-    { url = "https://download-r2.pytorch.org/whl/cu132/torchvision-0.29.1%2Bcu132-cp313-cp313-manylinux_2_28_x86_64.whl", hash = "sha256:09392871165e65def144cf681a67693c4d46b59a6cdbe4cd94ee4ec0cce1db78", upload-time = "2026-09-30T15:46:28Z" },
-    { url = "https://download-r2.pytorch.org/whl/cu132/torchvision-0.29.1%2Bcu132-cp313-cp313-win_amd64.whl", hash = "sha256:a55b10a7a0af8bebc8d3dc9a8c3b87b24486bec87ad3f41698e5de0a774fa8a8", upload-time = "2026-09-30T15:46:28Z" },
-    { url = "https://download-r2.pytorch.org/whl/cu132/torchvision-0.29.1%2Bcu132-cp314-cp314-manylinux_2_28_aarch64.whl", hash = "sha256:ab3a154cd653a1eafea784c2c73767abf274b8863979dedb9720cc517b61ba99", upload-time = "2026-09-30T15:46:28Z" },
-    { url = "https://download-r2.pytorch.org/whl/cu132/torchvision-0.29.1%2Bcu132-cp314-cp314-manylinux_2_28_x86_64.whl", hash = "sha256:15a69f48dbc3a880b8350fb0c992e1f3b1430d8d7a4081e6545196203f1893b4", upload-time = "2026-09-30T15:46:28Z" },
-    { url = "https://download-r2.pytorch.org/whl/cu132/torchvision-0.29.1%2Bcu132-cp314-cp314-win_amd64.whl", hash = "sha256:d2f541145d691147691d17eb0c0fa2cd39952ce06714463bf9a56b56068bfe7e", upload-time = "2026-09-30T15:46:28Z" },
-    { url = "https://download-r2.pytorch.org/whl/cu132/torchvision-0.29.1%2Bcu132-cp314-cp314t-manylinux_2_28_aarch64.whl", hash = "sha256:a0fa73ce7c263ac533d669bfb986e37e4a887014926e2d1a520bc4aefb055906", upload-time = "2026-09-30T15:46:28Z" },
-    { url = "https://download-r2.pytorch.org/whl/cu132/torchvision-0.29.1%2Bcu132-cp314-cp314t-manylinux_2_28_x86_64.whl", hash = "sha256:928e8c8796263976f079431e5fb5425d2658349dd6a35dc92784949405da1a94", upload-time = "2026-09-30T15:46:28Z" },
-    { url = "https://download-r2.pytorch.org/whl/cu132/torchvision-0.29.1%2Bcu132-cp314-cp314t-win_amd64.whl", hash = "sha256:9287bbfe240f6ac656f94deb7d06960dd7c02d5b7cd194ec7312dd9328c58eb2", upload-time = "2026-09-30T15:46:29Z" },
-    { url = "https://download-r2.pytorch.org/whl/cu132/torchvision-0.29.1%2Bcu132-cp315-cp315-manylinux_2_28_aarch64.whl", hash = "sha256:7ba4f6e93b75161ba2c6b7bd080e14398fc3939a0725df3802ba3e61b7abafd2", upload-time = "2026-09-30T15:46:29Z" },
-    { url = "https://download-r2.pytorch.org/whl/cu132/torchvision-0.29.1%2Bcu132-cp315-cp315-manylinux_2_28_x86_64.whl", hash = "sha256:744681ff25fad9f1299a3bbbbea48bd3f59c6748aba7279624ec62a9dc9d7256", upload-time = "2026-09-30T15:46:29Z" },
-    { url = "https://download-r2.pytorch.org/whl/cu132/torchvision-0.29.1%2Bcu132-cp315-cp315-win_amd64.whl", hash = "sha256:5f72df255bfae09492ebc778332e73451f8dfcc0e2d7a0bdb72651cbcbffbe5f", upload-time = "2026-09-30T15:46:29Z" },
-    { url = "https://download-r2.pytorch.org/whl/cu132/torchvision-0.29.1%2Bcu132-cp315-cp315t-manylinux_2_28_aarch64.whl", hash = "sha256:b05ad9e70830a5182c4e7c737d6a7f0752ef9b825ba452abf639677c4d80a667", upload-time = "2026-09-30T15:46:29Z" },
-    { url = "https://download-r2.pytorch.org/whl/cu132/torchvision-0.29.1%2Bcu132-cp315-cp315t-manylinux_2_28_x86_64.whl", hash = "sha256:fd950b8d448cebdb13c2c4fbcdad8e253deed498d64468f060e11fb65556bc3b", upload-time = "2026-09-30T15:46:29Z" },
-    { url = "https://download-r2.pytorch.org/whl/cu132/torchvision-0.29.1%2Bcu132-cp315-cp315t-win_amd64.whl", hash = "sha256:a4d175e81abaa1b3ea43cab09e1eb66409c9ca8a51d810bb492660d2f7c5bd4b", upload-time = "2026-09-30T15:46:29Z" },
 ]
 
 [[package]]
@@ -3551,7 +3229,7 @@ name = "tqdm"
 version = "4.70.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "colorama", marker = "sys_platform == 'win32' or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126') or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu132') or (extra == 'extra-26-deepfake-detection-archive-cu126' and extra == 'extra-26-deepfake-detection-archive-cu132')" },
+    { name = "colorama", marker = "sys_platform == 'win32' or (extra == 'extra-26-deepfake-detection-archive-cpu' and extra == 'extra-26-deepfake-detection-archive-cu126')" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/0d/ea/b2a5bd54b28a324dae8211928b2d730b6547500342c7e6c6dea08bd0a485/tqdm-4.70.1.tar.gz", hash = "sha256:cefd0eca11b2a37a3aee776544d4f4ae913f02688135b5556b8788dfa474afc4", size = 171846, upload-time = "2026-09-11T07:25:16.601Z" }
 wheels = [

@@ -3,9 +3,9 @@
 本页描述现有RTX4090服务器的显式兼容入口。通用安装与运行见[开发指南](development.md#环境)，
 发布包使用自己的`run.sh`。以下服务器路径不作为公共安装或模型发现的默认前提。
 
-## 已有共享cu132环境
+## 共享cu126环境
 
-环境为`/opt/venvs/deepfake-cu132`，只由有写权限的维护者同步；普通任务不重新安装依赖：
+环境为`/opt/venvs/deepfake-cu126`，只由有写权限的维护者同步；普通任务不重新安装依赖：
 
 ```bash
 scripts/devctl run python -m deepfake_detection_archive --help
@@ -15,11 +15,14 @@ scripts/devctl check
 scripts/devctl sync
 ```
 
-`devctl`默认保留团队cu132环境，`UV_PROJECT_ENVIRONMENT`可显式覆盖目录。
+`devctl`默认使用团队cu126环境，`UV_PROJECT_ENVIRONMENT`可显式覆盖目录。
 它优先当前checkout的`src/`，不往共享环境安装某个工作副本。
 不再强制覆盖`CUDA_HOME`、`CUDACXX`或`UV_PYTHON_INSTALL_DIR`；编译研究扩展需要的工具链
 由对应任务显式设置。`doctor`报告实际Python、torch构建、CUDA/GPU与媒体工具，
-无GPU时可以诊断CPU，不要求所有开发者都是CUDA13.2或RTX4090。
+无GPU时可以诊断CPU，不要求所有开发者都是RTX4090。
+服务器保留原CUDA13.2 Toolkit和驱动；预编译cu126三件套使用wheel中的CUDA12.6运行库，
+无需更换系统Toolkit。若研究扩展确需本地编译，再按扩展要求单独配置工具链。
+旧cu132 Python环境仅保留历史回退，后续开发不再使用，devctl不再提供cu132后端。
 
 ## 独立环境的可选快捷入口
 
@@ -27,14 +30,16 @@ scripts/devctl sync
 DEEPFAKE_BACKEND=cpu scripts/devctl sync
 DEEPFAKE_BACKEND=cpu scripts/devctl run python -m deepfake_detection_archive --help
 DEEPFAKE_BACKEND=cpu scripts/devctl check
-# cu126使用另一个目录，不把CPU或cu126同步到共享cu132环境
-DEEPFAKE_BACKEND=cu126 scripts/devctl sync
+# 独立GPU环境需先创建，再显式指定；共享环境由维护者同步
+uv venv --python 3.12 .venv-cu126
+UV_PROJECT_ENVIRONMENT="$PWD/.venv-cu126" DEEPFAKE_BACKEND=cu126 scripts/devctl sync
 ```
 
-默认分别使用该checkout的`.venv-cpu`、`.venv-cu126`，首次由uv创建；
+CPU默认使用该checkout的`.venv-cpu`，首次由uv创建；cu126默认使用已存在的共享目录，
+独立GPU目录由上例显式创建；
 指定`UV_PROJECT_ENVIRONMENT`时使用该目录。
 `DEEPFAKE_BACKEND`决定sync依赖组合，显式目录不会自动改变后端，避免将共享环境切成CPU。
-三种后端使用不同环境；不把本机旧CUDA环境作为本任务CPU环境。
+两种后端使用不同环境；不把本机旧CUDA环境作为本任务CPU环境。
 
 ## 可选direnv
 
@@ -43,8 +48,8 @@ DEEPFAKE_BACKEND=cu126 scripts/devctl sync
 
 ```bash
 # 服务器示例；原电脑可替换成自己的独立环境路径
-export UV_PROJECT_ENVIRONMENT=/opt/venvs/deepfake-cu132
-export DEEPFAKE_BACKEND=cu132
+export UV_PROJECT_ENVIRONMENT=/opt/venvs/deepfake-cu126
+export DEEPFAKE_BACKEND=cu126
 ```
 
 `.envrc`会激活已指定且存在的环境，并让当前源码优先；没有本地配置时不选择共享环境。
