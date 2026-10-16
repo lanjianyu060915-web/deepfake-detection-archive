@@ -21,17 +21,20 @@ scripts/devctl sync
 由对应任务显式设置。`doctor`报告实际Python、torch构建、CUDA/GPU与媒体工具，
 无GPU时可以诊断CPU，不要求所有开发者都是CUDA13.2或RTX4090。
 
-## 独立CPU环境的可选快捷入口
+## 独立环境的可选快捷入口
 
 ```bash
 DEEPFAKE_BACKEND=cpu scripts/devctl sync
 DEEPFAKE_BACKEND=cpu scripts/devctl run python -m deepfake_detection_archive --help
 DEEPFAKE_BACKEND=cpu scripts/devctl check
+# cu126使用另一个目录，不把CPU或cu126同步到共享cu132环境
+DEEPFAKE_BACKEND=cu126 scripts/devctl sync
 ```
 
-默认使用该checkout的`.venv-cpu`，首次由uv创建；指定`UV_PROJECT_ENVIRONMENT`时使用该目录。
+默认分别使用该checkout的`.venv-cpu`、`.venv-cu126`，首次由uv创建；
+指定`UV_PROJECT_ENVIRONMENT`时使用该目录。
 `DEEPFAKE_BACKEND`决定sync依赖组合，显式目录不会自动改变后端，避免将共享环境切成CPU。
-两种后端使用不同环境；不把本机旧CUDA环境作为本任务CPU环境。
+三种后端使用不同环境；不把本机旧CUDA环境作为本任务CPU环境。
 
 ## 可选direnv
 
