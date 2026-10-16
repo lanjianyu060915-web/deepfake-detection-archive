@@ -206,8 +206,14 @@ GPU仍依赖宿主驱动和NVIDIA Container Toolkit。当前云机不具备可�
 已完成CPU/cu126两个运行时镜像的build/run/save/load，在无GPU宿主以CPU模式执行4条无标签样例、
 断网/非root/只读根/空缓存推理及save/load复测，按相对路径与媒体SHA对齐，容差`1e-4`。
 两路均4/4、零失败，host/container/save-load分数最大差0；镜像配置digest在save/load后不变。
-镜像及小结果artifact不含权重或训练数据，保留1天；C16保存小结果，镜像持久复制进行中（见数据说明）。
+镜像及小结果artifact不含权重或训练数据，保留1天；C16已持久保存完整镜像及结果，开发使用POSIX只读共享副本（见数据说明）。
 昂贵镜像构建在相关源码/发布环境变更合入main后运行，也可手动触发；PR使用标准检查，避免文档同步反复重建镜像。
+共享开发根为`/srv/shared-data/deliveries/runtime-completion-20261016/C16-container-runtime-20261016/`，
+镜像归档分别为`cpu/runtime-image-cpu.tar.gz`、`cu126/runtime-image-cu126.tar.gz`。
+`docker load --input ARCHIVE`后的tag分别为`deepfake-rehearsal:cpu`和`deepfake-rehearsal:cu126`；
+运行时需另加`--mount type=bind,src=/absolute/model-package,dst=/models,readonly`，
+模型包应包含`configs/`、`weights/`及`release.json`，其余输入/输出/缓存挂载沿用上例。
+CPU运行使用`--device cpu`，仅GPU运行才加`--gpus all`。
 GPU容器及万级容器容量未实测，Ubuntu24 rootfs演练共享宿主内核，不能代替这些证据。
 
 新RC3（clean `2e8388a`）已在RTX4090完成非Docker实际音频/视频各10000条、零失败，

@@ -73,7 +73,7 @@ OOM 原因和每次减批已记录。仅捕获 CUDA OOM，最多减半 3 次，�
 `C15-runtime-completion-20261016` 持久保存 162 内容文件、109657257B，含完整分数/
 选择清单/计划、20 输入回归和 30 张量、源码与依赖锁、27985 个包文件的 SHA 清单，
 以及本轮有界 C3 历史源码查找事实；权重复用 C1，工具源码与工程媒体复用 C13。
-独立 `index.json`/`SHA256SUMS`、团队只读，不复制完整运行库或训练媒体。
+独立 `index.json`/`SHA256SUMS`、团队可读，不复制完整运行库或训练媒体。
 
 [Docker 实际 CI](https://github.com/lanjianyu060915-web/deepfake-detection-archive/actions/runs/38916789385)
 已成功构建 CPU/cu126 两路无权重镜像并完成断网、非 root、只读根/输入/模型、空缓存推理及
@@ -85,7 +85,10 @@ save/load。两路均4/4，host→container、host→loaded、repeat 分数差�
 | CPU | 469660126 | `sha256:65166a271b273d2e4539654698983e765b9b9c0f23ac099af01223c279e28d54` |
 | cu126 | 4050034064 | `sha256:53eeaf4a1acc8d7d9e9b14ae5b73e7f0e8881afb05631127f243cef7a431c826` |
 
-完整小结果及归档SHA保存C16，实际镜像持久复制进行中，完整值见摘要。Actions默认checkout的实际
+C16已持久保存完整镜像及结果，共98内容文件4,519,922,634B；完整值见摘要。
+持久网盘`fx`实测不强制Unix只读位；C15/C16另提供正常POSIX只读开发副本
+`/srv/shared-data/deliveries/runtime-completion-20261016/`，持久归档用于恢复。
+Actions默认checkout的实际
 干净源码为 `250f3b351fb8390352ce20d237d776056bfcb2f5`（PR测试merge），运行的PR head为
 `e2ef985cbba2db44a144910c852caafe25f3c40d`；与容量RC3源码分别登记，不冒充同一构建。
 两构建均在无 GPU runner 以 CPU 执行，不扩展为 GPU 容器或容器万级容量。

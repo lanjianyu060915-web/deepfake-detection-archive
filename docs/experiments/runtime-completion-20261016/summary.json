@@ -48,502 +48,6 @@
       "docker": false
     }
   },
-  "capacity": {
-    "audio": {
-      "status": "passed",
-      "checks": {
-        "exit_zero": true,
-        "complete_report": true,
-        "all_scores": true,
-        "sha_and_path_alignment": true,
-        "unique_media": true,
-        "csv_complete": true
-      },
-      "run": {
-        "status": "finished",
-        "source": {
-          "git_head": "2e8388ae0b3ce2489d70af33ce821ba23665ddb8",
-          "dirty": false
-        },
-        "release_sha256": "5b9d3a92092c2235f6edf82408188ca5b5e5dbdf11cebf29b2b34aa1e5b35b4e",
-        "selection_sha256": "7ba06cd2e1ba5b9a61953ad28b085c54c12725d205cd7da98533efbf7e11f347",
-        "command": [
-          "/var/tmp/deepfake-offline54-20261014/offline_probe",
-          "/var/tmp/deepfake-media-build-20261016/rootfs/app/离线包 rc3/runtime/python/bin/python3.12",
-          "-I",
-          "-S",
-          "/var/tmp/deepfake-residual-20261016/run_capacity.py",
-          "audio",
-          "--child"
-        ],
-        "environment": {
-          "OMP_NUM_THREADS": "2",
-          "MKL_NUM_THREADS": "2",
-          "NVIDIA_TF32_OVERRIDE": "0",
-          "HF_HOME": "/var/tmp/deepfake-residual-20261016/capacity-audio/empty-cache/hf",
-          "TORCH_HOME": "/var/tmp/deepfake-residual-20261016/capacity-audio/empty-cache/torch",
-          "XDG_CACHE_HOME": "/var/tmp/deepfake-residual-20261016/capacity-audio/empty-cache/xdg"
-        },
-        "network_filter_sha256": "480c7f5d581dcf15161ec8a20dce9452a7f609853d689b60ae42a2686eeba317",
-        "execution_mode": "adaptive",
-        "denominator": 10000,
-        "scope": "previously seen real-file capacity, fixed default weights/algorithm, no EER/holdout",
-        "pid": 881897,
-        "exit_code": 0,
-        "wall_end_to_end_seconds": 1046.8318625260144,
-        "max_rss_kib": 1730424
-      },
-      "report": {
-        "by_modality": {
-          "audio": {
-            "coverage": 1.0,
-            "failed": 0,
-            "not_run": 0,
-            "registered": 10000,
-            "success": 10000
-          },
-          "video": {
-            "coverage": null,
-            "failed": 0,
-            "not_run": 0,
-            "registered": 0,
-            "success": 0
-          }
-        },
-        "device": "cuda",
-        "discovered": 10000,
-        "discovery_counts": {
-          "duplicate": 0,
-          "error": 0,
-          "excluded": 0,
-          "media": 10000
-        },
-        "failures": 0,
-        "global_error": null,
-        "official": false,
-        "output": "/var/tmp/deepfake-residual-20261016/capacity-audio/output",
-        "samples": 10000,
-        "score_direction": "higher_is_fake",
-        "score_type": "raw_logit"
-      },
-      "runtime": {
-        "python": "/var/tmp/deepfake-media-build-20261016/rootfs/app/离线包 rc3/runtime/python/bin/python3.12",
-        "torch_file": "/var/tmp/deepfake-media-build-20261016/rootfs/app/离线包 rc3/runtime/site-packages/torch/__init__.py",
-        "torch": "2.14.1+cu126",
-        "cuda": "12.6",
-        "gpu": "NVIDIA GeForce RTX 4090",
-        "allocated_peak": 400120320,
-        "reserved_peak": 434110464,
-        "uid": 1001,
-        "tf32": false
-      },
-      "execution": {
-        "cpu_threads": 2,
-        "effective_batch": 1,
-        "formal_seconds": 787.0734758200124,
-        "oom_max_reductions": 3,
-        "peak_allocated": 400120320,
-        "peak_reserved": 434110464,
-        "precision": "fp32",
-        "profile": [
-          {
-            "batch": 1,
-            "fits_reserve": true,
-            "free_before": 23803068416,
-            "oom": false,
-            "oom_message": null,
-            "peak_allocated": 400120320,
-            "reserve": 3570460263,
-            "seconds": 0.22838414181023836
-          }
-        ],
-        "profile_bounds": {
-          "attempts": 3,
-          "seconds_before_next_attempt": 10.0,
-          "single_call_interruptible": false
-        },
-        "profile_seconds": 0.22838414181023836,
-        "profiled": true,
-        "reductions": [],
-        "requested_batch": 4,
-        "resources": {
-          "cpu": {
-            "affinity_cpus": 12,
-            "memory_available": 64204177408,
-            "memory_limit": 68718428160,
-            "memory_total": 68718428160,
-            "quota_cpus": null,
-            "threads": 12,
-            "workers": 1
-          },
-          "cuda": {
-            "free": 23803068416,
-            "load_peak_allocated": 343120384,
-            "load_peak_reserved": 379584512,
-            "model_allocated": 343120384,
-            "model_reserved": 379584512,
-            "reserve": 3570460263,
-            "total": 25252724736
-          },
-          "model_load_seconds": 10.767942753620446
-        },
-        "resources_end": {
-          "cpu": {
-            "affinity_cpus": 12,
-            "memory_available": 64031846400,
-            "memory_limit": 68718428160,
-            "memory_total": 68718428160,
-            "quota_cpus": null,
-            "threads": 12,
-            "workers": 1
-          },
-          "cuda": {
-            "free": 23645782016,
-            "load_peak_allocated": 400120320,
-            "load_peak_reserved": 434110464,
-            "model_allocated": 376674816,
-            "model_reserved": 434110464,
-            "reserve": 3546867303,
-            "total": 25252724736
-          }
-        },
-        "signature": {
-          "compute_capability": [
-            8,
-            9
-          ],
-          "cpu_thread_budget": 12,
-          "cpu_threads": 2,
-          "cuda_build": "12.6",
-          "cudnn": 91002,
-          "cudnn_tf32": false,
-          "device": "cuda",
-          "device_name": "NVIDIA GeForce RTX 4090",
-          "matmul_precision": "highest",
-          "matmul_tf32": false,
-          "mode": "adaptive",
-          "nvidia_tf32_override": "0",
-          "precision": "fp32",
-          "schema_version": 1,
-          "torch": "2.14.1+cu126",
-          "total_memory": 25252724736,
-          "visible_index": 0
-        },
-        "successful_files": 10000
-      },
-      "inputs": {
-        "count": 10000,
-        "selected_bytes": 2863551136,
-        "new_copied_media_bytes": 0,
-        "materialization": "root-created read-only-to-caller hardlinks; original inode permissions unchanged",
-        "source_selection": "/var/tmp/deepfake-residual-20261016/audio-reference/selection.jsonl",
-        "source_selection_sha256": "6c5ae11a80e27d1e0cc0dcc1505d0283a1a186ce1bf5f4d3b480e1b99fbaf1dd",
-        "selection_reused": true,
-        "modality": "audio",
-        "holdout_consumed": false,
-        "scope": "previously seen diagnosis/train/dev capacity only; no EER, no new selection"
-      },
-      "wall_scope": "spawn through wait4 reap; includes package Python/Torch initialization, discovery, model load/profile, decode, scoring, writes and observer runtime capture; RSS is wait4 child+waited descendants maximum, not simultaneous tree sum"
-    },
-    "video": {
-      "status": "passed",
-      "checks": {
-        "exit_zero": true,
-        "complete_report": true,
-        "all_scores": true,
-        "sha_and_path_alignment": true,
-        "unique_media": true,
-        "csv_complete": true
-      },
-      "run": {
-        "status": "finished",
-        "source": {
-          "git_head": "2e8388ae0b3ce2489d70af33ce821ba23665ddb8",
-          "dirty": false
-        },
-        "release_sha256": "5b9d3a92092c2235f6edf82408188ca5b5e5dbdf11cebf29b2b34aa1e5b35b4e",
-        "selection_sha256": "b27d529cce42d7f630da9e4e837f70d2e4e6c24fabf051bb346476ae4290304b",
-        "command": [
-          "/var/tmp/deepfake-offline54-20261014/offline_probe",
-          "/var/tmp/deepfake-media-build-20261016/rootfs/app/离线包 rc3/runtime/python/bin/python3.12",
-          "-I",
-          "-S",
-          "/var/tmp/deepfake-residual-20261016/run_capacity.py",
-          "video",
-          "--child"
-        ],
-        "environment": {
-          "OMP_NUM_THREADS": "2",
-          "MKL_NUM_THREADS": "2",
-          "NVIDIA_TF32_OVERRIDE": "0",
-          "HF_HOME": "/var/tmp/deepfake-residual-20261016/capacity-video/empty-cache/hf",
-          "TORCH_HOME": "/var/tmp/deepfake-residual-20261016/capacity-video/empty-cache/torch",
-          "XDG_CACHE_HOME": "/var/tmp/deepfake-residual-20261016/capacity-video/empty-cache/xdg"
-        },
-        "network_filter_sha256": "480c7f5d581dcf15161ec8a20dce9452a7f609853d689b60ae42a2686eeba317",
-        "execution_mode": "adaptive",
-        "denominator": 10000,
-        "scope": "previously seen real-file capacity, fixed default weights/algorithm, no EER/holdout",
-        "pid": 881898,
-        "exit_code": 0,
-        "wall_end_to_end_seconds": 1613.3152421070263,
-        "max_rss_kib": 1513624
-      },
-      "report": {
-        "by_modality": {
-          "audio": {
-            "coverage": null,
-            "failed": 0,
-            "not_run": 0,
-            "registered": 0,
-            "success": 0
-          },
-          "video": {
-            "coverage": 1.0,
-            "failed": 0,
-            "not_run": 0,
-            "registered": 10000,
-            "success": 10000
-          }
-        },
-        "device": "cuda",
-        "discovered": 10000,
-        "discovery_counts": {
-          "duplicate": 0,
-          "error": 0,
-          "excluded": 0,
-          "media": 10000
-        },
-        "failures": 0,
-        "global_error": null,
-        "official": false,
-        "output": "/var/tmp/deepfake-residual-20261016/capacity-video/output",
-        "samples": 10000,
-        "score_direction": "higher_is_fake",
-        "score_type": "raw_logit"
-      },
-      "runtime": {
-        "python": "/var/tmp/deepfake-media-build-20261016/rootfs/app/离线包 rc3/runtime/python/bin/python3.12",
-        "torch_file": "/var/tmp/deepfake-media-build-20261016/rootfs/app/离线包 rc3/runtime/site-packages/torch/__init__.py",
-        "torch": "2.14.1+cu126",
-        "cuda": "12.6",
-        "gpu": "NVIDIA GeForce RTX 4090",
-        "allocated_peak": 110129664,
-        "reserved_peak": 134217728,
-        "uid": 1001,
-        "tf32": false
-      },
-      "execution": {
-        "cpu_threads": 2,
-        "effective_batch": 4,
-        "formal_seconds": 1359.8814164856449,
-        "oom_max_reductions": 3,
-        "peak_allocated": 110129664,
-        "peak_reserved": 134217728,
-        "precision": "fp32",
-        "profile": [
-          {
-            "batch": 1,
-            "fits_reserve": true,
-            "free_before": 24762843136,
-            "oom": false,
-            "oom_message": null,
-            "peak_allocated": 78468608,
-            "reserve": 3714426471,
-            "seconds": 0.6003749594092369
-          },
-          {
-            "batch": 2,
-            "fits_reserve": true,
-            "free_before": 24592973824,
-            "oom": false,
-            "oom_message": null,
-            "peak_allocated": 108818944,
-            "reserve": 3688946074,
-            "seconds": 0.10609431471675634
-          },
-          {
-            "batch": 4,
-            "fits_reserve": true,
-            "free_before": 24592973824,
-            "oom": false,
-            "oom_message": null,
-            "peak_allocated": 110129664,
-            "reserve": 3688946074,
-            "seconds": 0.14412674587219954
-          }
-        ],
-        "profile_bounds": {
-          "attempts": 3,
-          "seconds_before_next_attempt": 10.0,
-          "single_call_interruptible": false
-        },
-        "profile_seconds": 0.8505960199981928,
-        "profiled": true,
-        "reductions": [],
-        "requested_batch": 8,
-        "resources": {
-          "cpu": {
-            "affinity_cpus": 12,
-            "memory_available": 65336184832,
-            "memory_limit": 68718428160,
-            "memory_total": 68718428160,
-            "quota_cpus": null,
-            "threads": 12,
-            "workers": 1
-          },
-          "cuda": {
-            "free": 24762843136,
-            "load_peak_allocated": 44896768,
-            "load_peak_reserved": 67108864,
-            "model_allocated": 44896768,
-            "model_reserved": 67108864,
-            "reserve": 3714426471,
-            "total": 25252724736
-          },
-          "model_load_seconds": 6.436918028630316
-        },
-        "resources_end": {
-          "cpu": {
-            "affinity_cpus": 12,
-            "memory_available": 65184305152,
-            "memory_limit": 68718428160,
-            "memory_total": 68718428160,
-            "quota_cpus": null,
-            "threads": 12,
-            "workers": 1
-          },
-          "cuda": {
-            "free": 24592973824,
-            "load_peak_allocated": 110129664,
-            "load_peak_reserved": 134217728,
-            "model_allocated": 78451200,
-            "model_reserved": 134217728,
-            "reserve": 3688946074,
-            "total": 25252724736
-          }
-        },
-        "signature": {
-          "compute_capability": [
-            8,
-            9
-          ],
-          "cpu_thread_budget": 12,
-          "cpu_threads": 2,
-          "cuda_build": "12.6",
-          "cudnn": 91002,
-          "cudnn_tf32": false,
-          "device": "cuda",
-          "device_name": "NVIDIA GeForce RTX 4090",
-          "matmul_precision": "highest",
-          "matmul_tf32": false,
-          "mode": "adaptive",
-          "nvidia_tf32_override": "0",
-          "precision": "fp32",
-          "schema_version": 1,
-          "torch": "2.14.1+cu126",
-          "total_memory": 25252724736,
-          "visible_index": 0
-        },
-        "successful_files": 10000
-      },
-      "inputs": {
-        "count": 10000,
-        "selected_bytes": 698764633,
-        "new_copied_media_bytes": 0,
-        "materialization": "root-created read-only-to-caller hardlinks; original inode permissions unchanged",
-        "source_selection": "/var/tmp/deepfake-video-capacity-20261016/selection.jsonl",
-        "source_selection_sha256": "d4eef4cd30fa56c3529792d182e2e0cdd5bf0b9bd5ffc1fdd7b735597ef58d73",
-        "selection_reused": true,
-        "modality": "video",
-        "holdout_consumed": false,
-        "scope": "previously seen diagnosis/train/dev capacity only; no EER, no new selection"
-      },
-      "wall_scope": "spawn through wait4 reap; includes package Python/Torch initialization, discovery, model load/profile, decode, scoring, writes and observer runtime capture; RSS is wait4 child+waited descendants maximum, not simultaneous tree sum"
-    }
-  },
-  "oom_control": {
-    "status": "passed",
-    "scope": "RTX4090 true CUDA allocator OOM under per-process quotas; not real8GiB GPU or media accuracy",
-    "fractions": [
-      0.04,
-      0.012,
-      0.001
-    ],
-    "allocation_batches": [
-      1,
-      2,
-      8,
-      8,
-      8,
-      4,
-      4,
-      2,
-      1
-    ],
-    "completed_control_rows": 2,
-    "uncommitted_control_id": "2",
-    "minimum_batch_failure": "CUDA out of memory. Tried to allocate 64.00 MiB. GPU 0 has a total capacity of 23.52 GiB of which 23.06 GiB is free. Process 2112806 has 448.00 MiB memory in use. 24.08 MiB allowed; Of the allocated memory 0 bytes is allocated by PyTorch, and 0 bytes is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)",
-    "effective_batch": 1,
-    "reductions": [
-      {
-        "attempt": 1,
-        "new_batch": 4,
-        "old_batch": 8,
-        "oom_message": "CUDA out of memory. Tried to allocate 512.00 MiB. GPU 0 has a total capacity of 23.52 GiB of which 23.06 GiB is free. Process 2112806 has 448.00 MiB memory in use. 288.99 MiB allowed; Of the allocated memory 0 bytes is allocated by PyTorch, and 0 bytes is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)",
-        "phase": "inference"
-      },
-      {
-        "attempt": 1,
-        "new_batch": 2,
-        "old_batch": 4,
-        "oom_message": "CUDA out of memory. Tried to allocate 256.00 MiB. GPU 0 has a total capacity of 23.52 GiB of which 23.06 GiB is free. Process 2112806 has 448.00 MiB memory in use. 24.08 MiB allowed; Of the allocated memory 0 bytes is allocated by PyTorch, and 0 bytes is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)",
-        "phase": "inference"
-      },
-      {
-        "attempt": 2,
-        "new_batch": 1,
-        "old_batch": 2,
-        "oom_message": "CUDA out of memory. Tried to allocate 128.00 MiB. GPU 0 has a total capacity of 23.52 GiB of which 23.06 GiB is free. Process 2112806 has 448.00 MiB memory in use. 24.08 MiB allowed; Of the allocated memory 0 bytes is allocated by PyTorch, and 0 bytes is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)",
-        "phase": "inference"
-      }
-    ],
-    "profile": [
-      {
-        "batch": 1,
-        "fits_reserve": true,
-        "free_before": 24829952000,
-        "oom": false,
-        "oom_message": null,
-        "peak_allocated": 67108864,
-        "reserve": 3724492800,
-        "seconds": 0.015260382555425167
-      },
-      {
-        "batch": 2,
-        "fits_reserve": true,
-        "free_before": 24697831424,
-        "oom": false,
-        "oom_message": null,
-        "peak_allocated": 134217728,
-        "reserve": 3704674714,
-        "seconds": 0.0005896519869565964
-      },
-      {
-        "batch": 8,
-        "fits_reserve": true,
-        "free_before": 24563613696,
-        "oom": false,
-        "oom_message": null,
-        "peak_allocated": 536870912,
-        "reserve": 3684542055,
-        "seconds": 0.0008456846699118614
-      }
-    ],
-    "allocated_peak": 536870912,
-    "reserved_peak": 738197504,
-    "source_commit": "2e8388ae0b3ce2489d70af33ce821ba23665ddb8"
-  },
   "limitations": [
     "Previously seen diagnostics/train/dev for capacity, no blind generalization claim",
     "Both capacity tasks ran concurrently, no speedup comparison against previous serial runs",
@@ -565,6 +69,118 @@
     "package_bytes": 7522767208,
     "release_json_sha256": "5b9d3a92092c2235f6edf82408188ca5b5e5dbdf11cebf29b2b34aa1e5b35b4e"
   },
+  "capacity": {
+    "audio": {
+      "status": "passed",
+      "denominator": 10000,
+      "success": 10000,
+      "failures": 0,
+      "exit_code": 0,
+      "coverage": 1.0,
+      "wall_end_to_end_seconds": 1046.8318625260144,
+      "max_rss_kib": 1730424,
+      "wall_scope": "spawn through wait4 reap; includes package Python/Torch initialization, discovery, model load/profile, decode, scoring, writes and observer runtime capture; RSS is wait4 child+waited descendants maximum, not simultaneous tree sum",
+      "runtime": {
+        "torch": "2.14.1+cu126",
+        "cuda": "12.6",
+        "gpu": "NVIDIA GeForce RTX 4090",
+        "tf32": false
+      },
+      "execution": {
+        "requested_batch": 4,
+        "effective_batch": 1,
+        "cpu_threads": 2,
+        "precision": "fp32",
+        "profile_seconds": 0.22838414181023836,
+        "formal_seconds": 787.0734758200124,
+        "peak_allocated": 400120320,
+        "peak_reserved": 434110464,
+        "reductions": []
+      },
+      "inputs": {
+        "count": 10000,
+        "selected_bytes": 2863551136,
+        "new_copied_media_bytes": 0,
+        "selection_sha256": "7ba06cd2e1ba5b9a61953ad28b085c54c12725d205cd7da98533efbf7e11f347",
+        "selection_reused": true,
+        "holdout_consumed": false
+      },
+      "full_result": "C15-runtime-completion-20261016/capacity-audio/summary.json"
+    },
+    "video": {
+      "status": "passed",
+      "denominator": 10000,
+      "success": 10000,
+      "failures": 0,
+      "exit_code": 0,
+      "coverage": 1.0,
+      "wall_end_to_end_seconds": 1613.3152421070263,
+      "max_rss_kib": 1513624,
+      "wall_scope": "spawn through wait4 reap; includes package Python/Torch initialization, discovery, model load/profile, decode, scoring, writes and observer runtime capture; RSS is wait4 child+waited descendants maximum, not simultaneous tree sum",
+      "runtime": {
+        "torch": "2.14.1+cu126",
+        "cuda": "12.6",
+        "gpu": "NVIDIA GeForce RTX 4090",
+        "tf32": false
+      },
+      "execution": {
+        "requested_batch": 8,
+        "effective_batch": 4,
+        "cpu_threads": 2,
+        "precision": "fp32",
+        "profile_seconds": 0.8505960199981928,
+        "formal_seconds": 1359.8814164856449,
+        "peak_allocated": 110129664,
+        "peak_reserved": 134217728,
+        "reductions": []
+      },
+      "inputs": {
+        "count": 10000,
+        "selected_bytes": 698764633,
+        "new_copied_media_bytes": 0,
+        "selection_sha256": "b27d529cce42d7f630da9e4e837f70d2e4e6c24fabf051bb346476ae4290304b",
+        "selection_reused": true,
+        "holdout_consumed": false
+      },
+      "full_result": "C15-runtime-completion-20261016/capacity-video/summary.json"
+    }
+  },
+  "oom_control": {
+    "status": "passed",
+    "scope": "RTX4090 true CUDA allocator OOM under per-process quotas; not real8GiB GPU or media accuracy",
+    "fractions": [
+      0.04,
+      0.012,
+      0.001
+    ],
+    "completed_control_rows": 2,
+    "uncommitted_control_id": "2",
+    "effective_batch": 1,
+    "allocated_peak": 536870912,
+    "reserved_peak": 738197504,
+    "source_commit": "2e8388ae0b3ce2489d70af33ce821ba23665ddb8",
+    "reductions": [
+      {
+        "phase": "inference",
+        "attempt": 1,
+        "old_batch": 8,
+        "new_batch": 4
+      },
+      {
+        "phase": "inference",
+        "attempt": 1,
+        "old_batch": 4,
+        "new_batch": 2
+      },
+      {
+        "phase": "inference",
+        "attempt": 2,
+        "old_batch": 2,
+        "new_batch": 1
+      }
+    ],
+    "minimum_batch_failure": "torch.cuda.OutOfMemoryError; complete allocator diagnostics in C15-runtime-completion-20261016/oom-control/summary.json"
+  },
   "docker": {
     "run_id": 38916789385,
     "run_url": "https://github.com/lanjianyu060915-web/deepfake-detection-archive/actions/runs/38916789385",
@@ -575,6 +191,14 @@
       "dirty": false
     },
     "archive_root": "/mnt/deepfake-archive/C16-container-runtime-20261016",
+    "conditions": {
+      "network": "none",
+      "root_filesystem": "read-only",
+      "user": "1001:1001",
+      "models_inputs": "read-only",
+      "cache": "empty before each run",
+      "host_source_or_venv_mount": false
+    },
     "variants": {
       "cpu": {
         "backend": "cpu",
@@ -584,104 +208,11 @@
         "host_container_max_abs_delta": 0.0,
         "host_loaded_max_abs_delta": 0.0,
         "container_repeat_max_abs_delta": 0.0,
-        "image_id": "sha256:65166a271b273d2e4539654698983e765b9b9c0f23ac099af01223c279e28d54",
         "image_config_digest": "sha256:65166a271b273d2e4539654698983e765b9b9c0f23ac099af01223c279e28d54",
         "archive_sha256": "a82531d422f27223972adcd87721a2aba844ac1bfe1f8a4089e329bff6134e9c",
         "archive_bytes": 469660126,
-        "runtime_dependencies": {
-          "tqdm": "4.70.1",
-          "sympy": "1.14.0",
-          "pycparser": "3.11",
-          "shellingham": "1.5.4",
-          "httpx2": "2.13.1",
-          "annotated-doc": "0.0.5",
-          "torch": "2.14.1+cpu",
-          "pillow": "12.3.0",
-          "jinja2": "3.1.6",
-          "torchvision": "0.29.1+cpu",
-          "safetensors": "0.8.0",
-          "networkx": "3.7",
-          "tokenizers": "0.23.3",
-          "markdown-it-py": "4.2.0",
-          "idna": "3.20",
-          "truststore": "0.10.4",
-          "h11": "0.16.0",
-          "markupsafe": "3.0.4",
-          "numpy": "2.5.3",
-          "typing_extensions": "4.16.0",
-          "mdurl": "0.1.2",
-          "soundfile": "0.14.0",
-          "pygments": "2.21.0",
-          "httpcore2": "2.13.1",
-          "typer": "0.27.3",
-          "hf-xet": "1.7.0",
-          "scipy": "1.18.1",
-          "rich": "15.0.0",
-          "timm": "1.0.30",
-          "transformers": "5.19.0",
-          "huggingface_hub": "2.2.0",
-          "mpmath": "1.3.0",
-          "click": "8.5.0",
-          "regex": "2026.9.29",
-          "fsspec": "2026.9.0",
-          "filelock": "4.1.0",
-          "pyyaml": "6.0.3",
-          "setuptools": "84.0.0",
-          "packaging": "26.3",
-          "cffi": "2.1.1",
-          "anyio": "4.15.1"
-        },
-        "checkpoint_sha256": {
-          "audio": "62584d52533fc4204df9c8c37e4f78fd2b5299e5cded13869c23faf4399c3efb",
-          "video": "21fdd4e547a5ae7c7a24162eaf2cb526379b7d152e36aa4546891657ae48f115"
-        },
-        "source": {
-          "git_head": "250f3b351fb8390352ce20d237d776056bfcb2f5",
-          "dirty": false
-        },
-        "alignment": [
-          {
-            "path": "audio/mono-16000.flac",
-            "sha256": "68d4838b00555a4b0fcf1223955e64197df0e4919d9b49b55283d9b7a543ddf2",
-            "reference": 4.701779842376709,
-            "container": 4.701779842376709,
-            "loaded": 4.701779842376709
-          },
-          {
-            "path": "audio/stereo-44100.wav",
-            "sha256": "6d46de8bc0706f450603a243f3578708893dd794bd5baf578785fb5760626762",
-            "reference": 3.2543416023254395,
-            "container": 3.2543416023254395,
-            "loaded": 3.2543416023254395
-          },
-          {
-            "path": "video/blue.mp4",
-            "sha256": "c9a386f7a2de9b39abaae65c3b104f45ebc1ef38ba662ea336ad5690a46c1ea5",
-            "reference": 3.9439852237701416,
-            "container": 3.9439852237701416,
-            "loaded": 3.9439852237701416
-          },
-          {
-            "path": "video/testsrc.mp4",
-            "sha256": "47e9623b99817a24bcd0f2814ad32c08d558de664044dfb4d9fadc5eb4eb5933",
-            "reference": 6.741816520690918,
-            "container": 6.741816520690918,
-            "loaded": 6.741816520690918
-          }
-        ],
-        "conditions": {
-          "network": "none",
-          "root_filesystem": "read-only",
-          "user": "1001:1001",
-          "models_inputs": "read-only",
-          "cache": "empty before each run",
-          "host_source_or_venv_mount": false
-        },
-        "limitations": [
-          "GPU container execution not tested",
-          "10k-scale container capacity not tested",
-          "Self-generated unlabelled fixtures; no EER conclusion"
-        ]
+        "torch": "2.14.1+cpu",
+        "full_result": "C16-container-runtime-20261016/cpu/summary.json"
       },
       "cu126": {
         "backend": "cu126",
@@ -691,124 +222,33 @@
         "host_container_max_abs_delta": 0.0,
         "host_loaded_max_abs_delta": 0.0,
         "container_repeat_max_abs_delta": 0.0,
-        "image_id": "sha256:53eeaf4a1acc8d7d9e9b14ae5b73e7f0e8881afb05631127f243cef7a431c826",
         "image_config_digest": "sha256:53eeaf4a1acc8d7d9e9b14ae5b73e7f0e8881afb05631127f243cef7a431c826",
         "archive_sha256": "702b05d564879437e6b03f90208a4c42c89c741b78087fdfbbc824ec2251b0e5",
         "archive_bytes": 4050034064,
-        "runtime_dependencies": {
-          "tqdm": "4.70.1",
-          "sympy": "1.14.0",
-          "pycparser": "3.11",
-          "nvidia-cusolver-cu12": "11.7.1.2",
-          "nvidia-cublas-cu12": "12.6.4.1",
-          "shellingham": "1.5.4",
-          "torch": "2.14.1+cu126",
-          "httpx2": "2.13.1",
-          "cuda-toolkit": "12.6.3",
-          "annotated-doc": "0.0.5",
-          "nvidia-nvshmem-cu12": "3.4.5",
-          "nvidia-cuda-runtime-cu12": "12.6.77",
-          "torchvision": "0.29.1+cu126",
-          "pillow": "12.3.0",
-          "jinja2": "3.1.6",
-          "nvidia-cuda-nvrtc-cu12": "12.6.85",
-          "safetensors": "0.8.0",
-          "networkx": "3.7",
-          "nvidia-cufile-cu12": "1.11.1.6",
-          "triton": "3.8.0",
-          "tokenizers": "0.23.3",
-          "markdown-it-py": "4.2.0",
-          "idna": "3.20",
-          "truststore": "0.10.4",
-          "nvidia-cusparselt-cu12": "0.7.1",
-          "h11": "0.16.0",
-          "cuda-bindings": "12.9.9",
-          "markupsafe": "3.0.4",
-          "numpy": "2.5.3",
-          "typing_extensions": "4.16.0",
-          "nvidia-nccl-cu12": "2.29.3",
-          "mdurl": "0.1.2",
-          "nvidia-cufft-cu12": "11.3.0.4",
-          "soundfile": "0.14.0",
-          "pygments": "2.21.0",
-          "httpcore2": "2.13.1",
-          "typer": "0.27.3",
-          "hf-xet": "1.7.0",
-          "scipy": "1.18.1",
-          "rich": "15.0.0",
-          "cuda-pathfinder": "1.8.3",
-          "nvidia-nvjitlink-cu12": "12.9.86",
-          "timm": "1.0.30",
-          "transformers": "5.19.0",
-          "huggingface_hub": "2.2.0",
-          "mpmath": "1.3.0",
-          "click": "8.5.0",
-          "regex": "2026.9.29",
-          "fsspec": "2026.9.0",
-          "filelock": "4.1.0",
-          "pyyaml": "6.0.3",
-          "nvidia-cusparse-cu12": "12.5.4.2",
-          "nvidia-cudnn-cu12": "9.10.2.21",
-          "nvidia-cuda-cupti-cu12": "12.6.80",
-          "nvidia-curand-cu12": "10.3.7.77",
-          "nvidia-nvtx-cu12": "12.6.77",
-          "setuptools": "84.0.0",
-          "packaging": "26.3",
-          "cffi": "2.1.1",
-          "anyio": "4.15.1"
-        },
-        "checkpoint_sha256": {
-          "audio": "62584d52533fc4204df9c8c37e4f78fd2b5299e5cded13869c23faf4399c3efb",
-          "video": "21fdd4e547a5ae7c7a24162eaf2cb526379b7d152e36aa4546891657ae48f115"
-        },
-        "source": {
-          "git_head": "250f3b351fb8390352ce20d237d776056bfcb2f5",
-          "dirty": false
-        },
-        "alignment": [
-          {
-            "path": "audio/mono-16000.flac",
-            "sha256": "68d4838b00555a4b0fcf1223955e64197df0e4919d9b49b55283d9b7a543ddf2",
-            "reference": 4.701784610748291,
-            "container": 4.701784610748291,
-            "loaded": 4.701784610748291
-          },
-          {
-            "path": "audio/stereo-44100.wav",
-            "sha256": "6d46de8bc0706f450603a243f3578708893dd794bd5baf578785fb5760626762",
-            "reference": 3.2543399333953857,
-            "container": 3.2543399333953857,
-            "loaded": 3.2543399333953857
-          },
-          {
-            "path": "video/blue.mp4",
-            "sha256": "c9a386f7a2de9b39abaae65c3b104f45ebc1ef38ba662ea336ad5690a46c1ea5",
-            "reference": 3.9439854621887207,
-            "container": 3.9439854621887207,
-            "loaded": 3.9439854621887207
-          },
-          {
-            "path": "video/testsrc.mp4",
-            "sha256": "47e9623b99817a24bcd0f2814ad32c08d558de664044dfb4d9fadc5eb4eb5933",
-            "reference": 6.741816520690918,
-            "container": 6.741816520690918,
-            "loaded": 6.741816520690918
-          }
-        ],
-        "conditions": {
-          "network": "none",
-          "root_filesystem": "read-only",
-          "user": "1001:1001",
-          "models_inputs": "read-only",
-          "cache": "empty before each run",
-          "host_source_or_venv_mount": false
-        },
-        "limitations": [
-          "GPU container execution not tested",
-          "10k-scale container capacity not tested",
-          "Self-generated unlabelled fixtures; no EER conclusion"
-        ]
+        "torch": "2.14.1+cu126",
+        "full_result": "C16-container-runtime-20261016/cu126/summary.json"
       }
+    }
+  },
+  "storage": {
+    "persistent_root": "/mnt/deepfake-archive",
+    "persistent_permission_limit": "fx displays Unix read-only bits but does not enforce them; SHA256 verifies integrity",
+    "readonly_workspace": "/srv/shared-data/deliveries/runtime-completion-20261016",
+    "batches": [
+      "C15-runtime-completion-20261016",
+      "C16-container-runtime-20261016"
+    ],
+    "C16_payload_files": 98,
+    "C16_payload_bytes": 4519922634,
+    "readonly_users_verified": [
+      "maochuanjun",
+      "lanjianyu"
+    ],
+    "readonly_workspace_files": 264,
+    "readonly_workspace_bytes": 4629659179,
+    "index_sha256": {
+      "C15-runtime-completion-20261016": "79e5c5ffd6b2289b60c444bcd33cd7b2bb0b0f546ccf674d7125bd5c8c6a5b00",
+      "C16-container-runtime-20261016": "9924d55327cb4f748b337023a67d82b63acf2dd7567fb178617aea62f217a034"
     }
   }
 }

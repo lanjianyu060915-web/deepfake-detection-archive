@@ -138,6 +138,9 @@ uv run --no-sync python -m deepfake_detection_archive train \
 训练只消费 train/dev，dev 早停并选择最佳 checkpoint；holdout 不进入模型选择。
 当前视频支持末端主干微调及轻量时序头；帧均值本身不能当作时序学习。
 CUDA 支持 BF16/FP16 AMP、梯度累积；新方法先用一次小 profile 确定 batch 和输入规模。
+训练容量独立于推理：历史 AST 末4层/12层训练循环的 allocated/reserved 峰值分别为
+5.57/6.66GiB、8.45/9.21GiB，包含dev、不含特征准备；见[原实验](experiments/audio-envsdd-20261011/README.md#资源与复现)。
+这些是原配置与运行构建的测量，不是新的cu126训练profile，也不能由8GiB推理结果推断训练容量。
 `balanced_sampling` 仅用于 train 的类别平衡；同时开启 `balance_sources` 后，
 已存在的来源与类别组合等权抽样，避免小来源被淹没。它不改变 dev 选模指标；
 多来源实验需明确选模使用哪个 dev，并分别报告其他来源。
