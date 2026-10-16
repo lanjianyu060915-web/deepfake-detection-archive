@@ -51,7 +51,7 @@ USE CODEX NATIVE SUBAGENTS FOR INDEPENDENT PARALLEL SUBTASKS WHEN THAT IMPROVES 
 | `data/ models/ outputs/ cache/ external/` | Git忽略的本地资产、运行产物与固定参考 |
 
 - 归档清单保护1526个旧文件及恢复工具，不改写哈希、批量格式化或沿用旧UI/身份检索/Windows接口。
-- Python3.12、uv和`uv.lock`；共享环境 `/opt/venvs/deepfake-cu126`，使用cu126 Torch/torchvision/torchaudio。CPU/cu126互斥，CPU用独立环境 `.venv-cpu`；旧cu132仅保留历史回退，不擅改驱动或装上游整份requirements。无明确需要不新增依赖。
+- Python3.12、uv和`uv.lock`；共享环境 `/opt/venvs/deepfake-cu126`，使用cu126 Torch/torchvision/torchaudio。CPU/cu126互斥，CPU用独立环境 `.venv-cpu`；旧cu132仅保留历史回退，系统Toolkit13.2保留，不擅改驱动或装上游整份requirements。无明确需要不新增依赖。
 - 主动代码88字符、Ruff、严格mypy；维护者需要同步时执行 `scripts/devctl sync`，日常 `scripts/devctl run ...`，提交前 `scripts/devctl check`。
 - 本地/CI检查范围只在 `tools/check_project.sh` 维护；CI为独立CPU环境和固定媒体工具链。归档字节检查保留，旧评测器stub不默认运行。
 

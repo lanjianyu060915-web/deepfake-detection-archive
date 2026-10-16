@@ -131,20 +131,20 @@ scripts/devctl run python -m deepfake_detection_archive predict \
   --input /data/audio --output outputs/audio
 ```
 
-维护者在对应tag的源码checkout中，用已取得的本地权重与环境构建，
-不自动下载或读取训练/holdout媒体：
+维护者在干净源码提交中，用已取得的本地权重与环境构建新的研究RC，
+不自动下载或读取训练/holdout媒体，也不覆盖已发布v0.1.1：
 
 ```bash
 scripts/devctl run python tools/build_release.py \
-  --version 0.1.1 \
-  --output outputs/releases/deepfake-v0.1.1 \
-  --site-packages /opt/venvs/deepfake-cu132/lib/python3.12/site-packages \
+  --version 0.1.2-rc2 \
+  --output outputs/releases/deepfake-v0.1.2-rc2 \
+  --site-packages /opt/venvs/deepfake-cu126/lib/python3.12/site-packages \
   --python-home /opt/uv/python/cpython-3.12.15-linux-x86_64-gnu \
   --audio-weight /path/to/v0.1.1/weights/audio-ast-urban.pt \
   --video-weight /path/to/v0.1.1/weights/video-resnet18.pt
-tar -C outputs/releases -czf outputs/releases/deepfake-v0.1.1-linux-x86_64.tar.gz deepfake-v0.1.1
-split -b 1900M -d outputs/releases/deepfake-v0.1.1-linux-x86_64.tar.gz \
-  outputs/releases/deepfake-v0.1.1-linux-x86_64.tar.gz.part-
+tar -C outputs/releases -czf outputs/releases/deepfake-v0.1.2-rc2-linux-x86_64.tar.gz deepfake-v0.1.2-rc2
+split -b 1900M -d outputs/releases/deepfake-v0.1.2-rc2-linux-x86_64.tar.gz \
+  outputs/releases/deepfake-v0.1.2-rc2-linux-x86_64.tar.gz.part-
 ```
 
 包内 `release.json` 标识版本、构建源码、平台、权重及实际运行依赖版本，

@@ -62,6 +62,8 @@
 | `C10-video-generator-coverage-20261016/` | 三个最佳头、配置/历史/完整分数、来源/排除及小适配器；新增1500原媒体单份tar，骨干复用C6、前轮数据/适配器复用C9，缓存和派生媒体不归档 |
 | `C11-video-clip-adapt-20261016/` | 三个自包含最佳checkpoint、配置/历史/完整分数、来源清单、摘要和必要适配器；不复制C6/C9/C10原媒体、初始权重或tokens，完整权重可独立加载 |
 | `C12-video-capacity-20261016/` | 真实10000视频完整CLI输出/分数/CSV、选择映射、资源/配置和必要测量器；28文件46,582,989字节，原媒体/权重/运行时不重复归档 |
+| `C13-offline-runtime-20261016/` | cu126与固定媒体工具回归：20输入、30份张量、CPU/GPU/Ubuntu24用户态分数、对应工具源码及构建锁；136内容文件96,372,367字节，完整运行库/模型权重复用，不重复归档 |
+| `C14-assets-restoration-20261016/` | #50增量：427条精确路径映射、9份推理配置、源码恢复与缺口、4条无标签工程媒体、既有C6标准infer分数及生成器；251内容文件2,445,066字节，不复制权重、媒体全集或缓存 |
 | `shared/` | `resnet18-a1/encoder.pt`（视频共享基座）与`ast-audioset/`（AST预训练基座） |
 
 原C1–C5与shared共396个内容文件、约3.07GiB，不含原始媒体、特征缓存和可再生的发布分片。
@@ -79,6 +81,17 @@ C11独立登记72个内容文件、3,685,709,182字节；三种完整权重、�
 不包含可重建前缀缓存。训练缓存28,451,327,667字节已在评分及归档完成后释放；
 主43标准infer4条零失败、raw/cached最大logit差4.65e-6，未做跨实例恢复。
 
+C14按独立 `index.json`/`SHA256SUMS` 保全#50新增要求的最小材料，旧索引、配置和分数不改写；
+数据、权重、cache、输出可分别指定根，生成器按原路径/逻辑ID精确映射，C1原sidecar与新权重相邻，
+C6轻量头显式配套完整视觉编码器。同实例新根CPU标准 `infer` 对C6两条自生成无标签
+工程视频2/2成功，仅证明加载推理；C1 AST/ResNet各2条标准 `infer` 也均成功，按显式
+logical ID与媒体SHA对齐新cu126包 `predict`，预设分数绝对容差1e-4、最大差0。
+这4条只证明工程入口/新根兼容，不是历史有标签分数或EER复现，不使用holdout。
+历史清单实际5个dirty候选中4份源码包与训练记录哈希一致；C3原工作副本当前源码及58个
+可达历史源码树均不匹配训练哈希，历史dirty源码仍未恢复，不能用当前clean替代。
+完整历史工作树差异、原训练媒体/缓存恢复、optimizer/RNG无损续训、独立实例恢复、
+旧有标签评分集/全部候选新OS验收及正式许可仍有缺口；同机根映射与本批归档不构成独立跨实例备份，#50新要求尚未全部完成。
+
 校验：
 
 ```bash
@@ -93,11 +106,12 @@ cd /mnt/deepfake-archive && sha256sum -c SHA256SUMS
 原批次候选的归档资产与前端快照在 [`configs/release/candidates.json`](../configs/release/candidates.json)：
 完整鉴伪权重或所需基座的归档路径与SHA-256、代码版本、适用范围、研究/发布状态，以及
 从当前环境实际读出的有效预处理（AST频谱前端常量、LogMel前端、视频帧采样与RGB mean/std）。
-归档时环境未安装 torchaudio，既有 AST 权重使用 NumPy 特征。当前共享环境已补装
-`torchaudio 2.11.0+cpu`；模型显式记录 `frontend`，旧权重缺字段固定为
+归档时环境未安装 torchaudio，既有 AST 权重使用 NumPy 特征。当前共享环境已切换为
+`torchaudio 2.11.0+cu126`，系统 CUDA Toolkit 13.2 保留；模型显式记录 `frontend`，旧权重缺字段固定为
 `numpy_spectrogram_v1`，安装依赖不会自动切换特征。Kaldi 仅由
 `torchaudio_kaldi_v1` 显式选择，训练缓存与发布元数据均区分实现。
-视频缩放裁剪全部由 ffmpeg 完成，不能再叠加 timm 的 `crop_pct`；ffmpeg 由主机提供。
+视频缩放裁剪全部由 ffmpeg 完成，不能再叠加 timm 的 `crop_pct`。源码开发使用宿主FFmpeg；
+新RC可带固定工具，运行回归见[离线运行实验](experiments/offline-runtime-20261016/README.md)。
 该文件仅记录本次归档时的事实，不作为运行配置。统一入口 #57 由
 `configs/release/models.json` 及其引用的推理配置选择模型；完整 checkpoint 包含模型参数，
 视频 ResNet18 基座仅用于训练初始化，恢复推理无需额外加载基座。

@@ -70,7 +70,7 @@ cu126实机为RTX4060 Laptop 8188MiB、驱动617.42，
 PyTorch峰值allocated402.92MiB、reserved486MiB；torchvision CUDA算子和CPU Kaldi fbank均运行通过。
 这是相同权重的小批推理兼容结果，训练容量、批量自适应和其他平台仍需分别验证；
 该次安装使用CPU torchaudio，不能作为GPU torchaudio已验证的证据。
-当前依赖已迁移到完整cu126三件套，新的GPU torchaudio运行证据单独记录；
+当前依赖已迁移到完整cu126三件套，新的GPU TorchAudio算子及同权重CPU/GPU回归已通过，见[实测](experiments/offline-runtime-20261016/README.md)；
 历史cu132整包的既有服务器结果见[发布说明](release.md)。
 
 ### 模型与前端
