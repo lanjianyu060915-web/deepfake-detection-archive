@@ -18,7 +18,7 @@ OPTIONS=(
   --disable-ffplay --disable-avdevice --disable-network --disable-hwaccels
   --disable-x86asm --disable-decoder=av1 --disable-encoders
   --enable-encoder=rawvideo,pcm_f32le,pcm_s16le --disable-muxers
-  --enable-muxer=rawvideo,f32le,s16le,wav --disable-protocols
+  --enable-muxer=rawvideo,pcm_f32le,pcm_s16le,wav --disable-protocols
   --enable-protocol=file,pipe
 )
 ./configure "${OPTIONS[@]}"
@@ -37,6 +37,13 @@ import sys
 from pathlib import Path
 
 root = Path(sys.argv[1])
+samples = bytes(64)
+decoded = subprocess.run([
+    str(root / 'bin/ffmpeg'), '-v', 'error', '-f', 'f32le', '-ar', '16000',
+    '-ac', '1', '-i', 'pipe:0', '-af', 'pan=mono|c0=c0', '-f', 'f32le',
+    '-acodec', 'pcm_f32le', 'pipe:1',
+], input=samples, capture_output=True, check=True).stdout
+assert decoded == samples, 'fixed float-audio CLI smoke failed'
 def sha(path):
     digest = hashlib.sha256()
     with path.open('rb') as stream:
