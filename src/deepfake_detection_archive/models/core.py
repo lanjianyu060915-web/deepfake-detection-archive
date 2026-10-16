@@ -82,6 +82,28 @@ class FeatureHead(nn.Module):
         return result
 
 
+class TemporalHead(nn.Module):
+    """Contextual frame logits from chronological [batch, frames, features]."""
+
+    def __init__(self, feature_dim: int, hidden_dim: int, dropout: float) -> None:
+        super().__init__()
+        self.norm = nn.LayerNorm(feature_dim)
+        self.layers = nn.Sequential(
+            nn.Conv1d(feature_dim, hidden_dim, kernel_size=3, padding=1),
+            nn.GELU(),
+            nn.Dropout(dropout),
+            nn.Conv1d(hidden_dim, 1, kernel_size=1),
+        )
+
+    def forward(self, features: Tensor, mask: Tensor | None = None) -> Tensor:
+        normalized = self.norm(features)
+        if mask is not None:
+            normalized = normalized.masked_fill(~mask[:, :, None], 0)
+        normalized = normalized.transpose(1, 2)
+        logits: Tensor = self.layers(normalized).squeeze(1)
+        return logits
+
+
 @dataclass(frozen=True)
 class LogMelConfig:
     sample_rate: int = 16000
@@ -270,9 +292,17 @@ class MediaFeatureConfig:
     dropout: float = 0.1
     aggregation: PoolingMethod = "mean"
     trim_fraction: float = 0.1
+    temporal_kernel_size: int = 0
 
     def __post_init__(self) -> None:
         HeadConfig(self.input_dim, self.hidden_dim, self.dropout)
+        if type(
+            self.temporal_kernel_size
+        ) is not int or self.temporal_kernel_size not in (
+            0,
+            3,
+        ):
+            raise ValueError("temporal_kernel_size must be 0 or 3")
         if self.aggregation not in ("mean", "median", "logsumexp", "trimmed_mean"):
             raise ValueError(f"unsupported aggregation: {self.aggregation}")
         if not 0 <= self.trim_fraction < 0.5:
@@ -292,9 +322,15 @@ class MediaFeatureClassifier(nn.Module):
     def __init__(self, config: MediaFeatureConfig) -> None:
         super().__init__()
         self.config = config
-        self.head = FeatureHead(
-            HeadConfig(config.input_dim, config.hidden_dim, config.dropout)
-        )
+        self.head: FeatureHead | TemporalHead
+        if config.temporal_kernel_size == 0:
+            self.head = FeatureHead(
+                HeadConfig(config.input_dim, config.hidden_dim, config.dropout)
+            )
+        else:
+            self.head = TemporalHead(
+                config.input_dim, config.hidden_dim, config.dropout
+            )
 
     def forward(self, features: Tensor, lengths: Tensor | None = None) -> Tensor:
         if features.ndim != 3 or min(features.shape) == 0:
@@ -314,7 +350,11 @@ class MediaFeatureClassifier(nn.Module):
             positions = torch.arange(features.shape[1], device=features.device)
             mask = positions[None, :] < lengths[:, None]
             features = features.masked_fill(~mask[:, :, None], 0)
-        logits = self.head.forward(features)
+        logits = (
+            self.head.forward(features, mask)
+            if isinstance(self.head, TemporalHead)
+            else self.head.forward(features)
+        )
         return pool_media_scores(
             logits, mask, self.config.aggregation, self.config.trim_fraction
         )

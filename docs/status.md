@@ -16,8 +16,10 @@
 | 音乐/语音混合 | 匹配对照中未训练路径合成混合32.55%→26.89%；真实广播混合仍50%、环境音退化 | 保留负结果，不替换主候选；[实验](experiments/audio-speech-mix-20261012/README.md) |
 | 三域联合音频 | 等权双种子dev macro 0.70%/0.81%、pooled 1.14%/0.87%；主候选冻结holdout fsd8.57%、音乐2.08%；In-the-Wild24.86%；未训练音乐25.00%、广播混合51.32% | 冻结seed42为主、seed43备选，权重/配置/完整分数团队可读；泛化与许可尚不足以替换release；[实验](experiments/universal-audio-20261012/README.md) |
 | 视频 | 七生成器train3,614/dev844，四轮训练；统一1949条EER33.12%→31.73%，未训练标签33.47%→33.14% | 原同域dev16.44%→19.18%，保留研究候选、不替换v0.1.1；仍缺独立来源泛化与更强视觉表征；[实验](experiments/video-multigen-20261013/README.md) |
+| WaveRep与固定研究融合 | G1新来源受控dev31.41%；仅原dev844拟合的CLIP43+WaveRep为26.48% | 研究路径结果，尚未接公共融合入口；#72由maochuanjun承接，冻结保留与许可待确认；[PR #70](https://github.com/lanjianyu060915-web/deepfake-detection-archive/pull/70) |
 | 强视频公开权重对照 | UFD完整1949条47.75%、未训练标签50.00%、旧dev49.32%、CRF35 58.43%；共2405条全覆盖、零失败 | 作者数值已对齐；停止直接采用公开检测头，不替换现候选，继续有限适配与独立来源比较；[实验](experiments/video-ufd-20261014/README.md) |
 | 冻结CLIP视频头 | 双种子dev24.88%/24.64%；冻结seed43统一1949条26.56%、未训练标签27.88%、CRF35 25.84% | 优于七生成器ResNet，原同域dev20.55%仍退化；新来源受控dev1880条31.33%（ResNet39.00%）、自然组21.33%（ResNet43.36%），8帧31.80%无收益、保留4帧，作为后续视频研究主候选；母媒体独立性及许可未确认，不替换release；[新来源实验](experiments/video-aigvdbench-20261014/README.md) |
+| 冻结CLIP轻量时序头 | 双seed原dev23.93%/24.41%，选42；新来源受控31.17%，去Open-Sora30.29% | 较MLP43 pooled仅改善0.16点、去Open-Sora退化0.44点；不替换候选，停止轻头/帧数调参；[实验](experiments/video-clip-temporal-20261014/README.md) |
 | 离线系统 | 统一入口RC包搬移、CPU/GPU演示及440条profile成功；真实唯一语音10,000/10,000、零失败，端到端1,800.67秒；中断恢复20/20 | 仍用原研究默认，未重发Release；可用已登记视频不足万条，新环境/完整容量/官方I/O及赛用资源仍待完成；[实验](experiments/offline-entry-20261014/README.md) |
 
 以上不是比赛成绩。music-aime96、speech-asv200来自当前dev；未训练音乐视图共享既有dev
