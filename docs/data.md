@@ -10,6 +10,7 @@
 | UFD强视频对照 | `/var/tmp/deepfake-video-ufd-20261014/` | 完整检测器、固定配置与三组分数；公开头负结果；最小资产已另存下方C6持久归档 |
 | 冻结CLIP视频头 | `/var/tmp/deepfake-video-clip-head-20261014/` | 双seed头与三组完整分数，冻结43为研究候选；复用UFD骨干，最小资产已另存C6，不替换release |
 | 生成机制鉴伪（#59） | `/var/tmp/lanjianyu-issue59-20261014/` | WaveRep G1 原权重与 `waverep_video_v1` checkpoint、SD1/Wan2.1 VAE、T1 权重、机制表、全部逐样本分数；持久副本 `/mnt/deepfake-archive/issue59-generator-forensics/`，研究用途、非营利许可 |
+| 固定视频融合（#72） | `/var/tmp/deepfake-video-fusion-20261016/` | CLIP43＋WaveRep自包含checkpoint、受控dev1880标准分数、搬移wheel研究模型包；[实验](experiments/video-fusion-20261016/README.md)，持久副本C8，正式赛用未确认 |
 | 统一入口研究包 | `/var/tmp/deepfake-offline54-20261014/relocated/deepfake-v0.1.2-rc1/` | 真实v0.1.1权重、包内解释器和依赖；搬移、440条profile及真实语音万级已完成，未重发Release |
 | 三域联合音频冻结候选 | `/srv/shared-data/candidates/audio-universal-20261014/` | seed42主/seed43备权重、sidecar、原始配置/历史、完整dev与冻结评分；文件0444、目录2755，研究用途 |
 | 音频补充诊断媒体 | `/srv/shared-data/datasets/audio-review-20261014/` | AIME未训练路径154条、AI-OpenBMAT纯音乐94/混合152条；原清单与媒体哈希保留，只作已见研究诊断 |
@@ -50,12 +51,15 @@
 | `C4-video-multigen/` | 五次运行权重（冻结为`paired-seed43`）、配置、`canonical-2s`与统一诊断清单、全部评分 |
 | `C5-video-temporal/` | 时序头seed42/seed43-retry权重、分数、训练清单 |
 | `C6-video-ufd-clip-20261014/` | UFD完整编码器与公开头、冻结CLIP双seed头、配置和三组完整分数；31内容文件约1.219GB |
+| `C8-video-fusion-20261016/` | 固定CLIP＋WaveRep checkpoint、配置、1880条完整标准分数、摘要、必要运行资源记录与wheel；不含原媒体全集或运行依赖副本 |
 | `shared/` | `resnet18-a1/encoder.pt`（视频共享基座）与`ast-audioset/`（AST预训练基座） |
 
 原C1–C5与shared共396个内容文件、约3.07GiB，不含原始媒体、特征缓存和可再生的发布分片。
 `index.json` 逐文件记录原路径、归档路径、大小和SHA-256；配置中的原路径按该表替换即可指向归档。
 C6是后来完成的独立批次，另31内容文件，由其目录内 `index.json` 与 `SHA256SUMS` 登记，
 不改写原396文件索引。配置保留原路径，恢复时按索引重映射；C6引用原C4数据清单，不重复备份媒体。
+C8同样独立登记：46个内容文件、1,566,333,503字节，包含本轮完整融合checkpoint；
+研究模型包的原发布音频权重复用C1，依赖不重复归档。各原路径与持久路径见C8的`index.json`。
 校验：
 
 ```bash
