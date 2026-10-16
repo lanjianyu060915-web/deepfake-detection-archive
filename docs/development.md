@@ -141,6 +141,16 @@ UV_PROJECT_ENVIRONMENT="$PWD/.venv-cpu" bash tools/check_project.sh
 原 `predict --config MODEL_CONFIG --input DIR --output DIR` 继续用于显式模型配置。
 两种入口复用现有推理逻辑，无需先手写 manifest。
 
+推理配置的`batch_size`控制执行批量。`video_frames`的ResNet18、UFD和WaveRep
+按该值分批把独立帧送入主干；全部特征或帧分数按原顺序恢复后，一次运行完整时序头和
+文件级聚合。CPU保留完整预处理帧，GPU逐批接收；帧数、时间点、分辨率和精度由原配置决定。
+该参数不表示跨文件批量，训练继续使用训练配置的batch。更换执行batch时使用新输出目录。
+当前是固定批量执行，资源自适应和有界OOM重试尚未接入，内存故障沿用全局中止行为。
+
+现有CLIP特征缓存身份包含整个`models/ufd.py`；此次分类器推理修改会改变缓存键，
+首次新实验将重提取，旧缓存和元数据保留。冻结编码器仍直接调用原backbone，
+特征生产计算没有改变；本轮不迁移旧键或手改历史哈希。
+
 准备与 checkpoint 对应的实值配置；以下示例使用 `data/audio-dev.jsonl`，
 推理配置的 `output_dir` 设为 `../outputs/audio-dev`：
 

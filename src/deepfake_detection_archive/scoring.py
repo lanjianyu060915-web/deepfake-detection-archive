@@ -158,7 +158,9 @@ class OfflineScorer:
                 self.frame_preprocessing,
             )
             with inference_stage("model_and_feature_scoring"):
-                frame_result: Tensor = self.model(frames[None, ...].to(self.device))
+                frame_result: Tensor = self.model(
+                    frames[None, ...], frame_batch_size=self.config.batch_size
+                )
                 return float(frame_result[0].float().cpu())
         if self.encoder is not None:
             features = extract_features(
