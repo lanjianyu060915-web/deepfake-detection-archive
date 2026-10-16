@@ -1,0 +1,11 @@
+# Context contains only package/ and this Dockerfile. Preload the base offline.
+FROM ubuntu:24.04@sha256:f610ab94648195aa356059f5b41d6085c9d4d903c072430cdd1af7bdb646106b
+
+COPY package/ /app/
+RUN mkdir -p /work /outputs /cache && chown 1001:1001 /outputs /cache
+ENV HOME=/tmp XDG_CACHE_HOME=/cache HF_HOME=/cache/huggingface \
+    TORCH_HOME=/cache/torch TMPDIR=/tmp
+WORKDIR /work
+USER 1001:1001
+ENTRYPOINT ["/app/run.sh"]
+CMD ["--help"]

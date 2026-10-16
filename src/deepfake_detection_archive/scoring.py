@@ -27,6 +27,7 @@ from .media import (
     decode_audio,
     sample_audio_segments,
 )
+from .media_tools import media_tool
 from .models import (
     AASISTLite,
     LogMelCNN,
@@ -50,7 +51,9 @@ def resolve_path(base: Path, value: str) -> Path:
 
 def _validate_media_executables(config: InferenceConfig, audio: AudioConfig) -> None:
     if config.modality == "video" or audio.backend == "ffmpeg":
-        missing = [name for name in ("ffmpeg", "ffprobe") if not shutil.which(name)]
+        missing = [
+            name for name in ("ffmpeg", "ffprobe") if not shutil.which(media_tool(name))
+        ]
         if missing:
             raise RuntimeError(
                 f"required media executables missing: {', '.join(missing)}"

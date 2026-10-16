@@ -381,6 +381,7 @@ def _predict_run(  # noqa: C901, PLR0912, PLR0915 -- orchestration over the exis
         package / name
         for name in (
             "scoring.py",
+            "media_tools.py",
             "features.py",
             "config.py",
             "contracts.py",
