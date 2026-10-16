@@ -3,7 +3,8 @@
 更新：2026-10-16。**v0.1.1 是可运行的环境音/视频离线研究基线**：
 带本地权重、CPython 与依赖，无标签目录→推理→连续分数导出，支持失败记账与恢复。
 [下载与使用](release.md)。三域联合音频研究候选现已完成，尚未替换发布包；
-独立来源泛化、官方格式、赛用许可及新构建的万级容量验收仍有缺口。
+新RC3已完成音频/视频各万条零失败容量运行；独立来源泛化、官方格式、
+赛用许可与GPU容器实测仍有缺口。
 后续见[路线图](roadmap.md)，全部实验见[实验索引](experiments/README.md)，资产见[数据说明](data.md)。
 
 ## 当前候选与缺口
@@ -24,8 +25,8 @@
 | CLIP三生成器扩展（#80） | 新增1500条库存，排除跨split重复原组2条后train5412/dev1344；主43外部AIGVD18.83%（上轮21.25%、同预算control21.67%）、复现20.00%；ViF pooled25.91%（上轮27.75%） | 采用主43为后续训练研究候选；旧域回到24.88%，原新dev200由16%→18%、ViF未训练标签29.21%仍差于原CLIP27.88%；已见诊断非盲测，许可/最终保留未完成；[实验](experiments/video-generator-coverage-20261016/README.md) |
 | CLIP最后block适配（#81） | 固定主43 AIGVD18.83%→17.83%、去五训练标签21.00%→19.33%，旧dev24.88%→23.22%；ViF pooled25.96%、未训练标签28.64%，rep42为26.92%/30.36% | 保留微调研究候选，C10仍通用视频主候选；复现ViF退化，不升级Release或继续扫已见dev；完整权重已存C11，主43标准infer4/4；[实验](experiments/video-clip-adapt-20261016/README.md) |
 | 固定CLIP＋WaveRep融合 | 真实标准入口受控dev1880/1880、零失败；EER26.41%（CLIP31.33%）、去Open-Sora21.32%；18个生成器均优于CLIP；CLI调用803.54秒、显存allocated峰值1.80GB | 已接入infer/predict、单checkpoint与搬移wheel；仅研究候选，dev已见、旧母媒体交集未知，冻结保留验收及赛用许可待确认；[实验](experiments/video-fusion-20261016/README.md) |
-| cu126与固定工具 | 完整cu126三件套实装；原权重20输入在CPU/GPU/Ubuntu24用户态各20/20，前端张量差0、分数差≤7.63e-6 | 系统Toolkit13.2保留；新RC含LGPL媒体工具及对应源码，未发Release；Docker/新构建容量待完成；[回归](experiments/offline-runtime-20261016/README.md) |
-| 离线系统 | 同一搬移RC包已完成实际语音文件10000/10000、1800.67秒；视频10000/10000、2317.95秒，均零失败；视频allocated峰值110.13MB | 原v0.1.1研究权重，视频限1.25–3.5秒受控H264；未重发Release，工具闭包与Ubuntu24用户态小回归已完成，Docker/新构建容量/官方I/O及赛用许可待完成；[视频容量](experiments/video-capacity-20261016/README.md) |
+| cu126与固定工具 | 完整cu126三件套实装；RC3原权重20输入在CPU/GPU/Ubuntu24新用户各20/20，30前端张量差0、CPU/GPU分数差≤7.63e-6；同设备旧/新实现分数差0 | 系统Toolkit13.2保留；固定同源码LGPL工具及对应源码随包；Ubuntu24用户态共享宿主内核，不能当作Docker；[本轮回归](experiments/runtime-completion-20261016/README.md) |
+| 离线系统 | clean `2e8388a` RC3、adaptive模式：音频10000/10000、1046.83秒；视频10000/10000、1613.32秒，均零失败；allocated/reserved峰值分别400.12/434.11MB、110.13/134.22MB | 两任务并行，耗时不与旧串行运行作加速比较；已见诊断/train-dev容量，无holdout或EER，默认仍为原v0.1.1研究权重；CPU/cu126无权重Docker镜像已实测CPU推理及save/load，未重发Release；[结果与限制](experiments/runtime-completion-20261016/README.md) |
 
 以上不是比赛成绩。music-aime96、speech-asv200来自当前dev；未训练音乐视图共享既有dev
 真样本与prompt组，原曲/artist独立性未知。AI-OpenBMAT有标签纯度与底层许可限制。
@@ -66,6 +67,7 @@ In-the-Wild及多轮使用的dev已见，不能再作为未来盲测；正式交
 - 跨来源视频训练：[#77](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/77)完成新数据、双种子适配与冻结诊断；优先扩充困难内容及真实来源，不继续扫描已见dev。
 - 视频训练覆盖：[#80](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/80)完成AccVideo/EasyAnimate/SVD新训练、同预算对照及跨集诊断；继续更多来源/困难内容与强表征有限适配，保留旧域能力。
 - 视频表征有限适配：[#81](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/81)完成最后block双种子与同预算头对照；AIGVD及旧域改善，ViF复现退化，研究保留而不替换C10。下一步更多真实来源/困难内容，与#51并行衔接，不继续扫已见dev。
+- 安装与资源适配：#65/#66的本轮实现和实际RC3回归已提交[PR #85](https://github.com/lanjianyu060915-web/deepfake-detection-archive/pull/85)，待合并；默认reference、显式adaptive，有界profile/OOM缩减与恢复计划已接入。Docker CPU/cu126镜像在无GPU Actions以CPU模式做4样本及save/load演练，[运行](https://github.com/lanjianyu060915-web/deepfake-detection-archive/actions/runs/38916789385)已成功，两路4/4且host/container/save-load分数差0；不计GPU容器或万级容器验收。
 - 共享资产持久保存：[#50](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/50)原备份完成；用户后来增加的恢复要求尚未全部完成，已重新开放，C14保存部分恢复结果；离线兼容与容量：[#54](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/54)。
 
 RTX4090按实际负载共享，任务输出独立。联合音频候选位于
