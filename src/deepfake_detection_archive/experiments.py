@@ -516,6 +516,7 @@ def _prepare_cache(  # noqa: C901, PLR0912, PLR0913, PLR0915, PLR0917 -- cache a
     frame_preprocessing: dict[str, Any] | None = None,
 ) -> dict[str, list[tuple[Path, str, int]]]:
     audio_config, video_config = config.media_configs
+    vision_features = isinstance(encoder, FrozenVisionEncoder)
     clip_features = (
         isinstance(encoder, FrozenVisionEncoder)
         and encoder.architecture == "ufd_clip_vit_l14"
@@ -573,7 +574,7 @@ def _prepare_cache(  # noqa: C901, PLR0912, PLR0913, PLR0915, PLR0917 -- cache a
         max(1, config.feature_batch_size // config.segments)
         if isinstance(encoder, FrozenAudioEncoder)
         else max(1, config.num_workers)
-        if frame_preprocessing is not None or clip_features
+        if frame_preprocessing is not None or vision_features
         else 1
     )
     for offset in range(0, len(records), chunk_size):
@@ -582,7 +583,7 @@ def _prepare_cache(  # noqa: C901, PLR0912, PLR0913, PLR0915, PLR0917 -- cache a
             identity = cache_identity(record)
             chunk.append((record, identity, cache / f"{object_hash(identity)}.pt"))
         prepared: dict[str, Tensor] = {}
-        if isinstance(encoder, FrozenAudioEncoder) or clip_features:
+        if isinstance(encoder, FrozenAudioEncoder) or vision_features:
             missing = [record for record, _, path in chunk if not path.exists()]
             if missing:
                 try:
@@ -625,7 +626,7 @@ def _prepare_cache(  # noqa: C901, PLR0912, PLR0913, PLR0915, PLR0917 -- cache a
                                 "sample_id": record.sample_id,
                                 "stage": (
                                     "video_feature_batch"
-                                    if clip_features
+                                    if vision_features
                                     else "audio_feature_batch"
                                 ),
                                 "error_type": type(exc).__name__,

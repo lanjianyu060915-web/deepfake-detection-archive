@@ -223,10 +223,16 @@ def extract_video_feature_batch(  # noqa: PLR0913, PLR0917
         ]
         inputs = [future.result() for future in futures]
     with torch.inference_mode():
-        features = [
-            encoder(frames.to(device)).cpu().float()
-            for frames in torch.cat(inputs).split(batch_size)  # type: ignore[no-untyped-call]
-        ]
+        features: list[Tensor] = []
+        for frames in torch.cat(inputs).split(batch_size):  # type: ignore[no-untyped-call]
+            encoded = encoder(frames.to(device))
+            if (
+                encoded.ndim != 2
+                or encoded.shape[0] != frames.shape[0]
+                or not bool(torch.isfinite(encoded).all())
+            ):
+                raise ValueError("encoder returned invalid feature shape or values")
+            features.append(encoded.cpu().float())
     values = torch.cat(features).reshape(len(records), video_config.n_frames, -1)
     return [value.clone() for value in values.unbind()]
 
