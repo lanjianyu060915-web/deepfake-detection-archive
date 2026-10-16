@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "manifest": "/var/tmp/lanjianyu-issue51-20261014/aigvdbench/controlled-1p25s/video_h264_crf23_448x256_16fps_1p25s/manifest.jsonl",
+  "data_root": "/var/tmp/lanjianyu-issue51-20261014/aigvdbench/controlled-1p25s/video_h264_crf23_448x256_16fps_1p25s",
+  "output_dir": "/var/tmp/deepfake-video-clip-temporal-20261014/controlled",
+  "modality": "video",
+  "model_kind": "video_features",
+  "checkpoint": "/var/tmp/deepfake-video-clip-temporal-20261014/seed42-precomputed/training/best.pt",
+  "checkpoint_sha256": "45bb5050bc7058f8be102669a153d028484bcda192429dc893bb552c0f737265",
+  "device": "cuda",
+  "video": {
+    "n_frames": 4,
+    "height": 224,
+    "width": 224,
+    "resize_mode": "native_center_crop"
+  },
+  "aggregation": "mean",
+  "batch_size": 4,
+  "seed": 42,
+  "encoder": {
+    "kind": "vision",
+    "architecture": "ufd_clip_vit_l14",
+    "checkpoint": "/var/tmp/deepfake-video-ufd-20261014/models/ufd-vit-l14.pt",
+    "expected_sha256": "81907988948ab62e4ab20adc33f7eff6bee14f1067cf47e1e712525e0010d7f7"
+  }
+}

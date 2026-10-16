@@ -1,0 +1,1615 @@
+{
+  "dataset": "AIGVDBench/AIGVDBench",
+  "dataset_revision": "bf48acaa4920990af3dd2a511ea88e63354df305",
+  "role": "dev",
+  "condition": "video_h264_crf23_448x256_16fps_1p25s",
+  "manifest_path": "/var/tmp/lanjianyu-issue51-20261014/aigvdbench/controlled-1p25s/video_h264_crf23_448x256_16fps_1p25s/manifest.jsonl",
+  "manifest_sha256": "4e357561ae439b3ba415805886308fda9c37d36ec46eb066f8aa86235016b6f5",
+  "media_snapshot_sha256": "f7e56a7d15a82539e793d12e28fe293891e6a8151f7aa280c4a28224ffffd2d8",
+  "score_direction": "fake_high",
+  "aggregation": "mean_frame_logits",
+  "models": {
+    "release-video": {
+      "pooled": {
+        "expected": 1880,
+        "successful": 1880,
+        "failures": 0,
+        "coverage": 1.0,
+        "eer": 0.4625,
+        "roc_auc": 0.5633359375,
+        "real_count": 600,
+        "fake_count": 1280
+      },
+      "without_Open-Sora": {
+        "expected": 1280,
+        "successful": 1280,
+        "failures": 0,
+        "coverage": 1.0,
+        "eer": 0.38166666666666665,
+        "roc_auc": 0.6658700980392157,
+        "real_count": 600,
+        "fake_count": 680
+      },
+      "paired_Open-Sora_real": {
+        "expected": 1200,
+        "successful": 1200,
+        "failures": 0,
+        "coverage": 1.0,
+        "eer": 0.5416666666666666,
+        "roc_auc": 0.44713055555555553,
+        "real_count": 600,
+        "fake_count": 600
+      },
+      "per_generator_against_all_600_real": {
+        "AccVideo": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.22333333333333333,
+          "roc_auc": 0.8650416666666667,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "AnimateDiff": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.31166666666666665,
+          "roc_auc": 0.7619166666666667,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "EasyAnimate": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.31333333333333335,
+          "roc_auc": 0.7285416666666666,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Gen2": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.45,
+          "roc_auc": 0.6057083333333333,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Gen3": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.4,
+          "roc_auc": 0.62525,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "IPOC": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.31166666666666665,
+          "roc_auc": 0.776,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Jimeng": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.375,
+          "roc_auc": 0.6631666666666667,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Luma": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.40166666666666667,
+          "roc_auc": 0.6219583333333334,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Open-Sora": {
+          "expected": 1200,
+          "successful": 1200,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.5416666666666666,
+          "roc_auc": 0.44713055555555553,
+          "real_count": 600,
+          "fake_count": 600
+        },
+        "Opensora": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.375,
+          "roc_auc": 0.6839166666666666,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Pyramid-Flow": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.3,
+          "roc_auc": 0.7477916666666666,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "RepVideo": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.3566666666666667,
+          "roc_auc": 0.7070000000000001,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "SEINE": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.6,
+          "roc_auc": 0.32595833333333335,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "SVD": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.55,
+          "roc_auc": 0.42891666666666667,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Sora": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.3883333333333333,
+          "roc_auc": 0.642,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "VideoCrafter": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.2866666666666667,
+          "roc_auc": 0.7549583333333333,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "causvid_24fps": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.3,
+          "roc_auc": 0.746,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "vidu": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.375,
+          "roc_auc": 0.6356666666666667,
+          "real_count": 600,
+          "fake_count": 40
+        }
+      },
+      "actual_code_identity": {
+        "code_sha256": "5214eabc4f0fe18386428b6e6a6a948f030e5f60562530be54ae6c1c9f2825cb",
+        "commit": "unavailable",
+        "dirty": null
+      },
+      "scores_sha256": "e54deb49b2fe86cfce1be0dc2f1857e967b4c573c352064ccc19f2d580351d11",
+      "checkpoint_sha256": "21fdd4e547a5ae7c7a24162eaf2cb526379b7d152e36aa4546891657ae48f115",
+      "video": {
+        "height": 224,
+        "n_frames": 4,
+        "resize_mode": "center_crop",
+        "width": 224
+      },
+      "batch_size": 8,
+      "scores_path": "/var/tmp/lanjianyu-issue51-20261014/aigvdbench/scores/release-video/controlled/scores.jsonl"
+    },
+    "multigen-paired-seed43": {
+      "pooled": {
+        "expected": 1880,
+        "successful": 1880,
+        "failures": 0,
+        "coverage": 1.0,
+        "eer": 0.39,
+        "roc_auc": 0.66726953125,
+        "real_count": 600,
+        "fake_count": 1280
+      },
+      "without_Open-Sora": {
+        "expected": 1280,
+        "successful": 1280,
+        "failures": 0,
+        "coverage": 1.0,
+        "eer": 0.35,
+        "roc_auc": 0.7161740196078431,
+        "real_count": 600,
+        "fake_count": 680
+      },
+      "paired_Open-Sora_real": {
+        "expected": 1200,
+        "successful": 1200,
+        "failures": 0,
+        "coverage": 1.0,
+        "eer": 0.43,
+        "roc_auc": 0.6118444444444444,
+        "real_count": 600,
+        "fake_count": 600
+      },
+      "per_generator_against_all_600_real": {
+        "AccVideo": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.2,
+          "roc_auc": 0.858,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "AnimateDiff": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.275,
+          "roc_auc": 0.784625,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "EasyAnimate": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.2866666666666667,
+          "roc_auc": 0.7303333333333334,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Gen2": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.425,
+          "roc_auc": 0.6286666666666667,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Gen3": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.325,
+          "roc_auc": 0.7328333333333333,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "IPOC": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.225,
+          "roc_auc": 0.8428333333333333,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Jimeng": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.33666666666666667,
+          "roc_auc": 0.732375,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Luma": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.40166666666666667,
+          "roc_auc": 0.649875,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Open-Sora": {
+          "expected": 1200,
+          "successful": 1200,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.43,
+          "roc_auc": 0.6118444444444444,
+          "real_count": 600,
+          "fake_count": 600
+        },
+        "Opensora": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.375,
+          "roc_auc": 0.690625,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Pyramid-Flow": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.255,
+          "roc_auc": 0.819625,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "RepVideo": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.3416666666666667,
+          "roc_auc": 0.7705833333333333,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "SEINE": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.5666666666666667,
+          "roc_auc": 0.4245,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "SVD": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.375,
+          "roc_auc": 0.628125,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Sora": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.38,
+          "roc_auc": 0.660125,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "VideoCrafter": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.2,
+          "roc_auc": 0.8924166666666666,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "causvid_24fps": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.35,
+          "roc_auc": 0.7273333333333334,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "vidu": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.425,
+          "roc_auc": 0.6020833333333333,
+          "real_count": 600,
+          "fake_count": 40
+        }
+      },
+      "actual_code_identity": {
+        "code_sha256": "567f1d2664967bab2366513d815ff379fdbe9994670b1b94a60e8bc680e8129a",
+        "commit": "unavailable",
+        "dirty": null
+      },
+      "scores_sha256": "917419b38f899dff6c5f7754e732a1e3293db6ea13fa2976faabf5b43c38a6bb",
+      "checkpoint_sha256": "1d7cb9f5dab5cecef04ec11d67ad2323d1e85fe5b58ad0bb5efb0bfc6f143dc3",
+      "video": {
+        "height": 224,
+        "n_frames": 4,
+        "resize_mode": "center_crop",
+        "width": 224
+      },
+      "batch_size": 8,
+      "scores_path": "/var/tmp/lanjianyu-issue51-20261014/aigvdbench/scores/multigen-paired-seed43/controlled/scores.jsonl"
+    },
+    "temporal-seed43": {
+      "pooled": {
+        "expected": 1880,
+        "successful": 1880,
+        "failures": 0,
+        "coverage": 1.0,
+        "eer": 0.44296875,
+        "roc_auc": 0.5779361979166666,
+        "real_count": 600,
+        "fake_count": 1280
+      },
+      "without_Open-Sora": {
+        "expected": 1280,
+        "successful": 1280,
+        "failures": 0,
+        "coverage": 1.0,
+        "eer": 0.38529411764705884,
+        "roc_auc": 0.6626691176470588,
+        "real_count": 600,
+        "fake_count": 680
+      },
+      "paired_Open-Sora_real": {
+        "expected": 1200,
+        "successful": 1200,
+        "failures": 0,
+        "coverage": 1.0,
+        "eer": 0.5066666666666667,
+        "roc_auc": 0.48190555555555553,
+        "real_count": 600,
+        "fake_count": 600
+      },
+      "per_generator_against_all_600_real": {
+        "AccVideo": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.22833333333333333,
+          "roc_auc": 0.8499166666666667,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "AnimateDiff": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.325,
+          "roc_auc": 0.7737083333333333,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "EasyAnimate": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.35333333333333333,
+          "roc_auc": 0.6912916666666666,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Gen2": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.45,
+          "roc_auc": 0.5995,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Gen3": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.41833333333333333,
+          "roc_auc": 0.6332083333333334,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "IPOC": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.325,
+          "roc_auc": 0.7488333333333334,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Jimeng": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.385,
+          "roc_auc": 0.63975,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Luma": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.375,
+          "roc_auc": 0.6374166666666666,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Open-Sora": {
+          "expected": 1200,
+          "successful": 1200,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.5066666666666667,
+          "roc_auc": 0.48190555555555553,
+          "real_count": 600,
+          "fake_count": 600
+        },
+        "Opensora": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.35,
+          "roc_auc": 0.6730833333333334,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Pyramid-Flow": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.35,
+          "roc_auc": 0.7250416666666667,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "RepVideo": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.375,
+          "roc_auc": 0.7172083333333333,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "SEINE": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.5733333333333334,
+          "roc_auc": 0.35062499999999996,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "SVD": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.5,
+          "roc_auc": 0.47079166666666666,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Sora": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.4,
+          "roc_auc": 0.6102916666666667,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "VideoCrafter": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.335,
+          "roc_auc": 0.7541249999999999,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "causvid_24fps": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.275,
+          "roc_auc": 0.761875,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "vidu": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.41333333333333333,
+          "roc_auc": 0.6287083333333333,
+          "real_count": 600,
+          "fake_count": 40
+        }
+      },
+      "actual_code_identity": {
+        "code_sha256": "567f1d2664967bab2366513d815ff379fdbe9994670b1b94a60e8bc680e8129a",
+        "commit": "unavailable",
+        "dirty": null
+      },
+      "scores_sha256": "039534fc84712846affdf18f32dce0f5244969f68300ac476a05a21f9b3022de",
+      "checkpoint_sha256": "977721c2edd496c6e790ea56df41a34b1402399ebd8f414f754b0dfd4ea1cef1",
+      "video": {
+        "height": 224,
+        "n_frames": 4,
+        "resize_mode": "center_crop",
+        "width": 224
+      },
+      "batch_size": 8,
+      "scores_path": "/var/tmp/lanjianyu-issue51-20261014/aigvdbench/scores/temporal-seed43/controlled/scores.jsonl"
+    },
+    "clip-head-seed43": {
+      "pooled": {
+        "expected": 1880,
+        "successful": 1880,
+        "failures": 0,
+        "coverage": 1.0,
+        "eer": 0.31333333333333335,
+        "roc_auc": 0.7459348958333334,
+        "real_count": 600,
+        "fake_count": 1280
+      },
+      "without_Open-Sora": {
+        "expected": 1280,
+        "successful": 1280,
+        "failures": 0,
+        "coverage": 1.0,
+        "eer": 0.2985294117647059,
+        "roc_auc": 0.7630612745098039,
+        "real_count": 600,
+        "fake_count": 680
+      },
+      "paired_Open-Sora_real": {
+        "expected": 1200,
+        "successful": 1200,
+        "failures": 0,
+        "coverage": 1.0,
+        "eer": 0.32666666666666666,
+        "roc_auc": 0.726525,
+        "real_count": 600,
+        "fake_count": 600
+      },
+      "per_generator_against_all_600_real": {
+        "AccVideo": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.25666666666666665,
+          "roc_auc": 0.817875,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "AnimateDiff": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.225,
+          "roc_auc": 0.869,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "EasyAnimate": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.325,
+          "roc_auc": 0.7562083333333334,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Gen2": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.325,
+          "roc_auc": 0.7027916666666667,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Gen3": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.35,
+          "roc_auc": 0.7119583333333334,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "IPOC": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.20666666666666667,
+          "roc_auc": 0.8768750000000001,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Jimeng": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.3,
+          "roc_auc": 0.7170416666666667,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Luma": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.425,
+          "roc_auc": 0.6798333333333334,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Open-Sora": {
+          "expected": 1200,
+          "successful": 1200,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.32666666666666666,
+          "roc_auc": 0.726525,
+          "real_count": 600,
+          "fake_count": 600
+        },
+        "Opensora": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.33666666666666667,
+          "roc_auc": 0.7504166666666666,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Pyramid-Flow": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.25,
+          "roc_auc": 0.8654166666666666,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "RepVideo": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.325,
+          "roc_auc": 0.7639166666666667,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "SEINE": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.425,
+          "roc_auc": 0.59675,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "SVD": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.35,
+          "roc_auc": 0.706875,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Sora": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.31333333333333335,
+          "roc_auc": 0.7374583333333333,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "VideoCrafter": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.22166666666666668,
+          "roc_auc": 0.8753333333333334,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "causvid_24fps": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.2683333333333333,
+          "roc_auc": 0.8136666666666666,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "vidu": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.35,
+          "roc_auc": 0.730625,
+          "real_count": 600,
+          "fake_count": 40
+        }
+      },
+      "actual_code_identity": {
+        "code_sha256": "11f178a827a8e43c39529fc69a97131e55b31bc0838dd3484cda0f16f32986ec",
+        "commit": "32f027e3be7e774ff3d9b1d360685e5bfeb2decb",
+        "dirty": false
+      },
+      "scores_sha256": "aceda4c5ac620993740e4db4d60606bae95af1819f708af5170d550d6ab54004",
+      "checkpoint_sha256": "7dc0283f0975b2c373956e670138e4f870ed64fda78d2863183655af49037bdf",
+      "video": {
+        "height": 224,
+        "n_frames": 4,
+        "resize_mode": "native_center_crop",
+        "width": 224
+      },
+      "batch_size": 4,
+      "scores_path": "/var/tmp/deepfake-video-independent-20261014/runs/controlled/scores.jsonl"
+    }
+  },
+  "clip_resources": {
+    "elapsed_seconds": 726.6924864565954,
+    "cuda_peak_allocated_bytes": 1337047552,
+    "cuda_peak_reserved_bytes": 1379926016
+  },
+  "clip_timing": {
+    "T10k_raw_seconds": 3710.77948166323,
+    "T10k_safe_seconds": 4638.474352079037,
+    "current_session_elapsed_seconds_before_report_write": 690.7495573628694,
+    "current_session_instrumented_rows": 1880,
+    "current_session_new_rows": 1880,
+    "current_session_report_build_seconds": 0.10714823752641678,
+    "current_session_sample_call_seconds": 685.6999082434922,
+    "current_session_scope": "runner entry through report preparation; excludes caller preflight/model startup, final report write and lock release; stage timings cover only newly processed rows, including sample failures; uninstrumented work is unattributed",
+    "current_session_setup_seconds": 0.0682033197954297,
+    "current_session_stage_seconds": {
+      "decode_and_preprocess": 474.49894765857607,
+      "input_validation": 1.0161590902134776,
+      "model_and_feature_scoring": 209.7662344807759,
+      "unattributed_sample_call": 0.41856701392680407
+    },
+    "current_session_write_seconds": 4.701667515560985,
+    "preflight_seconds": 0.620661542750895,
+    "preflight_seconds_per_sample": 0.00033013911848451866,
+    "projection_scope": "model startup, media/config preflight per sample, sample calls, and row writes",
+    "representative": false,
+    "representativeness_reason": "duration_content_distribution_not_verified",
+    "sample_call_seconds": 685.6999082434922,
+    "samples_per_second": 2.7417241527942737,
+    "stage_clock": "host wall clock, no added CUDA synchronization; built-in successful scoring includes blocking CPU feature/score copies, transfers and pooling, not kernel-only time; failed CUDA calls may leave asynchronous work pending",
+    "startup_seconds": 35.129283249378204,
+    "write_estimate_available": true
+  },
+  "limitations": [
+    "与旧Panda训练/选择集的YouTube母媒体独立性尚未由原始URL映射证实。",
+    "17个少数组各40假视频；共享600真实池，各行不可相加。",
+    "Open-Sora600与Opensora40分别报告。",
+    "保持各候选必要空间预处理；比较整体候选而非骨干因果效应。",
+    "底层YouTube许可未确认；不作为正式比赛资源。",
+    "保留部分未读取，本轮不重训、不重选seed，不替换release。"
+  ],
+  "frame_count_trial": {
+    "eight_frames": {
+      "pooled": {
+        "real_count": 600,
+        "fake_count": 1280,
+        "eer": 0.31796875,
+        "roc_auc": 0.7427578125000001
+      },
+      "without_Open-Sora": {
+        "real_count": 600,
+        "fake_count": 680,
+        "eer": 0.30833333333333335,
+        "roc_auc": 0.7624044117647059
+      },
+      "paired_Open-Sora_real": {
+        "real_count": 600,
+        "fake_count": 600,
+        "eer": 0.325,
+        "roc_auc": 0.7204916666666666
+      },
+      "per_generator": {
+        "AccVideo": {
+          "real_count": 600,
+          "fake_count": 40,
+          "eer": 0.26,
+          "roc_auc": 0.8196666666666667
+        },
+        "AnimateDiff": {
+          "real_count": 600,
+          "fake_count": 40,
+          "eer": 0.225,
+          "roc_auc": 0.870375
+        },
+        "EasyAnimate": {
+          "real_count": 600,
+          "fake_count": 40,
+          "eer": 0.335,
+          "roc_auc": 0.7665416666666667
+        },
+        "Gen2": {
+          "real_count": 600,
+          "fake_count": 40,
+          "eer": 0.32166666666666666,
+          "roc_auc": 0.6998333333333333
+        },
+        "Gen3": {
+          "real_count": 600,
+          "fake_count": 40,
+          "eer": 0.3616666666666667,
+          "roc_auc": 0.703
+        },
+        "IPOC": {
+          "real_count": 600,
+          "fake_count": 40,
+          "eer": 0.225,
+          "roc_auc": 0.873875
+        },
+        "Jimeng": {
+          "real_count": 600,
+          "fake_count": 40,
+          "eer": 0.30666666666666664,
+          "roc_auc": 0.716125
+        },
+        "Luma": {
+          "real_count": 600,
+          "fake_count": 40,
+          "eer": 0.4166666666666667,
+          "roc_auc": 0.6806666666666666
+        },
+        "Open-Sora": {
+          "real_count": 600,
+          "fake_count": 600,
+          "eer": 0.325,
+          "roc_auc": 0.7204916666666666
+        },
+        "Opensora": {
+          "real_count": 600,
+          "fake_count": 40,
+          "eer": 0.3466666666666667,
+          "roc_auc": 0.7436666666666667
+        },
+        "Pyramid-Flow": {
+          "real_count": 600,
+          "fake_count": 40,
+          "eer": 0.23,
+          "roc_auc": 0.861875
+        },
+        "RepVideo": {
+          "real_count": 600,
+          "fake_count": 40,
+          "eer": 0.32666666666666666,
+          "roc_auc": 0.7643333333333333
+        },
+        "SEINE": {
+          "real_count": 600,
+          "fake_count": 40,
+          "eer": 0.425,
+          "roc_auc": 0.61075
+        },
+        "SVD": {
+          "real_count": 600,
+          "fake_count": 40,
+          "eer": 0.35,
+          "roc_auc": 0.7046666666666667
+        },
+        "Sora": {
+          "real_count": 600,
+          "fake_count": 40,
+          "eer": 0.295,
+          "roc_auc": 0.7381666666666666
+        },
+        "VideoCrafter": {
+          "real_count": 600,
+          "fake_count": 40,
+          "eer": 0.22333333333333333,
+          "roc_auc": 0.87375
+        },
+        "causvid_24fps": {
+          "real_count": 600,
+          "fake_count": 40,
+          "eer": 0.26,
+          "roc_auc": 0.80925
+        },
+        "vidu": {
+          "real_count": 600,
+          "fake_count": 40,
+          "eer": 0.35,
+          "roc_auc": 0.7243333333333334
+        }
+      }
+    },
+    "delta_eer_8_minus_4": {
+      "pooled": 0.00463541666666667,
+      "without_Open-Sora": 0.009803921568627472,
+      "paired_Open-Sora_real": -0.0016666666666666496
+    },
+    "sample_count": 1880,
+    "successful": 1880,
+    "failures": 0,
+    "resources": {
+      "elapsed_seconds": 797.3882996523753,
+      "cuda_peak_allocated_bytes": 1337059840,
+      "cuda_peak_reserved_bytes": 1379926016
+    },
+    "timing": {
+      "T10k_raw_seconds": 4088.4196693301797,
+      "T10k_safe_seconds": 5110.524586662725,
+      "current_session_elapsed_seconds_before_report_write": 761.6882790708914,
+      "current_session_instrumented_rows": 1880,
+      "current_session_new_rows": 1880,
+      "current_session_report_build_seconds": 0.0766972005367279,
+      "current_session_sample_call_seconds": 754.7004292234778,
+      "current_session_scope": "runner entry through report preparation; excludes caller preflight/model startup, final report write and lock release; stage timings cover only newly processed rows, including sample failures; uninstrumented work is unattributed",
+      "current_session_setup_seconds": 0.09773611463606358,
+      "current_session_stage_seconds": {
+        "decode_and_preprocess": 523.9332324275747,
+        "input_validation": 1.0406719418242574,
+        "model_and_feature_scoring": 229.31127733457834,
+        "unattributed_sample_call": 0.4152475195005536
+      },
+      "current_session_write_seconds": 6.652800966054201,
+      "preflight_seconds": 0.7296074945479631,
+      "preflight_seconds_per_sample": 0.00038808909284466126,
+      "projection_scope": "model startup, media/config preflight per sample, sample calls, and row writes",
+      "representative": false,
+      "representativeness_reason": "duration_content_distribution_not_verified",
+      "sample_call_seconds": 754.7004292234778,
+      "samples_per_second": 2.4910546320138693,
+      "stage_clock": "host wall clock, no added CUDA synchronization; built-in successful scoring includes blocking CPU feature/score copies, transfers and pooling, not kernel-only time; failed CUDA calls may leave asynchronous work pending",
+      "startup_seconds": 34.787553989328444,
+      "write_estimate_available": true
+    },
+    "elapsed_ratio_8_over_4": 1.097284359634015,
+    "source_code": {
+      "code_sha256": "11f178a827a8e43c39529fc69a97131e55b31bc0838dd3484cda0f16f32986ec",
+      "commit": "32f027e3be7e774ff3d9b1d360685e5bfeb2decb",
+      "dirty": false
+    },
+    "scores_path": "/var/tmp/deepfake-video-eightframes-20261014/runs/controlled/scores.jsonl",
+    "scores_sha256": "8bdc7f9f5ed4fa11195153f84b5979f32d63d261cc567084e5f7c72be702df35",
+    "config": "infer-controlled-8frames.json",
+    "decision": "保留4帧，停止增加帧数；下一步有界学习时序头，不将此dev当盲测。",
+    "scope": "same frozen head/backbone, same dev media and FP32/batch4/native center crop/mean logits; only algorithm change is evenly sampled frame count. Eight frames change inner timestamps, not a strict superset of four frames. Shared GPU/CPU load differs."
+  },
+  "natural": {
+    "manifest_sha256": "2c3b121851fbc1d8d7c6fbe9d45924868402831f5e19353152312181211fdedc",
+    "media_snapshot_sha256": "439d346d61d00efc92be209570616cbbbb4a61c5ba01846375c49c32207bc728",
+    "models": {
+      "release-video": {
+        "pooled": {
+          "expected": 1880,
+          "successful": 1880,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.55,
+          "roc_auc": 0.4438111979166667,
+          "real_count": 600,
+          "fake_count": 1280
+        },
+        "without_Open-Sora": {
+          "expected": 1280,
+          "successful": 1280,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.4411764705882353,
+          "roc_auc": 0.5895245098039216,
+          "real_count": 600,
+          "fake_count": 680
+        },
+        "paired_Open-Sora_real": {
+          "expected": 1200,
+          "successful": 1200,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.6683333333333333,
+          "roc_auc": 0.27866944444444447,
+          "real_count": 600,
+          "fake_count": 600
+        },
+        "scores_sha256": "9026c7e17e0bfbfd977339c06b7721ac4e694aab8fac2223c61689545b40f363",
+        "per_generator": {
+          "AccVideo": {
+            "eer": 0.24333333333333335,
+            "roc_auc": 0.8398333333333333
+          },
+          "AnimateDiff": {
+            "eer": 0.305,
+            "roc_auc": 0.75075
+          },
+          "EasyAnimate": {
+            "eer": 0.375,
+            "roc_auc": 0.6934583333333334
+          },
+          "Gen2": {
+            "eer": 0.5,
+            "roc_auc": 0.5221666666666667
+          },
+          "Gen3": {
+            "eer": 0.475,
+            "roc_auc": 0.5585833333333333
+          },
+          "IPOC": {
+            "eer": 0.3416666666666667,
+            "roc_auc": 0.7161666666666666
+          },
+          "Jimeng": {
+            "eer": 0.41833333333333333,
+            "roc_auc": 0.5867916666666667
+          },
+          "Luma": {
+            "eer": 0.46,
+            "roc_auc": 0.544125
+          },
+          "Open-Sora": {
+            "eer": 0.6683333333333333,
+            "roc_auc": 0.27866944444444447
+          },
+          "Opensora": {
+            "eer": 0.475,
+            "roc_auc": 0.570625
+          },
+          "Pyramid-Flow": {
+            "eer": 0.425,
+            "roc_auc": 0.59
+          },
+          "RepVideo": {
+            "eer": 0.425,
+            "roc_auc": 0.5962083333333333
+          },
+          "SEINE": {
+            "eer": 0.7,
+            "roc_auc": 0.22320833333333334
+          },
+          "SVD": {
+            "eer": 0.575,
+            "roc_auc": 0.36754166666666666
+          },
+          "Sora": {
+            "eer": 0.475,
+            "roc_auc": 0.5465416666666667
+          },
+          "VideoCrafter": {
+            "eer": 0.325,
+            "roc_auc": 0.7461666666666666
+          },
+          "causvid_24fps": {
+            "eer": 0.4,
+            "roc_auc": 0.6462916666666666
+          },
+          "vidu": {
+            "eer": 0.475,
+            "roc_auc": 0.5234583333333334
+          }
+        },
+        "same_candidate_code_weights_video_as_controlled": true
+      },
+      "multigen-paired-seed43": {
+        "pooled": {
+          "expected": 1880,
+          "successful": 1880,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.43359375,
+          "roc_auc": 0.5965,
+          "real_count": 600,
+          "fake_count": 1280
+        },
+        "without_Open-Sora": {
+          "expected": 1280,
+          "successful": 1280,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.36764705882352944,
+          "roc_auc": 0.6805735294117647,
+          "real_count": 600,
+          "fake_count": 680
+        },
+        "paired_Open-Sora_real": {
+          "expected": 1200,
+          "successful": 1200,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.49833333333333335,
+          "roc_auc": 0.5012166666666666,
+          "real_count": 600,
+          "fake_count": 600
+        },
+        "scores_sha256": "5303abaa9d92b2d5fada2498c5ffc01764bfecf4f0f21605c9ff40250d767648",
+        "per_generator": {
+          "AccVideo": {
+            "eer": 0.22,
+            "roc_auc": 0.8556666666666667
+          },
+          "AnimateDiff": {
+            "eer": 0.31833333333333336,
+            "roc_auc": 0.7646666666666667
+          },
+          "EasyAnimate": {
+            "eer": 0.3,
+            "roc_auc": 0.7169583333333334
+          },
+          "Gen2": {
+            "eer": 0.425,
+            "roc_auc": 0.604
+          },
+          "Gen3": {
+            "eer": 0.3933333333333333,
+            "roc_auc": 0.710875
+          },
+          "IPOC": {
+            "eer": 0.25333333333333335,
+            "roc_auc": 0.817375
+          },
+          "Jimeng": {
+            "eer": 0.30833333333333335,
+            "roc_auc": 0.7169166666666666
+          },
+          "Luma": {
+            "eer": 0.40166666666666667,
+            "roc_auc": 0.6061666666666666
+          },
+          "Open-Sora": {
+            "eer": 0.49833333333333335,
+            "roc_auc": 0.5012166666666666
+          },
+          "Opensora": {
+            "eer": 0.375,
+            "roc_auc": 0.6590416666666666
+          },
+          "Pyramid-Flow": {
+            "eer": 0.325,
+            "roc_auc": 0.7177083333333333
+          },
+          "RepVideo": {
+            "eer": 0.33,
+            "roc_auc": 0.684375
+          },
+          "SEINE": {
+            "eer": 0.6333333333333333,
+            "roc_auc": 0.31808333333333333
+          },
+          "SVD": {
+            "eer": 0.4216666666666667,
+            "roc_auc": 0.5886250000000001
+          },
+          "Sora": {
+            "eer": 0.4,
+            "roc_auc": 0.6320416666666667
+          },
+          "VideoCrafter": {
+            "eer": 0.17166666666666666,
+            "roc_auc": 0.8934166666666666
+          },
+          "causvid_24fps": {
+            "eer": 0.35,
+            "roc_auc": 0.70525
+          },
+          "vidu": {
+            "eer": 0.475,
+            "roc_auc": 0.5785833333333333
+          }
+        },
+        "same_candidate_code_weights_video_as_controlled": true
+      },
+      "temporal-seed43": {
+        "pooled": {
+          "expected": 1880,
+          "successful": 1880,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.52734375,
+          "roc_auc": 0.47029166666666666,
+          "real_count": 600,
+          "fake_count": 1280
+        },
+        "without_Open-Sora": {
+          "expected": 1280,
+          "successful": 1280,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.4294117647058823,
+          "roc_auc": 0.5914240196078432,
+          "real_count": 600,
+          "fake_count": 680
+        },
+        "paired_Open-Sora_real": {
+          "expected": 1200,
+          "successful": 1200,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.6316666666666667,
+          "roc_auc": 0.33300833333333335,
+          "real_count": 600,
+          "fake_count": 600
+        },
+        "scores_sha256": "717c563726bc6535ad736728c2313f0c875dd6dae5a80009810f2d8c766730c7",
+        "per_generator": {
+          "AccVideo": {
+            "eer": 0.3,
+            "roc_auc": 0.8048333333333333
+          },
+          "AnimateDiff": {
+            "eer": 0.325,
+            "roc_auc": 0.71625
+          },
+          "EasyAnimate": {
+            "eer": 0.35,
+            "roc_auc": 0.6674166666666667
+          },
+          "Gen2": {
+            "eer": 0.45,
+            "roc_auc": 0.5557083333333334
+          },
+          "Gen3": {
+            "eer": 0.425,
+            "roc_auc": 0.59875
+          },
+          "IPOC": {
+            "eer": 0.35833333333333334,
+            "roc_auc": 0.7033333333333334
+          },
+          "Jimeng": {
+            "eer": 0.425,
+            "roc_auc": 0.5625416666666667
+          },
+          "Luma": {
+            "eer": 0.45,
+            "roc_auc": 0.5465416666666667
+          },
+          "Open-Sora": {
+            "eer": 0.6316666666666667,
+            "roc_auc": 0.33300833333333335
+          },
+          "Opensora": {
+            "eer": 0.42833333333333334,
+            "roc_auc": 0.5735833333333333
+          },
+          "Pyramid-Flow": {
+            "eer": 0.465,
+            "roc_auc": 0.5766666666666667
+          },
+          "RepVideo": {
+            "eer": 0.43166666666666664,
+            "roc_auc": 0.5993333333333334
+          },
+          "SEINE": {
+            "eer": 0.675,
+            "roc_auc": 0.245625
+          },
+          "SVD": {
+            "eer": 0.5566666666666666,
+            "roc_auc": 0.436125
+          },
+          "Sora": {
+            "eer": 0.49333333333333335,
+            "roc_auc": 0.5338333333333334
+          },
+          "VideoCrafter": {
+            "eer": 0.37333333333333335,
+            "roc_auc": 0.7302083333333333
+          },
+          "causvid_24fps": {
+            "eer": 0.325,
+            "roc_auc": 0.6834583333333334
+          },
+          "vidu": {
+            "eer": 0.5,
+            "roc_auc": 0.52
+          }
+        },
+        "same_candidate_code_weights_video_as_controlled": true
+      },
+      "clip-head-seed43": {
+        "pooled": {
+          "expected": 1880,
+          "successful": 1880,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.21328125,
+          "roc_auc": 0.8654674479166666,
+          "real_count": 600,
+          "fake_count": 1280
+        },
+        "without_Open-Sora": {
+          "expected": 1280,
+          "successful": 1280,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.20833333333333334,
+          "roc_auc": 0.8768946078431372,
+          "real_count": 600,
+          "fake_count": 680
+        },
+        "paired_Open-Sora_real": {
+          "expected": 1200,
+          "successful": 1200,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.21833333333333332,
+          "roc_auc": 0.8525166666666667,
+          "real_count": 600,
+          "fake_count": 600
+        },
+        "scores_sha256": "1d97adfa2de0635de5a6e124fde939464df80d3fada21daa5dcd884e1a332e85",
+        "per_generator": {
+          "AccVideo": {
+            "eer": 0.125,
+            "roc_auc": 0.9626666666666667
+          },
+          "AnimateDiff": {
+            "eer": 0.16666666666666666,
+            "roc_auc": 0.9372916666666666
+          },
+          "EasyAnimate": {
+            "eer": 0.225,
+            "roc_auc": 0.877
+          },
+          "Gen2": {
+            "eer": 0.25,
+            "roc_auc": 0.8311666666666666
+          },
+          "Gen3": {
+            "eer": 0.20166666666666666,
+            "roc_auc": 0.8379583333333334
+          },
+          "IPOC": {
+            "eer": 0.14833333333333334,
+            "roc_auc": 0.9194166666666667
+          },
+          "Jimeng": {
+            "eer": 0.12333333333333334,
+            "roc_auc": 0.94725
+          },
+          "Luma": {
+            "eer": 0.2783333333333333,
+            "roc_auc": 0.7950416666666666
+          },
+          "Open-Sora": {
+            "eer": 0.21833333333333332,
+            "roc_auc": 0.8525166666666667
+          },
+          "Opensora": {
+            "eer": 0.175,
+            "roc_auc": 0.892
+          },
+          "Pyramid-Flow": {
+            "eer": 0.15,
+            "roc_auc": 0.9359166666666667
+          },
+          "RepVideo": {
+            "eer": 0.2,
+            "roc_auc": 0.907875
+          },
+          "SEINE": {
+            "eer": 0.35,
+            "roc_auc": 0.7221666666666666
+          },
+          "SVD": {
+            "eer": 0.275,
+            "roc_auc": 0.8169166666666666
+          },
+          "Sora": {
+            "eer": 0.275,
+            "roc_auc": 0.8038333333333334
+          },
+          "VideoCrafter": {
+            "eer": 0.06166666666666667,
+            "roc_auc": 0.9782083333333333
+          },
+          "causvid_24fps": {
+            "eer": 0.145,
+            "roc_auc": 0.9362916666666667
+          },
+          "vidu": {
+            "eer": 0.275,
+            "roc_auc": 0.8062083333333333
+          }
+        },
+        "same_candidate_code_weights_video_as_controlled": true
+      }
+    },
+    "last_resume_resources": {
+      "elapsed_seconds": 1945.6899652490392,
+      "cuda_peak_allocated_bytes": 1337047552,
+      "cuda_peak_reserved_bytes": 1379926016
+    },
+    "last_resume_rows": 466,
+    "complete_end_to_end_wall_seconds": null,
+    "timing_scope": "只有最后466条续跑有完整wall记录；此前一次进程停止未留下完整资源记录，不拼造总wall。逐样本elapsed覆盖完整1880条。",
+    "complete_sample_call_seconds": 3858.9267011797056,
+    "resume_prefix": {
+      "prefix_checks": [
+        {
+          "prefix_bytes": 95403,
+          "unchanged": true
+        },
+        {
+          "prefix_bytes": 507602,
+          "unchanged": true
+        }
+      ],
+      "rows_after_resume": 1880
+    },
+    "condition_comparison_limit": "自然与受控同时改变尺寸/裁剪覆盖、时长、fps和重编码；差值不是仅由元数据捷径造成的因果量。"
+  }
+}
