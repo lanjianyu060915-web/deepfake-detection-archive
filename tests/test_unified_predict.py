@@ -1,5 +1,6 @@
 """Real local stream discovery and unified entry orchestration regressions."""
 
+import hashlib
 import json
 import shutil
 import subprocess
@@ -12,7 +13,12 @@ from deepfake_detection_archive import media
 from deepfake_detection_archive.cli import main
 from deepfake_detection_archive.config import load_inference_config
 from deepfake_detection_archive.media import VideoConfig, decode_video
-from deepfake_detection_archive.models import LogMelCNN, LogMelConfig, save_checkpoint
+from deepfake_detection_archive.models import (
+    LogMelCNN,
+    LogMelConfig,
+    checkpoint,
+    save_checkpoint,
+)
 from deepfake_detection_archive.scoring import OfflineScorer
 from deepfake_detection_archive.unified_predict import (
     _validate_ast_frontend,
@@ -21,6 +27,24 @@ from deepfake_detection_archive.unified_predict import (
     predict_media,
     probe_media,
 )
+
+
+@pytest.fixture(autouse=True)
+def lightweight_host_media_identity(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Real host tools are large; reserve actual hashing for tiny selected fixtures."""
+    original = checkpoint.sha256_file
+    host_tools = {
+        Path(path).resolve()
+        for name in ("ffmpeg", "ffprobe")
+        if (path := shutil.which(name)) is not None
+    }
+
+    def digest(path: Path) -> str:
+        if path.resolve() in host_tools:
+            return hashlib.sha256(f"fixture-host:{path.name}".encode()).hexdigest()
+        return original(path)
+
+    monkeypatch.setattr(checkpoint, "sha256_file", digest)
 
 
 def ffmpeg(*args):
@@ -432,3 +456,44 @@ def test_legacy_numpy_ast_release_runs_with_torchaudio_installed(
     report = predict_media([audio], tmp_path / "wrong-contract", "cpu", resume=False)
     assert "checkpoint AST frontend differs" in report["global_error"]
     assert report["failures"] > 0
+
+
+def test_resume_distinguishes_binary_bytes_but_not_tool_location(
+    bundle: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    first = tmp_path / "first tools"
+    first.mkdir()
+    for name in ("ffmpeg", "ffprobe"):
+        binary = first / name
+        binary.write_text("#!/bin/sh\nprintf 'fixture version\\n'\n")
+        binary.chmod(0o755)
+    hashed: list[Path] = []
+    original = checkpoint.sha256_file
+
+    def counted_hash(path: Path) -> str:
+        hashed.append(path)
+        return original(path)
+
+    monkeypatch.setattr(checkpoint, "sha256_file", counted_hash)
+    monkeypatch.setenv("DEEPFAKE_MEDIA_TOOLS", str(first))
+    output = tmp_path / "binary-identity-run"
+    predict_media([], output, "cpu", resume=False)
+    identity = json.loads((output / "input.json").read_text())
+    assert identity["media_tools_sha256"] == {
+        name: hashlib.sha256((first / name).read_bytes()).hexdigest()
+        for name in ("ffmpeg", "ffprobe")
+    }
+    assert set(identity["media_tools"].values()) == {"fixture version\n"}
+    assert len(hashed) == 2
+    relocated = tmp_path / "relocated tools"
+    shutil.copytree(first, relocated)
+    monkeypatch.setenv("DEEPFAKE_MEDIA_TOOLS", str(relocated))
+    predict_media([], output, "cpu", resume=True)
+    assert json.loads((output / "input.json").read_text()) == identity
+    assert len(hashed) == 4
+    with (relocated / "ffmpeg").open("a") as stream:
+        stream.write("# different binary, same version output\n")
+    assert media._run(["ffmpeg", "-version"], 5, 4096).decode() == "fixture version\n"
+    with pytest.raises(ValueError, match="resume rejected"):
+        predict_media([], output, "cpu", resume=True)
+    assert len(hashed) == 6

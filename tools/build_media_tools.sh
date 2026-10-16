@@ -5,18 +5,19 @@ set -euo pipefail
 SCRIPT="$(realpath -- "$0")"
 ARCHIVE="$(realpath -- "$1")"
 OUTPUT="$(realpath -m -- "$2")"
-EXPECTED=09f990289327d3ebfedf4fc15cae3f884a65dab7a5aac7bbb5b01ff83900efd9
+EXPECTED=ab4652ccd1ca1a5c864c09751bb0465757f8a4aafc00425b7490e3bdd9b6fccf
 printf '%s  %s\n' "$EXPECTED" "$ARCHIVE" | sha256sum --check --status
 mkdir -- "$OUTPUT"
 WORK="$(mktemp -d "${TMPDIR:-/tmp}/deepfake-ffmpeg-build.XXXXXX")"
 trap 'rm -rf -- "$WORK"' EXIT
 tar -xf "$ARCHIVE" -C "$WORK" --strip-components=1
 cd "$WORK"
+printf '%s\n' N-127271-gba987fe24d-local-lgpl > FF_VERSION
 OPTIONS=(
   --disable-autodetect --disable-gpl --disable-nonfree --disable-version3
-  --disable-shared --enable-static --enable-small --disable-doc --disable-debug
+  --disable-shared --enable-static --disable-doc --disable-debug
   --disable-ffplay --disable-avdevice --disable-network --disable-hwaccels
-  --disable-x86asm --disable-decoder=av1 --disable-encoders
+  --disable-decoder=av1 --disable-encoders
   --enable-encoder=rawvideo,pcm_f32le,pcm_s16le --disable-muxers
   --enable-muxer=rawvideo,pcm_f32le,pcm_s16le,wav --disable-protocols
   --enable-protocol=file,pipe
@@ -25,7 +26,7 @@ OPTIONS=(
 make -j "${DEEPFAKE_BUILD_JOBS:-4}" ffmpeg ffprobe
 mkdir -p "$OUTPUT/bin" "$OUTPUT/source" "$OUTPUT/licenses"
 cp -- ffmpeg ffprobe "$OUTPUT/bin/"
-cp -- "$ARCHIVE" "$OUTPUT/source/ffmpeg-n8.1.3-git.tar.gz"
+cp -- "$ARCHIVE" "$OUTPUT/source/ffmpeg-ba987fe24d.tar.gz"
 cp -- LICENSE.md COPYING.LGPLv2.1 "$OUTPUT/licenses/"
 cp -- "$SCRIPT" "$OUTPUT/build.sh"
 python3 - "$OUTPUT" "${OPTIONS[@]}" <<'PY'
@@ -58,15 +59,16 @@ for name in ('ffmpeg', 'ffprobe'):
         'version': subprocess.check_output([str(path), '-version'], text=True),
         'dynamic_libraries': subprocess.check_output(['ldd', str(path)], text=True),
     }
-source = root / 'source/ffmpeg-n8.1.3-git.tar.gz'
+source = root / 'source/ffmpeg-ba987fe24d.tar.gz'
 metadata = {
-    'schema': 1, 'version': '8.1.3', 'tools': tools,
+    'schema': 1, 'version': 'N-127271-gba987fe24d-local-lgpl', 'tools': tools,
     'source': {
         'archive': str(source.relative_to(root)), 'sha256': sha(source),
-        'url': 'https://github.com/FFmpeg/FFmpeg/archive/refs/tags/n8.1.3.tar.gz',
-        'commit': '1041abdc962f4cc4f394aa8de9dc5236c0c3b9e7',
+        'url': 'https://github.com/FFmpeg/FFmpeg/archive/ba987fe24d6713c4d4b3a15cebaeca18c41fbd31.tar.gz',
+        'commit': 'ba987fe24d6713c4d4b3a15cebaeca18c41fbd31',
         'verification': 'HTTPS archive, fixed SHA256 and Git archive PAX commit',
     },
+    'source_modifications': ['FF_VERSION labels the pinned Git source and local build'],
     'configure': sys.argv[2:], 'compiler': subprocess.check_output(
         ['cc', '--version'], text=True).splitlines()[0],
     'platform': platform.platform(), 'license': 'LGPL-2.1-or-later',

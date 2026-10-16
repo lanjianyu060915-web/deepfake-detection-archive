@@ -164,21 +164,21 @@ split -b 1900M -d outputs/releases/deepfake-v0.1.1-linux-x86_64.tar.gz \
 显式目录或已存在的包内工具不完整时直接报错，不回退到另一构建。
 工具变更记录在统一入口恢复身份中，不能混入旧运行继续写分数。
 
-当前工具配方固定 [FFmpeg n8.1.3](https://github.com/FFmpeg/FFmpeg/tree/1041abdc962f4cc4f394aa8de9dc5236c0c3b9e7)，
+当前工具配方固定原服务器对应的 [FFmpeg ba987fe24d](https://github.com/FFmpeg/FFmpeg/tree/ba987fe24d6713c4d4b3a15cebaeca18c41fbd31)，
 保留原生解码器、滤镜和 swscale/swresample，禁用第三方自动探测、GPL、nonfree、网络和硬件解码。
 FFmpeg 自身库静态链接，系统 glibc/libm 仍需目标机提供。**该构建不支持 AV1 软件解码**，
-不作为现有服务器完整 GPL 工具的无条件替换。源码原包、许可、配方和二进制哈希随工具保存。
+不作为现有服务器完整 GPL 工具的无条件替换。源码原包、许可、配方和二进制哈希随工具保存。构建需要 GCC、make 和 nasm。
 样例生成仍使用构建机的 FFmpeg/libx264；目标机预测不需要编码器。
 
 ```bash
-curl -fL https://github.com/FFmpeg/FFmpeg/archive/refs/tags/n8.1.3.tar.gz -o ffmpeg-n8.1.3-git.tar.gz
-bash tools/build_media_tools.sh ffmpeg-n8.1.3-git.tar.gz /path/to/new-media-tools
+curl -fL https://github.com/FFmpeg/FFmpeg/archive/ba987fe24d6713c4d4b3a15cebaeca18c41fbd31.tar.gz -o ffmpeg-ba987fe24d.tar.gz
+bash tools/build_media_tools.sh ffmpeg-ba987fe24d.tar.gz /path/to/new-media-tools
 # tools/build_release.py 的原构建参数另加 --media-tools /path/to/new-media-tools
 ```
 
 `containers/Dockerfile.offline` 固定已核对的 Ubuntu 24.04 amd64 manifest digest，
 只复制构建好的 `package/`，不在推理时安装或下载。构建目录仅放该包和 Dockerfile，
-预先加载基座；CPU/cu126/cu132 以包内实际依赖为准，不能仅改镜像标签。
+预先加载基座；CPU/cu126 以包内实际依赖为准，不能仅改镜像标签。
 
 ```bash
 docker build --network=none -f Dockerfile.offline -t deepfake:research .
