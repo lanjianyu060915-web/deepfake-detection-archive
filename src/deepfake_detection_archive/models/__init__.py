@@ -14,6 +14,7 @@ from .core import (
 from .encoders import FrozenAudioEncoder, FrozenVisionEncoder
 from .finetune import VideoFrameClassifier, VideoFrameConfig
 from .ufd import UFDConfig, UFDVideoClassifier
+from .waverep import WaveRepConfig, WaveRepVideoClassifier
 
 
 __all__ = [
@@ -30,6 +31,8 @@ __all__ = [
     "UFDVideoClassifier",
     "VideoFrameClassifier",
     "VideoFrameConfig",
+    "WaveRepConfig",
+    "WaveRepVideoClassifier",
     "create_model",
     "load_checkpoint",
     "pool_media_scores",

@@ -26,6 +26,7 @@ from .models import (
     MediaFeatureClassifier,
     UFDVideoClassifier,
     VideoFrameClassifier,
+    WaveRepVideoClassifier,
     load_checkpoint,
     pool_media_scores,
 )
@@ -71,21 +72,28 @@ class OfflineScorer:
         self.model.to(self.device).eval()
         self.frame_preprocessing: dict[str, Any] | None = None
         if config.model_kind == "video_frames":
-            if not isinstance(self.model, (VideoFrameClassifier, UFDVideoClassifier)):
+            if not isinstance(
+                self.model,
+                (VideoFrameClassifier, UFDVideoClassifier, WaveRepVideoClassifier),
+            ):
                 raise ValueError(
-                    "video_frames requires a video_frame_finetune_v1 or ufd_video_v1 "
-                    "checkpoint"
+                    "video_frames requires a video_frame_finetune_v1, ufd_video_v1 "
+                    "or waverep_video_v1 checkpoint"
                 )
             if self.model.config.aggregation != config.aggregation:
                 raise ValueError(
                     "head aggregation and inference configuration disagree"
                 )
-            if isinstance(self.model, UFDVideoClassifier) and (
+            if isinstance(
+                self.model, (UFDVideoClassifier, WaveRepVideoClassifier)
+            ) and (
                 self.video.resize_mode != "native_center_crop"
                 or self.model.preprocessing["input_size"]
                 != (3, self.video.height, self.video.width)
             ):
-                raise ValueError("UFD requires native_center_crop at its input size")
+                raise ValueError(
+                    "UFD/WaveRep require native_center_crop at their input size"
+                )
             self.encoder = None
             self.frame_preprocessing = self.model.preprocessing
         elif config.model_kind == "audio_waveform":
