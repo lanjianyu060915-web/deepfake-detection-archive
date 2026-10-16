@@ -2,6 +2,7 @@
 
 from .aasist import AASISTLite
 from .checkpoint import create_model, load_checkpoint, save_checkpoint, sha256_file
+from .clip_adapt import ClipAdaptConfig, ClipAdaptVideoClassifier
 from .core import (
     FeatureHead,
     HeadConfig,
@@ -20,6 +21,8 @@ from .waverep import WaveRepConfig, WaveRepVideoClassifier
 
 __all__ = [
     "AASISTLite",
+    "ClipAdaptConfig",
+    "ClipAdaptVideoClassifier",
     "FeatureHead",
     "FrozenAudioEncoder",
     "FrozenVisionEncoder",

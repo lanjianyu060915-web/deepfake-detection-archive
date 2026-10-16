@@ -12,6 +12,7 @@ from torch import nn
 
 from .aasist import AASISTLite
 from .ast import ASTClassifier, ASTConfig
+from .clip_adapt import ClipAdaptConfig, ClipAdaptVideoClassifier
 from .core import (
     FeatureHead,
     HeadConfig,
@@ -58,6 +59,8 @@ def create_model(architecture: str, config: dict[str, Any]) -> nn.Module:  # noq
         return VideoFrameClassifier(VideoFrameConfig(**config))
     if architecture == "ufd_video_v1":
         return UFDVideoClassifier(UFDConfig(**config))
+    if architecture == "clip_adapt_video_v1":
+        return ClipAdaptVideoClassifier(ClipAdaptConfig(**config))
     if architecture == "waverep_video_v1":
         return WaveRepVideoClassifier(WaveRepConfig(**config))
     if architecture == "video_fusion_v1":
@@ -80,6 +83,8 @@ def model_spec(model: nn.Module) -> tuple[str, dict[str, Any]]:  # noqa: PLR0911
         return "video_frame_finetune_v1", asdict(model.config)
     if type(model) is UFDVideoClassifier:
         return "ufd_video_v1", asdict(model.config)
+    if type(model) is ClipAdaptVideoClassifier:
+        return "clip_adapt_video_v1", asdict(model.config)
     if type(model) is WaveRepVideoClassifier:
         return "waverep_video_v1", asdict(model.config)
     if type(model) is VideoFusionClassifier:

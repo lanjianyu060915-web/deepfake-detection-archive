@@ -51,7 +51,7 @@ class UFDVideoClassifier(nn.Module):
         vision_config = CLIPVisionConfig(**config.backbone_config)
         vision_config._attn_implementation = "eager"
         self.backbone = CLIPVisionModelWithProjection(vision_config)
-        self.head = nn.Linear(vision_config.projection_dim, 1)
+        self.head: nn.Module = nn.Linear(vision_config.projection_dim, 1)
         self.preprocessing: dict[str, Any] = {
             "input_size": (3, vision_config.image_size, vision_config.image_size),
             "mean": (0.48145466, 0.4578275, 0.40821073),
