@@ -45,7 +45,7 @@ uv run --no-sync python -m deepfake_detection_archive --help
 模型不随Git或项目wheel分发。已发布离线包直接使用其`run.sh`，无需源码开发环境。
 
 只做推理可省略三个`--group`并加`--no-dev`，无需绘图或数据导入依赖。
-CPU/cu126/cu132后端互斥；独立wheel安装、CUDA环境和前端说明见[开发指南](docs/development.md#环境)。
+CPU/cu126后端互斥（默认cu126共享环境，CPU使用独立环境）；独立wheel安装、CUDA环境和前端说明见[开发指南](docs/development.md#环境)。
 现有RTX4090共享环境的`devctl`兼容入口和权限见[团队环境](docs/team-environment.md)。
 日常运行不重新同步依赖或做全量环境检查。
 

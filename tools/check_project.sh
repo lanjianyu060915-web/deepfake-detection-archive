@@ -5,7 +5,8 @@ ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
 export PYTHONPATH="$ROOT/src${PYTHONPATH:+:$PYTHONPATH}"
 cd "$ROOT"
 
-for script in scripts/devctl scripts/install-global-direnv-hook.sh tools/check_project.sh; do
+for script in scripts/devctl scripts/install-global-direnv-hook.sh \
+  tools/check_project.sh tools/build_media_tools.sh; do
   bash -n "$script"
 done
 

@@ -19,6 +19,8 @@ from typing import Any, Literal
 import numpy as np
 from numpy.typing import NDArray
 
+from deepfake_detection_archive.media_tools import media_tool
+
 
 class MediaError(ValueError):
     """A sample-level failure whose stable code can be recorded in a manifest."""
@@ -120,6 +122,7 @@ class VideoData:
 
 def _run(command: list[str], timeout: float, max_bytes: int) -> bytes:
     """Bound wall time and captured output without retaining unbounded pipes."""
+    command = [media_tool(command[0]), *command[1:]]
     with tempfile.TemporaryFile() as output, tempfile.TemporaryFile() as errors:
         try:
             process = subprocess.Popen(  # noqa: S603 - fixed executable, shell=False

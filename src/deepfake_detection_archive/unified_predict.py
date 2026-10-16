@@ -6,6 +6,7 @@ import csv
 import hashlib
 import importlib.metadata
 import os
+import shutil
 import sys
 import tempfile
 from dataclasses import replace
@@ -16,6 +17,7 @@ from typing import Any, cast
 from .config import InferenceConfig, load_inference_config, load_object
 from .contracts import load_scores
 from .data.manifest import SampleRecord, file_sha256, write_manifest
+from .media_tools import media_tool
 from .tracking import (
     atomic_json,
     canonical_json,
@@ -355,6 +357,7 @@ def _predict_run(  # noqa: C901, PLR0912, PLR0915 -- orchestration over the exis
 
     from .media import _run  # noqa: PLC0415
     from .models.ast import ASTClassifier  # noqa: PLC0415
+    from .models.checkpoint import sha256_file  # noqa: PLC0415
     from .scoring import OfflineScorer  # noqa: PLC0415
     from .submission.runner import run_inference  # noqa: PLC0415
 
@@ -364,11 +367,17 @@ def _predict_run(  # noqa: C901, PLR0912, PLR0915 -- orchestration over the exis
     configs: dict[str, InferenceConfig] = {}
     global_error: str | None = None
     media_tools: dict[str, str] = {}
+    media_tools_sha256: dict[str, str] = {}
     try:
         media_tools = {
             name: _run([name, "-version"], 5.0, 65_536).decode("utf-8")
             for name in ("ffmpeg", "ffprobe")
         }
+        for name in media_tools:
+            executable = shutil.which(media_tool(name))
+            if executable is None:
+                raise FileNotFoundError(f"{name} unavailable")
+            media_tools_sha256[name] = sha256_file(Path(executable))
         for modality in ("audio", "video"):
             if any(row.modality == modality for row in records):
                 configs[modality] = _resolved_config(
@@ -381,6 +390,7 @@ def _predict_run(  # noqa: C901, PLR0912, PLR0915 -- orchestration over the exis
         package / name
         for name in (
             "scoring.py",
+            "media_tools.py",
             "features.py",
             "config.py",
             "contracts.py",
@@ -417,6 +427,7 @@ def _predict_run(  # noqa: C901, PLR0912, PLR0915 -- orchestration over the exis
     identity = {
         "frontend_contract": frontend_contract,
         "media_tools": media_tools,
+        "media_tools_sha256": media_tools_sha256,
         "runtime": runtime,
         "protocol": "unified_media_v1",
         "discovery": entries,

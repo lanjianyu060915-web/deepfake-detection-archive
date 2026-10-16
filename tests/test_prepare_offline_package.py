@@ -65,6 +65,11 @@ def test_builder_relocates_isolated_runtime_and_source(
     source = build / "src" / "deepfake_detection_archive"
     source.mkdir(parents=True)
     (source / "__init__.py").write_text("")
+    shutil.copyfile(
+        Path(__file__).resolve().parents[1]
+        / "src/deepfake_detection_archive/media_tools.py",
+        source / "media_tools.py",
+    )
     (source / "__main__.py").write_text(
         "import json, os, sys\n"
         "from pathlib import Path\n"
