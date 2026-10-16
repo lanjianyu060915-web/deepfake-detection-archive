@@ -3,7 +3,8 @@
 复用 UFD 的 CLIP ViT-L/14 视觉表征，冻结骨干，仅训练现有 MLP 检测头。
 按 dev 选择的 seed43 在统一1949条诊断上 EER **26.56%**，此前七生成器
 ResNet 为31.73%；未训练生成器标签从33.14%改善至27.88%。保留为下一轮视频研究候选，
-尚缺独立来源比较，不替换 v0.1.1 发布权重。
+后续已完成[新来源受控dev比较](../video-aigvdbench-20261014/README.md)，
+但母媒体独立性与正式适用许可尚未证实，不替换 v0.1.1 发布权重。
 
 ## 方法与选择
 
@@ -76,5 +77,6 @@ scripts/devctl run python -m deepfake_detection_archive infer \
   --config docs/experiments/video-clip-head-20261014/infer-canonical.json
 ```
 
-重跑先更换输出目录；训练不支持 optimizer/RNG 续跑。下一步接入 #51 的独立来源开发媒体，
-保持其保留部分隔离，对冻结候选与旧 ResNet 比较；之后才决定适配或视频时序方向。
+重跑先更换输出目录；训练不支持 optimizer/RNG 续跑。后续新来源dev受控组已完成，
+CLIP受控31.33%优于七生成器ResNet39.00%，自然组21.33%对43.36%；8帧31.80%无收益，
+保留4帧，下一步学习轻量时序头，保留部分封存。
