@@ -14,6 +14,7 @@
 | [语音第二种子与白噪声增强](speech-robust-20261013/README.md) | 带宽seed43 8kHz 1.04%，收益稳定；白噪声增强双种子dev 1.84%/0.94%不稳定，停止；In-the-Wild约30%（冻结候选30.67%） | 真实场景语音并入三域联合训练 |
 | [ViF 云端受控视频](vif-cloud-20261011/README.md) | Hunyuan train618/dev146；视觉EER20.55%/21.92%，优于同集元数据 | 跨来源/生成器与压缩评分，再决定微调/时序 |
 | [ViF 帧微调](video-finetune-20261011/README.md) | 同划分解冻layer4与头，双种子dev EER16.44%（冻结头对照20.55%/21.92%），覆盖率1.0 | 尺寸受控后的跨生成器验收见下一行 |
+| [CLIP最后block有限适配](video-clip-adapt-20261016/README.md) | 同初始化/预算control+两种子，各8epoch/344updates；主43 AIGVD17.83%、去五标签19.33%、旧dev23.22%；ViF25.96%基本持平、未训练28.64% | 研究保留，C10仍通用视频主候选；rep42 ViF退化，停止本轮已见dev扫描；完整权重已存C11，主43标准infer4/4，默认不变 |
 | [三生成器扩展与匹配预算对照](video-generator-coverage-20261016/README.md) | 新增1500媒体、实际采用1498，3训练均20epoch/860updates；主43 AIGVD18.83%（上轮21.25%、control21.67%）、ViF pooled25.91% | 研究采用主43；旧域回到24.88%，原new200及ViF未训练标签仍退化，已见诊断非盲测；C10持久共享，发布默认不变 |
 | [CLIP跨来源训练](video-cross-source-20261016/README.md) | officialtrain新增600train/200dev，双种子；固定主43已见外部dev31.33%→21.25%，去新增两标签29.22%→24.00% | 研究采用主43，旧域略退至25.83%；同域已见诊断非盲测，C9资产持久共享；继续困难内容和来源，默认不变 |
 | [固定CLIP＋WaveRep离线融合](video-fusion-20261016/README.md) | 标准入口1880/1880、零失败；受控dev26.41%（CLIP31.33%）、去Open-Sora21.32%；803.54秒、allocated峰值1.80GB；搬移wheel双分支成功 | 保留研究候选；补独立数据与困难内容，冻结保留和赛用许可待确认，不继续调已见dev |

@@ -1,0 +1,26 @@
+{
+  "aggregation": "mean",
+  "batch_size": 32,
+  "checkpoint": "/mnt/deepfake-archive/C11-video-clip-adapt-20261016/tuned43/training/best.pt",
+  "checkpoint_sha256": "a67f615f1e1e2f45bf059cc19b2962edc3df5b7085f7f82505ab96cb35361cbf",
+  "data_root": "/var/tmp/lanjianyu-issue51-20261014/aigvdbench/controlled-1p25s/video_h264_crf23_448x256_16fps_1p25s",
+  "device": "cuda",
+  "manifest": "/var/tmp/lanjianyu-issue51-20261014/aigvdbench/controlled-1p25s/video_h264_crf23_448x256_16fps_1p25s/manifest.jsonl",
+  "modality": "video",
+  "model_kind": "video_frames",
+  "output_dir": "/var/tmp/deepfake-video-clip-adapt-20261016/standard-aigvd",
+  "schema_version": 1,
+  "seed": 43,
+  "video": {
+    "height": 224,
+    "max_duration_seconds": 600.0,
+    "max_output_bytes": 536870912,
+    "max_source_frames": 100000,
+    "max_source_pixels": 40000000,
+    "n_frames": 4,
+    "resize_mode": "native_center_crop",
+    "stream_index": null,
+    "timeout_seconds": 60.0,
+    "width": 224
+  }
+}
