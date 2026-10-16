@@ -39,11 +39,13 @@ uv run --no-sync python -m deepfake_detection_archive --help
 ```
 
 源码环境运行统一预测时，另将`DEEPFAKE_MODEL_PACKAGE`设为已有本地模型包目录；
-其下须有`configs/models.json`及引用的配置/权重。相对模型包路径从当前工作目录解析，
+其下须有`configs/models.json`及引用的配置、权重和运行时元数据（默认`release.json`）。
+相对模型包路径从当前工作目录解析，
 支持`~`；显式错误目录会报错，不借用源码目录的另一份注册表。
 模型不随Git或项目wheel分发。已发布离线包直接使用其`run.sh`，无需源码开发环境。
 
-CPU/cu132后端互斥；CUDA环境、前端一致性和训练参数见[开发指南](docs/development.md#环境)。
+只做推理可省略三个`--group`并加`--no-dev`，无需绘图或数据导入依赖。
+CPU/cu126/cu132后端互斥；独立wheel安装、CUDA环境和前端说明见[开发指南](docs/development.md#环境)。
 现有RTX4090共享环境的`devctl`兼容入口和权限见[团队环境](docs/team-environment.md)。
 日常运行不重新同步依赖或做全量环境检查。
 

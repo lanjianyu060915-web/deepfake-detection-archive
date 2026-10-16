@@ -1,6 +1,6 @@
 """Check optional research/media/ML dependencies with synthetic inputs only.
 
-Run after installing media, research, and either the cpu or cu132 extra.
+Run after installing media, research, and one of the cpu/cu126/cu132 extras.
 This is an environment probe, not a detector, benchmark, or training run.
 """
 
