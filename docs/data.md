@@ -7,6 +7,7 @@
 
 | 资产 | 实际位置 | 当前用途 |
 | --- | --- | --- |
+| DINOv2/CLIP新候选（#86） | `/srv/shared-data/candidates/video-dinov2-20261017/` | 四个新头、四个完整适配/对照checkpoint与两个编码器，root只读、两位账号实测可读；大权重硬链接不重复占盘；CLIP研究备选、DINO负结果，C10仍主候选；[实验](experiments/video-dinov2-20261017/README.md) |
 | UFD强视频对照 | `/var/tmp/deepfake-video-ufd-20261014/` | 完整检测器、固定配置与三组分数；公开头负结果；最小资产已另存下方C6持久归档 |
 | 冻结CLIP视频头 | `/var/tmp/deepfake-video-clip-head-20261014/` | 双seed头与三组完整分数，冻结43为研究候选；复用UFD骨干，最小资产已另存C6，不替换release |
 | 生成机制鉴伪（#59） | `/var/tmp/lanjianyu-issue59-20261014/` | WaveRep G1 原权重与 `waverep_video_v1` checkpoint、SD1/Wan2.1 VAE、T1 权重、机制表、全部逐样本分数；持久副本 `/mnt/deepfake-archive/issue59-generator-forensics/`，研究用途、非营利许可 |
@@ -66,6 +67,8 @@
 | `C14-assets-restoration-20261016/` | #50增量：427条精确路径映射、9份推理配置、源码恢复与缺口、4条无标签工程媒体、既有C6标准infer分数及生成器；251内容文件2,445,066字节，不复制权重、媒体全集或缓存 |
 | `C15-runtime-completion-20261016/` | RC3自适应双万级完整分数/计划、20输入新用户名搬移与30张量、包文件SHA及C3有界查找；162内容文件109,657,257字节，权重/工具源码/工程媒体复用C1/C13 |
 | `C16-container-runtime-20261016/` | Actions实际CPU/cu126无权重镜像与4输入结果、源码/digest/归档SHA；98内容文件4,519,922,634B，两路CPU推理和save/load差0，不算GPU容器验收 |
+| `C17-video-dinov2-representation-20261017/` | 四个同预算CLIP/DINO新头、DINO转换权重与固定上游模型卡/Apache-2.0许可、完整选择/诊断分数和摘要、共享访问记录、必要适配器与运行源码；CLIP编码器复用C6 |
+| `C18-video-dinov2-adapt-20261017/` | 四个自包含适配/对照checkpoint、配置/历史/完整分数、12组原视频标准结果和CRF18/35原媒体单份tar；保留必要首轮失败记账，不复制训练媒体或tokens |
 | `shared/` | `resnet18-a1/encoder.pt`（视频共享基座）与`ast-audioset/`（AST预训练基座） |
 
 原C1–C5与shared共396个内容文件、约3.07GiB，不含原始媒体、特征缓存和可再生的发布分片。
@@ -82,6 +85,20 @@ C10独立登记71个内容文件、3,048,901,454字节，含原1500条取得库�
 C11独立登记72个内容文件、3,685,709,182字节；三种完整权重、原始分数和适配器团队可读，
 不包含可重建前缀缓存。训练缓存28,451,327,667字节已在评分及归档完成后释放；
 主43标准infer4条零失败、raw/cached最大logit差4.65e-6，未做跨实例恢复。
+
+C17独立登记84个内容文件、379,400,699B；C18为150个内容文件、1,507,613,563B，
+复制内容均已读回核对SHA，分别有`index.json`、`SHA256SUMS`和完成标记。
+两批分别保存固定提交`0ddc71a`/`b4ca925`的当前运行及构建源码，
+每批源码约1.2MB；旧归档和整份历史文档通过对应Git提交追溯，不重复保存。
+恢复适配候选只需完整checkpoint及该源码；冻结DINO头另需C17转换编码器，CLIP头另需C6编码器。
+DINO上游原始权重SHA、URL与转换SHA在`pretrained/conversion.json`，原始公开下载文件不重复归档。
+上游Apache-2.0许可不解决训练视频或最终参赛的权利问题。本轮不使用holdout。
+两个标准压缩条件各310个文件、合计89,004,053B，C18按manifest逐项及tar成员SHA核对后保存；
+训练媒体复用C9/C10，特征及BF16前缀缓存可按固定配置重建，不声称optimizer/RNG无损续训。
+评分与归档完成后，本轮16,718,480,522B前缀缓存及346,378,731B重复公开原权重已释放；
+转换编码器、完整候选与分数均保留。
+共享只读路径有30文件、2,949,553,679逻辑字节（大权重硬链接），两位账号各实测30文件可读、
+10份权重打开写入被拒；`shared-index.json`及`shared-access.json`保存于C17。
 
 C14按独立 `index.json`/`SHA256SUMS` 保全#50新增要求的最小材料，旧索引、配置和分数不改写；
 数据、权重、cache、输出可分别指定根，生成器按原路径/逻辑ID精确映射，C1原sidecar与新权重相邻，
