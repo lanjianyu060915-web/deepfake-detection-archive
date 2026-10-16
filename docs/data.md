@@ -12,6 +12,7 @@
 | 生成机制鉴伪（#59） | `/var/tmp/lanjianyu-issue59-20261014/` | WaveRep G1 原权重与 `waverep_video_v1` checkpoint、SD1/Wan2.1 VAE、T1 权重、机制表、全部逐样本分数；持久副本 `/mnt/deepfake-archive/issue59-generator-forensics/`，研究用途、非营利许可 |
 | AIGVDBench首批视频 | `/var/tmp/lanjianyu-issue51-20261014/aigvdbench/` | #51：仅消费dev1880条与其受控版本；保留部分隔离；底层YouTube许可未确认，仅研究评估 |
 | 新来源CLIP视频评分 | `/var/tmp/deepfake-video-independent-20261014/` | 自然/受控各1880条零失败、EER21.33%/31.33%；8帧受控31.80%无收益；[实验](experiments/video-aigvdbench-20261014/README.md) |
+| 三生成器扩展（#80） | `/var/tmp/deepfake-video-coverage-20261016/` | 新增1500条原媒体，整组排除训练2条后实际train5412/dev1344；control43/expanded43/42与两套完整诊断，内部研究，持久副本C10；[实验](experiments/video-generator-coverage-20261016/README.md) |
 | CLIP跨来源训练（#77） | `/var/tmp/deepfake-video-cross-source-20261016/` | 新增800条officialtrain媒体、600train/200dev，与旧域回放的双种子头及完整分数；内部研究，持久副本C9；[实验](experiments/video-cross-source-20261016/README.md) |
 | 固定视频融合（#72） | `/var/tmp/deepfake-video-fusion-20261016/` | CLIP43＋WaveRep自包含checkpoint、受控dev1880标准分数、搬移wheel研究模型包；[实验](experiments/video-fusion-20261016/README.md)，持久副本C8，正式赛用未确认 |
 | 统一入口研究包 | `/var/tmp/deepfake-offline54-20261014/relocated/deepfake-v0.1.2-rc1/` | 真实v0.1.1权重、包内解释器和依赖；搬移、440条profile及真实语音万级已完成，未重发Release |
@@ -57,6 +58,7 @@
 | `C7-video-clip-temporal-20261014/` | 轻量时序头双seed最佳权重、配置、训练历史/选择、预计算适配器和分数；24内容文件6.92MB，未采用为主候选，骨干复用C6 |
 | `C8-video-fusion-20261016/` | 固定CLIP＋WaveRep checkpoint、配置、1880条完整标准分数、摘要、必要运行资源记录与wheel；不含原媒体全集或运行依赖副本 |
 | `C9-video-cross-source-20261016/` | 双种子最佳头、配置/历史/完整选择及诊断分数、来源/选择/小适配器；新增800条原媒体仅保存一次`raw-media.tar`，骨干复用C6，受控媒体/缓存可重建 |
+| `C10-video-generator-coverage-20261016/` | 三个最佳头、配置/历史/完整分数、来源/排除及小适配器；新增1500原媒体单份tar，骨干复用C6、前轮数据/适配器复用C9，缓存和派生媒体不归档 |
 | `shared/` | `resnet18-a1/encoder.pt`（视频共享基座）与`ast-audioset/`（AST预训练基座） |
 
 原C1–C5与shared共396个内容文件、约3.07GiB，不含原始媒体、特征缓存和可再生的发布分片。
@@ -67,6 +69,8 @@ C8同样独立登记：46个内容文件、1,566,333,503字节，包含本轮完
 研究模型包的原发布音频权重复用C1，依赖不重复归档。各原路径与持久路径见C8的`index.json`。
 C9为54个内容文件、2,132,673,563字节，保存本轮新增原媒体及最小候选集合，独立`index.json`/`SHA256SUMS`登记；不重复旧媒体、
 骨干或缓存。原媒体只供内部团队研究，不是已获准公开再分发或赛用的资产。
+C10独立登记71个内容文件、3,048,901,454字节，含原1500条取得库存及确认重复组排除记录；
+仅1498条新记录实际进入本轮训练/选择，control未重训。旧骨干和缓存不重复归档。
 校验：
 
 ```bash
@@ -78,7 +82,7 @@ cd /mnt/deepfake-archive && sha256sum -c SHA256SUMS
 对照同时改变了缓存/直接解码路径和批量64/8，差异可能与这些条件有关，尚未单独确认原因。发布包v0.1.1不能加载该视频权重
 （缺少 `temporal_kernel_size` 字段），需要仓库源码入口。
 
-各候选的归档资产与前端快照在 [`configs/release/candidates.json`](../configs/release/candidates.json)：
+原批次候选的归档资产与前端快照在 [`configs/release/candidates.json`](../configs/release/candidates.json)：
 完整鉴伪权重或所需基座的归档路径与SHA-256、代码版本、适用范围、研究/发布状态，以及
 从当前环境实际读出的有效预处理（AST频谱前端常量、LogMel前端、视频帧采样与RGB mean/std）。
 归档时环境未安装 torchaudio，既有 AST 权重使用 NumPy 特征。当前共享环境已补装
@@ -93,7 +97,7 @@ C6的CLIP特征头则需要显式加载同批保存的视觉编码器。以持�
 与原分数逐值一致；源码/候选用途与限制见[本轮运行包](experiments/offline-entry-20261014/README.md)。
 
 网盘为 `fuse.fx`：`chgrp` 不生效（gid固定为2000），文件统一 0444 全员可读；
-`du` 显示为0，大小以 `index.json` 或 `stat` 为准。除C9新增原媒体外，其余原媒体与特征缓存仍只在实例上，需按各工具重建。
+`du` 显示为0，大小以 `index.json` 或 `stat` 为准。除C9/C10新增原媒体外，其余原媒体与特征缓存仍只在实例上，需按各工具重建。
 
 ## 导入与训练清单
 
