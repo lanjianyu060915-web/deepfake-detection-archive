@@ -4,6 +4,7 @@ import hashlib
 import json
 import shutil
 import subprocess
+import tempfile
 from dataclasses import replace
 from pathlib import Path
 
@@ -240,6 +241,20 @@ def test_cli_execution_options_are_effective_and_bound_to_resume(
     changed[changed.index("adaptive")] = "reference"
     assert main([*changed, "--resume"]) == 2
     assert (output / "audio/scores.jsonl").read_bytes() == scores
+
+
+def test_default_output_uses_tmpdir_without_writing_checkout(
+    audio, bundle, tmp_path, monkeypatch
+):
+    scratch = tmp_path / "writable-temporary-root"
+    scratch.mkdir()
+    monkeypatch.setenv("TMPDIR", str(scratch))
+    monkeypatch.setattr(tempfile, "tempdir", None)
+    monkeypatch.chdir(bundle)
+    report = predict_media([audio], None, "cpu", resume=False)
+    assert report["failures"] == 0
+    assert Path(report["output"]).parent == scratch
+    assert not list(bundle.glob("deepfake-predict-*"))
 
 
 def test_nonmedia_only_and_explicit_failure_nonzero(bundle, tmp_path):

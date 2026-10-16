@@ -316,7 +316,7 @@ def predict_media(  # noqa: PLR0913 -- media and explicit execution controls
     if resume and output is None:
         raise ValueError("--resume requires --output")
     if output is None:
-        output = Path(tempfile.mkdtemp(prefix="deepfake-predict-", dir=Path.cwd()))
+        output = Path(tempfile.mkdtemp(prefix="deepfake-predict-"))
     else:
         output = output.resolve()
         if resume:
