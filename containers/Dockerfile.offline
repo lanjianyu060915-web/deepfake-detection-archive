@@ -1,11 +1,24 @@
-# Context contains only package/ and this Dockerfile. Preload the base offline.
-FROM ubuntu:24.04@sha256:f610ab94648195aa356059f5b41d6085c9d4d903c072430cdd1af7bdb646106b
+# Context contains package/ and this Dockerfile. Preload the base offline.
+FROM ubuntu:24.04@sha256:f610ab94648195aa356059f5b41d6085c9d4d903c072430cdd1af7bdb646106b AS runtime
 
-COPY package/ /app/
+COPY package/runtime/ /app/runtime/
+COPY package/src/ /app/src/
+COPY package/run.py package/run.sh package/release.json /app/
+COPY package/deps/ /app/deps/
+COPY package/licenses/ /app/licenses/
 RUN mkdir -p /work /outputs /cache && chown 1001:1001 /outputs /cache
 ENV HOME=/tmp XDG_CACHE_HOME=/cache HF_HOME=/cache/huggingface \
-    TORCH_HOME=/cache/torch TMPDIR=/tmp
+    TORCH_HOME=/cache/torch TMPDIR=/tmp DEEPFAKE_MODEL_PACKAGE=/models
 WORKDIR /work
 USER 1001:1001
 ENTRYPOINT ["/app/run.sh"]
 CMD ["--help"]
+
+# Default target preserves the original complete-package image.
+FROM runtime AS offline
+COPY package/configs/ /app/configs/
+COPY package/weights/ /app/weights/
+COPY package/manifests/ /app/manifests/
+COPY package/media/ /app/media/
+COPY package/README.md /app/README.md
+ENV DEEPFAKE_MODEL_PACKAGE=/app

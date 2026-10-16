@@ -40,6 +40,7 @@ model_tools=(
   tools/compare_scores.py
   tools/prepare_offline_package.py
   tools/build_release.py
+  tools/run_container_rehearsal.py
   tools/test_prepare_asv_eval.py
   tools/test_prepare_in_the_wild.py
   tools/test_prepare_video_control.py
