@@ -22,6 +22,7 @@ from .core import (
 )
 from .finetune import VideoFrameClassifier, VideoFrameConfig
 from .ufd import UFDConfig, UFDVideoClassifier
+from .video_fusion import VideoFusionClassifier, VideoFusionConfig
 from .waverep import WaveRepConfig, WaveRepVideoClassifier
 
 
@@ -59,6 +60,8 @@ def create_model(architecture: str, config: dict[str, Any]) -> nn.Module:  # noq
         return UFDVideoClassifier(UFDConfig(**config))
     if architecture == "waverep_video_v1":
         return WaveRepVideoClassifier(WaveRepConfig(**config))
+    if architecture == "video_fusion_v1":
+        return VideoFusionClassifier(VideoFusionConfig(**config))
     if architecture == "aasist_l_v1" and config == {}:
         return AASISTLite()
     if architecture == "audio_ast_v1":
@@ -79,6 +82,8 @@ def model_spec(model: nn.Module) -> tuple[str, dict[str, Any]]:  # noqa: PLR0911
         return "ufd_video_v1", asdict(model.config)
     if type(model) is WaveRepVideoClassifier:
         return "waverep_video_v1", asdict(model.config)
+    if type(model) is VideoFusionClassifier:
+        return "video_fusion_v1", asdict(model.config)
     if type(model) is AASISTLite:
         return "aasist_l_v1", {}
     if type(model) is ASTClassifier:

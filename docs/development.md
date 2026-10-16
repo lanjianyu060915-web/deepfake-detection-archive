@@ -6,8 +6,7 @@
 ## 环境
 
 项目支持Linux x86_64、Python3.12；需要uv和宿主FFmpeg/ffprobe，FFmpeg须支持`-fps_mode`。
-在仓库根目录建立独立环境，锁文件固定依赖；这里的media/research组用于源码开发，
-不是最小推理安装闭包：
+在仓库根目录建立独立环境，锁文件固定依赖；media/research组用于开发和数据导入：
 
 ```bash
 export UV_PROJECT_ENVIRONMENT="$PWD/.venv-cpu"
@@ -15,19 +14,70 @@ uv sync --locked --group dev --group media --group research --extra cpu
 uv run --no-sync python -m deepfake_detection_archive --help
 ```
 
-CPU调试配置将`device`设为`cpu`、`amp`设为`false`。NVIDIA GPU源码开发使用独立目录，
-将上述`--extra cpu`换成`--extra cu132`，先确认宿主驱动可运行该构建；不使用`--all-extras`。
-当前锁定Torch2.14.1、torchvision0.29.1，两个后端均包含官方CPU wheel的torchaudio2.11.0。
+仅推理使用`uv sync --locked --no-dev --extra cpu`，不安装上述三个组。
+CPU调试配置将`device`设为`cpu`、`amp`设为`false`。NVIDIA GPU使用独立目录，
+将`--extra cpu`换成`--extra cu126`或`--extra cu132`，先确认宿主驱动可运行该构建。
+三种后端互斥，不使用`--all-extras`。当前锁定Torch2.14.1、torchvision0.29.1，
+标准wheel元数据同时固定`+cpu`/`+cu126`/`+cu132`构建标签；三个后端共用CPU torchaudio2.11.0。
+默认AST前端的NumPy2.5.3、Transformers5.19.0同时固定在安装元数据中，
+避免普通pip安装解析到与发布权重契约不符的补丁版本。
 其[stable ABI支持Torch2.11及以后](https://docs.pytorch.org/audio/stable/installation.html)，
-Kaldi fbank无需另装TorchCodec。其他CUDA构建及最小wheel安装闭包仍由#65后续部分验证，
-本轮不宣称任意CUDA/平台已受支持。普通预编译wheel不要求指定nvcc位置。
+Kaldi fbank无需另装TorchCodec。普通预编译wheel不要求指定CUDA Toolkit或nvcc位置。
+普通依赖默认从官方PyPI解析，PyTorch使用显式官方索引；`uv.lock`保留版本、来源和wheel哈希。
+更换镜像时在独立环境重新生成、检查锁文件，不覆盖团队环境或手改资产哈希。
+维护公共锁文件使用`uv --no-config lock --default-index https://pypi.org/simple`，
+避免个人uv配置中的附加镜像优先于项目默认源；日常安装使用已有锁，不重新解析版本。
+
+### 安装独立wheel
+
+wheel不包含权重，完整推理安装必须选择一个后端extra。以下是CPU示例，
+先在Python3.12虚拟环境安装官方CPU三件套，再安装构建出的wheel：
+
+```bash
+python -m pip install --index-url https://download.pytorch.org/whl/cpu \
+  'torch==2.14.1+cpu' 'torchvision==0.29.1+cpu' 'torchaudio==2.11.0+cpu'
+python -m pip install --index-url https://pypi.org/simple \
+  './dist/deepfake_detection_archive-0.1.1-py3-none-any.whl[cpu]'
+python -m deepfake_detection_archive --help
+```
+
+cu126使用官方`https://download.pytorch.org/whl/cu126`安装`torch==2.14.1+cu126`
+和`torchvision==0.29.1+cu126`；torchaudio仍单独从CPU索引安装，最后安装`wheel[cu126]`。
+cu132同理，替换torch/vision的构建标签、索引和项目extra。pip不读取`tool.uv.sources`，
+extra的精确构建标签用于拒绝错误组合，下载索引仍须显式提供；
+不靠`--extra-index-url`选择优先级。数据导入、绘图及开发工具不属于wheel运行依赖。
+
+随后设置`DEEPFAKE_MODEL_PACKAGE`并调用`predict`。运行时只读取本地资源，不执行安装或下载。
+
+### 已验证的安装范围
+
+2026-10-15在Linux x86_64（WSL2、glibc2.39）、Python3.12.13上，
+以v0.1.1原始AST/ResNet18鉴伪权重和原始`release.json`，完成以下工程小批对照。
+输入为4条已有dev语音和2个自生成视频；固定FP32并关闭matmul/cuDNN TF32，
+未改变帧数、窗口或聚合，不用于判断模型准确率。
+
+| 安装环境 | 实际依赖包数 | 成功/失败 | 相对源码CPU的最大分数差 |
+| --- | ---: | ---: | ---: |
+| 锁定最小CPU + 非editable wheel | 42 | 6/0 | 0 |
+| 上述pip命令 + CPU wheel | 43（含pip） | 6/0 | 0 |
+| 锁定cu126 + 非editable wheel | 61 | 6/0 | 0.00001240 |
+
+源码已暂时移开，安装代码和模型只读，从中文空格CWD运行并使用空HF缓存。
+10份实际解码/前端/视频输入张量完全一致；CPU重复运行分数一致。
+cu126实机为RTX4060 Laptop 8188MiB、驱动617.42，
+PyTorch峰值allocated402.92MiB、reserved486MiB；torchvision CUDA算子和CPU Kaldi fbank均运行通过。
+这是相同权重的小批推理兼容结果，训练容量、批量自适应和其他平台仍需分别验证；
+已发布cu132整包的既有服务器结果见[发布说明](release.md)。
+
+### 模型与前端
 
 AST的`frontend`默认`numpy_spectrogram_v1`，旧checkpoint同样按此恢复；
 新Kaldi实验显式选`torchaudio_kaldi_v1`，使用独立缓存和输出，不把旧权重改成新前端。
 安装torchaudio不会改变旧模型有效前端；当前语义已由#67固定，不重复改实现。
 
 配置及资源的相对路径继续以配置文件所在目录解析。统一预测的模型包根通过
-`DEEPFAKE_MODEL_PACKAGE`选择，须包含`configs/models.json`。该根相对当前工作目录，
+`DEEPFAKE_MODEL_PACKAGE`选择，须包含`configs/models.json`及其引用的运行时元数据，
+默认AST使用包根目录的原始`release.json`，与配置、权重一并保留。该根相对当前工作目录，
 支持`~`并在入口解析为绝对路径；显式目录缺失/不完整时明确失败，不回退到源码注册表。
 无显式选择时，源码checkout使用`configs/release/models.json`，完整离线包使用包内
 `configs/models.json`。安装后的wheel不携带默认权重，需明确指定已有模型包。
@@ -140,6 +190,16 @@ UV_PROJECT_ENVIRONMENT="$PWD/.venv-cpu" bash tools/check_project.sh
 见[统一预测入口](release.md#统一预测入口当前源码)。
 原 `predict --config MODEL_CONFIG --input DIR --output DIR` 继续用于显式模型配置。
 两种入口复用现有推理逻辑，无需先手写 manifest。
+
+推理配置的`batch_size`控制执行批量。`video_frames`的ResNet18、UFD和WaveRep
+按该值分批把独立帧送入主干；全部特征或帧分数按原顺序恢复后，一次运行完整时序头和
+文件级聚合。CPU保留完整预处理帧，GPU逐批接收；帧数、时间点、分辨率和精度由原配置决定。
+该参数不表示跨文件批量，训练继续使用训练配置的batch。更换执行batch时使用新输出目录。
+当前是固定批量执行，资源自适应和有界OOM重试尚未接入，内存故障沿用全局中止行为。
+
+现有CLIP特征缓存身份包含整个`models/ufd.py`；此次分类器推理修改会改变缓存键，
+首次新实验将重提取，旧缓存和元数据保留。冻结编码器仍直接调用原backbone，
+特征生产计算没有改变；本轮不迁移旧键或手改历史哈希。
 
 准备与 checkpoint 对应的实值配置；以下示例使用 `data/audio-dev.jsonl`，
 推理配置的 `output_dir` 设为 `../outputs/audio-dev`：

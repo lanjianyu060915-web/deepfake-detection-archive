@@ -3,7 +3,7 @@
 from dataclasses import dataclass, field
 from typing import Any, cast
 
-from torch import Tensor, nn
+from torch import Tensor, cat, nn, split
 
 
 def _dinov2_g1_config() -> dict[str, Any]:
@@ -35,6 +35,8 @@ class WaveRepVideoClassifier(nn.Module):
     Input is [batch, frames, 3, height, width]; output is the mean raw frame logit
     (author LLR, higher is fake). The network is built with ``pretrained=False``
     and receives every parameter from the local checkpoint; it never downloads.
+    frame_batch_size bounds inference backbone calls and device transfers;
+    all frame logits are restored in order before the video mean.
     """
 
     def __init__(self, config: WaveRepConfig) -> None:
@@ -56,8 +58,18 @@ class WaveRepVideoClassifier(nn.Module):
             "resize_mode": "native_center_crop",
         }
 
-    def forward(self, images: Tensor) -> Tensor:
+    def forward(self, images: Tensor, *, frame_batch_size: int | None = None) -> Tensor:
         batch, frames = images.shape[:2]
         flattened = images.reshape(batch * frames, *images.shape[2:])
-        logits = self.backbone(flattened)[:, -1].reshape(batch, frames)
+        if frame_batch_size is None:
+            outputs = self.backbone(flattened)
+        else:
+            device = next(self.parameters()).device
+            outputs = cat(
+                [
+                    self.backbone(chunk.to(device))
+                    for chunk in split(flattened, frame_batch_size)
+                ]
+            )
+        logits = outputs[:, -1].reshape(batch, frames)
         return cast(Tensor, logits.mean(dim=1))

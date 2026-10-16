@@ -3,6 +3,7 @@
 import socket
 import subprocess
 from pathlib import Path
+from unittest.mock import Mock
 
 import numpy as np
 import pytest
@@ -77,6 +78,26 @@ def test_frozen_clip_features_preserve_projection_and_freeze(tmp_path):
         torch.testing.assert_close(encoder(images), expected, rtol=0, atol=0)
     assert encoder.feature_dim == 6
     assert encoder.preprocessing == model.preprocessing
+
+
+def test_frame_batches_preserve_projection_head_and_tail(monkeypatch):
+    torch.manual_seed(66)
+    model = UFDVideoClassifier(tiny_config()).eval()
+    images = torch.randn(2, 7, 3, 8, 8)
+    with torch.inference_mode():
+        expected = model(images)
+    backbone = Mock(wraps=model.backbone.forward)
+    head = Mock(wraps=model.head.forward)
+    monkeypatch.setattr(model.backbone, "forward", backbone)
+    monkeypatch.setattr(model.head, "forward", head)
+    with torch.inference_mode():
+        actual = model(images, frame_batch_size=3)
+    torch.testing.assert_close(actual, expected, rtol=1e-4, atol=1e-5)
+    assert [
+        call.kwargs["pixel_values"].shape[0] for call in backbone.call_args_list
+    ] == [3, 3, 3, 3, 2]
+    head.assert_called_once()
+    assert head.call_args.args[0].shape == (14, 6)
 
 
 def test_clip_feature_batch_matches_serial_and_owns_storage(tmp_path):

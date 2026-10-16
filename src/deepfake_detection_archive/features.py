@@ -249,6 +249,13 @@ def extract_video_frames(
     if size != (3, video_config.height, video_config.width):
         raise ValueError("video dimensions must match the backbone input_size")
     path = media_path(record, root)
+    return normalized_video_frames(path, video_config, preprocessing)
+
+
+def normalized_video_frames(
+    path: Path, video_config: VideoConfig, preprocessing: dict[str, Any]
+) -> Tensor:
+    """Decode a previously resolved media path with one branch's preprocessing."""
     with inference_stage("decode_and_preprocess"):
         video = decode_video(path, video_config)
         frames = torch.from_numpy(video.frames).permute(0, 3, 1, 2).float().div_(255)

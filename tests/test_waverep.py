@@ -1,6 +1,7 @@
 """Offline WaveRep checkpoint, raw frame-logit mean and native-crop contract."""
 
 import socket
+from unittest.mock import Mock
 
 import pytest
 import timm
@@ -56,6 +57,26 @@ def test_config_rejects_non_mean_aggregation_and_missing_size():
         WaveRepConfig(aggregation="median")
     with pytest.raises(ValueError, match="img_size"):
         WaveRepConfig(backbone_overrides={})
+
+
+def test_frame_batches_preserve_logits_and_tail(monkeypatch):
+    torch.manual_seed(66)
+    model = tiny_model()
+    images = torch.randn(2, 7, 3, 28, 28)
+    with torch.inference_mode():
+        expected = model(images)
+    backbone = Mock(wraps=model.backbone.forward)
+    monkeypatch.setattr(model.backbone, "forward", backbone)
+    with torch.inference_mode():
+        actual = model(images, frame_batch_size=3)
+    torch.testing.assert_close(actual, expected, rtol=1e-4, atol=1e-5)
+    assert [call.args[0].shape[0] for call in backbone.call_args_list] == [
+        3,
+        3,
+        3,
+        3,
+        2,
+    ]
 
 
 def test_scorer_requires_native_crop_at_detector_size(tmp_path):

@@ -6,9 +6,9 @@ ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
 export PYTHONPATH="$ROOT/src${PYTHONPATH:+:$PYTHONPATH}"
 BACKEND="${DEEPFAKE_BACKEND:-cu132}"
 case "$BACKEND" in
-    cpu) DEFAULT_ENV="$ROOT/.venv-cpu" ;;
+    cpu|cu126) DEFAULT_ENV="$ROOT/.venv-$BACKEND" ;;
     cu132) DEFAULT_ENV="/opt/venvs/deepfake-cu132" ;;
-    *) printf 'ERROR: DEEPFAKE_BACKEND 应为 cpu 或 cu132：%s\n' "$BACKEND" >&2; exit 2 ;;
+    *) printf 'ERROR: DEEPFAKE_BACKEND 应为 cpu、cu126 或 cu132：%s\n' "$BACKEND" >&2; exit 2 ;;
 esac
 export UV_PROJECT_ENVIRONMENT="${UV_PROJECT_ENVIRONMENT:-$DEFAULT_ENV}"
 export VIRTUAL_ENV="$UV_PROJECT_ENVIRONMENT"
@@ -30,7 +30,7 @@ usage() {
   help              查看此帮助
 
 注意：进入项目目录不会自动安装/更新依赖；sync 由维护者显式运行。
-默认 cu132 使用 /opt/venvs/deepfake-cu132；DEEPFAKE_BACKEND=cpu 使用项目 .venv-cpu。
+默认 cu132 使用 /opt/venvs/deepfake-cu132；cpu/cu126 使用项目 .venv-<后端>。
 UV_PROJECT_ENVIRONMENT 优先指定环境；共享环境 sync 由有写权限的维护者运行。
 HELP
 }
@@ -64,9 +64,9 @@ case "$command" in
             exit 2
         fi
         require_uv
-        if [[ "$BACKEND" == cpu && "$(readlink -m -- "$VIRTUAL_ENV")" == \
+        if [[ "$BACKEND" != cu132 && "$(readlink -m -- "$VIRTUAL_ENV")" == \
             "$(readlink -m -- /opt/venvs/deepfake-cu132)" ]]; then
-            printf 'ERROR: CPU sync 不能修改共享CUDA环境；请用 UV_PROJECT_ENVIRONMENT 指定独立CPU目录。\n' >&2
+            printf 'ERROR: %s sync 不能修改共享CUDA环境；请指定独立环境目录。\n' "$BACKEND" >&2
             exit 3
         fi
         if [[ "$BACKEND" == cu132 ]]; then
@@ -110,10 +110,14 @@ case "$command" in
             echo 'WARN: 缺少 ffmpeg/ffprobe；项目媒体集成测试会被跳过。'
         fi
         "$PYTHON" - <<'PY'
+import platform
 import sys
 import torch
 
 print('== python / torch / gpu ==')
+print('OS:', platform.platform())
+print('Architecture:', platform.machine())
+print('libc:', platform.libc_ver())
 print('Python:', sys.version.split()[0])
 print('PyTorch:', torch.__version__)
 print('torch.version.cuda:', torch.version.cuda)

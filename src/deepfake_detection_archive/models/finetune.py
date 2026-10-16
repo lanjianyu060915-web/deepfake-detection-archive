@@ -73,6 +73,8 @@ class VideoFrameClassifier(nn.Module):
     are encoded independently. The default head pools independent frame logits;
     the optional temporal head uses neighboring frames before pooling. Callers
     that need bounded scores may apply a sigmoid to the media logit.
+    Inference can set frame_batch_size to move independent frame chunks to the
+    model device; the complete feature sequence still reaches the head once.
     """
 
     def __init__(self, config: VideoFrameConfig) -> None:
@@ -142,7 +144,7 @@ class VideoFrameClassifier(nn.Module):
         self._set_module_modes(mode)
         return self
 
-    def forward(self, images: Tensor) -> Tensor:
+    def forward(self, images: Tensor, *, frame_batch_size: int | None = None) -> Tensor:
         if images.ndim != 5 or images.shape[2] != 3 or min(images.shape) == 0:
             raise ValueError(
                 "images must have nonempty shape [batch, frames, 3, height, width]"
@@ -151,7 +153,16 @@ class VideoFrameClassifier(nn.Module):
             raise ValueError("images must contain finite floating-point values")
         batch, frames = images.shape[0], images.shape[1]
         flattened = images.reshape(batch * frames, *images.shape[2:])
-        features = self.backbone(flattened)
+        if frame_batch_size is None:
+            features = self.backbone(flattened)
+        else:
+            device = next(self.parameters()).device
+            features = torch.cat(
+                [
+                    self.backbone(chunk.to(device))
+                    for chunk in torch.split(flattened, frame_batch_size)
+                ]
+            )
         if self.config.temporal_kernel_size == 3:
             features = features.reshape(batch, frames, -1)
         logits = self.head.forward(features).reshape(batch, frames)
