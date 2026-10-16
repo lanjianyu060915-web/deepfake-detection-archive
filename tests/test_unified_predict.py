@@ -211,6 +211,37 @@ def test_missing_weight_records_global_abort(audio, bundle, tmp_path):
     assert json.loads((output / "results.jsonl").read_text())["status"] == "not_run"
 
 
+def test_cli_execution_options_are_effective_and_bound_to_resume(
+    audio, bundle, tmp_path
+):
+    output = tmp_path / "adaptive"
+    arguments = [
+        "predict",
+        str(audio),
+        "--device",
+        "cpu",
+        "--execution-mode",
+        "adaptive",
+        "--batch-size",
+        "1",
+        "--output",
+        str(output),
+    ]
+    assert main(arguments) == 0
+    config = json.loads((output / "input.json").read_text())["configs"]["audio"]
+    assert config["execution_mode"] == "adaptive"
+    assert config["batch_size"] == 1
+    execution = json.loads((output / "audio/execution.json").read_text())
+    assert execution["effective_batch"] == 1
+    scores = (output / "audio/scores.jsonl").read_bytes()
+    assert main([*arguments, "--resume"]) == 0
+    assert (output / "audio/scores.jsonl").read_bytes() == scores
+    changed = list(arguments)
+    changed[changed.index("adaptive")] = "reference"
+    assert main([*changed, "--resume"]) == 2
+    assert (output / "audio/scores.jsonl").read_bytes() == scores
+
+
 def test_nonmedia_only_and_explicit_failure_nonzero(bundle, tmp_path):
     folder = tmp_path / "empty"
     folder.mkdir()

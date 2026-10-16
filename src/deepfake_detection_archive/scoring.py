@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import shutil
+import time
 from dataclasses import replace
 from pathlib import Path
 from typing import Any, cast
@@ -13,6 +14,7 @@ from torch import Tensor
 
 from .config import InferenceConfig
 from .data.manifest import SampleRecord
+from .execution import ExecutionPolicy
 from .features import (
     extract_features,
     extract_video_frames,
@@ -63,8 +65,8 @@ def _validate_media_executables(config: InferenceConfig, audio: AudioConfig) -> 
 class OfflineScorer:
     """Load resources once; media errors are recorded by the outer runner."""
 
-    def __init__(  # noqa: PLR0912
-        self, config: InferenceConfig, base_dir: Path
+    def __init__(  # noqa: C901, PLR0912
+        self, config: InferenceConfig, base_dir: Path, *, resume: bool = False
     ) -> None:
         os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
         self.config = config
@@ -75,6 +77,9 @@ class OfflineScorer:
         self.device = torch.device(config.device)
         if config.device == "cuda" and not torch.cuda.is_available():
             raise RuntimeError("CUDA requested but unavailable; no silent CPU fallback")
+        loading_started = time.monotonic()
+        if self.device.type == "cuda":
+            torch.cuda.reset_peak_memory_stats(self.device)
         torch.manual_seed(config.seed)
         self.model, self.metadata = load_checkpoint(
             resolve_path(base_dir, config.checkpoint),
@@ -147,6 +152,17 @@ class OfflineScorer:
                     "head aggregation and inference configuration disagree"
                 )
             self.encoder = load_encoder(config.encoder, base_dir, str(self.device))
+        self.execution = ExecutionPolicy(
+            self.device,
+            config.execution_mode,
+            config.batch_size,
+            self.video.n_frames if config.modality == "video" else config.segments,
+            resolve_path(base_dir, config.output_dir),
+            resume=resume,
+        )
+        self.execution.resources["model_load_seconds"] = (
+            time.monotonic() - loading_started
+        )
 
     @torch.inference_mode()
     def __call__(
@@ -156,9 +172,18 @@ class OfflineScorer:
         audio_config: AudioConfig | None = None,
         video_config: VideoConfig | None = None,
     ) -> float:
+        if record.status != "available":
+            raise MediaError(record.status, record.failure_reason)
+        if record.modality != self.config.modality:
+            raise MediaError("wrong_modality", "sample differs from run modality")
         try:
-            return self._score(
-                record, audio_config=audio_config, video_config=video_config
+            return self.execution.score(
+                lambda batch_size: self._score(
+                    record,
+                    batch_size=batch_size,
+                    audio_config=audio_config,
+                    video_config=video_config,
+                )
             )
         except RuntimeError as exc:
             # PyTorch's CPU allocator raises RuntimeError rather than OutOfMemoryError.
@@ -170,13 +195,10 @@ class OfflineScorer:
         self,
         record: SampleRecord,
         *,
+        batch_size: int,
         audio_config: AudioConfig | None = None,
         video_config: VideoConfig | None = None,
     ) -> float:
-        if record.status != "available":
-            raise MediaError(record.status, record.failure_reason)
-        if record.modality != self.config.modality:
-            raise MediaError("wrong_modality", "sample differs from run modality")
         if self.config.model_kind == "video_frames" and isinstance(
             self.model, VideoFusionClassifier
         ):
@@ -194,7 +216,7 @@ class OfflineScorer:
                 fused = self.model(
                     clip_frames[None, ...],
                     waverep_frames[None, ...],
-                    frame_batch_size=self.config.batch_size,
+                    frame_batch_size=batch_size,
                 )
                 return float(fused[0].float().cpu())
         if self.frame_preprocessing is not None:
@@ -206,7 +228,7 @@ class OfflineScorer:
             )
             with inference_stage("model_and_feature_scoring"):
                 frame_result: Tensor = self.model(
-                    frames[None, ...], frame_batch_size=self.config.batch_size
+                    frames[None, ...], frame_batch_size=batch_size
                 )
                 return float(frame_result[0].float().cpu())
         if self.encoder is not None:
@@ -219,7 +241,7 @@ class OfflineScorer:
                 self.config.segment_samples,
                 self.config.segments,
                 str(self.device),
-                self.config.batch_size,
+                batch_size,
             )
             with inference_stage("model_and_feature_scoring"):
                 result: Tensor = self.model(features[None, ...].to(self.device))
@@ -247,9 +269,9 @@ class OfflineScorer:
         with inference_stage("model_and_feature_scoring"):
             scores = [
                 self.model(
-                    observations[start : start + self.config.batch_size].to(self.device)
+                    observations[start : start + batch_size].to(self.device)
                 ).float()
-                for start in range(0, len(observations), self.config.batch_size)
+                for start in range(0, len(observations), batch_size)
             ]
             pooled = pool_media_scores(
                 torch.cat(scores)[None, :],

@@ -3,6 +3,7 @@
 import wave
 from dataclasses import replace
 from pathlib import Path
+from unittest.mock import Mock
 
 import pytest
 
@@ -176,6 +177,8 @@ def test_media_boundaries_preserve_scoring_errors(
             )
     else:
         scorer = object.__new__(OfflineScorer)
+        scorer.execution = Mock()
+        scorer.execution.score.side_effect = lambda call: call(scorer.config.batch_size)
         scorer.config = InferenceConfig(
             manifest="manifest.jsonl",
             data_root="media",

@@ -153,6 +153,13 @@ def _evaluate(args: argparse.Namespace) -> dict[str, object]:
 def _infer(args: argparse.Namespace) -> dict[str, object]:
     started = time.perf_counter()
     config = load_inference_config(args.config)
+    config = replace(
+        config,
+        execution_mode=args.execution_mode or config.execution_mode,
+        batch_size=(
+            args.batch_size if args.batch_size is not None else config.batch_size
+        ),
+    )
     base = args.config.parent
     records = load_manifest(base / config.manifest)
     return _infer_records(
@@ -191,7 +198,9 @@ def _infer_records(  # noqa: PLR0913 -- parsed inputs and explicit run controls
     records = [replace(record, group_id=groups[record.sample_id]) for record in records]
     preflight = time.perf_counter() - preflight_started
     started = time.perf_counter()
-    scorer = OfflineScorer(config, base)
+    from .execution import execution_signature  # noqa: PLC0415
+
+    scorer = OfflineScorer(config, base, resume=resume)
     startup = time.perf_counter() - started
     output = base / config.output_dir
     identity = {
@@ -202,15 +211,19 @@ def _infer_records(  # noqa: PLR0913 -- parsed inputs and explicit run controls
         "code": code_identity(),
         "official_adapter": "unconfirmed",
         "frozen_audit": frozen_audit,
+        "execution": execution_signature(config.device, config.execution_mode),
     }
-    scores = run_inference(
-        records,
-        scorer,
-        output,
-        identity=identity,
-        resume=resume,
-        fatal_exceptions=(torch.OutOfMemoryError,),
-    )
+    try:
+        scores = run_inference(
+            records,
+            scorer,
+            output,
+            identity=identity,
+            resume=resume,
+            fatal_exceptions=(torch.OutOfMemoryError,),
+        )
+    finally:
+        scorer.execution.finish()
     summary = load_object(output / "report.json")
     timing = summary["timing"]
     if not isinstance(timing, dict):
@@ -248,7 +261,12 @@ def _predict(args: argparse.Namespace) -> dict[str, object]:
             raise ValueError(
                 "positional media cannot be combined with --config/--input"
             )
-        from .unified_predict import default_models, predict_media  # noqa: PLC0415
+        from .unified_predict import (  # noqa: PLC0415
+            _model_package_root,
+            _package_resource,
+            default_models,
+            predict_media,
+        )
 
         if args.show_models:
             if args.paths:
@@ -257,13 +275,22 @@ def _predict(args: argparse.Namespace) -> dict[str, object]:
             return {
                 "models": catalog,
                 "inference_configs": {
-                    modality: load_inference_config(folder / entry["config"]).to_dict()
+                    modality: load_inference_config(
+                        _package_resource(
+                            _model_package_root(), folder, entry["config"]
+                        )
+                    ).to_dict()
                     for modality, entry in catalog["models"].items()
                 },
                 "failures": 0,
             }
         return predict_media(
-            args.paths, args.output, args.device or "auto", resume=args.resume
+            args.paths,
+            args.output,
+            args.device or "auto",
+            resume=args.resume,
+            execution_mode=args.execution_mode,
+            batch_size=args.batch_size,
         )
     if args.config is None or args.input is None or args.output is None:
         raise ValueError("provide media paths, or --config --input --output")
@@ -281,6 +308,10 @@ def _predict(args: argparse.Namespace) -> dict[str, object]:
         output_dir=str(output),
         checkpoint=str((base / template.checkpoint).resolve()),
         device=args.device or template.device,
+        execution_mode=args.execution_mode or template.execution_mode,
+        batch_size=(
+            args.batch_size if args.batch_size is not None else template.batch_size
+        ),
     )
     # Indexing already hashed every input; reuse those bytes in the resume identity.
     snapshot: list[dict[str, object]] = [
@@ -384,7 +415,7 @@ def _verify(args: argparse.Namespace) -> dict[str, Any]:
     return {key: value for key, value in result.items() if key != "manifest"}
 
 
-def parser() -> argparse.ArgumentParser:
+def parser() -> argparse.ArgumentParser:  # noqa: PLR0915 -- explicit command options
     result = argparse.ArgumentParser(description="Offline AIGC audio/video detection")
     commands = result.add_subparsers(dest="command", required=True)
     for name in ("audit", "train", "infer", "package"):
@@ -401,6 +432,8 @@ def parser() -> argparse.ArgumentParser:
         if name == "infer":
             command.add_argument("--resume", action="store_true")
             command.add_argument("--frozen-audit", action="store_true")
+            command.add_argument("--execution-mode", choices=("reference", "adaptive"))
+            command.add_argument("--batch-size", type=int)
     command = commands.add_parser("predict")
     command.add_argument("paths", nargs="*", type=Path)
     command.add_argument("--show-models", action="store_true")
@@ -409,6 +442,8 @@ def parser() -> argparse.ArgumentParser:
     command.add_argument("--output", type=Path)
     command.add_argument("--device", choices=("auto", "cpu", "cuda"))
     command.add_argument("--resume", action="store_true")
+    command.add_argument("--execution-mode", choices=("reference", "adaptive"))
+    command.add_argument("--batch-size", type=int)
     command = commands.add_parser("index")
     command.add_argument("--root", type=Path, required=True)
     command.add_argument("--modality", choices=("audio", "video"), required=True)

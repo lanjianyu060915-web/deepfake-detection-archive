@@ -43,6 +43,7 @@ class InferenceConfig:
     segment_samples: int = 64600
     aggregation: str = "mean"
     batch_size: int = 8
+    execution_mode: str = "reference"
     seed: int = 42
     schema_version: int = 1
 
@@ -53,6 +54,8 @@ class InferenceConfig:
             raise ValueError("modality must be audio or video")
         if self.device not in ("cpu", "cuda"):
             raise ValueError("device must be cpu or cuda")
+        if self.execution_mode not in ("reference", "adaptive"):
+            raise ValueError("execution_mode must be reference or adaptive")
         if self.model_kind not in (
             "audio_waveform",
             "audio_features",
