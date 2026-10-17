@@ -23,6 +23,7 @@ model_tools=(
   tools/finalize_asvspoof2019.py
   tools/prepare_vif_panda.py
   tools/prepare_vif_bench.py
+  tools/prepare_aigvdbench.py
   tools/prepare_asv_main.py
   tools/prepare_doppelganger.py
   tools/prepare_fakesound.py
@@ -42,6 +43,7 @@ model_tools=(
   tools/build_release.py
   tools/run_container_rehearsal.py
   tools/test_prepare_asv_eval.py
+  tools/test_prepare_aigvdbench.py
   tools/test_prepare_in_the_wild.py
   tools/test_prepare_video_control.py
   tools/test_prepare_video_multigen.py

@@ -1,0 +1,496 @@
+{
+  "counts": [
+    {
+      "generator": "unknown",
+      "label": 0,
+      "n": 599,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "unknown",
+      "label": 0,
+      "n": 1,
+      "split": "dev",
+      "status": "excluded"
+    },
+    {
+      "generator": "AccVideo",
+      "label": 1,
+      "n": 40,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "AnimateDiff",
+      "label": 1,
+      "n": 40,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "EasyAnimate",
+      "label": 1,
+      "n": 40,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "Gen2",
+      "label": 1,
+      "n": 40,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "Gen3",
+      "label": 1,
+      "n": 40,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "IPOC",
+      "label": 1,
+      "n": 40,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "Jimeng",
+      "label": 1,
+      "n": 40,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "Luma",
+      "label": 1,
+      "n": 40,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "Open-Sora",
+      "label": 1,
+      "n": 599,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "Open-Sora",
+      "label": 1,
+      "n": 1,
+      "split": "dev",
+      "status": "excluded"
+    },
+    {
+      "generator": "Opensora",
+      "label": 1,
+      "n": 40,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "Pyramid-Flow",
+      "label": 1,
+      "n": 40,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "RepVideo",
+      "label": 1,
+      "n": 40,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "SEINE",
+      "label": 1,
+      "n": 40,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "SVD",
+      "label": 1,
+      "n": 40,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "Sora",
+      "label": 1,
+      "n": 40,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "VideoCrafter",
+      "label": 1,
+      "n": 40,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "causvid_24fps",
+      "label": 1,
+      "n": 40,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "vidu",
+      "label": 1,
+      "n": 40,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "unknown",
+      "label": 0,
+      "n": 600,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "AccVideo",
+      "label": 1,
+      "n": 39,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "AccVideo",
+      "label": 1,
+      "n": 1,
+      "split": "holdout",
+      "status": "excluded"
+    },
+    {
+      "generator": "AnimateDiff",
+      "label": 1,
+      "n": 39,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "AnimateDiff",
+      "label": 1,
+      "n": 1,
+      "split": "holdout",
+      "status": "excluded"
+    },
+    {
+      "generator": "EasyAnimate",
+      "label": 1,
+      "n": 39,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "EasyAnimate",
+      "label": 1,
+      "n": 1,
+      "split": "holdout",
+      "status": "excluded"
+    },
+    {
+      "generator": "Gen2",
+      "label": 1,
+      "n": 40,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "Gen3",
+      "label": 1,
+      "n": 40,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "IPOC",
+      "label": 1,
+      "n": 39,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "IPOC",
+      "label": 1,
+      "n": 1,
+      "split": "holdout",
+      "status": "excluded"
+    },
+    {
+      "generator": "Jimeng",
+      "label": 1,
+      "n": 40,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "Luma",
+      "label": 1,
+      "n": 40,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "Open-Sora",
+      "label": 1,
+      "n": 600,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "Opensora",
+      "label": 1,
+      "n": 40,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "Pyramid-Flow",
+      "label": 1,
+      "n": 39,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "Pyramid-Flow",
+      "label": 1,
+      "n": 1,
+      "split": "holdout",
+      "status": "excluded"
+    },
+    {
+      "generator": "RepVideo",
+      "label": 1,
+      "n": 39,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "RepVideo",
+      "label": 1,
+      "n": 1,
+      "split": "holdout",
+      "status": "excluded"
+    },
+    {
+      "generator": "SEINE",
+      "label": 1,
+      "n": 39,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "SEINE",
+      "label": 1,
+      "n": 1,
+      "split": "holdout",
+      "status": "excluded"
+    },
+    {
+      "generator": "SVD",
+      "label": 1,
+      "n": 39,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "SVD",
+      "label": 1,
+      "n": 1,
+      "split": "holdout",
+      "status": "excluded"
+    },
+    {
+      "generator": "Sora",
+      "label": 1,
+      "n": 40,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "VideoCrafter",
+      "label": 1,
+      "n": 39,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "VideoCrafter",
+      "label": 1,
+      "n": 1,
+      "split": "holdout",
+      "status": "excluded"
+    },
+    {
+      "generator": "causvid_24fps",
+      "label": 1,
+      "n": 40,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "vidu",
+      "label": 1,
+      "n": 40,
+      "split": "holdout",
+      "status": "available"
+    }
+  ],
+  "evaluation_manifests": {
+    "dev": {
+      "groups": 959,
+      "path": "dev-manifest.jsonl",
+      "samples": 1878,
+      "sha256": "6a59cda4774465f1c5890f996357fb5ac003b610db9f1905954ee58afe273c6e"
+    },
+    "holdout": {
+      "groups": 959,
+      "path": "holdout-manifest.jsonl",
+      "samples": 1871,
+      "sha256": "138f3eec1459d370ae8b24414ccc5d76ce690cce5f0c3b27e008d26bf9d3e0f2"
+    }
+  },
+  "format": {
+    "label0-dev": {
+      "audio_share": 0.0,
+      "count": 600,
+      "duration_max": 53.42,
+      "duration_median": 5.656,
+      "duration_min": 2.669,
+      "fps": {
+        "23.98": 120,
+        "24.0": 19,
+        "25.0": 150,
+        "29.97": 266,
+        "30.0": 43
+      },
+      "resolutions": {
+        "1920x1080": 600
+      }
+    },
+    "label0-holdout": {
+      "audio_share": 0.0,
+      "count": 600,
+      "duration_max": 54.04,
+      "duration_median": 5.9399999999999995,
+      "duration_min": 2.703,
+      "fps": {
+        "23.98": 132,
+        "24.0": 14,
+        "25.0": 161,
+        "29.97": 250,
+        "30.0": 42
+      },
+      "resolutions": {
+        "1916x1080": 1,
+        "1920x1080": 599
+      }
+    },
+    "label1-dev": {
+      "audio_share": 0.00390625,
+      "count": 1280,
+      "duration_max": 200.272,
+      "duration_median": 1.5710000000000002,
+      "duration_min": 1.375,
+      "fps": {
+        "8.0": 239,
+        "10.0": 80,
+        "24.0": 913,
+        "30.0": 42,
+        "32.0": 4
+      },
+      "resolutions": {
+        "1280x720": 73,
+        "336x192": 600,
+        "512x320": 120,
+        "512x512": 41,
+        "720x480": 80
+      }
+    },
+    "label1-holdout": {
+      "audio_share": 0.00625,
+      "count": 1280,
+      "duration_max": 160.82,
+      "duration_median": 1.5710000000000002,
+      "duration_min": 1.375,
+      "fps": {
+        "8.0": 239,
+        "10.0": 80,
+        "24.0": 908,
+        "30.0": 45,
+        "32.0": 4
+      },
+      "resolutions": {
+        "1280x720": 72,
+        "336x192": 600,
+        "512x320": 120,
+        "640x352": 40,
+        "720x480": 80
+      }
+    }
+  },
+  "isolation": {
+    "byte_duplicate_members": [],
+    "excluded": [
+      {
+        "group": "AIGVDBench/OpenSource/I2V/SEINE.zip::videos/zU4LIqsBYOk_60_60to170.mp4",
+        "sample_id": "aigvdb:AccVideo:zU4LIqsBYOk_60_60to170"
+      },
+      {
+        "group": "AIGVDBench/OpenSource/I2V/SEINE.zip::videos/zU4LIqsBYOk_60_60to170.mp4",
+        "sample_id": "aigvdb:AnimateDiff:zU4LIqsBYOk_60_60to170"
+      },
+      {
+        "group": "AIGVDBench/OpenSource/I2V/SEINE.zip::videos/zU4LIqsBYOk_60_60to170.mp4",
+        "sample_id": "aigvdb:EasyAnimate:zU4LIqsBYOk_60_60to170"
+      },
+      {
+        "group": "AIGVDBench/OpenSource/I2V/SEINE.zip::videos/zU4LIqsBYOk_60_60to170.mp4",
+        "sample_id": "aigvdb:IPOC:zU4LIqsBYOk_60_60to170"
+      },
+      {
+        "group": "AIGVDBench/OpenSource/I2V/SEINE.zip::videos/zU4LIqsBYOk_60_60to170.mp4",
+        "sample_id": "aigvdb:Open-Sora:zU4LIqsBYOk_69_17to180"
+      },
+      {
+        "group": "AIGVDBench/OpenSource/I2V/SEINE.zip::videos/zU4LIqsBYOk_60_60to170.mp4",
+        "sample_id": "aigvdb:Pyramid-Flow:zU4LIqsBYOk_60_60to170"
+      },
+      {
+        "group": "AIGVDBench/OpenSource/I2V/SEINE.zip::videos/zU4LIqsBYOk_60_60to170.mp4",
+        "sample_id": "aigvdb:RepVideo:zU4LIqsBYOk_60_60to170"
+      },
+      {
+        "group": "AIGVDBench/OpenSource/I2V/SEINE.zip::videos/zU4LIqsBYOk_60_60to170.mp4",
+        "sample_id": "aigvdb:SEINE:zU4LIqsBYOk_60_60to170"
+      },
+      {
+        "group": "AIGVDBench/OpenSource/I2V/SEINE.zip::videos/zU4LIqsBYOk_60_60to170.mp4",
+        "sample_id": "aigvdb:SVD:zU4LIqsBYOk_60_60to170"
+      },
+      {
+        "group": "AIGVDBench/OpenSource/I2V/SEINE.zip::videos/zU4LIqsBYOk_60_60to170.mp4",
+        "sample_id": "aigvdb:VideoCrafter:zU4LIqsBYOk_60_60to170"
+      },
+      {
+        "group": "AIGVDBench/OpenSource/I2V/SEINE.zip::videos/zU4LIqsBYOk_60_60to170.mp4",
+        "sample_id": "aigvdb:real:zU4LIqsBYOk_69_17to180"
+      }
+    ],
+    "groups": 1919,
+    "leaking_groups": [
+      "AIGVDBench/OpenSource/I2V/SEINE.zip::videos/zU4LIqsBYOk_60_60to170.mp4"
+    ]
+  },
+  "manifest_sha256": "6dd92198f988d8313214e5caabf418a50cc5a523c7a8d1362c6b6478f4b282d2",
+  "revision": "bf48acaa4920990af3dd2a511ea88e63354df305",
+  "samples": 3760
+}

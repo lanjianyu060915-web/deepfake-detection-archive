@@ -1,0 +1,26 @@
+{
+ "schema_version": 1,
+ "manifest": "/var/tmp/lanjianyu-issue51-20261014/aigvdbench/controlled-1p25s/video_h264_crf23_448x256_16fps_1p25s/manifest.jsonl",
+ "data_root": "/var/tmp/lanjianyu-issue51-20261014/aigvdbench/controlled-1p25s/video_h264_crf23_448x256_16fps_1p25s",
+ "output_dir": "/var/tmp/lanjianyu-issue51-20261014/aigvdbench/scores/multigen-paired-seed43/controlled",
+ "modality": "video",
+ "model_kind": "video_frames",
+ "checkpoint": "/mnt/deepfake-archive/C4-video-multigen/weights/paired-seed43/best.pt",
+ "checkpoint_sha256": "1d7cb9f5dab5cecef04ec11d67ad2323d1e85fe5b58ad0bb5efb0bfc6f143dc3",
+ "device": "cuda",
+ "video": {
+  "n_frames": 4,
+  "height": 224,
+  "width": 224,
+  "resize_mode": "center_crop"
+ },
+ "batch_size": 8,
+ "aggregation": "mean",
+ "seed": 42,
+ "encoder": {
+  "kind": "vision",
+  "architecture": "resnet18",
+  "checkpoint": "/mnt/deepfake-archive/shared/resnet18-a1/encoder.pt",
+  "expected_sha256": "db6fd0c5cfb2b712d1904bb8b7edcf41a850491bdf42729e4ab485e89f1b6889"
+ }
+}

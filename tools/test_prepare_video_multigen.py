@@ -10,7 +10,12 @@ import unittest
 from dataclasses import replace
 from pathlib import Path
 
-from prepare_robustness import MULTIGEN_CANONICAL, transform, video_timing
+from prepare_robustness import (
+    MULTIGEN_CANONICAL,
+    SHORT_CANONICAL,
+    transform,
+    video_timing,
+)
 from prepare_video_multigen import select_pairs
 
 from deepfake_detection_archive.data.manifest import SampleRecord
@@ -162,6 +167,36 @@ class MultiGeneratorTests(unittest.TestCase):
             self.assertEqual((probe["width"], probe["height"]), (448, 256))
             self.assertEqual(probe["sample_aspect_ratio"], "1:1")
             self.assertEqual(probe["avg_frame_rate"], "16/1")
+
+    def test_short_canonical_fits_clips_under_two_seconds(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            output = root / "output"
+            (output / "media").mkdir(parents=True)
+            source = root / "clip.mp4"
+            subprocess.run(
+                [
+                    "ffmpeg",
+                    "-v",
+                    "error",
+                    "-f",
+                    "lavfi",
+                    "-i",
+                    "testsrc2=size=96x96:rate=8:duration=1.5",
+                    "-threads",
+                    "1",
+                    str(source),
+                ],
+                check=True,
+                capture_output=True,
+                timeout=20,
+            )
+            row = replace(pair("clip")[0], path="clip.mp4")
+            short = transform(row, root, output, SHORT_CANONICAL, 20)
+            self.assertEqual(short.status, "available", short.failure_reason)
+            self.assertEqual(video_timing(output / short.path, 20), (1.25, 20))
+            too_short = transform(row, root, root / "other", MULTIGEN_CANONICAL, 20)
+            self.assertNotEqual(too_short.status, "available")
 
 
 if __name__ == "__main__":
