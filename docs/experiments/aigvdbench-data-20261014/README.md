@@ -22,12 +22,14 @@
 
 所有确定性抽样按“文件名 UTF-8 字节的 SHA-256 十六进制升序”取前 N 个。
 
-| 用途 | 真实 | Open-Sora 配对 | 17 个独立生成器 | 合计 |
+| 用途 | 真实 | Open-Sora 配对 | 17 个其他生成器 | 合计 |
 | --- | ---: | ---: | ---: | ---: |
 | dev（真实取自官方 val） | 600 | 600 | 各 40，共 680 | 1,880 |
 | 原holdout库存（真实取自官方 test） | 600 | 600 | 各 40，共 680 | 1,880 |
 
-- 每个 YouTube ID 只取一条；同时出现在官方 val 与 test 的 110 个 ID 两边都排除。官方 train 未用。
+- 真实池每个 YouTube ID 只取一条，同时出现在官方 val/test 的110个ID两边排除。
+  其他17个生成器按完整ZIP库存的文件hash选择，再分配用途，并非只来自官方val/test；
+  这些首批媒体均只用于开发/保留，不进入梯度训练。
 - Open-Sora及AccVideo、AnimateDiff、EasyAnimate、IPOC、Pyramid-Flow、RepVideo、
   VideoCrafter、SEINE、SVD按官方共享`Video_id`的YouTube母视频合组，不同片段也属于同组。
   闭源数字文件名没有确认映射，保持独立登记，不能据此断言统计独立。字节重复继续强制合组。
