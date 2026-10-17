@@ -1,0 +1,20 @@
+{
+ "schema_version": 1,
+ "manifest": "/var/tmp/lanjianyu-issue51-20261014/aigvdbench/devman/dev-manifest.jsonl",
+ "data_root": "/var/tmp/lanjianyu-issue51-20261014/aigvdbench/media",
+ "output_dir": "/var/tmp/lanjianyu-issue51-20261014/aigvdbench/scores/release-video/natural",
+ "modality": "video",
+ "model_kind": "video_frames",
+ "checkpoint": "/mnt/deepfake-archive/C1-release-v0.1.1/weights/video-resnet18.pt",
+ "checkpoint_sha256": "21fdd4e547a5ae7c7a24162eaf2cb526379b7d152e36aa4546891657ae48f115",
+ "device": "cuda",
+ "video": {
+  "n_frames": 4,
+  "height": 224,
+  "width": 224,
+  "resize_mode": "center_crop"
+ },
+ "batch_size": 8,
+ "aggregation": "mean",
+ "seed": 42
+}

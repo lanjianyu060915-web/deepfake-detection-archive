@@ -12,7 +12,8 @@
 | UFD强视频对照 | `/var/tmp/deepfake-video-ufd-20261014/` | 完整检测器、固定配置与三组分数；公开头负结果；最小资产已另存下方C6持久归档 |
 | 冻结CLIP视频头 | `/var/tmp/deepfake-video-clip-head-20261014/` | 双seed头与三组完整分数，冻结43为研究候选；复用UFD骨干，最小资产已另存C6，不替换release |
 | 生成机制鉴伪（#59） | `/var/tmp/lanjianyu-issue59-20261014/` | WaveRep G1 原权重与 `waverep_video_v1` checkpoint、SD1/Wan2.1 VAE、T1 权重、机制表、全部逐样本分数；持久副本 `/mnt/deepfake-archive/issue59-generator-forensics/`，研究用途、非营利许可 |
-| AIGVDBench首批视频 | `/var/tmp/lanjianyu-issue51-20261014/aigvdbench/` | #51：仅消费dev1880条与其受控版本；保留部分隔离；底层YouTube许可未确认，仅研究评估 |
+| AIGVDBench首批视频 | `/var/tmp/lanjianyu-issue51-20261014/aigvdbench/` | #51：dev/holdout各1880条（真600、配对Open-Sora600、17生成器各40），按YouTube母视频隔离；仅消费dev与其1.25秒受控版本，保留部分封存；底层YouTube许可未确认，仅研究评估；[数据卡](experiments/aigvdbench-data-20261014/README.md) |
+| 人工收集真假音视频 | `/home/lanjianyu/人工收集的数据/`（清单在 `/var/tmp/lanjianyu-issue51-20261014/human-collected/`） | #51：数据负责人手工收集并按目录认定标签（2026-10-17，未逐条复核）。`real_ai_media_500_20261014/` 523条（LibriVox/维基共享AI语音/Mixkit/archive.org AI短片，逐条来源与许可CSV）、`AI生成视频/` 106条（B站）、`真实音视频/` 282条；共911条，音频404（真279/假125）、视频507（真283/假224），split未分配；7组字节重复已同组；真假在音轨、帧率、采样率上有系统差异；许可未确认，仅内部研究 |
 | 新来源CLIP视频评分 | `/var/tmp/deepfake-video-independent-20261014/` | 自然/受控各1880条零失败、EER21.33%/31.33%；8帧受控31.80%无收益；[实验](experiments/video-aigvdbench-20261014/README.md) |
 | CLIP最后block适配（#81） | `/var/tmp/deepfake-video-clip-adapt-20261016/` | control43/tuned43/42完整权重、配置和逐样本分数；复用C6/C9/C10媒体及初始化，C11持久副本；可重建tokens在运行完成后释放；[实验](experiments/video-clip-adapt-20261016/README.md) |
 | 三生成器扩展（#80） | `/var/tmp/deepfake-video-coverage-20261016/` | 新增1500条原媒体，整组排除训练2条后实际train5412/dev1344；control43/expanded43/42与两套完整诊断，内部研究，持久副本C10；[实验](experiments/video-generator-coverage-20261016/README.md) |

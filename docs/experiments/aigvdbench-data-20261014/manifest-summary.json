@@ -1,0 +1,358 @@
+{
+  "counts": [
+    {
+      "generator": "unknown",
+      "label": 0,
+      "n": 600,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "AccVideo",
+      "label": 1,
+      "n": 40,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "AnimateDiff",
+      "label": 1,
+      "n": 40,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "EasyAnimate",
+      "label": 1,
+      "n": 40,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "Gen2",
+      "label": 1,
+      "n": 40,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "Gen3",
+      "label": 1,
+      "n": 40,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "IPOC",
+      "label": 1,
+      "n": 40,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "Jimeng",
+      "label": 1,
+      "n": 40,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "Luma",
+      "label": 1,
+      "n": 40,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "Open-Sora",
+      "label": 1,
+      "n": 600,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "Opensora",
+      "label": 1,
+      "n": 40,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "Pyramid-Flow",
+      "label": 1,
+      "n": 40,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "RepVideo",
+      "label": 1,
+      "n": 40,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "SEINE",
+      "label": 1,
+      "n": 40,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "SVD",
+      "label": 1,
+      "n": 40,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "Sora",
+      "label": 1,
+      "n": 40,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "VideoCrafter",
+      "label": 1,
+      "n": 40,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "causvid_24fps",
+      "label": 1,
+      "n": 40,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "vidu",
+      "label": 1,
+      "n": 40,
+      "split": "dev",
+      "status": "available"
+    },
+    {
+      "generator": "unknown",
+      "label": 0,
+      "n": 600,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "AccVideo",
+      "label": 1,
+      "n": 40,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "AnimateDiff",
+      "label": 1,
+      "n": 40,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "EasyAnimate",
+      "label": 1,
+      "n": 40,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "Gen2",
+      "label": 1,
+      "n": 40,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "Gen3",
+      "label": 1,
+      "n": 40,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "IPOC",
+      "label": 1,
+      "n": 40,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "Jimeng",
+      "label": 1,
+      "n": 40,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "Luma",
+      "label": 1,
+      "n": 40,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "Open-Sora",
+      "label": 1,
+      "n": 600,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "Opensora",
+      "label": 1,
+      "n": 40,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "Pyramid-Flow",
+      "label": 1,
+      "n": 40,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "RepVideo",
+      "label": 1,
+      "n": 40,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "SEINE",
+      "label": 1,
+      "n": 40,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "SVD",
+      "label": 1,
+      "n": 40,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "Sora",
+      "label": 1,
+      "n": 40,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "VideoCrafter",
+      "label": 1,
+      "n": 40,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "causvid_24fps",
+      "label": 1,
+      "n": 40,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "vidu",
+      "label": 1,
+      "n": 40,
+      "split": "holdout",
+      "status": "available"
+    }
+  ],
+  "format": {
+    "label0-dev": {
+      "audio_share": 0.0,
+      "count": 600,
+      "duration_max": 53.42,
+      "duration_median": 5.656,
+      "duration_min": 2.669,
+      "fps": {
+        "23.98": 120,
+        "24.0": 19,
+        "25.0": 150,
+        "29.97": 266,
+        "30.0": 43
+      },
+      "resolutions": {
+        "1920x1080": 600
+      }
+    },
+    "label0-holdout": {
+      "audio_share": 0.0,
+      "count": 600,
+      "duration_max": 54.04,
+      "duration_median": 5.9399999999999995,
+      "duration_min": 2.703,
+      "fps": {
+        "23.98": 132,
+        "24.0": 14,
+        "25.0": 161,
+        "29.97": 250,
+        "30.0": 42
+      },
+      "resolutions": {
+        "1916x1080": 1,
+        "1920x1080": 599
+      }
+    },
+    "label1-dev": {
+      "audio_share": 0.00390625,
+      "count": 1280,
+      "duration_max": 200.272,
+      "duration_median": 1.5710000000000002,
+      "duration_min": 1.375,
+      "fps": {
+        "8.0": 239,
+        "10.0": 80,
+        "24.0": 913,
+        "30.0": 42,
+        "32.0": 4
+      },
+      "resolutions": {
+        "1280x720": 73,
+        "336x192": 600,
+        "512x320": 120,
+        "512x512": 41,
+        "720x480": 80
+      }
+    },
+    "label1-holdout": {
+      "audio_share": 0.00625,
+      "count": 1280,
+      "duration_max": 160.82,
+      "duration_median": 1.5710000000000002,
+      "duration_min": 1.375,
+      "fps": {
+        "8.0": 239,
+        "10.0": 80,
+        "24.0": 908,
+        "30.0": 45,
+        "32.0": 4
+      },
+      "resolutions": {
+        "1280x720": 72,
+        "336x192": 600,
+        "512x320": 120,
+        "640x352": 40,
+        "720x480": 80
+      }
+    }
+  },
+  "isolation": {
+    "byte_duplicate_members": [],
+    "excluded": [],
+    "groups": 2560,
+    "leaking_groups": []
+  },
+  "manifest_sha256": "9843c3da174a932150f205548fd43f1489193011f296d0c0ded3310d7a4b1f9b",
+  "revision": "bf48acaa4920990af3dd2a511ea88e63354df305",
+  "samples": 3760
+}
