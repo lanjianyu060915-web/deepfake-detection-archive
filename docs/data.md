@@ -7,6 +7,7 @@
 
 | 资产 | 实际位置 | 当前用途 |
 | --- | --- | --- |
+| 三生成器扩展（#90） | `/srv/shared-data/candidates/video-coverage-20261017/` | 四个头与复用CLIP编码器，root只读，两账号各14文件可读/5权重写入被拒；新增2400train、实际train7812/dev1344；跨集取舍，C10仍主候选；[实验](experiments/video-coverage-20261017/README.md) |
 | 原生Swin3D/CLIP16（#88） | `/srv/shared-data/candidates/video-native-20261017/` | 八个训练checkpoint、完整冻结Swin43、复用CLIP编码器；root只读，两账号各31文件可读/10权重写入被拒；Swin负结果、CLIP16研究对照，C10仍主候选；[实验](experiments/video-native-20261017/README.md) |
 | DINOv2/CLIP新候选（#86） | `/srv/shared-data/candidates/video-dinov2-20261017/` | 四个新头、四个完整适配/对照checkpoint与两个编码器，root只读、两位账号实测可读；大权重硬链接不重复占盘；CLIP研究备选、DINO负结果，C10仍主候选；[实验](experiments/video-dinov2-20261017/README.md) |
 | UFD强视频对照 | `/var/tmp/deepfake-video-ufd-20261014/` | 完整检测器、固定配置与三组分数；公开头负结果；最小资产已另存下方C6持久归档 |
@@ -73,6 +74,7 @@
 | `C19-video-native-temporal-20261017/` | Swin3D/CLIP16八组训练checkpoint与完整分数/配置/历史、完整冻结Swin43、原公开Swin权重和固定许可、时序2304条及标准入口24条结果、必要适配器与两份固定源码；CLIP编码器/媒体复用C6/C9/C10，不复制缓存 |
 | `C20-speech-ssl-aasist-20261014/` | #53：SSL_Anti-spoofing官方`LA_model.pth`、作者源码`4acaa61d`与协议、XLS-R配置、评分脚本新旧两版、5个语音集与5个非语音诊断集完整分数/评估/加载映射、同协议汇总与来源记录；52文件1,356,326,200字节，自带`SHA256SUMS` 51/51 OK |
 | `C21-human-collected-20261017/` | #51数据负责人收集的真假音视频原媒体与项目清单：real_ai_media_500 523条（含来源CSV）、AI生成视频106条与原zip、真实音视频282条、china-clips-1000解压包根（不含与之重复的2.2GB zip，zip SHA-256记于README）；清单911+999条；2,940文件3,251,126,327字节，`SHA256SUMS` 2,939/2,939 OK；原目录 `/home/lanjianyu/人工收集的数据/` 保留，许可未确认仅内部研究 |
+| `C22-video-generator-coverage-20261017/` | 四个同初始化/预算CLIP4头、完整配置/分数/历史、采集排除与feature producer记录、标准CLI8条、必要适配器/源码；新增2400原媒体及canonical各单份tar，旧媒体/编码器/缓存不复制 |
 | `shared/` | `resnet18-a1/encoder.pt`（视频共享基座）与`ast-audioset/`（AST预训练基座） |
 
 原C1–C5与shared共396个内容文件、约3.07GiB，不含原始媒体、特征缓存和可再生的发布分片。
@@ -111,6 +113,12 @@ commit为`unavailable`，package SHA不变，事后只读源映射独立保存�
 CLIP编码器和训练媒体分别复用C6、C9/C10。完整Swin checkpoint运行时无需原权重或缓存。
 共享目录31文件、1,848,935,400逻辑字节，权重硬链接；两位账号实测可读、10权重写入被拒。
 归档完成后释放12,814,208,484B RAM缓存及544,998,476B CLIP特征；不删除原媒体或候选。
+
+C22独立登记85个内容文件、3,913,948,538B，复制文件读回及新增raw/canonical各2400个tar成员SHA核对完成。
+保存本轮四个头、完整分数与配置、旧特征producer摘要和两份固定源码`35de6a6`/`2af4b61`；
+共享目录14文件，两账号均可读、5份权重打开写入被拒，大权重硬链接不重复占盘。
+候选推理另需C6编码器；旧6756条媒体未全部归档，全量重训仍依赖原共享媒体或按原清单重新取得。
+本轮新增媒体已保存不等于已完成跨实例全量恢复，也不支持optimizer/RNG续训。
 
 C14按独立 `index.json`/`SHA256SUMS` 保全#50新增要求的最小材料，旧索引、配置和分数不改写；
 数据、权重、cache、输出可分别指定根，生成器按原路径/逻辑ID精确映射，C1原sidecar与新权重相邻，
