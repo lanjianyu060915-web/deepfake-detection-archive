@@ -12,6 +12,7 @@
 | 方向 | 已有结果 | 当前选择与缺口 |
 | --- | --- | --- |
 | 语音 | 带宽seed42/43 clean 0.90%/1.08%、8kHz带限1.39%/1.04%；In-the-Wild 30.67%/31.19% | 保留带宽seed42；白噪声双种子不稳定已停止；真实网络语音仍弱；[实验](experiments/speech-robust-20261013/README.md) |
+| 语音SSL | 官方XLS-R+AASIST LA权重：ASV dev clean/AAC/8kHz 0.08%/0.08%/0.04%，A07–A19 0.19%，In-the-Wild 11.21%（LogMel 30.67%、AST 24.86%） | 保留为语音专家候选，不替换通用音频；权重1.2GB、显存约2GB；[实验](experiments/speech-ssl-20261014/README.md) |
 | 环境音 | Urban AST12层seed42 dev1.39%；冻结研究候选holdout已见1.43%、未见生成器6.51% | 保留环境音对照；不能代表音乐或通用音频；[实验](experiments/audio-envsdd-20261011/README.md) |
 | 音乐 | 扩展AIME无增强候选未训练路径18.75%；事后等权分数融合14.58% | 融合仅为dev探索，未接离线推理；跨来源仍弱；[实验](experiments/audio-ast-regularization-20261012/README.md) |
 | 音乐/语音混合 | 匹配对照中未训练路径合成混合32.55%→26.89%；真实广播混合仍50%、环境音退化 | 保留负结果，不替换主候选；[实验](experiments/audio-speech-mix-20261012/README.md) |

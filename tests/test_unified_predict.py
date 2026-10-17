@@ -543,3 +543,49 @@ def test_resume_distinguishes_binary_bytes_but_not_tool_location(
     with pytest.raises(ValueError, match="resume rejected"):
         predict_media([], output, "cpu", resume=True)
     assert len(hashed) == 6
+
+
+def test_ssl_bundle_predict_checks_real_loader_metadata(
+    audio, bundle, tmp_path, monkeypatch
+):
+    """Exercise full discovery/config/scorer/registry/run flow with a tiny model."""
+    import torch  # noqa: PLC0415 -- local tiny inference fixture
+    from torch import nn  # noqa: PLC0415
+
+    from deepfake_detection_archive.models import ssl_antispoofing as ssl  # noqa: PLC0415
+
+    class TinySSL(nn.Module):
+        def forward(self, wave):
+            return torch.tensor([[1.0, 2.0]]).expand(len(wave), -1)
+
+    config_path = bundle / "configs/audio-environment.json"
+    config = json.loads(config_path.read_text())
+    (bundle / "weights/model.py").write_text("pinned source fixture")
+    (bundle / "weights/xlsr.json").write_text("{}")
+    config.update(
+        model_kind="audio_ssl_antispoofing",
+        segment_samples=64600,
+        segments=1,
+        ssl={
+            "upstream_model": "../weights/model.py",
+            "xlsr_config": "../weights/xlsr.json",
+            "xlsr_config_sha256": checkpoint.sha256_file(bundle / "weights/xlsr.json"),
+        },
+    )
+    config_path.write_text(json.dumps(config))
+    registry_path = bundle / "configs/models.json"
+    registry = json.loads(registry_path.read_text())
+    registry["models"]["audio"].update(
+        architecture="audio_ssl_antispoofing_v1", checkpoint_schema=1
+    )
+    registry_path.write_text(json.dumps(registry))
+    monkeypatch.setattr(
+        ssl, "upstream_model_class", lambda *args: lambda *args: TinySSL()
+    )
+    monkeypatch.setattr(ssl.torch, "load", lambda *args, **kwargs: {})
+    output = tmp_path / "ssl-predict"
+    report = predict_media([audio], output, "cpu", resume=False)
+    assert report["failures"] == 0
+    row = json.loads((output / "audio/scores.jsonl").read_text())
+    assert row["status"] == "ok"
+    assert row["score"] == -2.0

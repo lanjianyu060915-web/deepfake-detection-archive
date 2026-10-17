@@ -44,7 +44,9 @@ from .models import (
     pool_media_scores,
 )
 from .models.ast import ASTClassifier
+from .models.checkpoint import verify_sha256
 from .models.core import PoolingMethod
+from .models.ssl_antispoofing import build_model, pad_or_tile
 from .timing import inference_stage
 
 
@@ -67,7 +69,7 @@ def _validate_media_executables(config: InferenceConfig, audio: AudioConfig) -> 
 class OfflineScorer:
     """Load resources once; media errors are recorded by the outer runner."""
 
-    def __init__(  # noqa: C901, PLR0912
+    def __init__(  # noqa: C901, PLR0912, PLR0915
         self, config: InferenceConfig, base_dir: Path, *, resume: bool = False
     ) -> None:
         os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
@@ -83,10 +85,22 @@ class OfflineScorer:
         if self.device.type == "cuda":
             torch.cuda.reset_peak_memory_stats(self.device)
         torch.manual_seed(config.seed)
-        self.model, self.metadata = load_checkpoint(
-            resolve_path(base_dir, config.checkpoint),
-            expected_sha256=config.checkpoint_sha256,
-        )
+        if config.model_kind == "audio_ssl_antispoofing":
+            weights = resolve_path(base_dir, config.checkpoint)
+            xlsr_config = resolve_path(base_dir, config.ssl["xlsr_config"])
+            verify_sha256(xlsr_config, config.ssl["xlsr_config_sha256"])
+            self.model, self.metadata = build_model(
+                weights,
+                resolve_path(base_dir, config.ssl["upstream_model"]),
+                xlsr_config,
+                str(self.device),
+                expected_weights_sha256=config.checkpoint_sha256,
+            )
+        else:
+            self.model, self.metadata = load_checkpoint(
+                resolve_path(base_dir, config.checkpoint),
+                expected_sha256=config.checkpoint_sha256,
+            )
         self.model.to(self.device).eval()
         self.frame_preprocessing: dict[str, Any] | None = None
         if config.model_kind == "video_frames":
@@ -142,6 +156,8 @@ class OfflineScorer:
                     )
             else:
                 self.frame_preprocessing = self.model.preprocessing
+        elif config.model_kind == "audio_ssl_antispoofing":
+            self.encoder = None
         elif config.model_kind == "audio_waveform":
             if not isinstance(self.model, (LogMelCNN, AASISTLite, ASTClassifier)):
                 raise ValueError("audio_waveform requires LogMel, AASIST-L or AST")
@@ -266,7 +282,9 @@ class OfflineScorer:
                 path,
                 audio_config or self.audio,
             )
-            if isinstance(self.model, ASTClassifier):
+            if self.config.model_kind == "audio_ssl_antispoofing":
+                observations = torch.from_numpy(pad_or_tile(decoded.waveform))[None, :]
+            elif isinstance(self.model, ASTClassifier):
                 observations = self.model.prepare_audio(
                     decoded.waveform,
                     self.config.segment_samples,
@@ -281,6 +299,9 @@ class OfflineScorer:
                     )
                 )
         with inference_stage("model_and_feature_scoring"):
+            if self.config.model_kind == "audio_ssl_antispoofing":
+                logits = self.model(observations.to(self.device)).float()
+                return -float(logits[0, 1].cpu())
             scores = [
                 self.model(
                     observations[start : start + batch_size].to(self.device)

@@ -10,7 +10,7 @@
 | 数据 | `manifest.example.jsonl`、`sources.example.jsonl`、`audit.example.json` |
 | 音频训练 | `train-logmel.example.json`、`train-aasist-l.example.json`、`train-audio-ssl-head.example.json`、`train-logmel-doppelganger.example.json` |
 | 视频训练 | `train-video-head.example.json` |
-| 推理 | `infer-audio-waveform.example.json`、`infer-audio-ssl-head.example.json`、`infer-video-head.example.json`、`infer-video-fusion.example.json` |
+| 推理 | `infer-audio-waveform.example.json`、`infer-audio-ssl-head.example.json`、`infer-audio-ssl-antispoofing.example.json`、`infer-video-head.example.json`、`infer-video-fusion.example.json` |
 | 导出与交付 | `adapter.example.json`、`package.example.json` |
 
 最短训练流程：
@@ -64,6 +64,11 @@ AST可设置 `training.frequency_mask_width` / `time_mask_width`，默认0关闭
 
 完整命令和字段边界见[开发指南](../docs/development.md)。历史实验的实值配置保留在对应实验
 记录中，不应复制成新实验默认值。
+
+`infer-audio-ssl-antispoofing.example.json` 是官方 XLS-R+AASIST LA 语音专家完整权重，
+与仅训练 SSL 特征头的模板不同。需要本地 `LA_model.pth`、固定上游 `model.py` 和
+`xlsr_cfg.json` 三个资源；模板已固定本轮权重和配置哈希，不隐式下载。
+运行、逐样本失败记账和离线搬移说明见[实验](../docs/experiments/speech-ssl-20261014/README.md#标准离线推理)。
 
 原生 Swin3D 研究 checkpoint（`video_swin3d_v1`）同样使用
 `model_kind="video_frames"`，`video` 必须为16帧、224×224及
