@@ -119,6 +119,7 @@ logical ID与媒体SHA对齐新cu126包 `predict`，预设分数绝对容差1e-4
 历史清单实际5个dirty候选中4份源码包与训练记录哈希一致；C3原工作副本当前源码及58个
 可达历史源码树均不匹配训练哈希，历史dirty源码仍未恢复，不能用当前clean替代。
 本轮另查本仓库3个不可达commit的4份包源码树，以及队友原C3仓库49个路径commit/reflog中的48份唯一包源码树，仍未匹配训练hash；仅记录这些已知位置，不推断其他位置不存在。RC3实际结果见[执行与容量](experiments/runtime-completion-20261016/README.md)。
+2026-10-17又在数据负责人本机仓库复算全部316个commit（`git rev-list --all --reflog`及`fsck`不可达commit）的`code_sha256`：C3 bandwidth42的`daae2a27…`仍无匹配；C3 bandwidth43（#55，原记录commit为`unavailable`）的`9dc591ca…`精确匹配`2fabb61`（其后`46bc8f1`、`97ea83f`未改包源码，哈希相同），该候选源码可从已提交树完整恢复。复算方法与`tracking.code_identity`一致：包内`.py`/`.txt`逐文件SHA-256组成的规范JSON再取SHA-256。
 
 完整历史工作树差异、原训练媒体/缓存恢复、optimizer/RNG无损续训、独立实例恢复、旧有标签评分集/全部候选新OS验收及正式许可仍有缺口；同机根映射与本批归档不构成独立跨实例备份，#50新要求尚未全部完成。
 
