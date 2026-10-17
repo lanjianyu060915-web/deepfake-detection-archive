@@ -3,9 +3,16 @@
     {
       "generator": "unknown",
       "label": 0,
-      "n": 600,
+      "n": 599,
       "split": "dev",
       "status": "available"
+    },
+    {
+      "generator": "unknown",
+      "label": 0,
+      "n": 1,
+      "split": "dev",
+      "status": "excluded"
     },
     {
       "generator": "AccVideo",
@@ -66,9 +73,16 @@
     {
       "generator": "Open-Sora",
       "label": 1,
-      "n": 600,
+      "n": 599,
       "split": "dev",
       "status": "available"
+    },
+    {
+      "generator": "Open-Sora",
+      "label": 1,
+      "n": 1,
+      "split": "dev",
+      "status": "excluded"
     },
     {
       "generator": "Opensora",
@@ -143,23 +157,44 @@
     {
       "generator": "AccVideo",
       "label": 1,
-      "n": 40,
+      "n": 39,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "AccVideo",
+      "label": 1,
+      "n": 1,
+      "split": "holdout",
+      "status": "excluded"
+    },
+    {
+      "generator": "AnimateDiff",
+      "label": 1,
+      "n": 39,
       "split": "holdout",
       "status": "available"
     },
     {
       "generator": "AnimateDiff",
       "label": 1,
-      "n": 40,
+      "n": 1,
+      "split": "holdout",
+      "status": "excluded"
+    },
+    {
+      "generator": "EasyAnimate",
+      "label": 1,
+      "n": 39,
       "split": "holdout",
       "status": "available"
     },
     {
       "generator": "EasyAnimate",
       "label": 1,
-      "n": 40,
+      "n": 1,
       "split": "holdout",
-      "status": "available"
+      "status": "excluded"
     },
     {
       "generator": "Gen2",
@@ -178,9 +213,16 @@
     {
       "generator": "IPOC",
       "label": 1,
-      "n": 40,
+      "n": 39,
       "split": "holdout",
       "status": "available"
+    },
+    {
+      "generator": "IPOC",
+      "label": 1,
+      "n": 1,
+      "split": "holdout",
+      "status": "excluded"
     },
     {
       "generator": "Jimeng",
@@ -213,30 +255,58 @@
     {
       "generator": "Pyramid-Flow",
       "label": 1,
-      "n": 40,
+      "n": 39,
+      "split": "holdout",
+      "status": "available"
+    },
+    {
+      "generator": "Pyramid-Flow",
+      "label": 1,
+      "n": 1,
+      "split": "holdout",
+      "status": "excluded"
+    },
+    {
+      "generator": "RepVideo",
+      "label": 1,
+      "n": 39,
       "split": "holdout",
       "status": "available"
     },
     {
       "generator": "RepVideo",
       "label": 1,
-      "n": 40,
+      "n": 1,
+      "split": "holdout",
+      "status": "excluded"
+    },
+    {
+      "generator": "SEINE",
+      "label": 1,
+      "n": 39,
       "split": "holdout",
       "status": "available"
     },
     {
       "generator": "SEINE",
       "label": 1,
-      "n": 40,
+      "n": 1,
+      "split": "holdout",
+      "status": "excluded"
+    },
+    {
+      "generator": "SVD",
+      "label": 1,
+      "n": 39,
       "split": "holdout",
       "status": "available"
     },
     {
       "generator": "SVD",
       "label": 1,
-      "n": 40,
+      "n": 1,
       "split": "holdout",
-      "status": "available"
+      "status": "excluded"
     },
     {
       "generator": "Sora",
@@ -248,9 +318,16 @@
     {
       "generator": "VideoCrafter",
       "label": 1,
-      "n": 40,
+      "n": 39,
       "split": "holdout",
       "status": "available"
+    },
+    {
+      "generator": "VideoCrafter",
+      "label": 1,
+      "n": 1,
+      "split": "holdout",
+      "status": "excluded"
     },
     {
       "generator": "causvid_24fps",
@@ -267,6 +344,20 @@
       "status": "available"
     }
   ],
+  "evaluation_manifests": {
+    "dev": {
+      "groups": 959,
+      "path": "dev-manifest.jsonl",
+      "samples": 1878,
+      "sha256": "6a59cda4774465f1c5890f996357fb5ac003b610db9f1905954ee58afe273c6e"
+    },
+    "holdout": {
+      "groups": 959,
+      "path": "holdout-manifest.jsonl",
+      "samples": 1871,
+      "sha256": "138f3eec1459d370ae8b24414ccc5d76ce690cce5f0c3b27e008d26bf9d3e0f2"
+    }
+  },
   "format": {
     "label0-dev": {
       "audio_share": 0.0,
@@ -348,11 +439,58 @@
   },
   "isolation": {
     "byte_duplicate_members": [],
-    "excluded": [],
-    "groups": 2560,
-    "leaking_groups": []
+    "excluded": [
+      {
+        "group": "AIGVDBench/OpenSource/I2V/SEINE.zip::videos/zU4LIqsBYOk_60_60to170.mp4",
+        "sample_id": "aigvdb:AccVideo:zU4LIqsBYOk_60_60to170"
+      },
+      {
+        "group": "AIGVDBench/OpenSource/I2V/SEINE.zip::videos/zU4LIqsBYOk_60_60to170.mp4",
+        "sample_id": "aigvdb:AnimateDiff:zU4LIqsBYOk_60_60to170"
+      },
+      {
+        "group": "AIGVDBench/OpenSource/I2V/SEINE.zip::videos/zU4LIqsBYOk_60_60to170.mp4",
+        "sample_id": "aigvdb:EasyAnimate:zU4LIqsBYOk_60_60to170"
+      },
+      {
+        "group": "AIGVDBench/OpenSource/I2V/SEINE.zip::videos/zU4LIqsBYOk_60_60to170.mp4",
+        "sample_id": "aigvdb:IPOC:zU4LIqsBYOk_60_60to170"
+      },
+      {
+        "group": "AIGVDBench/OpenSource/I2V/SEINE.zip::videos/zU4LIqsBYOk_60_60to170.mp4",
+        "sample_id": "aigvdb:Open-Sora:zU4LIqsBYOk_69_17to180"
+      },
+      {
+        "group": "AIGVDBench/OpenSource/I2V/SEINE.zip::videos/zU4LIqsBYOk_60_60to170.mp4",
+        "sample_id": "aigvdb:Pyramid-Flow:zU4LIqsBYOk_60_60to170"
+      },
+      {
+        "group": "AIGVDBench/OpenSource/I2V/SEINE.zip::videos/zU4LIqsBYOk_60_60to170.mp4",
+        "sample_id": "aigvdb:RepVideo:zU4LIqsBYOk_60_60to170"
+      },
+      {
+        "group": "AIGVDBench/OpenSource/I2V/SEINE.zip::videos/zU4LIqsBYOk_60_60to170.mp4",
+        "sample_id": "aigvdb:SEINE:zU4LIqsBYOk_60_60to170"
+      },
+      {
+        "group": "AIGVDBench/OpenSource/I2V/SEINE.zip::videos/zU4LIqsBYOk_60_60to170.mp4",
+        "sample_id": "aigvdb:SVD:zU4LIqsBYOk_60_60to170"
+      },
+      {
+        "group": "AIGVDBench/OpenSource/I2V/SEINE.zip::videos/zU4LIqsBYOk_60_60to170.mp4",
+        "sample_id": "aigvdb:VideoCrafter:zU4LIqsBYOk_60_60to170"
+      },
+      {
+        "group": "AIGVDBench/OpenSource/I2V/SEINE.zip::videos/zU4LIqsBYOk_60_60to170.mp4",
+        "sample_id": "aigvdb:real:zU4LIqsBYOk_69_17to180"
+      }
+    ],
+    "groups": 1919,
+    "leaking_groups": [
+      "AIGVDBench/OpenSource/I2V/SEINE.zip::videos/zU4LIqsBYOk_60_60to170.mp4"
+    ]
   },
-  "manifest_sha256": "9843c3da174a932150f205548fd43f1489193011f296d0c0ded3310d7a4b1f9b",
+  "manifest_sha256": "6dd92198f988d8313214e5caabf418a50cc5a523c7a8d1362c6b6478f4b282d2",
   "revision": "bf48acaa4920990af3dd2a511ea88e63354df305",
   "samples": 3760
 }

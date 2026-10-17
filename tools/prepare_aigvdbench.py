@@ -3,8 +3,9 @@
 Input is the per-file download log written while fetching selected members of
 the pinned AIGVDBench release: real clips from the official val/test splits and
 fakes from generators absent from current training and ViF-Bench. Real clips
-group by YouTube ID; a paired Open-Sora fake joins its real clip's group; other
-fakes have no known link and stay singleton groups. Identical bytes are merged
+and the named open-source derivatives group by the shared official Video_id's
+YouTube ID, including different clips from the same parent. Closed-source
+numeric filenames have no confirmed mapping and stay singleton groups. Identical bytes are merged
 into one group, and a group must not span dev and holdout. Failed downloads stay
 in the manifest as missing so coverage keeps them in the denominator. No media
 is decoded, scored or copied here.
@@ -32,6 +33,18 @@ SOURCE = "aigvdbench-first-batch"
 REPOSITORY = "https://huggingface.co/datasets/AIGVDBench/AIGVDBench"
 LICENSE_ID = "CC-BY-4.0 AND LicenseRef-YouTube-underlying-unverified"
 SPLITS = {"dev": "dev", "holdout": "holdout"}
+YOUTUBE_DERIVED_GENERATORS = {
+    "Open-Sora",
+    "AccVideo",
+    "AnimateDiff",
+    "EasyAnimate",
+    "IPOC",
+    "Pyramid-Flow",
+    "RepVideo",
+    "VideoCrafter",
+    "SEINE",
+    "SVD",
+}
 
 
 def _find(parent: dict[str, str], key: str) -> str:
@@ -70,6 +83,8 @@ def _declared_group(row: dict[str, Any]) -> str:
         return f"{SOURCE}:youtube:{row['youtube_id']}"
     if row.get("paired_real"):
         return f"{SOURCE}:youtube:{str(row['paired_real'])[:11]}"
+    if row["generator"] in YOUTUBE_DERIVED_GENERATORS:
+        return f"{SOURCE}:youtube:{Path(row['member']).name[:11]}"
     return f"{SOURCE}:{row['generator']}:{Path(row['member']).stem}"
 
 
@@ -121,13 +136,13 @@ def build_records(
         group = groups[row["member_key"]]
         probe = row.get("ffprobe") or {}
         status, reason = "available", UNKNOWN
-        if row["status"] != "ok":
-            status, reason = "missing", str(row.get("error") or "download failed")
-        elif group in leaking:
+        if group in leaking:
             status, reason = "excluded", "group spans dev and holdout"
             excluded.append(
                 {"sample_id": sample_ids[row["member_key"]], "group": group}
             )
+        elif row["status"] != "ok":
+            status, reason = "missing", str(row.get("error") or "download failed")
         paired = row.get("paired_real")
         records.append(
             SampleRecord(
@@ -228,6 +243,20 @@ def prepare(
     )
     output.mkdir(parents=True, exist_ok=True)
     digest = write_manifest(records, output / "manifest.jsonl")
+    evaluation_manifests = {}
+    for split in SPLITS:
+        eligible = [
+            record
+            for record in records
+            if record.split == split and record.status != "excluded"
+        ]
+        name = f"{split}-manifest.jsonl"
+        evaluation_manifests[split] = {
+            "path": name,
+            "sha256": write_manifest(eligible, output / name),
+            "samples": len(eligible),
+            "groups": len({record.group_id for record in eligible}),
+        }
     (output / "sources.jsonl").write_text(
         json.dumps(
             asdict(source) | {"allowed_uses": list(source.allowed_uses)},
@@ -250,6 +279,7 @@ def prepare(
             for (split, label, gen, state), n in sorted(counts.items())
         ],
         "isolation": report,
+        "evaluation_manifests": evaluation_manifests,
         "format": format_summary(rows),
     }
     (output / "summary.json").write_text(
