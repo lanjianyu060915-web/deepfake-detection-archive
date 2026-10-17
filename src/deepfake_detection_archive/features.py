@@ -143,9 +143,9 @@ def extract_features(  # noqa: PLR0913, PLR0917
 ) -> Tensor:
     """Return CPU float32 [observations, dimensions], preserving each media.
 
-    Vision decoding uses the explicitly configured FFmpeg resize/crop or pad,
-    then the encoder's registered mean/std. This preprocessing choice is shared
-    verbatim with inference and recorded in the experiment configuration.
+    VideoConfig controls the research head's spatial view; the frozen encoder
+    supplies input dimensions and mean/std. Training and inference share this
+    preprocessing and record it in the experiment configuration.
     """
     if type(batch_size) is not int or batch_size <= 0:
         raise ValueError("feature batch_size must be a positive integer")
@@ -164,9 +164,6 @@ def extract_features(  # noqa: PLR0913, PLR0917
             size = tuple(encoder.preprocessing["input_size"])
             if size != (3, video_config.height, video_config.width):
                 raise ValueError("video dimensions must match encoder input_size")
-            required_mode = encoder.preprocessing.get("resize_mode")
-            if required_mode is not None and video_config.resize_mode != required_mode:
-                raise ValueError("video resize_mode must match encoder preprocessing")
             video = decode_video(path, video_config)
             inputs = (
                 torch.from_numpy(video.frames).permute(0, 3, 1, 2).float().div_(255)
@@ -211,9 +208,6 @@ def extract_video_feature_batch(  # noqa: PLR0913, PLR0917
     """
     if not records:
         return []
-    required_mode = encoder.preprocessing.get("resize_mode")
-    if required_mode is not None and video_config.resize_mode != required_mode:
-        raise ValueError("video resize_mode must match encoder preprocessing")
     with ThreadPoolExecutor(max_workers=max(1, num_workers)) as pool:
         futures = [
             pool.submit(

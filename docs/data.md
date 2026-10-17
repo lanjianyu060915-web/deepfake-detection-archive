@@ -7,6 +7,7 @@
 
 | 资产 | 实际位置 | 当前用途 |
 | --- | --- | --- |
+| CLIP空间视图（#99） | `/srv/shared-data/candidates/video-spatial-20261017/` | native43/global43两个小头与推理模板，root只读，两账号各8/8文件可读；CLIP编码器硬链接复用；平台泛化负结果，不替换C10；最小产物存C25；[实验](experiments/video-spatial-20261017/README.md) |
 | 三生成器扩展（#90） | `/srv/shared-data/candidates/video-coverage-20261017/` | 四个头与复用CLIP编码器，root只读，两账号各14文件可读/5权重写入被拒；新增2400train、实际train7812/dev1344；跨集取舍，C10仍主候选；[实验](experiments/video-coverage-20261017/README.md) |
 | 原生Swin3D/CLIP16（#88） | `/srv/shared-data/candidates/video-native-20261017/` | 八个训练checkpoint、完整冻结Swin43、复用CLIP编码器；root只读，两账号各31文件可读/10权重写入被拒；Swin负结果、CLIP16研究对照，C10仍主候选；[实验](experiments/video-native-20261017/README.md) |
 | DINOv2/CLIP新候选（#86） | `/srv/shared-data/candidates/video-dinov2-20261017/` | 四个新头、四个完整适配/对照checkpoint与两个编码器，root只读、两位账号实测可读；大权重硬链接不重复占盘；CLIP研究备选、DINO负结果，C10仍主候选；[实验](experiments/video-dinov2-20261017/README.md) |
@@ -89,6 +90,7 @@
 | `C22-video-generator-coverage-20261017/` | 四个同初始化/预算CLIP4头、完整配置/分数/历史、采集排除与feature producer记录、标准CLI8条、必要适配器/源码；新增2400原媒体及canonical各单份tar，旧媒体/编码器/缓存不复制 |
 | `C23-platform-video-20261017/` | #95首批平台视频dev用途、固定C10/C22比较、自然/受控四份完整分数与失败、生产者源码和适配器；47内容文件60,111,997B，复制读回一致、受控tar808成员逐一SHA核对；原媒体复用C21、权重复用C6/C10/C22，不复制自然dev或特征缓存，holdout仅元数据 |
 | `C24-platform-diagnostic-20261017/` | #97十份完整分数、实际配置/运行元数据、清单/原角色与消费更正、分析脚本；63内容文件12,142,679B，复制读回一致；原媒体/权重/缓存不复制。已消费原保留445条，全1910条现为已见诊断，C23保留旧协议不改写 |
+| `C25-video-spatial-20261017/` | #99两头、匹配训练配置/历史/dev分数、平台自然/受控四份分数与评估、标准infer8条及parity、实验摘要和冻结69b1ec4源码/必要适配器；60内容文件5,174,581B，复制读回一致；清单引用C10，媒体/编码器复用C6/C9/C10/C21/C23，不复制大缓存；平台负结果、默认不变 |
 | `shared/` | `resnet18-a1/encoder.pt`（视频共享基座）与`ast-audioset/`（AST预训练基座） |
 
 原C1–C5与shared共396个内容文件、约3.07GiB，不含原始媒体、特征缓存和可再生的发布分片。

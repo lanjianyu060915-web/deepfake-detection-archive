@@ -87,8 +87,8 @@ class FrozenVisionEncoder(_FrozenEncoder):
 
     Timm files contain the exact `num_classes=0` state_dict without wrappers;
     UFD uses a standard full checkpoint containing its projected visual encoder.
-    Input RGB tensors must already use the registered model preprocessing;
-    `preprocessing` exposes its size, interpolation, mean and standard deviation.
+    Input RGB tensors must use the encoder's size and normalization; research
+    feature heads configure their spatial view separately through VideoConfig.
     DINOv2 keeps its pretrained 518 position grid and interpolates it for the
     experiment's 224 RGB center crops, using ImageNet normalization.
     """

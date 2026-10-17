@@ -100,7 +100,8 @@ def test_frame_batches_preserve_projection_head_and_tail(monkeypatch):
     assert head.call_args.args[0].shape == (14, 6)
 
 
-def test_clip_feature_batch_matches_serial_and_owns_storage(tmp_path):
+@pytest.mark.parametrize("resize_mode", ["native_center_crop", "center_crop", "pad"])
+def test_clip_feature_batch_matches_serial_and_owns_storage(tmp_path, resize_mode):
     model = UFDVideoClassifier(tiny_config()).eval()
     checkpoint = tmp_path / "ufd.pt"
     descriptor = save_checkpoint(checkpoint, model)
@@ -126,9 +127,7 @@ def test_clip_feature_batch_matches_serial_and_owns_storage(tmp_path):
                 str(index), path.name, "video", index, "dev", sha256=file_sha256(path)
             )
         )
-    config = VideoConfig(
-        n_frames=3, height=8, width=8, resize_mode="native_center_crop"
-    )
+    config = VideoConfig(n_frames=3, height=8, width=8, resize_mode=resize_mode)
     expected = [
         extract_features(
             record, tmp_path, encoder, AudioConfig(), config, 10, 1, "cpu", 4
@@ -141,19 +140,10 @@ def test_clip_feature_batch_matches_serial_and_owns_storage(tmp_path):
     for value, reference in zip(actual, expected, strict=True):
         torch.testing.assert_close(value, reference)
         assert value.untyped_storage().nbytes() == value.numel() * value.element_size()
-    with pytest.raises(ValueError, match="resize_mode"):
-        extract_video_feature_batch(
-            records,
-            tmp_path,
-            encoder,
-            VideoConfig(n_frames=3, height=8, width=8),
-            "cpu",
-            4,
-            2,
-        )
 
 
-def test_scorer_requires_native_crop_and_matching_aggregation(tmp_path):
+@pytest.mark.parametrize("resize_mode", ["pad", "center_crop"])
+def test_scorer_requires_native_crop_and_matching_aggregation(tmp_path, resize_mode):
     path = tmp_path / "ufd.pt"
     descriptor = save_checkpoint(path, UFDVideoClassifier(tiny_config()))
     common = {
@@ -167,7 +157,13 @@ def test_scorer_requires_native_crop_and_matching_aggregation(tmp_path):
         "device": "cpu",
     }
     with pytest.raises(ValueError, match="native_center_crop"):
-        OfflineScorer(InferenceConfig(**common), tmp_path)
+        OfflineScorer(
+            InferenceConfig(
+                **common,
+                video={"resize_mode": resize_mode, "height": 8, "width": 8},
+            ),
+            tmp_path,
+        )
     video = {
         "n_frames": 4,
         "height": 8,
