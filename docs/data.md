@@ -14,9 +14,9 @@
 | 冻结CLIP视频头 | `/var/tmp/deepfake-video-clip-head-20261014/` | 双seed头与三组完整分数，冻结43为研究候选；复用UFD骨干，最小资产已另存C6，不替换release |
 | 生成机制鉴伪（#59） | `/var/tmp/lanjianyu-issue59-20261014/` | WaveRep G1 原权重与 `waverep_video_v1` checkpoint、SD1/Wan2.1 VAE、T1 权重、机制表、全部逐样本分数；持久副本 `/mnt/deepfake-archive/issue59-generator-forensics/`，研究用途、非营利许可 |
 | AIGVDBench首批视频 | `/var/tmp/lanjianyu-issue51-20261014/aigvdbench/` | #51：原库存dev/holdout各1880；修正已知母视频分组后整组排除11条，当前dev1878/holdout1871（新清单`/var/tmp/deepfake-pr92-corrected-20261017/`）；历史评分保留，保留部分封存，Panda母媒体交集未知；底层YouTube许可未确认，仅研究评估；[数据卡](experiments/aigvdbench-data-20261014/README.md) |
-| 人工收集真假音视频 | `/home/lanjianyu/人工收集的数据/`（清单在 `/var/tmp/lanjianyu-issue51-20261014/human-collected/`） | #51：数据负责人手工收集并按目录认定标签（2026-10-17，未逐条复核）。`real_ai_media_500_20261014/` 523条（LibriVox/维基共享AI语音/Mixkit/archive.org AI短片，逐条来源与许可CSV）、`AI生成视频/` 106条（B站）、`真实音视频/` 282条；共911条，音频404（真279/假125）、视频507（真283/假224）；原清单保持unassigned，#95派生清单已按两批共同关系固定dev/holdout用途，无train；7组字节重复已同组；真假在音轨、帧率、采样率上有系统差异；许可未确认，仅内部研究 |
-| 中文平台片段 china-clips-1000 | `/home/lanjianyu/人工收集的数据/china-clips-1000-20261016/`（清单在 `/var/tmp/lanjianyu-issue51-20261014/china-clips/`） | #51：B站投稿与国内生成工具官网展示的约10秒片段，音频/视频各500（mp3/wav/flac、mp4/mkv统一转码）；标签取候选方向，由数据负责人2026-10-17认定、依据上传者/官方声明、未逐条试听试看；排除方向未知1条后999条：音频真250/假249（音乐354、语音120）、视频真250/假250；视频真实全部来自B站、假视频122条来自官网展示，评估时需分开报告；按原素材999组，84位作者多条另记identity；原清单保持unassigned，#95派生清单已固定dev/holdout用途，无train；许可未确认，仅内部研究 |
-| 新平台视频开发诊断（#95） | `/var/tmp/deepfake-china-video-20261017/` | 两批1910条共同组件划分：视频dev808（真415/假393）/holdout199，音频dev657/holdout246仅用途；精确BV跨批3组、字节重复与已登记关系保留。普通用户可读dev自然副本及对称受控各808，原媒体不改；自然800成功/8失败（完整EER不可算），受控808成功；原始失败保留，holdout未读；[实验](experiments/video-platform-20261017/README.md) |
+| 人工收集真假音视频 | `/home/lanjianyu/人工收集的数据/`（清单在 `/var/tmp/lanjianyu-issue51-20261014/human-collected/`） | #51：数据负责人手工收集并按目录认定标签（2026-10-17，未逐条复核）。`real_ai_media_500_20261014/` 523条（LibriVox/维基共享AI语音/Mixkit/archive.org AI短片，逐条来源与许可CSV）、`AI生成视频/` 106条（B站）、`真实音视频/` 282条；共911条，音频404（真279/假125）、视频507（真283/假224）；原清单保持unassigned，#95派生清单曾固定dev/holdout用途；#97随后全量评分，首批现均为已见诊断，无train；7组字节重复已同组；真假在音轨、帧率、采样率上有系统差异；许可未确认，仅内部研究 |
+| 中文平台片段 china-clips-1000 | `/home/lanjianyu/人工收集的数据/china-clips-1000-20261016/`（清单在 `/var/tmp/lanjianyu-issue51-20261014/china-clips/`） | #51：B站投稿与国内生成工具官网展示的约10秒片段，音频/视频各500（mp3/wav/flac、mp4/mkv统一转码）；标签取候选方向，由数据负责人2026-10-17认定、依据上传者/官方声明、未逐条试听试看；排除方向未知1条后999条：音频真250/假249（音乐354、语音120）、视频真250/假250；视频真实全部来自B站、假视频122条来自官网展示，评估时需分开报告；按原素材999组，84位作者多条另记identity；原清单保持unassigned，#95派生清单曾固定dev/holdout用途；#97随后全量评分，现已见诊断，无train；许可未确认，仅内部研究 |
+| 新平台视频开发诊断（#95） | `/var/tmp/deepfake-china-video-20261017/` | 两批1910条共同组件划分：视频dev808（真415/假393）/holdout199，音频dev657/holdout246仅用途；精确BV跨批3组、字节重复与已登记关系保留。普通用户可读dev自然副本及对称受控各808，原媒体不改；自然800成功/8失败（完整EER不可算），受控808成功；原始失败保留；#95本轮未读保留，随后#97已全量消费，现已见诊断；[实验](experiments/video-platform-20261017/README.md) |
 | 新来源CLIP视频评分 | `/var/tmp/deepfake-video-independent-20261014/` | 自然/受控各1880条零失败、EER21.33%/31.33%；8帧受控31.80%无收益；[实验](experiments/video-aigvdbench-20261014/README.md) |
 | CLIP最后block适配（#81） | `/var/tmp/deepfake-video-clip-adapt-20261016/` | control43/tuned43/42完整权重、配置和逐样本分数；复用C6/C9/C10媒体及初始化，C11持久副本；可重建tokens在运行完成后释放；[实验](experiments/video-clip-adapt-20261016/README.md) |
 | 三生成器扩展（#80） | `/var/tmp/deepfake-video-coverage-20261016/` | 新增1500条原媒体，整组排除训练2条后实际train5412/dev1344；control43/expanded43/42与两套完整诊断，内部研究，持久副本C10；[实验](experiments/video-generator-coverage-20261016/README.md) |
@@ -50,7 +50,8 @@
 
 #95用途依据完整1910条metadata共同计算连通组件，seed20261017按组件哈希80/20固定，
 未知关系保持未知；视频生成器1007条全未知、937条作者身份未知，dev108条统计分组未知。
-首批1910条不用于梯度训练，保留视频199条未解码/未评分。自然与受控视图同时改变时长、
+首批1910条不用于梯度训练。#95单轮没有读取保留，随后#97全量评分已消费视频199/音频246原保留，
+首批现全部是已见诊断；原角色清单仅历史溯源，不事后重抽划分伪装盲测。自然与受控视图同时改变时长、
 尺寸、压缩和采样，不能作纯编解码对照。自然8条初始失败保持记账：7条实际时间戳异常、1条无关MP2音轨错误影响严格解码，本轮未恢复；
 用途、原路径/SHA映射与分数见上述#95运行目录，原库存及持久C21保持原样。
 
@@ -87,6 +88,7 @@
 | `C21-human-collected-20261017/` | #51数据负责人收集的真假音视频原媒体与项目清单：real_ai_media_500 523条（含来源CSV）、AI生成视频106条与原zip、真实音视频282条、china-clips-1000解压包根（不含与之重复的2.2GB zip，zip SHA-256记于README）；清单911+999条；2,940文件3,251,126,327字节，`SHA256SUMS` 2,939/2,939 OK；原目录 `/home/lanjianyu/人工收集的数据/` 保留，许可未确认仅内部研究 |
 | `C22-video-generator-coverage-20261017/` | 四个同初始化/预算CLIP4头、完整配置/分数/历史、采集排除与feature producer记录、标准CLI8条、必要适配器/源码；新增2400原媒体及canonical各单份tar，旧媒体/编码器/缓存不复制 |
 | `C23-platform-video-20261017/` | #95首批平台视频dev用途、固定C10/C22比较、自然/受控四份完整分数与失败、生产者源码和适配器；47内容文件60,111,997B，复制读回一致、受控tar808成员逐一SHA核对；原媒体复用C21、权重复用C6/C10/C22，不复制自然dev或特征缓存，holdout仅元数据 |
+| `C24-platform-diagnostic-20261017/` | #97十份完整分数、实际配置/运行元数据、清单/原角色与消费更正、分析脚本；63内容文件12,142,679B，复制读回一致；原媒体/权重/缓存不复制。已消费原保留445条，全1910条现为已见诊断，C23保留旧协议不改写 |
 | `shared/` | `resnet18-a1/encoder.pt`（视频共享基座）与`ast-audioset/`（AST预训练基座） |
 
 原C1–C5与shared共396个内容文件、约3.07GiB，不含原始媒体、特征缓存和可再生的发布分片。

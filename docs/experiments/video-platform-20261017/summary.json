@@ -963,5 +963,15 @@
     "platform_generalization": "weak, near chance; no competition readiness claim",
     "next": "new unrelated platform training material and source/content coverage; first inventory remains dev/holdout",
     "no_new_seed_frame_or_fusion_sweep": true
+  },
+  "subsequent_usage": {
+    "issue": 51,
+    "pull_request": 97,
+    "original_reserved_audio_scored": 246,
+    "original_reserved_video_scored": 199,
+    "current_unseen_reserved_samples": 0,
+    "current_inventory_use": "all1910 seen diagnostic; original scope describes the earlier PR95 run only",
+    "original_roles_and_scores_preserved": true,
+    "no_retrospective_resplit_or_training_reuse": true
   }
 }

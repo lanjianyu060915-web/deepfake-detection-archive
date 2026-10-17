@@ -6,7 +6,8 @@
     "successful_subset": "EER uses successfully scored rows with both labels",
     "failure_policy": "failures retained in counts, coverage, and failure lists",
     "small_group_threshold": 30,
-    "label_provenance": "数据负责人认定（未逐条复核）"
+    "label_provenance": "数据负责人认定（未逐条复核）",
+    "eer_percent_scope": "legacy eer_percent always displays successful_subset_eer; use fullset_eer/fullset_reason for complete-set claims"
   },
   "manifest_summary": {
     "base": "/var/tmp/lanjianyu-issue51-20261014/eval-new-sources",
@@ -259,7 +260,10 @@
           "decode_error": 2,
           "invalid_metadata": 2
         },
-        "successful_subset_roc_auc": 0.7905163636363637
+        "successful_subset_roc_auc": 0.7905163636363637,
+        "fullset_eer": null,
+        "fullset_reason": "failed_samples_have_no_score",
+        "eer_scope": "successful_subset_only"
       },
       "by_source": {
         "human-collected-real-ai-media-500": {
@@ -278,7 +282,10 @@
           "failures_by_code": {
             "decode_error": 2
           },
-          "successful_subset_roc_auc": 0.7564031007751938
+          "successful_subset_roc_auc": 0.7564031007751938,
+          "fullset_eer": null,
+          "fullset_reason": "failed_samples_have_no_score",
+          "eer_scope": "successful_subset_only"
         },
         "human-collected-real-media": {
           "sample_count": 148,
@@ -295,7 +302,10 @@
           "sample_small": false,
           "failures_by_code": {
             "invalid_metadata": 2
-          }
+          },
+          "fullset_eer": null,
+          "fullset_reason": "failed_samples_have_no_score",
+          "eer_scope": "successful_subset_only"
         }
       },
       "by_content_type": {
@@ -316,7 +326,10 @@
             "decode_error": 2,
             "invalid_metadata": 2
           },
-          "successful_subset_roc_auc": 0.7905163636363637
+          "successful_subset_roc_auc": 0.7905163636363637,
+          "fullset_eer": null,
+          "fullset_reason": "failed_samples_have_no_score",
+          "eer_scope": "successful_subset_only"
         }
       },
       "custom_groups": {
@@ -334,7 +347,10 @@
             "eer_percent": "单类，无法计算",
             "metric_reason": "单类，无法计算",
             "sample_small": false,
-            "failures_by_code": {}
+            "failures_by_code": {},
+            "fullset_eer": null,
+            "fullset_reason": "单类，无法计算",
+            "eer_scope": "fullset"
           },
           "real_ai_media_500_20261014/真实音频_real_audio": {
             "sample_count": 131,
@@ -351,7 +367,10 @@
             "sample_small": false,
             "failures_by_code": {
               "decode_error": 2
-            }
+            },
+            "fullset_eer": null,
+            "fullset_reason": "failed_samples_have_no_score",
+            "eer_scope": "successful_subset_only"
           },
           "真实音视频": {
             "sample_count": 148,
@@ -368,7 +387,10 @@
             "sample_small": false,
             "failures_by_code": {
               "invalid_metadata": 2
-            }
+            },
+            "fullset_eer": null,
+            "fullset_reason": "failed_samples_have_no_score",
+            "eer_scope": "successful_subset_only"
           }
         }
       },
@@ -574,7 +596,10 @@
           "decode_error": 2,
           "invalid_metadata": 2
         },
-        "successful_subset_roc_auc": 0.6565527272727273
+        "successful_subset_roc_auc": 0.6565527272727273,
+        "fullset_eer": null,
+        "fullset_reason": "failed_samples_have_no_score",
+        "eer_scope": "successful_subset_only"
       },
       "by_source": {
         "human-collected-real-ai-media-500": {
@@ -593,7 +618,10 @@
           "failures_by_code": {
             "decode_error": 2
           },
-          "successful_subset_roc_auc": 0.6719379844961241
+          "successful_subset_roc_auc": 0.6719379844961241,
+          "fullset_eer": null,
+          "fullset_reason": "failed_samples_have_no_score",
+          "eer_scope": "successful_subset_only"
         },
         "human-collected-real-media": {
           "sample_count": 148,
@@ -610,7 +638,10 @@
           "sample_small": false,
           "failures_by_code": {
             "invalid_metadata": 2
-          }
+          },
+          "fullset_eer": null,
+          "fullset_reason": "failed_samples_have_no_score",
+          "eer_scope": "successful_subset_only"
         }
       },
       "by_content_type": {
@@ -631,7 +662,10 @@
             "decode_error": 2,
             "invalid_metadata": 2
           },
-          "successful_subset_roc_auc": 0.6565527272727273
+          "successful_subset_roc_auc": 0.6565527272727273,
+          "fullset_eer": null,
+          "fullset_reason": "failed_samples_have_no_score",
+          "eer_scope": "successful_subset_only"
         }
       },
       "custom_groups": {
@@ -649,7 +683,10 @@
             "eer_percent": "单类，无法计算",
             "metric_reason": "单类，无法计算",
             "sample_small": false,
-            "failures_by_code": {}
+            "failures_by_code": {},
+            "fullset_eer": null,
+            "fullset_reason": "单类，无法计算",
+            "eer_scope": "fullset"
           },
           "real_ai_media_500_20261014/真实音频_real_audio": {
             "sample_count": 131,
@@ -666,7 +703,10 @@
             "sample_small": false,
             "failures_by_code": {
               "decode_error": 2
-            }
+            },
+            "fullset_eer": null,
+            "fullset_reason": "failed_samples_have_no_score",
+            "eer_scope": "successful_subset_only"
           },
           "真实音视频": {
             "sample_count": 148,
@@ -683,7 +723,10 @@
             "sample_small": false,
             "failures_by_code": {
               "invalid_metadata": 2
-            }
+            },
+            "fullset_eer": null,
+            "fullset_reason": "failed_samples_have_no_score",
+            "eer_scope": "successful_subset_only"
           }
         }
       },
@@ -888,7 +931,10 @@
         "failures_by_code": {
           "MediaError": 4
         },
-        "successful_subset_roc_auc": 0.7737018181818182
+        "successful_subset_roc_auc": 0.7737018181818182,
+        "fullset_eer": null,
+        "fullset_reason": "failed_samples_have_no_score",
+        "eer_scope": "successful_subset_only"
       },
       "by_source": {
         "human-collected-real-ai-media-500": {
@@ -907,7 +953,10 @@
           "failures_by_code": {
             "MediaError": 2
           },
-          "successful_subset_roc_auc": 0.7768062015503876
+          "successful_subset_roc_auc": 0.7768062015503876,
+          "fullset_eer": null,
+          "fullset_reason": "failed_samples_have_no_score",
+          "eer_scope": "successful_subset_only"
         },
         "human-collected-real-media": {
           "sample_count": 148,
@@ -924,7 +973,10 @@
           "sample_small": false,
           "failures_by_code": {
             "MediaError": 2
-          }
+          },
+          "fullset_eer": null,
+          "fullset_reason": "failed_samples_have_no_score",
+          "eer_scope": "successful_subset_only"
         }
       },
       "by_content_type": {
@@ -944,7 +996,10 @@
           "failures_by_code": {
             "MediaError": 4
           },
-          "successful_subset_roc_auc": 0.7737018181818182
+          "successful_subset_roc_auc": 0.7737018181818182,
+          "fullset_eer": null,
+          "fullset_reason": "failed_samples_have_no_score",
+          "eer_scope": "successful_subset_only"
         }
       },
       "custom_groups": {
@@ -962,7 +1017,10 @@
             "eer_percent": "单类，无法计算",
             "metric_reason": "单类，无法计算",
             "sample_small": false,
-            "failures_by_code": {}
+            "failures_by_code": {},
+            "fullset_eer": null,
+            "fullset_reason": "单类，无法计算",
+            "eer_scope": "fullset"
           },
           "real_ai_media_500_20261014/真实音频_real_audio": {
             "sample_count": 131,
@@ -979,7 +1037,10 @@
             "sample_small": false,
             "failures_by_code": {
               "MediaError": 2
-            }
+            },
+            "fullset_eer": null,
+            "fullset_reason": "failed_samples_have_no_score",
+            "eer_scope": "successful_subset_only"
           },
           "真实音视频": {
             "sample_count": 148,
@@ -996,7 +1057,10 @@
             "sample_small": false,
             "failures_by_code": {
               "MediaError": 2
-            }
+            },
+            "fullset_eer": null,
+            "fullset_reason": "failed_samples_have_no_score",
+            "eer_scope": "successful_subset_only"
           }
         }
       },
@@ -1202,7 +1266,10 @@
           "decode_error": 1,
           "invalid_timestamps": 7
         },
-        "successful_subset_roc_auc": 0.6035551948051948
+        "successful_subset_roc_auc": 0.6035551948051948,
+        "fullset_eer": null,
+        "fullset_reason": "failed_samples_have_no_score",
+        "eer_scope": "successful_subset_only"
       },
       "by_source": {
         "human-collected-ai-video-zip": {
@@ -1218,7 +1285,10 @@
           "eer_percent": "单类，无法计算",
           "metric_reason": "单类，无法计算",
           "sample_small": false,
-          "failures_by_code": {}
+          "failures_by_code": {},
+          "fullset_eer": null,
+          "fullset_reason": "单类，无法计算",
+          "eer_scope": "fullset"
         },
         "human-collected-real-ai-media-500": {
           "sample_count": 267,
@@ -1237,7 +1307,10 @@
             "decode_error": 1,
             "invalid_timestamps": 7
           },
-          "successful_subset_roc_auc": 0.6220699603317706
+          "successful_subset_roc_auc": 0.6220699603317706,
+          "fullset_eer": null,
+          "fullset_reason": "failed_samples_have_no_score",
+          "eer_scope": "successful_subset_only"
         },
         "human-collected-real-media": {
           "sample_count": 134,
@@ -1252,7 +1325,10 @@
           "eer_percent": "单类，无法计算",
           "metric_reason": "单类，无法计算",
           "sample_small": false,
-          "failures_by_code": {}
+          "failures_by_code": {},
+          "fullset_eer": null,
+          "fullset_reason": "单类，无法计算",
+          "eer_scope": "fullset"
         }
       },
       "by_content_type": {
@@ -1273,7 +1349,10 @@
             "decode_error": 1,
             "invalid_timestamps": 7
           },
-          "successful_subset_roc_auc": 0.6035551948051948
+          "successful_subset_roc_auc": 0.6035551948051948,
+          "fullset_eer": null,
+          "fullset_reason": "failed_samples_have_no_score",
+          "eer_scope": "successful_subset_only"
         }
       },
       "custom_groups": {},
@@ -1515,7 +1594,10 @@
           "decode_error": 1,
           "invalid_timestamps": 7
         },
-        "successful_subset_roc_auc": 0.517775974025974
+        "successful_subset_roc_auc": 0.517775974025974,
+        "fullset_eer": null,
+        "fullset_reason": "failed_samples_have_no_score",
+        "eer_scope": "successful_subset_only"
       },
       "by_source": {
         "human-collected-ai-video-zip": {
@@ -1531,7 +1613,10 @@
           "eer_percent": "单类，无法计算",
           "metric_reason": "单类，无法计算",
           "sample_small": false,
-          "failures_by_code": {}
+          "failures_by_code": {},
+          "fullset_eer": null,
+          "fullset_reason": "单类，无法计算",
+          "eer_scope": "fullset"
         },
         "human-collected-real-ai-media-500": {
           "sample_count": 267,
@@ -1550,7 +1635,10 @@
             "decode_error": 1,
             "invalid_timestamps": 7
           },
-          "successful_subset_roc_auc": 0.49945906959971154
+          "successful_subset_roc_auc": 0.49945906959971154,
+          "fullset_eer": null,
+          "fullset_reason": "failed_samples_have_no_score",
+          "eer_scope": "successful_subset_only"
         },
         "human-collected-real-media": {
           "sample_count": 134,
@@ -1565,7 +1653,10 @@
           "eer_percent": "单类，无法计算",
           "metric_reason": "单类，无法计算",
           "sample_small": false,
-          "failures_by_code": {}
+          "failures_by_code": {},
+          "fullset_eer": null,
+          "fullset_reason": "单类，无法计算",
+          "eer_scope": "fullset"
         }
       },
       "by_content_type": {
@@ -1586,7 +1677,10 @@
             "decode_error": 1,
             "invalid_timestamps": 7
           },
-          "successful_subset_roc_auc": 0.517775974025974
+          "successful_subset_roc_auc": 0.517775974025974,
+          "fullset_eer": null,
+          "fullset_reason": "failed_samples_have_no_score",
+          "eer_scope": "successful_subset_only"
         }
       },
       "custom_groups": {},
@@ -1825,7 +1919,10 @@
         "metric_reason": null,
         "sample_small": false,
         "failures_by_code": {},
-        "successful_subset_roc_auc": 0.5844016064257028
+        "successful_subset_roc_auc": 0.5844016064257028,
+        "fullset_eer": 0.456,
+        "fullset_reason": null,
+        "eer_scope": "fullset"
       },
       "by_source": {
         "china-clips-bilibili": {
@@ -1842,7 +1939,10 @@
           "metric_reason": null,
           "sample_small": false,
           "failures_by_code": {},
-          "successful_subset_roc_auc": 0.560803738317757
+          "successful_subset_roc_auc": 0.560803738317757,
+          "fullset_eer": 0.4672897196261682,
+          "fullset_reason": null,
+          "eer_scope": "fullset"
         },
         "china-clips-official-showcase": {
           "sample_count": 35,
@@ -1857,7 +1957,10 @@
           "eer_percent": "单类，无法计算",
           "metric_reason": "单类，无法计算",
           "sample_small": false,
-          "failures_by_code": {}
+          "failures_by_code": {},
+          "fullset_eer": null,
+          "fullset_reason": "单类，无法计算",
+          "eer_scope": "fullset"
         }
       },
       "by_content_type": {
@@ -1875,7 +1978,10 @@
           "metric_reason": null,
           "sample_small": true,
           "failures_by_code": {},
-          "successful_subset_roc_auc": 0.625
+          "successful_subset_roc_auc": 0.625,
+          "fullset_eer": 0.375,
+          "fullset_reason": null,
+          "eer_scope": "fullset"
         },
         "mixed": {
           "sample_count": 16,
@@ -1891,7 +1997,10 @@
           "metric_reason": null,
           "sample_small": true,
           "failures_by_code": {},
-          "successful_subset_roc_auc": 0.0
+          "successful_subset_roc_auc": 0.0,
+          "fullset_eer": 1.0,
+          "fullset_reason": null,
+          "eer_scope": "fullset"
         },
         "music": {
           "sample_count": 354,
@@ -1907,7 +2016,10 @@
           "metric_reason": null,
           "sample_small": false,
           "failures_by_code": {},
-          "successful_subset_roc_auc": 0.5278099279835391
+          "successful_subset_roc_auc": 0.5278099279835391,
+          "fullset_eer": 0.4791666666666667,
+          "fullset_reason": null,
+          "eer_scope": "fullset"
         },
         "speech": {
           "sample_count": 120,
@@ -1923,7 +2035,10 @@
           "metric_reason": null,
           "sample_small": false,
           "failures_by_code": {},
-          "successful_subset_roc_auc": 0.747053751077896
+          "successful_subset_roc_auc": 0.747053751077896,
+          "fullset_eer": 0.29577464788732394,
+          "fullset_reason": null,
+          "eer_scope": "fullset"
         }
       },
       "custom_groups": {},
@@ -2089,7 +2204,10 @@
         "metric_reason": null,
         "sample_small": false,
         "failures_by_code": {},
-        "successful_subset_roc_auc": 0.4844016064257028
+        "successful_subset_roc_auc": 0.4844016064257028,
+        "fullset_eer": 0.5301204819277109,
+        "fullset_reason": null,
+        "eer_scope": "fullset"
       },
       "by_source": {
         "china-clips-bilibili": {
@@ -2106,7 +2224,10 @@
           "metric_reason": null,
           "sample_small": false,
           "failures_by_code": {},
-          "successful_subset_roc_auc": 0.44897196261682243
+          "successful_subset_roc_auc": 0.44897196261682243,
+          "fullset_eer": 0.552,
+          "fullset_reason": null,
+          "eer_scope": "fullset"
         },
         "china-clips-official-showcase": {
           "sample_count": 35,
@@ -2121,7 +2242,10 @@
           "eer_percent": "单类，无法计算",
           "metric_reason": "单类，无法计算",
           "sample_small": false,
-          "failures_by_code": {}
+          "failures_by_code": {},
+          "fullset_eer": null,
+          "fullset_reason": "单类，无法计算",
+          "eer_scope": "fullset"
         }
       },
       "by_content_type": {
@@ -2139,7 +2263,10 @@
           "metric_reason": null,
           "sample_small": true,
           "failures_by_code": {},
-          "successful_subset_roc_auc": 0.375
+          "successful_subset_roc_auc": 0.375,
+          "fullset_eer": 0.625,
+          "fullset_reason": null,
+          "eer_scope": "fullset"
         },
         "mixed": {
           "sample_count": 16,
@@ -2155,7 +2282,10 @@
           "metric_reason": null,
           "sample_small": true,
           "failures_by_code": {},
-          "successful_subset_roc_auc": 0.0
+          "successful_subset_roc_auc": 0.0,
+          "fullset_eer": 1.0,
+          "fullset_reason": null,
+          "eer_scope": "fullset"
         },
         "music": {
           "sample_count": 354,
@@ -2171,7 +2301,10 @@
           "metric_reason": null,
           "sample_small": false,
           "failures_by_code": {},
-          "successful_subset_roc_auc": 0.41875643004115226
+          "successful_subset_roc_auc": 0.41875643004115226,
+          "fullset_eer": 0.5802469135802469,
+          "fullset_reason": null,
+          "eer_scope": "fullset"
         },
         "speech": {
           "sample_count": 120,
@@ -2187,7 +2320,10 @@
           "metric_reason": null,
           "sample_small": false,
           "failures_by_code": {},
-          "successful_subset_roc_auc": 0.6248922104052889
+          "successful_subset_roc_auc": 0.6248922104052889,
+          "fullset_eer": 0.4084507042253521,
+          "fullset_reason": null,
+          "eer_scope": "fullset"
         }
       },
       "custom_groups": {},
@@ -2353,7 +2489,10 @@
         "metric_reason": null,
         "sample_small": false,
         "failures_by_code": {},
-        "successful_subset_roc_auc": 0.6737670682730924
+        "successful_subset_roc_auc": 0.6737670682730924,
+        "fullset_eer": 0.38,
+        "fullset_reason": null,
+        "eer_scope": "fullset"
       },
       "by_source": {
         "china-clips-bilibili": {
@@ -2370,7 +2509,10 @@
           "metric_reason": null,
           "sample_small": false,
           "failures_by_code": {},
-          "successful_subset_roc_auc": 0.6701682242990654
+          "successful_subset_roc_auc": 0.6701682242990654,
+          "fullset_eer": 0.38,
+          "fullset_reason": null,
+          "eer_scope": "fullset"
         },
         "china-clips-official-showcase": {
           "sample_count": 35,
@@ -2385,7 +2527,10 @@
           "eer_percent": "单类，无法计算",
           "metric_reason": "单类，无法计算",
           "sample_small": false,
-          "failures_by_code": {}
+          "failures_by_code": {},
+          "fullset_eer": null,
+          "fullset_reason": "单类，无法计算",
+          "eer_scope": "fullset"
         }
       },
       "by_content_type": {
@@ -2403,7 +2548,10 @@
           "metric_reason": null,
           "sample_small": true,
           "failures_by_code": {},
-          "successful_subset_roc_auc": 0.875
+          "successful_subset_roc_auc": 0.875,
+          "fullset_eer": 0.125,
+          "fullset_reason": null,
+          "eer_scope": "fullset"
         },
         "mixed": {
           "sample_count": 16,
@@ -2419,7 +2567,10 @@
           "metric_reason": null,
           "sample_small": true,
           "failures_by_code": {},
-          "successful_subset_roc_auc": 0.3333333333333334
+          "successful_subset_roc_auc": 0.3333333333333334,
+          "fullset_eer": 0.6666666666666666,
+          "fullset_reason": null,
+          "eer_scope": "fullset"
         },
         "music": {
           "sample_count": 354,
@@ -2435,7 +2586,10 @@
           "metric_reason": null,
           "sample_small": false,
           "failures_by_code": {},
-          "successful_subset_roc_auc": 0.7184284979423868
+          "successful_subset_roc_auc": 0.7184284979423868,
+          "fullset_eer": 0.3385416666666667,
+          "fullset_reason": null,
+          "eer_scope": "fullset"
         },
         "speech": {
           "sample_count": 120,
@@ -2451,7 +2605,10 @@
           "metric_reason": null,
           "sample_small": false,
           "failures_by_code": {},
-          "successful_subset_roc_auc": 0.5004311583788446
+          "successful_subset_roc_auc": 0.5004311583788446,
+          "fullset_eer": 0.49295774647887325,
+          "fullset_reason": null,
+          "eer_scope": "fullset"
         }
       },
       "custom_groups": {},
@@ -2617,7 +2774,10 @@
         "metric_reason": null,
         "sample_small": false,
         "failures_by_code": {},
-        "successful_subset_roc_auc": 0.513744
+        "successful_subset_roc_auc": 0.513744,
+        "fullset_eer": 0.464,
+        "fullset_reason": null,
+        "eer_scope": "fullset"
       },
       "by_source": {
         "china-clips-bilibili": {
@@ -2634,7 +2794,10 @@
           "metric_reason": null,
           "sample_small": false,
           "failures_by_code": {},
-          "successful_subset_roc_auc": 0.5054062500000001
+          "successful_subset_roc_auc": 0.5054062500000001,
+          "fullset_eer": 0.4765625,
+          "fullset_reason": null,
+          "eer_scope": "fullset"
         },
         "china-clips-official-showcase": {
           "sample_count": 122,
@@ -2649,7 +2812,10 @@
           "eer_percent": "单类，无法计算",
           "metric_reason": "单类，无法计算",
           "sample_small": false,
-          "failures_by_code": {}
+          "failures_by_code": {},
+          "fullset_eer": null,
+          "fullset_reason": "单类，无法计算",
+          "eer_scope": "fullset"
         }
       },
       "by_content_type": {
@@ -2667,7 +2833,10 @@
           "metric_reason": null,
           "sample_small": false,
           "failures_by_code": {},
-          "successful_subset_roc_auc": 0.513744
+          "successful_subset_roc_auc": 0.513744,
+          "fullset_eer": 0.464,
+          "fullset_reason": null,
+          "eer_scope": "fullset"
         }
       },
       "custom_groups": {
@@ -2686,7 +2855,10 @@
             "metric_reason": null,
             "sample_small": false,
             "failures_by_code": {},
-            "successful_subset_roc_auc": 0.5054062500000001
+            "successful_subset_roc_auc": 0.5054062500000001,
+            "fullset_eer": 0.4765625,
+            "fullset_reason": null,
+            "eer_scope": "fullset"
           }
         }
       },
@@ -2852,7 +3024,10 @@
         "metric_reason": null,
         "sample_small": false,
         "failures_by_code": {},
-        "successful_subset_roc_auc": 0.541472
+        "successful_subset_roc_auc": 0.541472,
+        "fullset_eer": 0.464,
+        "fullset_reason": null,
+        "eer_scope": "fullset"
       },
       "by_source": {
         "china-clips-bilibili": {
@@ -2869,7 +3044,10 @@
           "metric_reason": null,
           "sample_small": false,
           "failures_by_code": {},
-          "successful_subset_roc_auc": 0.44234375
+          "successful_subset_roc_auc": 0.44234375,
+          "fullset_eer": 0.552,
+          "fullset_reason": null,
+          "eer_scope": "fullset"
         },
         "china-clips-official-showcase": {
           "sample_count": 122,
@@ -2884,7 +3062,10 @@
           "eer_percent": "单类，无法计算",
           "metric_reason": "单类，无法计算",
           "sample_small": false,
-          "failures_by_code": {}
+          "failures_by_code": {},
+          "fullset_eer": null,
+          "fullset_reason": "单类，无法计算",
+          "eer_scope": "fullset"
         }
       },
       "by_content_type": {
@@ -2902,7 +3083,10 @@
           "metric_reason": null,
           "sample_small": false,
           "failures_by_code": {},
-          "successful_subset_roc_auc": 0.541472
+          "successful_subset_roc_auc": 0.541472,
+          "fullset_eer": 0.464,
+          "fullset_reason": null,
+          "eer_scope": "fullset"
         }
       },
       "custom_groups": {
@@ -2921,7 +3105,10 @@
             "metric_reason": null,
             "sample_small": false,
             "failures_by_code": {},
-            "successful_subset_roc_auc": 0.44234375
+            "successful_subset_roc_auc": 0.44234375,
+            "fullset_eer": 0.552,
+            "fullset_reason": null,
+            "eer_scope": "fullset"
           }
         }
       },
@@ -3092,7 +3279,10 @@
           "decode_error": 2,
           "invalid_metadata": 2
         },
-        "successful_subset_roc_auc": 0.6533435192258722
+        "successful_subset_roc_auc": 0.6533435192258722,
+        "fullset_eer": null,
+        "fullset_reason": "failed_samples_have_no_score",
+        "eer_scope": "successful_subset_only"
       },
       "by_dataset": {
         "human-collected": {
@@ -3112,7 +3302,10 @@
             "decode_error": 2,
             "invalid_metadata": 2
           },
-          "successful_subset_roc_auc": 0.7905163636363637
+          "successful_subset_roc_auc": 0.7905163636363637,
+          "fullset_eer": null,
+          "fullset_reason": "failed_samples_have_no_score",
+          "eer_scope": "successful_subset_only"
         },
         "china-clips": {
           "sample_count": 499,
@@ -3128,7 +3321,10 @@
           "metric_reason": null,
           "sample_small": false,
           "failures_by_code": {},
-          "successful_subset_roc_auc": 0.5844016064257028
+          "successful_subset_roc_auc": 0.5844016064257028,
+          "fullset_eer": 0.456,
+          "fullset_reason": null,
+          "eer_scope": "fullset"
         }
       }
     },
@@ -3151,7 +3347,10 @@
           "decode_error": 2,
           "invalid_metadata": 2
         },
-        "successful_subset_roc_auc": 0.556261777438248
+        "successful_subset_roc_auc": 0.556261777438248,
+        "fullset_eer": null,
+        "fullset_reason": "failed_samples_have_no_score",
+        "eer_scope": "successful_subset_only"
       },
       "by_dataset": {
         "human-collected": {
@@ -3171,7 +3370,10 @@
             "decode_error": 2,
             "invalid_metadata": 2
           },
-          "successful_subset_roc_auc": 0.6565527272727273
+          "successful_subset_roc_auc": 0.6565527272727273,
+          "fullset_eer": null,
+          "fullset_reason": "failed_samples_have_no_score",
+          "eer_scope": "successful_subset_only"
         },
         "china-clips": {
           "sample_count": 499,
@@ -3187,7 +3389,10 @@
           "metric_reason": null,
           "sample_small": false,
           "failures_by_code": {},
-          "successful_subset_roc_auc": 0.4844016064257028
+          "successful_subset_roc_auc": 0.4844016064257028,
+          "fullset_eer": 0.5301204819277109,
+          "fullset_reason": null,
+          "eer_scope": "fullset"
         }
       }
     },
@@ -3209,7 +3414,10 @@
         "failures_by_code": {
           "MediaError": 4
         },
-        "successful_subset_roc_auc": 0.7134453781512605
+        "successful_subset_roc_auc": 0.7134453781512605,
+        "fullset_eer": null,
+        "fullset_reason": "failed_samples_have_no_score",
+        "eer_scope": "successful_subset_only"
       },
       "by_dataset": {
         "human-collected": {
@@ -3228,7 +3436,10 @@
           "failures_by_code": {
             "MediaError": 4
           },
-          "successful_subset_roc_auc": 0.7737018181818182
+          "successful_subset_roc_auc": 0.7737018181818182,
+          "fullset_eer": null,
+          "fullset_reason": "failed_samples_have_no_score",
+          "eer_scope": "successful_subset_only"
         },
         "china-clips": {
           "sample_count": 499,
@@ -3244,7 +3455,10 @@
           "metric_reason": null,
           "sample_small": false,
           "failures_by_code": {},
-          "successful_subset_roc_auc": 0.6737670682730924
+          "successful_subset_roc_auc": 0.6737670682730924,
+          "fullset_eer": 0.38,
+          "fullset_reason": null,
+          "eer_scope": "fullset"
         }
       }
     },
@@ -3267,7 +3481,10 @@
           "decode_error": 1,
           "invalid_timestamps": 7
         },
-        "successful_subset_roc_auc": 0.5620534458509142
+        "successful_subset_roc_auc": 0.5620534458509142,
+        "fullset_eer": null,
+        "fullset_reason": "failed_samples_have_no_score",
+        "eer_scope": "successful_subset_only"
       },
       "by_dataset": {
         "human-collected": {
@@ -3287,7 +3504,10 @@
             "decode_error": 1,
             "invalid_timestamps": 7
           },
-          "successful_subset_roc_auc": 0.6035551948051948
+          "successful_subset_roc_auc": 0.6035551948051948,
+          "fullset_eer": null,
+          "fullset_reason": "failed_samples_have_no_score",
+          "eer_scope": "successful_subset_only"
         },
         "china-clips": {
           "sample_count": 500,
@@ -3303,7 +3523,10 @@
           "metric_reason": null,
           "sample_small": false,
           "failures_by_code": {},
-          "successful_subset_roc_auc": 0.513744
+          "successful_subset_roc_auc": 0.513744,
+          "fullset_eer": 0.464,
+          "fullset_reason": null,
+          "eer_scope": "fullset"
         }
       }
     },
@@ -3326,7 +3549,10 @@
           "decode_error": 1,
           "invalid_timestamps": 7
         },
-        "successful_subset_roc_auc": 0.5314607193088206
+        "successful_subset_roc_auc": 0.5314607193088206,
+        "fullset_eer": null,
+        "fullset_reason": "failed_samples_have_no_score",
+        "eer_scope": "successful_subset_only"
       },
       "by_dataset": {
         "human-collected": {
@@ -3346,7 +3572,10 @@
             "decode_error": 1,
             "invalid_timestamps": 7
           },
-          "successful_subset_roc_auc": 0.517775974025974
+          "successful_subset_roc_auc": 0.517775974025974,
+          "fullset_eer": null,
+          "fullset_reason": "failed_samples_have_no_score",
+          "eer_scope": "successful_subset_only"
         },
         "china-clips": {
           "sample_count": 500,
@@ -3362,7 +3591,10 @@
           "metric_reason": null,
           "sample_small": false,
           "failures_by_code": {},
-          "successful_subset_roc_auc": 0.541472
+          "successful_subset_roc_auc": 0.541472,
+          "fullset_eer": 0.464,
+          "fullset_reason": null,
+          "eer_scope": "fullset"
         }
       }
     }
@@ -5096,6 +5328,272 @@
           "path": "video/media/vc_60c51a10370e04e9.mp4"
         }
       ]
+    }
+  },
+  "scope_correction": {
+    "original_roles_manifest": "/var/tmp/deepfake-china-video-20261017/roles-manifest.jsonl",
+    "original_roles_manifest_sha256": "469f9f350f82903041b106d3fe4bf08e200794913beb99c824902cba179a2147",
+    "previous_protocol_issue": 95,
+    "scored_original_holdout": {
+      "audio": 246,
+      "video": 199,
+      "total": 445
+    },
+    "current_inventory_use": "all 1910 samples are now seen diagnostic material; no untouched holdout remains in these inventories",
+    "historical_roles": "retained for traceability only; no retrospective resplit or training reuse",
+    "no_training_or_refit": true,
+    "per_model_consumption": {
+      "ast-3domain-seed42": {
+        "modality": "audio",
+        "scored_samples": 903,
+        "original_dev_scored": 657,
+        "original_holdout_scored": 246
+      },
+      "logmel-bandwidth-seed42": {
+        "modality": "audio",
+        "scored_samples": 903,
+        "original_dev_scored": 657,
+        "original_holdout_scored": 246
+      },
+      "ssl-la": {
+        "modality": "audio",
+        "scored_samples": 903,
+        "original_dev_scored": 657,
+        "original_holdout_scored": 246
+      },
+      "c10-expanded43": {
+        "modality": "video",
+        "scored_samples": 1007,
+        "original_dev_scored": 808,
+        "original_holdout_scored": 199
+      },
+      "release-video-resnet18": {
+        "modality": "video",
+        "scored_samples": 1007,
+        "original_dev_scored": 808,
+        "original_holdout_scored": 199
+      }
+    },
+    "input_scores": {
+      "human-collected/ast-3domain-seed42": {
+        "path": "/var/tmp/lanjianyu-issue51-20261014/eval-new-sources/human-collected/ast-3domain-seed42/scores.jsonl",
+        "sha256": "de1f62e88e6d22768a1a932fb5ce0ac6a92c1c40e78f2b534f7cdf5372c561af"
+      },
+      "china-clips/ast-3domain-seed42": {
+        "path": "/var/tmp/lanjianyu-issue51-20261014/eval-new-sources/china-clips/ast-3domain-seed42/scores.jsonl",
+        "sha256": "4268e43702125b7bd8a9ec5abe7ecc1dd13e360f58b46e5020cd9b1bb8768208"
+      },
+      "human-collected/logmel-bandwidth-seed42": {
+        "path": "/var/tmp/lanjianyu-issue51-20261014/eval-new-sources/human-collected/logmel-bandwidth-seed42/scores.jsonl",
+        "sha256": "8e681b68962a6c6e3380da485959af80eea1ebb23562e10e84e6fb72b05eaa72"
+      },
+      "china-clips/logmel-bandwidth-seed42": {
+        "path": "/var/tmp/lanjianyu-issue51-20261014/eval-new-sources/china-clips/logmel-bandwidth-seed42/scores.jsonl",
+        "sha256": "1dd5f2c4af2a6eb961e337429ba6264d68a014594406bf8bd99228fe01333fa3"
+      },
+      "human-collected/ssl-la": {
+        "path": "/var/tmp/lanjianyu-issue51-20261014/eval-new-sources/human-collected/ssl-la/scores.jsonl",
+        "sha256": "7028de1d938a41b045f3d9861f05aa76852b290c5449b4fcbdf48986f505955b"
+      },
+      "china-clips/ssl-la": {
+        "path": "/var/tmp/lanjianyu-issue51-20261014/eval-new-sources/china-clips/ssl-la/scores.jsonl",
+        "sha256": "6629cd9ff2b91f9afc73056f7f04e35417ce950a1d79f2d54c75d57d474808a3"
+      },
+      "human-collected/c10-expanded43": {
+        "path": "/var/tmp/lanjianyu-issue51-20261014/eval-new-sources/human-collected/c10-expanded43/scores.jsonl",
+        "sha256": "347d21648fcb784faef3f8fbe8435d78e7f1ca12d0dc38a7a2cef36b1a6c9889"
+      },
+      "china-clips/c10-expanded43": {
+        "path": "/var/tmp/lanjianyu-issue51-20261014/eval-new-sources/china-clips/c10-expanded43/scores.jsonl",
+        "sha256": "4b5f5206da8acbe27bf5f8cf0e4241dbe0fd45718bce77a64b4efca532c39f8d"
+      },
+      "human-collected/release-video-resnet18": {
+        "path": "/var/tmp/lanjianyu-issue51-20261014/eval-new-sources/human-collected/release-video-resnet18/scores.jsonl",
+        "sha256": "1cf2d0b991cea3f75c0c2db8641d4cf633f4306a68450b5a29c78d1926bd12cc"
+      },
+      "china-clips/release-video-resnet18": {
+        "path": "/var/tmp/lanjianyu-issue51-20261014/eval-new-sources/china-clips/release-video-resnet18/scores.jsonl",
+        "sha256": "802103c9fef8fe1b3564dde7050d137422e0f8f01b6e709722cf51a69edaefd2"
+      }
+    },
+    "original_dev_results": {
+      "ast-3domain-seed42": {
+        "sample_count": 657,
+        "success_count": 653,
+        "failure_count": 4,
+        "unlabeled_count": 0,
+        "coverage": 0.9939117199391172,
+        "failure_rate": 0.0060882800608828,
+        "fullset_eer": null,
+        "fullset_reason": "failed_samples_have_no_score",
+        "successful_subset_metrics": {
+          "eer": 0.4698275862068966,
+          "roc_auc": 0.566467360144156,
+          "real_count": 421,
+          "fake_count": 232
+        },
+        "successful_subset_reason": null,
+        "failures_by_code": {
+          "decode_error": 2,
+          "invalid_metadata": 2
+        },
+        "failed_sample_ids": [
+          "hc-1834bc5c5e37b9ecd2bd57ee",
+          "hc-7886326d81ed2b53f80cefe3",
+          "hc-b4df0f0f431ab9bc3d26ce90",
+          "hc-c93614575a45285f1675c9f4"
+        ],
+        "real_count": 425,
+        "fake_count": 232,
+        "frozen_threshold": null,
+        "successful_subset_far": null,
+        "successful_subset_frr": null
+      },
+      "logmel-bandwidth-seed42": {
+        "sample_count": 657,
+        "success_count": 653,
+        "failure_count": 4,
+        "unlabeled_count": 0,
+        "coverage": 0.9939117199391172,
+        "failure_rate": 0.0060882800608828,
+        "fullset_eer": null,
+        "fullset_reason": "failed_samples_have_no_score",
+        "successful_subset_metrics": {
+          "eer": 0.5106888361045131,
+          "roc_auc": 0.49803423703825045,
+          "real_count": 421,
+          "fake_count": 232
+        },
+        "successful_subset_reason": null,
+        "failures_by_code": {
+          "decode_error": 2,
+          "invalid_metadata": 2
+        },
+        "failed_sample_ids": [
+          "hc-1834bc5c5e37b9ecd2bd57ee",
+          "hc-7886326d81ed2b53f80cefe3",
+          "hc-b4df0f0f431ab9bc3d26ce90",
+          "hc-c93614575a45285f1675c9f4"
+        ],
+        "real_count": 425,
+        "fake_count": 232,
+        "frozen_threshold": null,
+        "successful_subset_far": null,
+        "successful_subset_frr": null
+      },
+      "ssl-la": {
+        "sample_count": 657,
+        "success_count": 653,
+        "failure_count": 4,
+        "unlabeled_count": 0,
+        "coverage": 0.9939117199391172,
+        "failure_rate": 0.0060882800608828,
+        "fullset_eer": null,
+        "fullset_reason": "failed_samples_have_no_score",
+        "successful_subset_metrics": {
+          "eer": 0.36104513064133015,
+          "roc_auc": 0.6915287902367107,
+          "real_count": 421,
+          "fake_count": 232
+        },
+        "successful_subset_reason": null,
+        "failures_by_code": {
+          "MediaError": 4
+        },
+        "failed_sample_ids": [
+          "hc-1834bc5c5e37b9ecd2bd57ee",
+          "hc-7886326d81ed2b53f80cefe3",
+          "hc-b4df0f0f431ab9bc3d26ce90",
+          "hc-c93614575a45285f1675c9f4"
+        ],
+        "real_count": 425,
+        "fake_count": 232,
+        "frozen_threshold": null,
+        "successful_subset_far": null,
+        "successful_subset_frr": null
+      },
+      "c10-expanded43": {
+        "sample_count": 808,
+        "success_count": 800,
+        "failure_count": 8,
+        "unlabeled_count": 0,
+        "coverage": 0.9900990099009901,
+        "failure_rate": 0.009900990099009901,
+        "fullset_eer": null,
+        "fullset_reason": "failed_samples_have_no_score",
+        "successful_subset_metrics": {
+          "eer": 0.455470737913486,
+          "roc_auc": 0.5534194847171946,
+          "real_count": 407,
+          "fake_count": 393
+        },
+        "successful_subset_reason": null,
+        "failures_by_code": {
+          "decode_error": 1,
+          "invalid_timestamps": 7
+        },
+        "failed_sample_ids": [
+          "hc-116b9c13143d3ee243b6f290",
+          "hc-36a55ff3e14660fb3da0323a",
+          "hc-45acb7a646969440be1510e1",
+          "hc-7e38b82ad5efb5daa1f59685",
+          "hc-85a8f14a160300e91dd850a8",
+          "hc-b5b14a5bed0611d63db62c31",
+          "hc-e3e2580930908ac80fd86c84",
+          "hc-feafd162ef0bc290374a1406"
+        ],
+        "real_count": 415,
+        "fake_count": 393,
+        "frozen_threshold": null,
+        "successful_subset_far": null,
+        "successful_subset_frr": null
+      },
+      "release-video-resnet18": {
+        "sample_count": 808,
+        "success_count": 800,
+        "failure_count": 8,
+        "unlabeled_count": 0,
+        "coverage": 0.9900990099009901,
+        "failure_rate": 0.009900990099009901,
+        "fullset_eer": null,
+        "fullset_reason": "failed_samples_have_no_score",
+        "successful_subset_metrics": {
+          "eer": 0.48157248157248156,
+          "roc_auc": 0.5466549130671268,
+          "real_count": 407,
+          "fake_count": 393
+        },
+        "successful_subset_reason": null,
+        "failures_by_code": {
+          "decode_error": 1,
+          "invalid_timestamps": 7
+        },
+        "failed_sample_ids": [
+          "hc-116b9c13143d3ee243b6f290",
+          "hc-36a55ff3e14660fb3da0323a",
+          "hc-45acb7a646969440be1510e1",
+          "hc-7e38b82ad5efb5daa1f59685",
+          "hc-85a8f14a160300e91dd850a8",
+          "hc-b5b14a5bed0611d63db62c31",
+          "hc-e3e2580930908ac80fd86c84",
+          "hc-feafd162ef0bc290374a1406"
+        ],
+        "real_count": 415,
+        "fake_count": 393,
+        "frozen_threshold": null,
+        "successful_subset_far": null,
+        "successful_subset_frr": null
+      }
+    },
+    "C10_path_comparison": {
+      "shared_dev_samples": 808,
+      "shared_success_samples": 800,
+      "same_registered_media_and_candidate_hashes": true,
+      "mean_absolute_logit_delta": 0.0121323,
+      "max_absolute_logit_delta": 0.132554,
+      "issue95_path": "shared feature batches with TF32 explicitly disabled",
+      "issue51_path": "standard per-video encoding and scoring; numerical cause not isolated",
+      "not_a_matched_protocol_reproduction_or_improvement": true
     }
   }
 }
