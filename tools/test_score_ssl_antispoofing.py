@@ -9,8 +9,9 @@ import unittest
 from pathlib import Path
 
 import numpy as np
-import score_ssl_antispoofing as ssl
 from transformers import Wav2Vec2Config, Wav2Vec2Model
+
+from deepfake_detection_archive.models import ssl_antispoofing as ssl
 
 
 TINY = {

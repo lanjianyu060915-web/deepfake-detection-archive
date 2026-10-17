@@ -13,7 +13,8 @@ AST seed42（#41）在同一语音协议下比较。只评公开权重，未做�
   取回，与 Drive 原件做 3 个随机偏移的逐字节比对一致；已含微调后的完整 XLS-R 300M 前端
   （429 个前端键），不需要 3.55GB 的 fairseq 基座。选 LA 版本是因为它键名无 DataParallel 前缀、
   与作者 `main_SSL_LA.py` 加载方式一致，且作者公布了它在 2021 LA 上的成绩。
-- 实现：[`tools/score_ssl_antispoofing.py`](../../../tools/score_ssl_antispoofing.py)。不安装
+- 实现：共享加载器 [`models/ssl_antispoofing.py`](../../../src/deepfake_detection_archive/models/ssl_antispoofing.py)，
+  标准 `OfflineScorer` 与研究批量工具复用同一实现。不安装
   fairseq：AASIST 后端执行作者固定版本的 `model.py`（校验 SHA-256 `08b2b99b…`），只替换其中
   的 fairseq 前端类；XLS-R 前端用 transformers `Wav2Vec2Model`，把权重的 fairseq 键一对一改名
   后严格加载（667 键，无缺失、无多余，仅丢弃 7 个不参与推理的预训练头参数）。单元测试覆盖
@@ -50,7 +51,10 @@ AST seed42（#41）在同一语音协议下比较。只评公开权重，未做�
 | --- | ---: | ---: | ---: |
 | LogMel | 0.14 MB | 41 MiB | 3.3 ms |
 | AST 三域 | 327 MB | 382 MiB | 3.8 ms |
-| SSL LA | 1,213 MB | 1,998 MiB | 12.6 ms |
+| SSL LA | 1,213 MB | 1,998 MiB | 119.94 ms |
+
+SSL AAC64k 含解码平均耗时为 **621.24 ms/条**；以上均来自保留的逐样本 elapsed_seconds，
+不是纯 GPU 前向计时，未重新运行完整集合。
 
 ## 非语音适用范围
 
@@ -83,3 +87,27 @@ SSL 在环境音和音乐上接近随机，确认它只适用于语音。fsd-dev
 
 运行产物在 `/var/tmp/lanjianyu-issue53-20261014/`（`weights/`、`upstream/`、`out/`、`analysis/`），
 持久副本见 [数据说明](../../data.md)。完整数字见 [summary.json](summary.json)。
+
+## 标准离线推理
+
+共享 cu126 环境可直接使用完整 LA 权重，不安装 fairseq 或重建旧依赖环境。
+复制[配置模板](../../../configs/infer-audio-ssl-antispoofing.example.json)，替换媒体清单、
+媒体根目录、输出目录和三个本地资源路径；相对路径基于配置所在目录：
+
+```bash
+cp configs/infer-audio-ssl-antispoofing.example.json configs/infer-ssl.local.json
+# 编辑路径，保留对应权重、XLS-R配置哈希和16000Hz/64600点单窗口设置
+scripts/devctl run python -m deepfake_detection_archive infer \
+  --config configs/infer-ssl.local.json
+```
+
+标准 runner 输出连续 `-bonafide logit` 到 `scores.jsonl`，无效输入逐样本写 error，
+不从覆盖率分母删除。预处理固定头截断/整段循环补齐，FP32、无音量归一化；
+不采用通用音频模型的等距多窗口。不自动替换 AST、按内容路由或融合。
+离线 bundle 的显式文件列表须一并提供配置、`LA_model.pth`、固定 `model.py`、
+`xlsr_cfg.json`；配置使用包内相对路径。统一预测的资源解析支持这两个 SSL 附件，
+搬移后仍从包内加载，不下载资源。现有 release 默认保持 AST。
+
+2026-10-17 在当前 cu126/RTX4090 上，以8条原始 ASV dev 音频（真/假各4条）运行标准 CLI，
+8/8成功，与保留的200条工具分数按样本ID对齐，最大绝对差 **2.38×10⁻⁶**（容差10⁻⁴）。
+该小组只验证实现接入，不作为新泛化或10k吞吐结论；原五集合分数未重跑。

@@ -287,6 +287,10 @@ def _resolved_config(
         resources.update(cast(dict[str, str], encoder.get("expected_hashes", {})))
         for name in resources:
             _package_resource(root, model_dir, name)
+    ssl = dict(template.ssl)
+    for key in ("upstream_model", "xlsr_config"):
+        if key in ssl:
+            ssl[key] = str(_package_resource(root, config_path.parent, ssl[key]))
     return replace(
         template,
         manifest=str(output / "manifest.jsonl"),
@@ -296,6 +300,7 @@ def _resolved_config(
             _package_resource(root, config_path.parent, template.checkpoint)
         ),
         encoder=encoder,
+        ssl=ssl,
         device=device,
     )
 

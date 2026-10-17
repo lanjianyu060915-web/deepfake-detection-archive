@@ -13,178 +13,20 @@ normalisation, fp32. Upstream scores are the bonafide logit; records store
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
-import re
 import sys
 import time
 from pathlib import Path
-from typing import Any
 
 import numpy as np
 import torch
 from numpy.typing import NDArray
-from torch import nn
-from transformers import Wav2Vec2Config, Wav2Vec2Model
 
 from deepfake_detection_archive.contracts import ScoreRecord
 from deepfake_detection_archive.data.manifest import SampleRecord, load_manifest
 from deepfake_detection_archive.data.split import statistical_groups
-from deepfake_detection_archive.media import AudioConfig, decode_audio
-
-
-CUT = 64600
-PREFIX = "ssl_model.model."
-DROPPED = ("quantizer.", "project_q.", "final_proj.")
-UPSTREAM_COMMIT = "4acaa61dcef5f7610f43aa4d0b29c4559b970cd2"
-UPSTREAM_MODEL_SHA256 = (
-    "08b2b99b9cc0e90732746471325185f2eb144795ee35338e0a02951015a856c6"
-)
-RULES = (
-    (
-        r"^feature_extractor\.conv_layers\.(\d+)\.0\.",
-        r"feature_extractor.conv_layers.\1.conv.",
-    ),
-    (
-        r"^feature_extractor\.conv_layers\.(\d+)\.2\.1\.",
-        r"feature_extractor.conv_layers.\1.layer_norm.",
-    ),
-    (r"^post_extract_proj\.", "feature_projection.projection."),
-    (r"^layer_norm\.", "feature_projection.layer_norm."),
-    (
-        r"^encoder\.pos_conv\.0\.weight_g$",
-        "encoder.pos_conv_embed.conv.parametrizations.weight.original0",
-    ),
-    (
-        r"^encoder\.pos_conv\.0\.weight_v$",
-        "encoder.pos_conv_embed.conv.parametrizations.weight.original1",
-    ),
-    (r"^encoder\.pos_conv\.0\.bias$", "encoder.pos_conv_embed.conv.bias"),
-    (
-        r"^encoder\.layers\.(\d+)\.self_attn_layer_norm\.",
-        r"encoder.layers.\1.layer_norm.",
-    ),
-    (r"^encoder\.layers\.(\d+)\.self_attn\.", r"encoder.layers.\1.attention."),
-    (
-        r"^encoder\.layers\.(\d+)\.fc1\.",
-        r"encoder.layers.\1.feed_forward.intermediate_dense.",
-    ),
-    (
-        r"^encoder\.layers\.(\d+)\.fc2\.",
-        r"encoder.layers.\1.feed_forward.output_dense.",
-    ),
-)
-
-
-def sha256_file(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1 << 20), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
-
-
-def fairseq_to_hf(key: str) -> str | None:
-    """Map one fairseq XLS-R key to transformers; None drops pre-training heads."""
-    if key.startswith(DROPPED):
-        return None
-    if key == "mask_emb":
-        return "masked_spec_embed"
-    for pattern, replacement in RULES:
-        if re.search(pattern, key):
-            return re.sub(pattern, replacement, key)
-    return key
-
-
-def pad_or_tile(wave: NDArray[np.float32], max_len: int = CUT) -> NDArray[np.float32]:
-    """Upstream ``data_utils_SSL.pad``: head crop, or tile the whole clip."""
-    if wave.ndim != 1 or wave.size == 0:
-        raise ValueError("expected a nonempty mono waveform")
-    if wave.shape[0] >= max_len:
-        return wave[:max_len]
-    repeats = max_len // wave.shape[0] + 1
-    return np.tile(wave, repeats)[:max_len]
-
-
-class SSLModel(nn.Module):
-    """transformers XLS-R with the attribute layout the checkpoint expects."""
-
-    config: Wav2Vec2Config | None = None
-
-    def __init__(self, device: object) -> None:
-        super().__init__()
-        if SSLModel.config is None:
-            raise RuntimeError("SSLModel.config must be set before building")
-        self.model = Wav2Vec2Model(SSLModel.config)
-        self.device = device
-        self.out_dim = 1024
-
-    def extract_feat(self, input_data: torch.Tensor) -> torch.Tensor:
-        if input_data.ndim == 3:
-            input_data = input_data[:, :, 0]
-        hidden: torch.Tensor = self.model(input_data).last_hidden_state
-        return hidden
-
-
-def upstream_model_class(source: Path, expected_sha256: str) -> type[nn.Module]:
-    """Execute pinned upstream model.py with SSLModel swapped for the HF port."""
-    actual = sha256_file(source)
-    if actual != expected_sha256:
-        raise ValueError(f"upstream model.py sha256 {actual} != {expected_sha256}")
-    text = source.read_text(encoding="utf-8")
-    start = text.index("class SSLModel")
-    end = text.index("#---------AASIST back-end")
-    text = text[:start] + text[end:]
-    text = text.replace("import fairseq\n", "")
-    namespace: dict[str, Any] = {
-        "__name__": "ssl_antispoofing_upstream",
-        "SSLModel": SSLModel,
-    }
-    exec(compile(text, str(source), "exec"), namespace)  # noqa: S102 -- pinned MIT source
-    model_class: type[nn.Module] = namespace["Model"]
-    return model_class
-
-
-def build_model(
-    weights: Path, upstream: Path, config: Path, device: str
-) -> tuple[nn.Module, dict[str, Any]]:
-    """Build the detector and load the checkpoint strictly through the key map."""
-    SSLModel.config = Wav2Vec2Config.from_dict(
-        json.loads(config.read_text(encoding="utf-8"))
-    )
-    model = upstream_model_class(upstream, UPSTREAM_MODEL_SHA256)(None, device)
-    state = torch.load(weights, map_location="cpu", weights_only=True)
-    mapped: dict[str, torch.Tensor] = {}
-    dropped: list[str] = []
-    for key, value in state.items():
-        target = key
-        if key.startswith(PREFIX):
-            renamed = fairseq_to_hf(key[len(PREFIX) :])
-            if renamed is None:
-                dropped.append(key)
-                continue
-            target = PREFIX + renamed
-        if target in mapped:
-            raise ValueError(f"two checkpoint keys map to {target}")
-        mapped[target] = value
-    expected = model.state_dict()
-    mismatched = [
-        k for k, v in mapped.items() if k in expected and expected[k].shape != v.shape
-    ]
-    if mismatched:
-        raise ValueError(f"shape mismatch: {mismatched[:5]}")
-    model.load_state_dict(mapped, strict=True)
-    model.to(device).eval()
-    report = {
-        "weights_sha256": sha256_file(weights),
-        "upstream_commit": UPSTREAM_COMMIT,
-        "upstream_model_sha256": UPSTREAM_MODEL_SHA256,
-        "xlsr_config_sha256": sha256_file(config),
-        "checkpoint_keys": len(state),
-        "dropped_pretraining_keys": dropped,
-        "loaded_keys": len(mapped),
-    }
-    return model, report
+from deepfake_detection_archive.media import AudioConfig, MediaError, decode_audio
+from deepfake_detection_archive.models.ssl_antispoofing import build_model, pad_or_tile
 
 
 def score_row(
@@ -210,7 +52,7 @@ def score_row(
     )
 
 
-def main() -> None:
+def main() -> None:  # noqa: PLR0915 -- single research batch workflow
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--weights", type=Path, required=True)
     parser.add_argument("--upstream-model", type=Path, required=True)
@@ -230,7 +72,7 @@ def main() -> None:
     model, report = build_model(
         args.weights, args.upstream_model, args.xlsr_config, args.device
     )
-    records = [r for r in load_manifest(args.manifest) if r.status == "available"]
+    records = load_manifest(args.manifest)
     if any(r.split == "holdout" for r in records):
         sys.exit("refusing to score holdout records")
     args.output.mkdir(parents=True, exist_ok=False)
@@ -248,6 +90,10 @@ def main() -> None:
             for record in records[offset : offset + args.batch_size]:
                 begin = time.monotonic()
                 try:
+                    if record.status != "available":
+                        raise MediaError(record.status, record.failure_reason)  # noqa: TRY301 -- row accounting
+                    if record.modality != "audio":
+                        raise MediaError("wrong_modality", "expected audio")  # noqa: TRY301 -- row accounting
                     wave = decode_audio(args.data_root / record.path, audio).waveform
                     waves.append(pad_or_tile(np.asarray(wave, dtype=np.float32)))
                     decoded.append((record, time.monotonic() - begin))
@@ -258,9 +104,15 @@ def main() -> None:
             if not waves:
                 continue
             forward = time.monotonic()
-            with torch.inference_mode():
-                batch = torch.from_numpy(np.stack(waves)).to(args.device)
-                logits = model(batch).float().cpu()
+            try:
+                with torch.inference_mode():
+                    batch = torch.from_numpy(np.stack(waves)).to(args.device)
+                    logits = model(batch).float().cpu()
+            except Exception as exc:  # retain every decoded row on model failure
+                share = (time.monotonic() - forward) / len(waves)
+                for record, seconds in decoded:
+                    rows.append(score_row(record, groups, None, seconds + share, exc))
+                continue
             share = (time.monotonic() - forward) / len(waves)
             for (record, seconds), logit in zip(decoded, logits, strict=True):
                 spoof, bonafide = float(logit[0]), float(logit[1])

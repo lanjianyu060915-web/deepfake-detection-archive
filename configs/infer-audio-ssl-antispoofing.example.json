@@ -1,0 +1,20 @@
+{
+  "manifest": "../data/REPLACE_manifest.jsonl",
+  "data_root": "../data/REPLACE_audio",
+  "output_dir": "../outputs/REPLACE_ssl_infer",
+  "modality": "audio",
+  "model_kind": "audio_ssl_antispoofing",
+  "checkpoint": "../models/ssl-antispoofing/LA_model.pth",
+  "checkpoint_sha256": "bd6f36097259fe54e7004eb983651e5304d807be81156dbd04faccb70d91e10c",
+  "device": "cuda",
+  "batch_size": 1,
+  "audio": {
+    "sample_rate": 16000,
+    "backend": "soundfile"
+  },
+  "ssl": {
+    "upstream_model": "../models/ssl-antispoofing/model.py",
+    "xlsr_config": "../models/ssl-antispoofing/xlsr_cfg.json",
+    "xlsr_config_sha256": "0bffa0d0e98153e883b828d86491f3c6062cb563dc9d7a9cfd1790da30c286ac"
+  }
+}

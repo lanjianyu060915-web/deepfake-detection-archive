@@ -39,6 +39,7 @@ class InferenceConfig:
     audio: dict[str, object] = field(default_factory=dict)
     video: dict[str, object] = field(default_factory=dict)
     encoder: dict[str, object] = field(default_factory=dict)
+    ssl: dict[str, str] = field(default_factory=dict)
     segments: int = 1
     segment_samples: int = 64600
     aggregation: str = "mean"
@@ -58,6 +59,7 @@ class InferenceConfig:
             raise ValueError("execution_mode must be reference or adaptive")
         if self.model_kind not in (
             "audio_waveform",
+            "audio_ssl_antispoofing",
             "audio_features",
             "video_features",
             "video_frames",
@@ -70,6 +72,22 @@ class InferenceConfig:
         if self.aggregation not in ("mean", "median", "logsumexp", "trimmed_mean"):
             raise ValueError("unsupported aggregation")
         self._validate_resources()
+        if self.model_kind == "audio_ssl_antispoofing":
+            if set(self.ssl) != {"upstream_model", "xlsr_config", "xlsr_config_sha256"}:
+                raise ValueError(
+                    "SSL requires local upstream_model and hashed xlsr_config"
+                )
+            if any(
+                not isinstance(value, str) or not value.strip()
+                for value in self.ssl.values()
+            ):
+                raise ValueError("SSL resources must be nonempty strings")
+            if self.segments != 1 or self.segment_samples != 64600:
+                raise ValueError(
+                    "SSL requires one 64600-sample upstream head/tile window"
+                )
+            if self.audio.get("sample_rate", 16000) != 16000:
+                raise ValueError("SSL requires a 16000 Hz decoder")
 
     def _validate_resources(self) -> None:
         for key in ("manifest", "data_root", "output_dir", "checkpoint"):
@@ -87,7 +105,7 @@ class InferenceConfig:
                 raise ValueError(f"{key} must be positive integer")
         if type(self.seed) is not int or self.seed < 0:
             raise ValueError("seed must be nonnegative integer")
-        for key in ("audio", "video", "encoder"):
+        for key in ("audio", "video", "encoder", "ssl"):
             if not isinstance(getattr(self, key), dict):
                 raise ValueError(f"{key} must be an object")  # noqa: TRY004 -- schema
 
