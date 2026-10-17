@@ -1,0 +1,103 @@
+{
+  "architecture": "media_feature_head_v1",
+  "batch_size": 128,
+  "model_config": {
+    "aggregation": "mean",
+    "dropout": 0.1,
+    "hidden_dim": 64,
+    "input_dim": 768,
+    "temporal_kernel_size": 0,
+    "trim_fraction": 0.1
+  },
+  "provenance": {
+    "adapter_sha256": "7a15b43cebe5ec2a5f03981c41bc636c1934b0704cb779ee3bf22f12347286b8",
+    "code": {
+      "code_sha256": "856934703dac315e4d19e8e084380c93ffccd77dc8afdcb2f9fefd98800d948b",
+      "commit": "1a3ead979ab90f57ba5cd4726c9ebc158bc37625",
+      "dirty": false
+    },
+    "code_sha256": "856934703dac315e4d19e8e084380c93ffccd77dc8afdcb2f9fefd98800d948b",
+    "data_sha256": "d9dfe6f01e444d1de362d8c45f10b877f162ed29bcc8c1d06eed92e81c710b5d",
+    "features": {
+      "adapter_sha256": "7a15b43cebe5ec2a5f03981c41bc636c1934b0704cb779ee3bf22f12347286b8",
+      "code_sha256": "856934703dac315e4d19e8e084380c93ffccd77dc8afdcb2f9fefd98800d948b",
+      "dtype": "float32",
+      "preprocessing": {
+        "input_size": [
+          3,
+          224,
+          224
+        ],
+        "mean": [
+          0.485,
+          0.456,
+          0.406
+        ],
+        "resize_mode": "native_center_crop",
+        "std": [
+          0.229,
+          0.224,
+          0.225
+        ]
+      },
+      "video": {
+        "height": 224,
+        "max_duration_seconds": 600.0,
+        "max_output_bytes": 536870912,
+        "max_source_frames": 100000,
+        "max_source_pixels": 40000000,
+        "n_frames": 16,
+        "resize_mode": "native_center_crop",
+        "stream_index": null,
+        "timeout_seconds": 60.0,
+        "width": 224
+      },
+      "weights_sha256": "7615ae035996b65eb38dad437ae533d2dfcd36f9f89d28c0f0fa7bfb8e6b3130"
+    },
+    "holdout_consumed": false,
+    "initialization": "fresh seed-specific random head",
+    "manifest_sha256": "d9dfe6f01e444d1de362d8c45f10b877f162ed29bcc8c1d06eed92e81c710b5d",
+    "matched_budget": {
+      "epochs": 20,
+      "optimizer_updates": 860,
+      "sample_draws": 108240,
+      "skipped_updates": 0
+    },
+    "research_only": true,
+    "sample_draws_per_epoch": 5412,
+    "sampling": "source x label",
+    "selection": "dev source macro EER",
+    "sources_sha256": "49255c0fe44d813a0e1438cb92c164ed9b86b545597ece67cfa71ec820389334",
+    "weights_sha256": "7615ae035996b65eb38dad437ae533d2dfcd36f9f89d28c0f0fa7bfb8e6b3130"
+  },
+  "training": {
+    "accumulation_steps": 1,
+    "amp": true,
+    "amp_dtype": "bfloat16",
+    "backbone_lr_scale": 1.0,
+    "deterministic": true,
+    "device": "cuda",
+    "frequency_mask_width": 0,
+    "learning_rate": 0.001,
+    "max_epochs": 20,
+    "max_grad_norm": 1.0,
+    "max_seconds": 1200.0,
+    "min_delta": 0.0,
+    "patience": 20,
+    "seed": 43,
+    "time_mask_width": 0,
+    "weight_decay": 0.0001
+  },
+  "video": {
+    "height": 224,
+    "max_duration_seconds": 600.0,
+    "max_output_bytes": 536870912,
+    "max_source_frames": 100000,
+    "max_source_pixels": 40000000,
+    "n_frames": 16,
+    "resize_mode": "native_center_crop",
+    "stream_index": null,
+    "timeout_seconds": 60.0,
+    "width": 224
+  }
+}

@@ -7,6 +7,7 @@
 
 | 资产 | 实际位置 | 当前用途 |
 | --- | --- | --- |
+| 原生Swin3D/CLIP16（#88） | `/srv/shared-data/candidates/video-native-20261017/` | 八个训练checkpoint、完整冻结Swin43、复用CLIP编码器；root只读，两账号各31文件可读/10权重写入被拒；Swin负结果、CLIP16研究对照，C10仍主候选；[实验](experiments/video-native-20261017/README.md) |
 | DINOv2/CLIP新候选（#86） | `/srv/shared-data/candidates/video-dinov2-20261017/` | 四个新头、四个完整适配/对照checkpoint与两个编码器，root只读、两位账号实测可读；大权重硬链接不重复占盘；CLIP研究备选、DINO负结果，C10仍主候选；[实验](experiments/video-dinov2-20261017/README.md) |
 | UFD强视频对照 | `/var/tmp/deepfake-video-ufd-20261014/` | 完整检测器、固定配置与三组分数；公开头负结果；最小资产已另存下方C6持久归档 |
 | 冻结CLIP视频头 | `/var/tmp/deepfake-video-clip-head-20261014/` | 双seed头与三组完整分数，冻结43为研究候选；复用UFD骨干，最小资产已另存C6，不替换release |
@@ -69,6 +70,7 @@
 | `C16-container-runtime-20261016/` | Actions实际CPU/cu126无权重镜像与4输入结果、源码/digest/归档SHA；98内容文件4,519,922,634B，两路CPU推理和save/load差0，不算GPU容器验收 |
 | `C17-video-dinov2-representation-20261017/` | 四个同预算CLIP/DINO新头、DINO转换权重与固定上游模型卡/Apache-2.0许可、完整选择/诊断分数和摘要、共享访问记录、必要适配器与运行源码；CLIP编码器复用C6 |
 | `C18-video-dinov2-adapt-20261017/` | 四个自包含适配/对照checkpoint、配置/历史/完整分数、12组原视频标准结果和CRF18/35原媒体单份tar；保留必要首轮失败记账，不复制训练媒体或tokens |
+| `C19-video-native-temporal-20261017/` | Swin3D/CLIP16八组训练checkpoint与完整分数/配置/历史、完整冻结Swin43、原公开Swin权重和固定许可、时序2304条及标准入口24条结果、必要适配器与两份固定源码；CLIP编码器/媒体复用C6/C9/C10，不复制缓存 |
 | `shared/` | `resnet18-a1/encoder.pt`（视频共享基座）与`ast-audioset/`（AST预训练基座） |
 
 原C1–C5与shared共396个内容文件、约3.07GiB，不含原始媒体、特征缓存和可再生的发布分片。
@@ -99,6 +101,14 @@ DINO上游原始权重SHA、URL与转换SHA在`pretrained/conversion.json`，原
 转换编码器、完整候选与分数均保留。
 共享只读路径有30文件、2,949,553,679逻辑字节（大权重硬链接），两位账号各实测30文件可读、
 10份权重打开写入被拒；`shared-index.json`及`shared-access.json`保存于C17。
+
+C19独立登记152个内容文件、788,773,752B，复制文件均已读回核对SHA；
+保存固定运行源码`1a3ead9`及CLIP producer保留源码`0ddc71a`。后者原准备记录的
+commit为`unavailable`，package SHA不变，事后只读源映射独立保存，不改写原记录。
+八组完整分数及2304条时序/24条原视频标准评分均保留；原公开Swin权重单份归档，
+CLIP编码器和训练媒体分别复用C6、C9/C10。完整Swin checkpoint运行时无需原权重或缓存。
+共享目录31文件、1,848,935,400逻辑字节，权重硬链接；两位账号实测可读、10权重写入被拒。
+归档完成后释放12,814,208,484B RAM缓存及544,998,476B CLIP特征；不删除原媒体或候选。
 
 C14按独立 `index.json`/`SHA256SUMS` 保全#50新增要求的最小材料，旧索引、配置和分数不改写；
 数据、权重、cache、输出可分别指定根，生成器按原路径/逻辑ID精确映射，C1原sidecar与新权重相邻，
