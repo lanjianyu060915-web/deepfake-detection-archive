@@ -30,6 +30,7 @@
 | 三生成器训练覆盖扩展（#90） | 新增2400条officialtrain，实际train7812/dev1344；四组同预算训练，主43 AIGVD17.11%、去八训练标签20.33%，旧dev24.88%；ViF26.92% | AIGVD优于C10及匹配control，ViF却差于C10的25.91%，保留研究备选，C10仍主候选；新平台诊断见下一行，停止本轮同体系扩展；[实验](experiments/video-coverage-20261017/README.md) |
 | 新平台视频诊断（#95） | 新dev808：自然800/808，完整EER不可算，成功子集C10/C22为45.7002%/47.1744%；受控808/808，完整EER44.5783%/43.6145%。中文批409条自然47.2081%/51.4151%、受控48.7310%/43.3962% | 两候选在新数据上接近随机，C10仍主候选、C22不升级；原199条保留随后被#97评分，首批现均已见诊断，不继续扫参数或训练；[实验](experiments/video-platform-20261017/README.md) |
 | 平台音频/视频全库存诊断（#97） | 音频899/903、视频999/1007成功；成功子集EER：AST40.64%、LogMel47.86%、SSL34.22%，C10视频45.15%；含失败的完整EER不可算 | 已读取原保留445条，首批1910全部降为已见诊断；固定原dev音频653/657成功，AST46.98%、LogMel51.07%、SSL36.10%仅成功子集；不升级默认，另取无关联训练与保留素材；[实验](experiments/chinese-sources-20261017/README.md) |
+| CLIP空间视图匹配训练（#99） | 同预算两组各20epoch/860updates；缩放裁剪原dev macro 21.91%→19.06%，平台自然成功子集45.80%→44.96%、受控完整45.78%→49.16% | 平台两来源与视图没有一致收益，保存负结果、不采用；C10仍主候选，停止本轮空间视图扫描。两头及分数存C25，缩放候选标准infer8/8；[实验](experiments/video-spatial-20261017/README.md) |
 | 固定CLIP＋WaveRep融合 | 真实标准入口受控dev1880/1880、零失败；EER26.41%（CLIP31.33%）、去Open-Sora21.32%；18个生成器均优于CLIP；CLI调用803.54秒、显存allocated峰值1.80GB | 已接入infer/predict、单checkpoint与搬移wheel；仅研究候选，dev已见、旧母媒体交集未知，冻结保留验收及赛用许可待确认；[实验](experiments/video-fusion-20261016/README.md) |
 | cu126与固定工具 | 完整cu126三件套实装；RC3原权重20输入在CPU/GPU/Ubuntu24新用户各20/20，30前端张量差0、CPU/GPU分数差≤7.63e-6；同设备旧/新实现分数差0 | 系统Toolkit13.2保留；固定同源码LGPL工具及对应源码随包；Ubuntu24用户态共享宿主内核，不能当作Docker；[本轮回归](experiments/runtime-completion-20261016/README.md) |
 | 离线系统 | clean `2e8388a` RC3、adaptive模式：音频10000/10000、1046.83秒；视频10000/10000、1613.32秒，均零失败；allocated/reserved峰值分别400.12/434.11MB、110.13/134.22MB | 两任务并行，耗时不与旧串行运行作加速比较；已见诊断/train-dev容量，无holdout或EER，默认仍为原v0.1.1研究权重；CPU/cu126无权重Docker镜像已实测CPU推理及save/load，未重发Release；[结果与限制](experiments/runtime-completion-20261016/README.md) |
@@ -64,6 +65,7 @@ dev108条统计分组未知，不能宣称生成器或人物独立。自然视�
 | DINOv2冻结43/42与末block适配/对照 | 完成，八组比较中的六组 | 负结果，停止本轮投入 | 同上；区分FP32表征与BF16前缀 | #87已合入main | 否 | 是（C17/C18），当前实例共享只读 | 冻结43/适配43/对照43各620/620；其余为特征或前缀诊断 |
 | 原生Swin3D冻结/适配/对照与CLIP16 | 八组训练及完整诊断完成 | Swin负结果、CLIP16研究对照，C10仍主候选 | 预算/分数与时序诊断独立核对，未独立重训 | #89已合入main | 否 | 是（C19），当前实例共享只读 | 冻结Swin43/适配43/CLIP16_43原视频各8/8，最大缓存差2.41e-5；时序9组2304/2304 |
 | 三生成器覆盖 expanded43/42与control43/42 | 四组20epoch、1240updates全部完成 | 跨集取舍，研究备选，C10仍主候选 | 结果与产物独立核对，未独立重训 | #94 | 否 | 是（C22），团队共享只读 | 主43标准CLI原视频8/8，最大缓存logit差7.92e-5；完整外部为缓存诊断 |
+| 空间视图 native43/global43 | 两组匹配训练与平台自然/受控诊断完成 | 负结果，C10仍主候选 | 源码/预算/结论独立核对，未独立重训 | #99对应PR待合并 | 否 | 是（C25），当前实例共享只读 | global43原视频8/8，最大缓存logit差2.77e-5；平台诊断自然800/808、受控808/808 |
 | CLIP43＋WaveRep固定融合 | 标准dev1880完成 | 研究候选 | 实验记录独立核对；未独立重跑 | #76及补集成#78已合入main | 否 | 是（C8） | infer全量、非editable wheel统一入口2音频＋2视频成功 |
 
 所有候选的正式赛用许可均未确认。三域AST两种子与时序头为脏工作区产物，LogMel seed43未记录commit
@@ -87,6 +89,7 @@ dev108条统计分组未知，不能宣称生成器或人物独立。自然视�
 - 原生视频时序：[#88](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/88)完成Swin3D/CLIP16匹配双种子与Swin末stage/头对照，完整外部和时序诊断均齐备；Swin仍弱于CLIP，停止本轮训练，CLIP16保留对照。后续优先#51新真实来源/困难生成内容，不继续扫已见dev。
 - 新增三生成器训练：[#90](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/90)完成2400条扩展与四组匹配训练；AIGVD改善、ViF退化，保留研究备选。已由#95消费#51新平台视频作首轮诊断，不继续仅扩AIGVD或扫已见dev。
 - 新平台泛化：[#95](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/95)已完成固定用途与首轮视频诊断。C10/C22接近随机；下一步取得与这1910条无关联的训练媒体，扩大真实来源和困难生成内容并平衡来源/内容，首批1910现均已见诊断、不进梯度训练；新的独立保留须另取素材；不继续种子、帧数、融合或AIGVD扫描。
+- 空间视图：[#99](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/99)两组训练与诊断完成；原dev改善未转为平台一致收益，停止本轮，不替换C10。下一轮先消费#51新的无关联训练小批，再决定模型适配，避免继续堆旧dev实验。
 - 安装与资源适配：#65/#66的实现和实际RC3回归已通过[PR #85](https://github.com/lanjianyu060915-web/deepfake-detection-archive/pull/85)合入main；默认reference、显式adaptive，有界profile/OOM缩减与恢复计划已接入。Docker CPU/cu126镜像在无GPU Actions以CPU模式做4样本及save/load演练，[运行](https://github.com/lanjianyu060915-web/deepfake-detection-archive/actions/runs/38916789385)已成功，两路4/4且host/container/save-load分数差0；不计GPU容器或万级容器验收。
 - 共享资产持久保存：[#50](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/50)原备份完成；用户后来增加的恢复要求尚未全部完成，已重新开放，C14保存部分恢复结果；离线兼容与容量：[#54](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/54)。
 
