@@ -69,7 +69,9 @@ CSV 不填充失败分数，因此不能将部分覆盖结果冒充完整提交�
 当前另有未公开发布的 `0.1.2-rc1` 研究包，使用原 v0.1.1 权重和下述统一入口，
 位于团队服务器 `/var/tmp/deepfake-offline54-20261014/relocated/deepfake-v0.1.2-rc1/`。
 已完成真实搬移、CPU/GPU演示、440条profile及实际中断恢复；真实唯一语音10,000条全成功，
-端到端1,800.67秒。视频万级与独立新环境尚未验收；
+端到端1,800.67秒；视频10,000条全成功，端到端2,317.95秒，详见
+[视频容量](experiments/video-capacity-20261016/README.md)。这些结果绑定原研究包，
+不能覆盖更换工具、候选或操作系统后的容量；独立新环境由后续包验收。
 系统依赖、资源结果与未完成项见[实验记录](experiments/offline-entry-20261014/README.md)。
 已下载的 v0.1.1 压缩包仍按本页原命令使用。
 
@@ -96,6 +98,11 @@ scripts/devctl run python -m deepfake_detection_archive predict \
 v0.1.1 压缩包。原 `predict --config ... --input ...` 和 `infer --config ...` 保持可用。
 `--show-models` 显示模型标识、研究范围、分数方向和预处理版本，不读取输入媒体。
 统一入口提高输入便利性，音频仍是环境音研究候选，视频仍是四帧基线。
+默认注册表、配置、运行时元数据及权重限制在选择的模型包根内；`--show-models`同样遵循该边界。
+未指定`--output`时按`TMPDIR`创建临时目录。当前源码默认`--execution-mode reference`，
+显式`--execution-mode adaptive`启用资源profile及有界CUDA OOM批量缩减；
+`--batch-size`控制实际推理批量，不改变采样、模型、FP32或聚合。恢复须保持执行计划、设备与
+浮点设置一致，详见[开发说明](development.md#推理与-eer)。
 
 训练与发布决定固定资产；预测消费本地包内资产：
 
@@ -129,20 +136,21 @@ scripts/devctl run python -m deepfake_detection_archive predict \
   --input /data/audio --output outputs/audio
 ```
 
-维护者在对应tag的源码checkout中，用已取得的本地权重与环境构建，
-不自动下载或读取训练/holdout媒体：
+维护者在干净源码提交中，用已取得的本地权重与环境构建新的研究RC，
+不自动下载或读取训练/holdout媒体，也不覆盖已发布v0.1.1：
 
 ```bash
 scripts/devctl run python tools/build_release.py \
-  --version 0.1.1 \
-  --output outputs/releases/deepfake-v0.1.1 \
-  --site-packages /opt/venvs/deepfake-cu132/lib/python3.12/site-packages \
+  --version 0.1.2-rc3 \
+  --output outputs/releases/deepfake-v0.1.2-rc3 \
+  --site-packages /opt/venvs/deepfake-cu126/lib/python3.12/site-packages \
   --python-home /opt/uv/python/cpython-3.12.15-linux-x86_64-gnu \
+  --media-tools /path/to/new-media-tools \
   --audio-weight /path/to/v0.1.1/weights/audio-ast-urban.pt \
   --video-weight /path/to/v0.1.1/weights/video-resnet18.pt
-tar -C outputs/releases -czf outputs/releases/deepfake-v0.1.1-linux-x86_64.tar.gz deepfake-v0.1.1
-split -b 1900M -d outputs/releases/deepfake-v0.1.1-linux-x86_64.tar.gz \
-  outputs/releases/deepfake-v0.1.1-linux-x86_64.tar.gz.part-
+tar -C outputs/releases -czf outputs/releases/deepfake-v0.1.2-rc3-linux-x86_64.tar.gz deepfake-v0.1.2-rc3
+split -b 1900M -d outputs/releases/deepfake-v0.1.2-rc3-linux-x86_64.tar.gz \
+  outputs/releases/deepfake-v0.1.2-rc3-linux-x86_64.tar.gz.part-
 ```
 
 包内 `release.json` 标识版本、构建源码、平台、权重及实际运行依赖版本，
@@ -153,6 +161,67 @@ split -b 1900M -d outputs/releases/deepfake-v0.1.1-linux-x86_64.tar.gz \
 已发布 v0.1.1 与本轮 RC 包保持原内容，当前源码可在已安装 torchaudio 的环境恢复其 NumPy 权重。
 包内含可直接运行的无标签演示清单。目录搬移后不依赖原仓库、训练路径或共享虚拟环境。
 来源、版权与非商业限制见包内 `licenses/README.md`，项目内见 `docs/release-licenses.md`。
+
+### 包内媒体工具与容器构建
+
+构建器可通过 `--media-tools /path/to/media-tools` 收集固定 FFmpeg/ffprobe。
+`run.py` 和 Python API 共用工具选择：`DEEPFAKE_MEDIA_TOOLS` 显式指定的 bin
+目录优先，其次包内 `runtime/media-tools/bin`，源码开发未配置工具时使用 PATH。
+显式目录或已存在的包内工具不完整时直接报错，不回退到另一构建。
+工具变更记录在统一入口恢复身份中，不能混入旧运行继续写分数。
+
+当前工具配方固定原服务器对应的 [FFmpeg ba987fe24d](https://github.com/FFmpeg/FFmpeg/tree/ba987fe24d6713c4d4b3a15cebaeca18c41fbd31)，
+保留原生解码器、滤镜和 swscale/swresample，禁用第三方自动探测、GPL、nonfree、网络和硬件解码。
+FFmpeg 自身库静态链接，系统 glibc/libm 仍需目标机提供。**该构建不支持 AV1 软件解码**，
+不作为现有服务器完整 GPL 工具的无条件替换。源码原包、许可、配方和二进制哈希随工具保存。构建需要 GCC、make 和 nasm。
+样例生成仍使用构建机的 FFmpeg/libx264；目标机预测不需要编码器。
+
+```bash
+curl -fL https://github.com/FFmpeg/FFmpeg/archive/ba987fe24d6713c4d4b3a15cebaeca18c41fbd31.tar.gz -o ffmpeg-ba987fe24d.tar.gz
+bash tools/build_media_tools.sh ffmpeg-ba987fe24d.tar.gz /path/to/new-media-tools
+# tools/build_release.py 的原构建参数另加 --media-tools /path/to/new-media-tools
+```
+
+`containers/Dockerfile.offline` 固定已核对的 Ubuntu 24.04 amd64 manifest digest，
+只复制构建好的 `package/`，不在推理时安装或下载。默认`offline` target保留完整包；
+`--target runtime`只装运行库、源码、入口与许可，不包含权重、模型配置或输入媒体，
+通过只读`/models`挂载提供`configs/`、`weights/`及`release.json`。
+构建目录仅放该包和 Dockerfile，预先加载基座；CPU/cu126以包内实际依赖为准，不能仅改镜像标签。
+
+```bash
+docker build --network=none -f Dockerfile.offline -t deepfake:research .
+docker run --rm --network=none --read-only --tmpfs /tmp \
+  --user "$(id -u):$(id -g)" -v /data/media:/inputs:ro \
+  -v /data/results:/outputs -v /data/cache:/cache \
+  deepfake:research predict /inputs --device cpu --output /outputs/run
+# NVIDIA 模式另加 docker 参数 --gpus，应用参数使用 --device cuda。
+docker image save -o deepfake-research-image.tar deepfake:research
+sha256sum deepfake-research-image.tar
+docker image load -i deepfake-research-image.tar
+```
+
+输出与缓存挂载目录须允许所选 UID/GID 写入；不需要 privileged、Docker socket 或 chmod777。
+GPU仍依赖宿主驱动和NVIDIA Container Toolkit。当前云机不具备可用Docker隔离运行条件；
+[Actions镜像演练](https://github.com/lanjianyu060915-web/deepfake-detection-archive/actions/runs/38916789385)
+已完成CPU/cu126两个运行时镜像的build/run/save/load，在无GPU宿主以CPU模式执行4条无标签样例、
+断网/非root/只读根/空缓存推理及save/load复测，按相对路径与媒体SHA对齐，容差`1e-4`。
+两路均4/4、零失败，host/container/save-load分数最大差0；镜像配置digest在save/load后不变。
+镜像及小结果artifact不含权重或训练数据，保留1天；C16已持久保存完整镜像及结果，开发使用POSIX只读共享副本（见数据说明）。
+昂贵镜像构建在相关源码/发布环境变更合入main后运行，也可手动触发；PR使用标准检查，避免文档同步反复重建镜像。
+共享开发根为`/srv/shared-data/deliveries/runtime-completion-20261016/C16-container-runtime-20261016/`，
+镜像归档分别为`cpu/runtime-image-cpu.tar.gz`、`cu126/runtime-image-cu126.tar.gz`。
+`docker load --input ARCHIVE`后的tag分别为`deepfake-rehearsal:cpu`和`deepfake-rehearsal:cu126`；
+运行时需另加`--mount type=bind,src=/absolute/model-package,dst=/models,readonly`，
+模型包应包含`configs/`、`weights/`及`release.json`，其余输入/输出/缓存挂载沿用上例。
+CPU运行使用`--device cpu`，仅GPU运行才加`--gpus all`。
+GPU容器及万级容器容量未实测，Ubuntu24 rootfs演练共享宿主内核，不能代替这些证据。
+
+新RC3（clean `2e8388a`）已在RTX4090完成非Docker实际音频/视频各10000条、零失败，
+两任务并行，端到端耗时分别1046.83秒与1613.32秒；不与旧串行计时宣称加速。
+使用原v0.1.1研究权重、cu126与同源码LGPL工具，未消费holdout或计算EER。
+20输入同设备旧/新实现分数差0，CPU/GPU最大差7.63e-6，新Ubuntu24用户名
+`contest_runner`（UID1002）20/20，30个前端张量差0；见[本轮结果](experiments/runtime-completion-20261016/README.md)。
+这些是工程兼容与容量结果，正式赛用许可、平台I/O及新Release仍待完成。
 
 ## v0.1.1 变更与算法范围
 

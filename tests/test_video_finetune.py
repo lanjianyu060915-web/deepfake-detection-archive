@@ -4,6 +4,7 @@ import json
 import socket
 from dataclasses import asdict, replace
 from pathlib import Path
+from unittest.mock import Mock
 
 import pytest
 
@@ -110,6 +111,41 @@ def test_temporal_head_uses_frame_order():
     original = head(features).mean(dim=1)
     shuffled = head(features[:, [0, 2, 1, 3]]).mean(dim=1)
     assert not torch.allclose(original, shuffled)
+
+
+@pytest.mark.parametrize("kernel_size", [1, 3])
+@pytest.mark.parametrize("aggregation", ["mean", "median", "logsumexp", "trimmed_mean"])
+def test_frame_batches_preserve_full_sequence_and_pooling(
+    tmp_path, monkeypatch, kernel_size, aggregation
+):
+    torch.manual_seed(66)
+    config = replace(
+        _config(tmp_path),
+        temporal_kernel_size=kernel_size,
+        aggregation=aggregation,
+        trim_fraction=0.2,
+    )
+    model = VideoFrameClassifier(config).eval()
+    images = torch.randn(2, 7, 3, 64, 64)
+    with torch.inference_mode():
+        expected = model(images)
+    backbone = Mock(wraps=model.backbone.forward)
+    head = Mock(wraps=model.head.forward)
+    monkeypatch.setattr(model.backbone, "forward", backbone)
+    monkeypatch.setattr(model.head, "forward", head)
+    with torch.inference_mode():
+        actual = model(images, frame_batch_size=3)
+    torch.testing.assert_close(actual, expected, rtol=1e-4, atol=1e-5)
+    assert [call.args[0].shape[0] for call in backbone.call_args_list] == [
+        3,
+        3,
+        3,
+        3,
+        2,
+    ]
+    head.assert_called_once()
+    expected_shape = (2, 7, 512) if kernel_size == 3 else (14, 512)
+    assert head.call_args.args[0].shape == expected_shape
 
 
 def test_legacy_checkpoint_keeps_independent_frame_pooling(tmp_path):

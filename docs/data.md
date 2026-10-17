@@ -7,9 +7,18 @@
 
 | 资产 | 实际位置 | 当前用途 |
 | --- | --- | --- |
+| 原生Swin3D/CLIP16（#88） | `/srv/shared-data/candidates/video-native-20261017/` | 八个训练checkpoint、完整冻结Swin43、复用CLIP编码器；root只读，两账号各31文件可读/10权重写入被拒；Swin负结果、CLIP16研究对照，C10仍主候选；[实验](experiments/video-native-20261017/README.md) |
+| DINOv2/CLIP新候选（#86） | `/srv/shared-data/candidates/video-dinov2-20261017/` | 四个新头、四个完整适配/对照checkpoint与两个编码器，root只读、两位账号实测可读；大权重硬链接不重复占盘；CLIP研究备选、DINO负结果，C10仍主候选；[实验](experiments/video-dinov2-20261017/README.md) |
 | UFD强视频对照 | `/var/tmp/deepfake-video-ufd-20261014/` | 完整检测器、固定配置与三组分数；公开头负结果；最小资产已另存下方C6持久归档 |
 | 冻结CLIP视频头 | `/var/tmp/deepfake-video-clip-head-20261014/` | 双seed头与三组完整分数，冻结43为研究候选；复用UFD骨干，最小资产已另存C6，不替换release |
-| 统一入口研究包 | `/var/tmp/deepfake-offline54-20261014/relocated/deepfake-v0.1.2-rc1/` | 真实v0.1.1权重、包内解释器和依赖；搬移、440条profile及真实语音万级已完成，未重发Release |
+| 生成机制鉴伪（#59） | `/var/tmp/lanjianyu-issue59-20261014/` | WaveRep G1 原权重与 `waverep_video_v1` checkpoint、SD1/Wan2.1 VAE、T1 权重、机制表、全部逐样本分数；持久副本 `/mnt/deepfake-archive/issue59-generator-forensics/`，研究用途、非营利许可 |
+| AIGVDBench首批视频 | `/var/tmp/lanjianyu-issue51-20261014/aigvdbench/` | #51：仅消费dev1880条与其受控版本；保留部分隔离；底层YouTube许可未确认，仅研究评估 |
+| 新来源CLIP视频评分 | `/var/tmp/deepfake-video-independent-20261014/` | 自然/受控各1880条零失败、EER21.33%/31.33%；8帧受控31.80%无收益；[实验](experiments/video-aigvdbench-20261014/README.md) |
+| CLIP最后block适配（#81） | `/var/tmp/deepfake-video-clip-adapt-20261016/` | control43/tuned43/42完整权重、配置和逐样本分数；复用C6/C9/C10媒体及初始化，C11持久副本；可重建tokens在运行完成后释放；[实验](experiments/video-clip-adapt-20261016/README.md) |
+| 三生成器扩展（#80） | `/var/tmp/deepfake-video-coverage-20261016/` | 新增1500条原媒体，整组排除训练2条后实际train5412/dev1344；control43/expanded43/42与两套完整诊断，内部研究，持久副本C10；[实验](experiments/video-generator-coverage-20261016/README.md) |
+| CLIP跨来源训练（#77） | `/var/tmp/deepfake-video-cross-source-20261016/` | 新增800条officialtrain媒体、600train/200dev，与旧域回放的双种子头及完整分数；内部研究，持久副本C9；[实验](experiments/video-cross-source-20261016/README.md) |
+| 固定视频融合（#72） | `/var/tmp/deepfake-video-fusion-20261016/` | CLIP43＋WaveRep自包含checkpoint、受控dev1880标准分数、搬移wheel研究模型包；[实验](experiments/video-fusion-20261016/README.md)，持久副本C8，正式赛用未确认 |
+| 统一入口研究包 | `/var/tmp/deepfake-offline54-20261014/relocated/deepfake-v0.1.2-rc1/` | 真实v0.1.1权重、包内解释器和依赖；搬移、440条profile及语音/视频双万级已完成，未重发Release |
 | 三域联合音频冻结候选 | `/srv/shared-data/candidates/audio-universal-20261014/` | seed42主/seed43备权重、sidecar、原始配置/历史、完整dev与冻结评分；文件0444、目录2755，研究用途 |
 | 音频补充诊断媒体 | `/srv/shared-data/datasets/audio-review-20261014/` | AIME未训练路径154条、AI-OpenBMAT纯音乐94/混合152条；原清单与媒体哈希保留，只作已见研究诊断 |
 | ASVspoof LA Parquet | `/srv/shared-data/datasets/asvspoof2019-la/` | 官方 train/dev 物化输入；#9 已接入协议与 FLAC |
@@ -49,12 +58,75 @@
 | `C4-video-multigen/` | 五次运行权重（冻结为`paired-seed43`）、配置、`canonical-2s`与统一诊断清单、全部评分 |
 | `C5-video-temporal/` | 时序头seed42/seed43-retry权重、分数、训练清单 |
 | `C6-video-ufd-clip-20261014/` | UFD完整编码器与公开头、冻结CLIP双seed头、配置和三组完整分数；31内容文件约1.219GB |
+| `C7-video-clip-temporal-20261014/` | 轻量时序头双seed最佳权重、配置、训练历史/选择、预计算适配器和分数；24内容文件6.92MB，未采用为主候选，骨干复用C6 |
+| `C8-video-fusion-20261016/` | 固定CLIP＋WaveRep checkpoint、配置、1880条完整标准分数、摘要、必要运行资源记录与wheel；不含原媒体全集或运行依赖副本 |
+| `C9-video-cross-source-20261016/` | 双种子最佳头、配置/历史/完整选择及诊断分数、来源/选择/小适配器；新增800条原媒体仅保存一次`raw-media.tar`，骨干复用C6，受控媒体/缓存可重建 |
+| `C10-video-generator-coverage-20261016/` | 三个最佳头、配置/历史/完整分数、来源/排除及小适配器；新增1500原媒体单份tar，骨干复用C6、前轮数据/适配器复用C9，缓存和派生媒体不归档 |
+| `C11-video-clip-adapt-20261016/` | 三个自包含最佳checkpoint、配置/历史/完整分数、来源清单、摘要和必要适配器；不复制C6/C9/C10原媒体、初始权重或tokens，完整权重可独立加载 |
+| `C12-video-capacity-20261016/` | 真实10000视频完整CLI输出/分数/CSV、选择映射、资源/配置和必要测量器；28文件46,582,989字节，原媒体/权重/运行时不重复归档 |
+| `C13-offline-runtime-20261016/` | cu126与固定媒体工具回归：20输入、30份张量、CPU/GPU/Ubuntu24用户态分数、对应工具源码及构建锁；136内容文件96,372,367字节，完整运行库/模型权重复用，不重复归档 |
+| `C14-assets-restoration-20261016/` | #50增量：427条精确路径映射、9份推理配置、源码恢复与缺口、4条无标签工程媒体、既有C6标准infer分数及生成器；251内容文件2,445,066字节，不复制权重、媒体全集或缓存 |
+| `C15-runtime-completion-20261016/` | RC3自适应双万级完整分数/计划、20输入新用户名搬移与30张量、包文件SHA及C3有界查找；162内容文件109,657,257字节，权重/工具源码/工程媒体复用C1/C13 |
+| `C16-container-runtime-20261016/` | Actions实际CPU/cu126无权重镜像与4输入结果、源码/digest/归档SHA；98内容文件4,519,922,634B，两路CPU推理和save/load差0，不算GPU容器验收 |
+| `C17-video-dinov2-representation-20261017/` | 四个同预算CLIP/DINO新头、DINO转换权重与固定上游模型卡/Apache-2.0许可、完整选择/诊断分数和摘要、共享访问记录、必要适配器与运行源码；CLIP编码器复用C6 |
+| `C18-video-dinov2-adapt-20261017/` | 四个自包含适配/对照checkpoint、配置/历史/完整分数、12组原视频标准结果和CRF18/35原媒体单份tar；保留必要首轮失败记账，不复制训练媒体或tokens |
+| `C19-video-native-temporal-20261017/` | Swin3D/CLIP16八组训练checkpoint与完整分数/配置/历史、完整冻结Swin43、原公开Swin权重和固定许可、时序2304条及标准入口24条结果、必要适配器与两份固定源码；CLIP编码器/媒体复用C6/C9/C10，不复制缓存 |
 | `shared/` | `resnet18-a1/encoder.pt`（视频共享基座）与`ast-audioset/`（AST预训练基座） |
 
 原C1–C5与shared共396个内容文件、约3.07GiB，不含原始媒体、特征缓存和可再生的发布分片。
 `index.json` 逐文件记录原路径、归档路径、大小和SHA-256；配置中的原路径按该表替换即可指向归档。
 C6是后来完成的独立批次，另31内容文件，由其目录内 `index.json` 与 `SHA256SUMS` 登记，
 不改写原396文件索引。配置保留原路径，恢复时按索引重映射；C6引用原C4数据清单，不重复备份媒体。
+C8同样独立登记：46个内容文件、1,566,333,503字节，包含本轮完整融合checkpoint；
+研究模型包的原发布音频权重复用C1，依赖不重复归档。各原路径与持久路径见C8的`index.json`。
+C9为54个内容文件、2,132,673,563字节，保存本轮新增原媒体及最小候选集合，独立`index.json`/`SHA256SUMS`登记；不重复旧媒体、
+骨干或缓存。原媒体只供内部团队研究，不是已获准公开再分发或赛用的资产。
+C10独立登记71个内容文件、3,048,901,454字节，含原1500条取得库存及确认重复组排除记录；
+仅1498条新记录实际进入本轮训练/选择，control未重训。旧骨干和缓存不重复归档。
+
+C11独立登记72个内容文件、3,685,709,182字节；三种完整权重、原始分数和适配器团队可读，
+不包含可重建前缀缓存。训练缓存28,451,327,667字节已在评分及归档完成后释放；
+主43标准infer4条零失败、raw/cached最大logit差4.65e-6，未做跨实例恢复。
+
+C17独立登记84个内容文件、379,400,699B；C18为150个内容文件、1,507,613,563B，
+复制内容均已读回核对SHA，分别有`index.json`、`SHA256SUMS`和完成标记。
+两批分别保存固定提交`0ddc71a`/`b4ca925`的当前运行及构建源码，
+每批源码约1.2MB；旧归档和整份历史文档通过对应Git提交追溯，不重复保存。
+恢复适配候选只需完整checkpoint及该源码；冻结DINO头另需C17转换编码器，CLIP头另需C6编码器。
+DINO上游原始权重SHA、URL与转换SHA在`pretrained/conversion.json`，原始公开下载文件不重复归档。
+上游Apache-2.0许可不解决训练视频或最终参赛的权利问题。本轮不使用holdout。
+两个标准压缩条件各310个文件、合计89,004,053B，C18按manifest逐项及tar成员SHA核对后保存；
+训练媒体复用C9/C10，特征及BF16前缀缓存可按固定配置重建，不声称optimizer/RNG无损续训。
+评分与归档完成后，本轮16,718,480,522B前缀缓存及346,378,731B重复公开原权重已释放；
+转换编码器、完整候选与分数均保留。
+共享只读路径有30文件、2,949,553,679逻辑字节（大权重硬链接），两位账号各实测30文件可读、
+10份权重打开写入被拒；`shared-index.json`及`shared-access.json`保存于C17。
+
+C19独立登记152个内容文件、788,773,752B，复制文件均已读回核对SHA；
+保存固定运行源码`1a3ead9`及CLIP producer保留源码`0ddc71a`。后者原准备记录的
+commit为`unavailable`，package SHA不变，事后只读源映射独立保存，不改写原记录。
+八组完整分数及2304条时序/24条原视频标准评分均保留；原公开Swin权重单份归档，
+CLIP编码器和训练媒体分别复用C6、C9/C10。完整Swin checkpoint运行时无需原权重或缓存。
+共享目录31文件、1,848,935,400逻辑字节，权重硬链接；两位账号实测可读、10权重写入被拒。
+归档完成后释放12,814,208,484B RAM缓存及544,998,476B CLIP特征；不删除原媒体或候选。
+
+C14按独立 `index.json`/`SHA256SUMS` 保全#50新增要求的最小材料，旧索引、配置和分数不改写；
+数据、权重、cache、输出可分别指定根，生成器按原路径/逻辑ID精确映射，C1原sidecar与新权重相邻，
+C6轻量头显式配套完整视觉编码器。同实例新根CPU标准 `infer` 对C6两条自生成无标签
+工程视频2/2成功，仅证明加载推理；C1 AST/ResNet各2条标准 `infer` 也均成功，按显式
+logical ID与媒体SHA对齐新cu126包 `predict`，预设分数绝对容差1e-4、最大差0。
+这4条只证明工程入口/新根兼容，不是历史有标签分数或EER复现，不使用holdout。
+历史清单实际5个dirty候选中4份源码包与训练记录哈希一致；C3原工作副本当前源码及58个
+可达历史源码树均不匹配训练哈希，历史dirty源码仍未恢复，不能用当前clean替代。
+本轮另查本仓库3个不可达commit的4份包源码树，以及队友原C3仓库49个路径commit/reflog中的48份唯一包源码树，仍未匹配训练hash；仅记录这些已知位置，不推断其他位置不存在。RC3实际结果见[执行与容量](experiments/runtime-completion-20261016/README.md)。
+
+完整历史工作树差异、原训练媒体/缓存恢复、optimizer/RNG无损续训、独立实例恢复、旧有标签评分集/全部候选新OS验收及正式许可仍有缺口；同机根映射与本批归档不构成独立跨实例备份，#50新要求尚未全部完成。
+
+持久网盘的`fx`挂载会显示只读权限位，但实测不强制拒绝普通账号写入；哈希用于检查完整性，不能把显示的`0444`当访问控制。
+当前C15/C16的共享开发副本在`/srv/shared-data/deliveries/runtime-completion-20261016/`，
+共264文件、4,629,659,179B，目标262条SHA校验通过；root所有、文件0444/目录0555，
+maochuanjun与lanjianyu实际可读且打开写入被拒。原持久归档用于恢复，原媒体及权重继续复用已有只读资源。
+
 校验：
 
 ```bash
@@ -66,14 +138,15 @@ cd /mnt/deepfake-archive && sha256sum -c SHA256SUMS
 对照同时改变了缓存/直接解码路径和批量64/8，差异可能与这些条件有关，尚未单独确认原因。发布包v0.1.1不能加载该视频权重
 （缺少 `temporal_kernel_size` 字段），需要仓库源码入口。
 
-各候选的归档资产与前端快照在 [`configs/release/candidates.json`](../configs/release/candidates.json)：
+原批次候选的归档资产与前端快照在 [`configs/release/candidates.json`](../configs/release/candidates.json)：
 完整鉴伪权重或所需基座的归档路径与SHA-256、代码版本、适用范围、研究/发布状态，以及
 从当前环境实际读出的有效预处理（AST频谱前端常量、LogMel前端、视频帧采样与RGB mean/std）。
-归档时环境未安装 torchaudio，既有 AST 权重使用 NumPy 特征。当前共享环境已补装
-`torchaudio 2.11.0+cpu`；模型显式记录 `frontend`，旧权重缺字段固定为
+归档时环境未安装 torchaudio，既有 AST 权重使用 NumPy 特征。当前共享环境已切换为
+`torchaudio 2.11.0+cu126`，系统 CUDA Toolkit 13.2 保留；模型显式记录 `frontend`，旧权重缺字段固定为
 `numpy_spectrogram_v1`，安装依赖不会自动切换特征。Kaldi 仅由
 `torchaudio_kaldi_v1` 显式选择，训练缓存与发布元数据均区分实现。
-视频缩放裁剪全部由 ffmpeg 完成，不能再叠加 timm 的 `crop_pct`；ffmpeg 由主机提供。
+视频缩放裁剪全部由 ffmpeg 完成，不能再叠加 timm 的 `crop_pct`。源码开发使用宿主FFmpeg；
+新RC可带固定工具，运行回归见[离线运行实验](experiments/offline-runtime-20261016/README.md)。
 该文件仅记录本次归档时的事实，不作为运行配置。统一入口 #57 由
 `configs/release/models.json` 及其引用的推理配置选择模型；完整 checkpoint 包含模型参数，
 视频 ResNet18 基座仅用于训练初始化，恢复推理无需额外加载基座。
@@ -81,7 +154,12 @@ C6的CLIP特征头则需要显式加载同批保存的视觉编码器。以持�
 与原分数逐值一致；源码/候选用途与限制见[本轮运行包](experiments/offline-entry-20261014/README.md)。
 
 网盘为 `fuse.fx`：`chgrp` 不生效（gid固定为2000），文件统一 0444 全员可读；
-`du` 显示为0，大小以 `index.json` 或 `stat` 为准。原始媒体与特征缓存仍只在实例上，需按各工具重建。
+`du` 显示为0，大小以 `index.json` 或 `stat` 为准。除C9/C10新增原媒体外，其余原媒体与特征缓存仍只在实例上，需按各工具重建。
+
+当前已运行的C10 train/dev6756、AIGVD诊断1880、ViF诊断1949合计10,585条ID；
+按受控媒体SHA去重后为**10,571个文件**，均在本轮完成解码。已用于#54万级视频
+容量：10000/10000成功、零失败、完整2317.95秒，见[实测](experiments/video-capacity-20261016/README.md)。文件字节唯一不证明母媒体独立；这些已见数据
+仅作运行容量与研究诊断，不能当新盲测，holdout继续封存。
 
 ## 导入与训练清单
 

@@ -10,7 +10,7 @@
 | 数据 | `manifest.example.jsonl`、`sources.example.jsonl`、`audit.example.json` |
 | 音频训练 | `train-logmel.example.json`、`train-aasist-l.example.json`、`train-audio-ssl-head.example.json`、`train-logmel-doppelganger.example.json` |
 | 视频训练 | `train-video-head.example.json` |
-| 推理 | `infer-audio-waveform.example.json`、`infer-audio-ssl-head.example.json`、`infer-video-head.example.json` |
+| 推理 | `infer-audio-waveform.example.json`、`infer-audio-ssl-head.example.json`、`infer-video-head.example.json`、`infer-video-fusion.example.json` |
 | 导出与交付 | `adapter.example.json`、`package.example.json` |
 
 最短训练流程：
@@ -35,6 +35,17 @@ CPU 调试需同时设置 `device="cpu"` 和 `amp=false`。
 时按实际特征维度调整，并登记本地权重。编码器和预处理必须与推理配置一致。训练当前不支持
 optimizer/RNG 恢复；中断后在新输出目录重启。
 
+`infer-video-fusion.example.json` 对应固定 CLIP43＋WaveRep 研究候选。单个本地
+`video_fusion_v1` checkpoint 包含两路权重、CLIP MLP 和固定融合参数，不需要额外 encoder。
+配置保留 CLIP 的 4 帧 224 原生中心裁剪；评分器使用相同时间点和视频流，另按 WaveRep 的
+504 原生中心裁剪与归一化评分。`batch_size` 只控制独立帧主干批量，不改变帧数或融合。
+准备工具为 `tools/prepare_video_fusion.py`；WaveRep 正式赛用许可未确认，仅供研究。
+
+CLIP最后block适配的完整权重使用 `clip_adapt_video_v1`，推理设置
+`model_kind="video_frames"`、4帧224 `native_center_crop`，不需要额外encoder。
+实际配置及固定预算训练入口见[适配实验](../docs/experiments/video-clip-adapt-20261016/README.md)；
+本轮训练通过任务适配器调用现有trainer，公共train CLI暂不接受该架构。
+
 AudioSet AST部分主干微调的实值配置见[环境音AST实验](../docs/experiments/audio-ast-20261011/README.md)。
 它复用波形推理模板，checkpoint自包含前端配置和全部权重；预训练来源只在初始化时加载。
 新4秒 AST 实验按[开发指南](../docs/development.md#训练)显式设置
@@ -53,3 +64,12 @@ AST可设置 `training.frequency_mask_width` / `time_mask_width`，默认0关闭
 
 完整命令和字段边界见[开发指南](../docs/development.md)。历史实验的实值配置保留在对应实验
 记录中，不应复制成新实验默认值。
+
+原生 Swin3D 研究 checkpoint（`video_swin3d_v1`）同样使用
+`model_kind="video_frames"`，`video` 必须为16帧、224×224及
+`resize_mode="native_center_crop"`，`aggregation="mean"`；无需额外 encoder。
+其 frame batch hint 仅拆分完整 clip，不能缩减单个视频的16帧；
+小于16的 hint 仍处理一个完整 clip，不能据此宣称单 clip OOM 可减批解决。
+完整 checkpoint 已包含骨干与头，原始公开预训练文件只在实验准备时使用。
+实际训练配置与任务适配器见[原生时序实验](../docs/experiments/video-native-20261017/README.md)；
+适配器调用既有 trainer，公共 `train` CLI 当前不接受该架构配置。

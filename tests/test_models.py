@@ -213,6 +213,73 @@ def test_media_feature_classifier_masks_and_validates_observations():
         create_model("media_feature_head_v1", {"input_dim": 8, "unknown": 42})
 
 
+def test_legacy_media_checkpoint_keeps_default_mlp(tmp_path):
+    model = MediaFeatureClassifier(MediaFeatureConfig(8, 4, 0)).eval()
+    reference_head = FeatureHead(HeadConfig(8, 4, 0)).eval()
+    reference_head.load_state_dict(model.head.state_dict(), strict=True)
+    features = torch.randn(2, 4, 8)
+    expected = reference_head(features).mean(dim=1)
+    torch.testing.assert_close(model(features), expected, atol=0, rtol=0)
+    checkpoint = tmp_path / "legacy.pt"
+    save_checkpoint(checkpoint, model)
+    payload = torch.load(checkpoint, weights_only=True)
+    del payload["config"]["temporal_kernel_size"]
+    torch.save(payload, checkpoint)
+    loaded, _ = load_checkpoint(checkpoint, expected_sha256=sha256_file(checkpoint))
+    assert loaded.config.temporal_kernel_size == 0
+    assert list(model.state_dict()) == list(loaded.state_dict())
+    torch.testing.assert_close(loaded(features), expected, atol=0, rtol=0)
+
+
+def test_temporal_media_head_backpropagates_and_round_trips(tmp_path):
+    model = MediaFeatureClassifier(
+        MediaFeatureConfig(768, 4, 0, temporal_kernel_size=3)
+    ).eval()
+    features = torch.randn(2, 4, 768, requires_grad=True)
+    logits = model(features, torch.tensor([2, 4]))
+    assert logits.shape == (2,)
+    torch.nn.functional.binary_cross_entropy_with_logits(
+        logits, torch.tensor([0.0, 1.0])
+    ).backward()
+    for parameter in model.head.parameters():
+        assert parameter.grad is not None
+        assert torch.isfinite(parameter.grad).all()
+        assert parameter.grad.abs().sum() > 0
+    assert features.grad is not None
+    assert (features.grad[0, 2:] == 0).all()
+    path = tmp_path / "temporal.pt"
+    descriptor = save_checkpoint(path, model)
+    restored, _ = load_checkpoint(path, expected_sha256=descriptor["sha256"])
+    assert restored.config.temporal_kernel_size == 3
+    torch.testing.assert_close(
+        restored(features, torch.tensor([2, 4])), logits, atol=0, rtol=0
+    )
+
+
+@pytest.mark.parametrize("aggregation", ["mean", "median", "logsumexp", "trimmed_mean"])
+@pytest.mark.parametrize("length", [1, 2, 5])
+def test_temporal_media_head_ignores_padding_after_layernorm(aggregation, length):
+    model = MediaFeatureClassifier(
+        MediaFeatureConfig(8, 4, 0, aggregation=aggregation, temporal_kernel_size=3)
+    ).eval()
+    # Trained LayerNorm bias must not become a neighboring padded observation.
+    with torch.no_grad():
+        model.head.norm.bias.fill_(2)
+    features = torch.randn(2, 7, 8)
+    expected = model(features[:1, :length])
+    lengths = torch.tensor([length, 7])
+    actual = model(features, lengths)
+    torch.testing.assert_close(actual[:1], expected)
+    features[0, length:] = float("nan")
+    torch.testing.assert_close(model(features, lengths), actual)
+
+
+@pytest.mark.parametrize("kernel_size", [1, 2, 5, True, 3.0])
+def test_media_temporal_kernel_size_is_validated(kernel_size):
+    with pytest.raises(ValueError, match="temporal_kernel_size"):
+        MediaFeatureConfig(8, temporal_kernel_size=kernel_size)
+
+
 def test_aasist_structure_direction_and_upstream_equivalence():
     torch.manual_seed(3)
     model = AASISTLite().eval()
@@ -274,6 +341,70 @@ def test_local_vision_encoder_is_frozen(tmp_path, monkeypatch):
     with pytest.raises(ValueError, match="unsupported"):
         FrozenVisionEncoder(
             "hf-hub:any/remote", path, expected_sha256=sha256_file(path)
+        )
+
+
+def test_local_dinov2_preserves_position_grid_and_uses_224_crops(tmp_path, monkeypatch):
+    timm = pytest.importorskip("timm")
+    from timm.models.vision_transformer import VisionTransformer  # noqa: PLC0415
+
+    architecture = "vit_base_patch14_dinov2.lvd142m"
+    assert timm.is_model(architecture)
+    pretrained_cfg = timm.models.get_pretrained_cfg(architecture)
+
+    def tiny_model():
+        model = VisionTransformer(
+            img_size=518,
+            patch_size=14,
+            embed_dim=32,
+            depth=1,
+            num_heads=2,
+            num_classes=0,
+            dynamic_img_size=True,
+        )
+        model.pretrained_cfg = pretrained_cfg.to_dict()
+        return model.eval()
+
+    reference = tiny_model()
+    checkpoint = tmp_path / "dinov2.pt"
+    torch.save(reference.state_dict(), checkpoint)
+    calls = []
+
+    def create_local(name, **kwargs):
+        calls.append((name, kwargs))
+        return tiny_model()
+
+    monkeypatch.setattr(timm, "create_model", create_local)
+    encoder = FrozenVisionEncoder(
+        architecture, checkpoint, expected_sha256=sha256_file(checkpoint)
+    )
+    assert calls == [
+        (
+            architecture,
+            {"pretrained": False, "num_classes": 0, "dynamic_img_size": True},
+        )
+    ]
+    assert encoder.backbone.pos_embed.shape == (1, 1370, 32)
+    assert encoder.preprocessing["input_size"] == (3, 224, 224)
+    assert encoder.preprocessing["resize_mode"] == "native_center_crop"
+    assert encoder.preprocessing["mean"] == (0.485, 0.456, 0.406)
+    assert encoder.preprocessing["std"] == (0.229, 0.224, 0.225)
+    encoder.train()
+    assert not encoder.training
+    assert not encoder.backbone.training
+    assert all(not parameter.requires_grad for parameter in encoder.parameters())
+    images = torch.randn(2, 3, 224, 224)
+    features = encoder(images)
+    assert features.shape == (2, encoder.feature_dim)
+    assert encoder.feature_dim == 32
+    assert not features.requires_grad
+    torch.testing.assert_close(features, reference(images))
+    state = reference.state_dict()
+    del state["pos_embed"]
+    torch.save(state, checkpoint)
+    with pytest.raises(RuntimeError, match="Missing key"):
+        FrozenVisionEncoder(
+            architecture, checkpoint, expected_sha256=sha256_file(checkpoint)
         )
 
 

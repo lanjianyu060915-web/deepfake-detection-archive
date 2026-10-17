@@ -5,7 +5,8 @@ ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
 export PYTHONPATH="$ROOT/src${PYTHONPATH:+:$PYTHONPATH}"
 cd "$ROOT"
 
-for script in scripts/devctl scripts/install-global-direnv-hook.sh tools/check_project.sh; do
+for script in scripts/devctl scripts/install-global-direnv-hook.sh \
+  tools/check_project.sh tools/build_media_tools.sh; do
   bash -n "$script"
 done
 
@@ -13,6 +14,8 @@ model_tools=(
   tools/profile_models.py
   tools/prepare_pretrained.py
   tools/prepare_ufd.py
+  tools/prepare_waverep.py
+  tools/prepare_video_fusion.py
   tools/prepare_asvspoof2019.py
   tools/prepare_asv_parquet.py
   tools/prepare_asv_eval.py
@@ -38,6 +41,7 @@ model_tools=(
   tools/compare_scores.py
   tools/prepare_offline_package.py
   tools/build_release.py
+  tools/run_container_rehearsal.py
   tools/test_prepare_asv_eval.py
   tools/test_prepare_aigvdbench.py
   tools/test_prepare_in_the_wild.py

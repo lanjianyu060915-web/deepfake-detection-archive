@@ -7,6 +7,7 @@ import wave
 from dataclasses import replace
 from pathlib import Path
 from types import ModuleType
+from unittest.mock import Mock
 
 import pytest
 
@@ -234,7 +235,8 @@ def mocked_scorer(monkeypatch: pytest.MonkeyPatch) -> list[str]:
     called: list[str] = []
 
     class FakeScorer:
-        def __init__(self, config: object, base: Path) -> None:
+        def __init__(self, config: object, base: Path, *, resume: bool = False) -> None:
+            self.execution = Mock()
             self.base = base
 
         def __call__(self, record: SampleRecord) -> float:
@@ -382,8 +384,8 @@ def test_predict_exports_successes_with_failure_accounting_and_resumes(
     called: list[str] = []
 
     class MixedScorer:
-        def __init__(self, config: object, base: Path) -> None:
-            pass
+        def __init__(self, config: object, base: Path, *, resume: bool = False) -> None:
+            self.execution = Mock()
 
         def __call__(self, record: SampleRecord) -> float:
             called.append(record.sample_id)
@@ -462,8 +464,8 @@ def test_inference_fatal_failure_aborts_without_completed_artifacts(
     called: list[str] = []
 
     class FatalScorer:
-        def __init__(self, config: object, base: Path) -> None:
-            pass
+        def __init__(self, config: object, base: Path, *, resume: bool = False) -> None:
+            self.execution = Mock()
 
         def __call__(self, record: SampleRecord) -> float:
             called.append(record.path)

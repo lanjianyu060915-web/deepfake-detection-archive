@@ -4,45 +4,48 @@ set -Eeuo pipefail
 
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
 export PYTHONPATH="$ROOT/src${PYTHONPATH:+:$PYTHONPATH}"
-export CUDA_HOME="/usr/local/cuda-13.2"
-export CUDACXX="$CUDA_HOME/bin/nvcc"
-export UV_PYTHON_INSTALL_DIR="/opt/uv/python"
-export UV_PROJECT_ENVIRONMENT="${UV_PROJECT_ENVIRONMENT:-/opt/venvs/deepfake-cu132}"
+BACKEND="${DEEPFAKE_BACKEND:-cu126}"
+case "$BACKEND" in
+    cpu) DEFAULT_ENV="$ROOT/.venv-cpu" ;;
+    cu126) DEFAULT_ENV="/opt/venvs/deepfake-cu126" ;;
+    *) printf 'ERROR: DEEPFAKE_BACKEND 应为 cpu 或 cu126：%s\n' "$BACKEND" >&2; exit 2 ;;
+esac
+export UV_PROJECT_ENVIRONMENT="${UV_PROJECT_ENVIRONMENT:-$DEFAULT_ENV}"
 export VIRTUAL_ENV="$UV_PROJECT_ENVIRONMENT"
-unset UV_NO_MANAGED_PYTHON
-export PATH="$VIRTUAL_ENV/bin:$CUDA_HOME/bin:$PATH"
+export PATH="$VIRTUAL_ENV/bin:$PATH"
 PYTHON="$VIRTUAL_ENV/bin/python"
 
 usage() {
     cat <<'HELP'
 用法: scripts/devctl <命令> [参数]
 
-  doctor            检查 CUDA 13.2、Python、PyTorch、FFmpeg/GPU
-  sync              按 uv.lock 同步 GPU+dev+research+media 依赖（仅环境管理员）
+  doctor            报告 Python、PyTorch、FFmpeg 与实际 CUDA/GPU 状态
+  sync              按 uv.lock 同步所选后端及 dev/research/media 依赖
   lock-check        只检查 uv.lock 是否与 pyproject.toml 相符
   check             运行 tools/check_project.sh 的标准检查
   test [pytest参数]  运行 pytest（默认 -q）
   lint [ruff参数]    只检查当前代码 src/ 和 tests/
   typecheck         运行 mypy（沿用项目配置）
-  run <命令>        在共享虚拟环境中运行一个程序，不自动同步依赖
+  run <命令>        在所选虚拟环境中运行一个程序，不自动同步依赖
   help              查看此帮助
 
 注意：进入项目目录不会自动安装/更新依赖；sync 由维护者显式运行。
-默认环境为 /opt/venvs/deepfake-cu132；可用 UV_PROJECT_ENVIRONMENT 指定独立环境。
+默认 cu126 使用 /opt/venvs/deepfake-cu126；cpu 使用项目 .venv-cpu。
+UV_PROJECT_ENVIRONMENT 优先指定环境；共享环境 sync 由有写权限的维护者运行。
 HELP
 }
 
 require_venv() {
     if [[ ! -x "$PYTHON" ]]; then
         printf 'ERROR: 未发现项目虚拟环境: %s\n' "$PYTHON" >&2
-        printf '请先初始化指定环境，或联系共享环境管理员。\n' >&2
+        printf 'CPU 可运行 DEEPFAKE_BACKEND=cpu scripts/devctl sync；共享环境请联系管理员。\n' >&2
         exit 2
     fi
 }
 
 require_uv() {
     if ! command -v uv >/dev/null 2>&1; then
-        printf 'ERROR: uv 不在 PATH，请先安装 /usr/local/bin/uv。\n' >&2
+        printf 'ERROR: uv 不在 PATH，请先安装 uv。\n' >&2
         exit 2
     fi
 }
@@ -57,25 +60,34 @@ case "$command" in
         ;;
     sync)
         if (( $# != 0 )); then
-            echo "ERROR: sync 不接受额外参数；请使用预设 CUDA 13.2 依赖组合。" >&2
+            echo "ERROR: sync 不接受额外参数；请使用 DEEPFAKE_BACKEND 选择依赖组合。" >&2
             exit 2
         fi
         require_uv
-        if [[ ! -d "$VIRTUAL_ENV" || ! -w "$VIRTUAL_ENV" ]]; then
-            printf 'ERROR: 共享环境不存在或当前用户没有写权限：%s\n' "$VIRTUAL_ENV" >&2
-            printf '这是预期的多用户保护：只允许维护者同步依赖。\n' >&2
+        resolved_env="$(readlink -m -- "$VIRTUAL_ENV")"
+        if [[ "$resolved_env" == "$(readlink -m -- /opt/venvs/deepfake-cu132)" || \
+            ( "$BACKEND" == cpu && "$resolved_env" == \
+            "$(readlink -m -- /opt/venvs/deepfake-cu126)" ) ]]; then
+            printf 'ERROR: %s sync 不能修改受控共享CUDA环境；请指定独立环境目录。\n' "$BACKEND" >&2
             exit 3
         fi
-        if ! command -v flock >/dev/null 2>&1; then
-            printf 'ERROR: 需要 util-linux 中的 flock，防止多人同时写入共享环境。\n' >&2
-            exit 3
+        if [[ "$BACKEND" == cu126 ]]; then
+            if [[ ! -d "$VIRTUAL_ENV" || ! -w "$VIRTUAL_ENV" ]]; then
+                printf 'ERROR: 共享环境不存在或当前用户没有写权限：%s\n' "$VIRTUAL_ENV" >&2
+                printf '这是预期的多用户保护：只允许维护者同步依赖。\n' >&2
+                exit 3
+            fi
+            if ! command -v flock >/dev/null 2>&1; then
+                printf 'ERROR: 需要 util-linux 中的 flock，防止多人同时写入共享环境。\n' >&2
+                exit 3
+            fi
+            exec 9>"$VIRTUAL_ENV/.deepfake-sync.lock"
+            if ! flock -n 9; then
+                printf 'ERROR: 有另一个同步进程正在修改共享环境。\n' >&2
+                exit 3
+            fi
         fi
-        exec 9>"$VIRTUAL_ENV/.deepfake-sync.lock"
-        if ! flock -n 9; then
-            printf 'ERROR: 有另一个同步进程正在修改共享环境。\n' >&2
-            exit 3
-        fi
-        uv sync --locked --no-install-project --python 3.12 --extra cu132 \
+        uv sync --locked --no-install-project --python 3.12 --extra "$BACKEND" \
             --group dev --group research --group media "$@"
         ;;
     lock-check)
@@ -93,28 +105,32 @@ case "$command" in
         printf 'python: %s\n' "$PYTHON"
         printf 'uv: %s\n' "$(command -v uv || printf 'not found')"
         printf 'nvcc: %s\n' "$(command -v nvcc || printf 'not found')"
-        if [[ -x "$CUDA_HOME/bin/nvcc" ]]; then "$CUDA_HOME/bin/nvcc" -V | tail -n 1; else echo 'WARN: nvcc 不存在'; fi
+        if command -v nvcc >/dev/null 2>&1; then nvcc -V | tail -n 1; fi
         if command -v ffmpeg >/dev/null 2>&1 && command -v ffprobe >/dev/null 2>&1; then
             printf 'ffmpeg: %s\n' "$(ffmpeg -version | head -n 1)"
         else
             echo 'WARN: 缺少 ffmpeg/ffprobe；项目媒体集成测试会被跳过。'
         fi
         "$PYTHON" - <<'PY'
+import platform
 import sys
 import torch
 
 print('== python / torch / gpu ==')
+print('OS:', platform.platform())
+print('Architecture:', platform.machine())
+print('libc:', platform.libc_ver())
 print('Python:', sys.version.split()[0])
 print('PyTorch:', torch.__version__)
 print('torch.version.cuda:', torch.version.cuda)
 print('CUDA available:', torch.cuda.is_available())
 assert sys.version_info >= (3, 12), 'Python >=3.12 required'
-assert torch.version.cuda == '13.2', 'Expected CUDA 13.2 PyTorch wheel'
-assert torch.cuda.is_available(), 'GPU unavailable to PyTorch'
-print('GPU:', torch.cuda.get_device_name(0))
-x = torch.randn((128, 128), device='cuda')
-torch.cuda.synchronize()
-print('GPU matmul:', (x @ x).shape)
+if torch.cuda.is_available():
+    print('GPU:', torch.cuda.get_device_name(0))
+    x = torch.randn((128, 128), device='cuda')
+    result = x @ x
+    torch.cuda.synchronize()
+    print('GPU matmul:', result.shape)
 PY
         ;;
     test)

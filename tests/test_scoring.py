@@ -1,15 +1,17 @@
 """Torch allocation failures abort inference without swallowing model errors."""
 
 import json
+from dataclasses import replace
 from pathlib import Path
 from unittest.mock import Mock
 
+import numpy as np
 import pytest
 import torch
 
 from deepfake_detection_archive.config import InferenceConfig
 from deepfake_detection_archive.data.manifest import SampleRecord
-from deepfake_detection_archive.media import AudioConfig, VideoConfig
+from deepfake_detection_archive.media import AudioConfig, AudioData, VideoConfig
 from deepfake_detection_archive.scoring import OfflineScorer
 from deepfake_detection_archive.submission.runner import run_inference
 
@@ -33,6 +35,8 @@ def make_scorer(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> OfflineScore
         checkpoint_sha256="0" * 64,
         device="cpu",
     )
+    scorer.execution = Mock()
+    scorer.execution.score.side_effect = lambda call: call(scorer.config.batch_size)
     scorer.root = tmp_path
     scorer.device = torch.device("cpu")
     scorer.frame_preprocessing = {}
@@ -46,6 +50,26 @@ def make_scorer(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> OfflineScore
 
 def records() -> list[SampleRecord]:
     return [SampleRecord(str(i), f"{i}.mp4", "video", i % 2, "test") for i in range(3)]
+
+
+def test_frame_scorer_passes_cpu_frames_and_configured_batch(monkeypatch, tmp_path):
+    scorer = make_scorer(monkeypatch, tmp_path)
+    scorer.config = replace(scorer.config, batch_size=3)
+    # Device transfer belongs to the model's bounded frame batches.
+    scorer.device = torch.device("cuda")
+    frames = torch.randn(7, 3, 2, 2)
+    monkeypatch.setattr(
+        "deepfake_detection_archive.scoring.extract_video_frames",
+        Mock(return_value=frames),
+    )
+    scorer.model = Mock(return_value=torch.tensor([0.25]))
+    assert scorer(records()[0]) == 0.25
+    scorer.model.assert_called_once()
+    images = scorer.model.call_args.args[0]
+    assert images.shape == (1, 7, 3, 2, 2)
+    assert images.device.type == "cpu"
+    assert images.data_ptr() == frames.data_ptr()
+    assert scorer.model.call_args.kwargs == {"frame_batch_size": 3}
 
 
 def test_cpu_allocator_failure_aborts_and_preserves_prefix(
@@ -116,3 +140,40 @@ def test_feature_scorer_uses_selected_stream_configs(monkeypatch, tmp_path):
     )
     assert extract.call_args.args[3] is audio_config
     assert extract.call_args.args[4] is video_config
+
+
+def test_frame_policy_controls_effective_batch_without_changing_sampling(
+    monkeypatch, tmp_path
+):
+    scorer = make_scorer(monkeypatch, tmp_path)
+    scorer.execution.score.side_effect = lambda call: call(2)
+    scorer.model = Mock(return_value=torch.tensor([0.25]))
+    assert scorer(records()[0]) == 0.25
+    assert scorer.config.batch_size == 8
+    assert scorer.model.call_args.kwargs == {"frame_batch_size": 2}
+
+
+def test_audio_policy_batches_all_observations_before_one_pool(monkeypatch, tmp_path):
+    scorer = make_scorer(monkeypatch, tmp_path)
+    scorer.config = replace(
+        scorer.config, modality="audio", model_kind="audio_waveform"
+    )
+    scorer.execution.score.side_effect = lambda call: call(2)
+    scorer.frame_preprocessing = None
+    scorer.encoder = None
+    scorer.audio = AudioConfig()
+    scorer.model = Mock(side_effect=lambda batch: torch.full((len(batch),), 0.25))
+    monkeypatch.setattr(
+        "deepfake_detection_archive.scoring.media_path", lambda *_: tmp_path
+    )
+    monkeypatch.setattr(
+        "deepfake_detection_archive.scoring.decode_audio",
+        lambda *_: AudioData(np.zeros(8, dtype=np.float32), 16000, 16000, 0.0005),
+    )
+    monkeypatch.setattr(
+        "deepfake_detection_archive.scoring.sample_audio_segments",
+        lambda *_: np.zeros((5, 8), dtype=np.float32),
+    )
+    record = SampleRecord("audio", "audio.wav", "audio", 0, "test")
+    assert scorer(record) == 0.25
+    assert [len(call.args[0]) for call in scorer.model.call_args_list] == [2, 2, 1]

@@ -68,6 +68,8 @@ def test_scoring_stages_include_forward_and_existing_cpu_materialization(
         device="cpu",
         segment_samples=8,
     )
+    scorer.execution = Mock()
+    scorer.execution.score.side_effect = lambda call: call(scorer.config.batch_size)
     scorer.root = tmp_path
     scorer.device = torch.device("cpu")
     scorer.audio = AudioConfig()

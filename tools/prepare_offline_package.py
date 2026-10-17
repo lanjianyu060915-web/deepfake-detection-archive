@@ -324,6 +324,8 @@ if not sys.flags.isolated or not sys.flags.no_site:
     raise SystemExit("run with python3.12 -I -S run.py ...")
 root = Path(__file__).resolve().parent
 sys.path[:0] = [str(root / "src"), str(root / "runtime" / "site-packages")]
+from deepfake_detection_archive.media_tools import prepare_media_tools_path
+prepare_media_tools_path()
 for name in ("HF_HUB_OFFLINE", "TRANSFORMERS_OFFLINE", "HF_DATASETS_OFFLINE"):
     os.environ[name] = "1"
 runpy.run_module("deepfake_detection_archive", run_name="__main__")

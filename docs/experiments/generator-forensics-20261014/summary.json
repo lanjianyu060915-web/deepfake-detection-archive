@@ -1,0 +1,1889 @@
+{
+ "issue": 59,
+ "start_commit": "850d02a",
+ "selection_dev": "new-dev (844)",
+ "diagnostics": [
+  "canonical-3p5s (1949)",
+  "crf35 (310)",
+  "old-dev (146)"
+ ],
+ "methods": {
+  "B_resnet18_paired_s43": {
+   "new-dev": {
+    "pooled_eer": 30.0948,
+    "n_real": 422,
+    "n_fake": 422,
+    "failures": 0,
+    "coverage": 1.0,
+    "trained_labels_eer": 30.0948,
+    "untrained_labels_eer": null,
+    "far_at_dev_threshold": 0.3009478672985782,
+    "frr_at_dev_threshold": 0.3009478672985782,
+    "generators": {
+     "CogVideoX1.5-5B-I2V": 46.9194,
+     "CogVideoX1.5-5B-T": 23.0769,
+     "HunyuanVideo": 24.8815,
+     "HunyuanVideo-I2V": 38.961,
+     "Wan2.1-T2V-1.3B": 17.0616,
+     "Wan2.2-TI2V-5B-I": 36.7299,
+     "Wan2.2-TI2V-5B-T": 27.9621
+    },
+    "vae_families": {
+     "cogvideox_vae": 35.2941,
+     "hunyuan_vae": 31.5166,
+     "wan21_vae": 17.0616,
+     "wan22_vae": 31.6667
+    }
+   },
+   "canonical-3p5s": {
+    "pooled_eer": 31.7308,
+    "n_real": 104,
+    "n_fake": 1845,
+    "failures": 0,
+    "coverage": 1.0,
+    "trained_labels_eer": 29.8077,
+    "untrained_labels_eer": 33.1424,
+    "far_at_dev_threshold": 0.375,
+    "frr_at_dev_threshold": 0.2926829268292683,
+    "generators": {
+     "CogVideoX1.5-5B-T": 17.3077,
+     "HunyuanVideo": 17.3077,
+     "HunyuanVideo-I2V": 38.4615,
+     "LTX-Video-13B-I": 38.4615,
+     "LTX-Video-13B-T": 24.0385,
+     "SkyReels-V2": 17.3077,
+     "SkyReels-V2-I2V-14B-540P": 42.3077,
+     "Wan2.1-T2V-1.3B": 15.3846,
+     "Wan2.1-VACE-1.3B-T": 35.5769,
+     "Wan2.2-I2V-14B": 48.0769,
+     "Wan2.2-T2V-14B": 28.8462,
+     "Wan2.2-TI2V-5B-I": 43.2692,
+     "Wan2.2-TI2V-5B-T": 25.9615,
+     "gen4-turbo": 39.0625,
+     "hailuo": 24.6914,
+     "kling-v1": 31.25,
+     "pika-v2": 24.4444,
+     "pixverse-v4-5": 26.9231,
+     "sora-2": 37.234
+    },
+    "vae_families": {
+     "cogvideox_vae": 17.3077,
+     "hunyuan_vae": 29.8077,
+     "ltx_vae": 34.6154,
+     "unknown_closed": 29.8077,
+     "wan21_vae": 33.0658,
+     "wan22_vae": 37.5
+    }
+   },
+   "crf35": {
+    "pooled_eer": 32.1267,
+    "n_real": 89,
+    "n_fake": 221,
+    "failures": 0,
+    "coverage": 1.0,
+    "trained_labels_eer": null,
+    "untrained_labels_eer": 32.1267,
+    "far_at_dev_threshold": 0.1348314606741573,
+    "frr_at_dev_threshold": 0.6018099547511312,
+    "generators": {
+     "Wan2.1-VACE-1.3B-T": 34.8315,
+     "Wan2.2-I2V-14B": 40.0,
+     "gen4-turbo": 42.1053,
+     "hailuo": 31.4607,
+     "kling-v1": 28.0899,
+     "pixverse-v4-5": 31.4607
+    },
+    "vae_families": {
+     "unknown_closed": 31.4607,
+     "wan21_vae": 35.9551
+    }
+   },
+   "old-dev": {
+    "pooled_eer": 19.1781,
+    "n_real": 73,
+    "n_fake": 73,
+    "failures": 0,
+    "coverage": 1.0,
+    "trained_labels_eer": 19.1781,
+    "untrained_labels_eer": null,
+    "far_at_dev_threshold": 0.2328767123287671,
+    "frr_at_dev_threshold": 0.1232876712328767,
+    "generators": {
+     "HunyuanVideo": 19.1781
+    },
+    "vae_families": {
+     "hunyuan_vae": 19.1781
+    }
+   }
+  },
+  "WaveRep_G1": {
+   "new-dev": {
+    "pooled_eer": 31.7536,
+    "n_real": 422,
+    "n_fake": 422,
+    "failures": 0,
+    "coverage": 1.0,
+    "trained_labels_eer": 31.7536,
+    "untrained_labels_eer": null,
+    "far_at_dev_threshold": 0.3175355450236967,
+    "frr_at_dev_threshold": 0.3175355450236967,
+    "generators": {
+     "CogVideoX1.5-5B-I2V": 41.2322,
+     "CogVideoX1.5-5B-T": 18.4834,
+     "HunyuanVideo": 29.8578,
+     "HunyuanVideo-I2V": 46.9194,
+     "Wan2.1-T2V-1.3B": 22.3684,
+     "Wan2.2-TI2V-5B-I": 35.7143,
+     "Wan2.2-TI2V-5B-T": 37.5
+    },
+    "vae_families": {
+     "cogvideox_vae": 31.9905,
+     "hunyuan_vae": 37.3333,
+     "wan21_vae": 22.3684,
+     "wan22_vae": 37.2038
+    }
+   },
+   "canonical-3p5s": {
+    "pooled_eer": 27.8846,
+    "n_real": 104,
+    "n_fake": 1845,
+    "failures": 0,
+    "coverage": 1.0,
+    "trained_labels_eer": 26.9231,
+    "untrained_labels_eer": 28.3961,
+    "far_at_dev_threshold": 0.2403846153846154,
+    "frr_at_dev_threshold": 0.3956639566395664,
+    "generators": {
+     "CogVideoX1.5-5B-T": 22.1154,
+     "HunyuanVideo": 24.2718,
+     "HunyuanVideo-I2V": 33.6538,
+     "LTX-Video-13B-I": 39.2157,
+     "LTX-Video-13B-T": 18.0,
+     "SkyReels-V2": 15.3846,
+     "SkyReels-V2-I2V-14B-540P": 35.9223,
+     "Wan2.1-T2V-1.3B": 22.1154,
+     "Wan2.1-VACE-1.3B-T": 27.8846,
+     "Wan2.2-I2V-14B": 41.3462,
+     "Wan2.2-T2V-14B": 26.9231,
+     "Wan2.2-TI2V-5B-I": 42.3077,
+     "Wan2.2-TI2V-5B-T": 22.1154,
+     "gen4-turbo": 41.3462,
+     "hailuo": 25.9259,
+     "kling-v1": 26.9231,
+     "pika-v2": 31.7308,
+     "pixverse-v4-5": 23.0769,
+     "sora-2": 39.3617
+    },
+    "vae_families": {
+     "cogvideox_vae": 22.1154,
+     "hunyuan_vae": 27.5362,
+     "ltx_vae": 27.2277,
+     "unknown_closed": 28.7425,
+     "wan21_vae": 26.9231,
+     "wan22_vae": 32.6923
+    }
+   },
+   "crf35": {
+    "pooled_eer": 32.5792,
+    "n_real": 89,
+    "n_fake": 221,
+    "failures": 0,
+    "coverage": 1.0,
+    "trained_labels_eer": null,
+    "untrained_labels_eer": 32.5792,
+    "far_at_dev_threshold": 0.0898876404494382,
+    "frr_at_dev_threshold": 0.7194570135746606,
+    "generators": {
+     "Wan2.1-VACE-1.3B-T": 45.4545,
+     "Wan2.2-I2V-14B": 60.0,
+     "gen4-turbo": 41.573,
+     "hailuo": 25.8427,
+     "kling-v1": 25.8427,
+     "pixverse-v4-5": 28.0899
+    },
+    "vae_families": {
+     "unknown_closed": 30.7317,
+     "wan21_vae": 50.0
+    }
+   },
+   "old-dev": {
+    "pooled_eer": 26.0274,
+    "n_real": 73,
+    "n_fake": 73,
+    "failures": 0,
+    "coverage": 1.0,
+    "trained_labels_eer": 26.0274,
+    "untrained_labels_eer": null,
+    "far_at_dev_threshold": 0.3013698630136986,
+    "frr_at_dev_threshold": 0.2191780821917808,
+    "generators": {
+     "HunyuanVideo": 26.0274
+    },
+    "vae_families": {
+     "hunyuan_vae": 26.0274
+    }
+   }
+  },
+  "WaveRep_G1_native": {
+   "new-dev": {
+    "pooled_eer": 31.9905,
+    "n_real": 422,
+    "n_fake": 422,
+    "failures": 0,
+    "coverage": 1.0,
+    "trained_labels_eer": 31.9905,
+    "untrained_labels_eer": null,
+    "far_at_dev_threshold": 0.31990521327014215,
+    "frr_at_dev_threshold": 0.31990521327014215,
+    "generators": {
+     "CogVideoX1.5-5B-I2V": 41.7062,
+     "CogVideoX1.5-5B-T": 19.9052,
+     "HunyuanVideo": 28.91,
+     "HunyuanVideo-I2V": 49.3506,
+     "Wan2.1-T2V-1.3B": 22.3684,
+     "Wan2.2-TI2V-5B-I": 35.545,
+     "Wan2.2-TI2V-5B-T": 36.2559
+    },
+    "vae_families": {
+     "cogvideox_vae": 30.8824,
+     "hunyuan_vae": 37.3333,
+     "wan21_vae": 22.3684,
+     "wan22_vae": 35.545
+    }
+   },
+   "canonical-3p5s": {
+    "pooled_eer": 27.8846,
+    "n_real": 104,
+    "n_fake": 1845,
+    "failures": 0,
+    "coverage": 1.0,
+    "trained_labels_eer": 26.9231,
+    "untrained_labels_eer": 27.8846,
+    "far_at_dev_threshold": 0.2403846153846154,
+    "frr_at_dev_threshold": 0.4021680216802168,
+    "generators": {
+     "CogVideoX1.5-5B-T": 24.0385,
+     "HunyuanVideo": 24.2718,
+     "HunyuanVideo-I2V": 34.6154,
+     "LTX-Video-13B-I": 42.1569,
+     "LTX-Video-13B-T": 18.0,
+     "SkyReels-V2": 16.3462,
+     "SkyReels-V2-I2V-14B-540P": 35.5769,
+     "Wan2.1-T2V-1.3B": 19.2308,
+     "Wan2.1-VACE-1.3B-T": 26.9231,
+     "Wan2.2-I2V-14B": 40.3846,
+     "Wan2.2-T2V-14B": 25.0,
+     "Wan2.2-TI2V-5B-I": 41.3462,
+     "Wan2.2-TI2V-5B-T": 23.0769,
+     "gen4-turbo": 39.0625,
+     "hailuo": 25.0,
+     "kling-v1": 26.9231,
+     "pika-v2": 31.7308,
+     "pixverse-v4-5": 21.7391,
+     "sora-2": 38.4615
+    },
+    "vae_families": {
+     "cogvideox_vae": 24.0385,
+     "hunyuan_vae": 27.0531,
+     "ltx_vae": 27.8846,
+     "unknown_closed": 27.8846,
+     "wan21_vae": 26.9231,
+     "wan22_vae": 32.2115
+    }
+   },
+   "crf35": {
+    "pooled_eer": 30.7692,
+    "n_real": 89,
+    "n_fake": 221,
+    "failures": 0,
+    "coverage": 1.0,
+    "trained_labels_eer": null,
+    "untrained_labels_eer": 30.7692,
+    "far_at_dev_threshold": 0.10112359550561797,
+    "frr_at_dev_threshold": 0.7194570135746606,
+    "generators": {
+     "Wan2.1-VACE-1.3B-T": 40.4494,
+     "Wan2.2-I2V-14B": 53.9326,
+     "gen4-turbo": 39.4737,
+     "hailuo": 23.5955,
+     "kling-v1": 26.9663,
+     "pixverse-v4-5": 29.2135
+    },
+    "vae_families": {
+     "unknown_closed": 29.2683,
+     "wan21_vae": 43.75
+    }
+   }
+  },
+  "T1_awan": {
+   "new-dev": {
+    "pooled_eer": 33.4123,
+    "n_real": 422,
+    "n_fake": 422,
+    "failures": 0,
+    "coverage": 1.0,
+    "trained_labels_eer": 33.4123,
+    "untrained_labels_eer": null,
+    "far_at_dev_threshold": 0.3341232227488152,
+    "frr_at_dev_threshold": 0.3341232227488152,
+    "generators": {
+     "CogVideoX1.5-5B-I2V": 48.3412,
+     "CogVideoX1.5-5B-T": 24.8815,
+     "HunyuanVideo": 24.6575,
+     "HunyuanVideo-I2V": 42.8571,
+     "Wan2.1-T2V-1.3B": 19.7368,
+     "Wan2.2-TI2V-5B-I": 35.7143,
+     "Wan2.2-TI2V-5B-T": 34.5972
+    },
+    "vae_families": {
+     "cogvideox_vae": 36.9668,
+     "hunyuan_vae": 34.6667,
+     "wan21_vae": 19.7368,
+     "wan22_vae": 35.3081
+    }
+   },
+   "canonical-3p5s": {
+    "pooled_eer": 34.6154,
+    "n_real": 104,
+    "n_fake": 1845,
+    "failures": 0,
+    "coverage": 1.0,
+    "trained_labels_eer": 31.7308,
+    "untrained_labels_eer": 35.5769,
+    "far_at_dev_threshold": 0.375,
+    "frr_at_dev_threshold": 0.3100271002710027,
+    "generators": {
+     "CogVideoX1.5-5B-T": 25.9615,
+     "HunyuanVideo": 22.3301,
+     "HunyuanVideo-I2V": 42.3077,
+     "LTX-Video-13B-I": 38.4615,
+     "LTX-Video-13B-T": 37.5,
+     "SkyReels-V2": 22.1154,
+     "SkyReels-V2-I2V-14B-540P": 44.6602,
+     "Wan2.1-T2V-1.3B": 20.1923,
+     "Wan2.1-VACE-1.3B-T": 34.6154,
+     "Wan2.2-I2V-14B": 46.1538,
+     "Wan2.2-T2V-14B": 33.6538,
+     "Wan2.2-TI2V-5B-I": 46.1538,
+     "Wan2.2-TI2V-5B-T": 26.9231,
+     "gen4-turbo": 38.4615,
+     "hailuo": 34.6154,
+     "kling-v1": 36.25,
+     "pika-v2": 28.8462,
+     "pixverse-v4-5": 30.4348,
+     "sora-2": 37.5
+    },
+    "vae_families": {
+     "cogvideox_vae": 25.9615,
+     "hunyuan_vae": 32.6923,
+     "ltx_vae": 37.6238,
+     "unknown_closed": 34.6154,
+     "wan21_vae": 34.6154,
+     "wan22_vae": 36.5385
+    }
+   },
+   "crf35": {
+    "pooled_eer": 35.2941,
+    "n_real": 89,
+    "n_fake": 221,
+    "failures": 0,
+    "coverage": 1.0,
+    "trained_labels_eer": null,
+    "untrained_labels_eer": 35.2941,
+    "far_at_dev_threshold": 0.2247191011235955,
+    "frr_at_dev_threshold": 0.5339366515837104,
+    "generators": {
+     "Wan2.1-VACE-1.3B-T": 32.5843,
+     "Wan2.2-I2V-14B": 65.1685,
+     "gen4-turbo": 39.4737,
+     "hailuo": 38.2022,
+     "kling-v1": 32.5843,
+     "pixverse-v4-5": 30.6452
+    },
+    "vae_families": {
+     "unknown_closed": 34.8315,
+     "wan21_vae": 43.75
+    }
+   },
+   "old-dev": {
+    "pooled_eer": 20.5479,
+    "n_real": 73,
+    "n_fake": 73,
+    "failures": 0,
+    "coverage": 1.0,
+    "trained_labels_eer": 20.5479,
+    "untrained_labels_eer": null,
+    "far_at_dev_threshold": 0.2602739726027397,
+    "frr_at_dev_threshold": 0.1917808219178082,
+    "generators": {
+     "HunyuanVideo": 20.5479
+    },
+    "vae_families": {
+     "hunyuan_vae": 20.5479
+    }
+   }
+  },
+  "AE_sd1": {
+   "new-dev": {
+    "pooled_eer": 43.128,
+    "n_real": 422,
+    "n_fake": 422,
+    "failures": 0,
+    "coverage": 1.0,
+    "trained_labels_eer": 43.128,
+    "untrained_labels_eer": null,
+    "far_at_dev_threshold": 0.4312796208530806,
+    "frr_at_dev_threshold": 0.4312796208530806,
+    "generators": {
+     "CogVideoX1.5-5B-I2V": 47.8873,
+     "CogVideoX1.5-5B-T": 36.9231,
+     "HunyuanVideo": 38.3562,
+     "HunyuanVideo-I2V": 46.7532,
+     "Wan2.1-T2V-1.3B": 31.7536,
+     "Wan2.2-TI2V-5B-I": 46.4286,
+     "Wan2.2-TI2V-5B-T": 65.625
+    },
+    "vae_families": {
+     "cogvideox_vae": 41.9118,
+     "hunyuan_vae": 43.8389,
+     "wan21_vae": 31.7536,
+     "wan22_vae": 56.6667
+    }
+   },
+   "canonical-3p5s": {
+    "pooled_eer": 45.1923,
+    "n_real": 104,
+    "n_fake": 1845,
+    "failures": 0,
+    "coverage": 1.0,
+    "trained_labels_eer": 37.5602,
+    "untrained_labels_eer": 49.1817,
+    "far_at_dev_threshold": 0.25961538461538464,
+    "frr_at_dev_threshold": 0.6314363143631436,
+    "generators": {
+     "CogVideoX1.5-5B-T": 30.7692,
+     "HunyuanVideo": 30.7692,
+     "HunyuanVideo-I2V": 44.2308,
+     "LTX-Video-13B-I": 40.1961,
+     "LTX-Video-13B-T": 72.0,
+     "SkyReels-V2": 43.2692,
+     "SkyReels-V2-I2V-14B-540P": 52.4272,
+     "Wan2.1-T2V-1.3B": 33.6538,
+     "Wan2.1-VACE-1.3B-T": 53.8462,
+     "Wan2.2-I2V-14B": 50.0,
+     "Wan2.2-T2V-14B": 48.0769,
+     "Wan2.2-TI2V-5B-I": 46.1538,
+     "Wan2.2-TI2V-5B-T": 37.5,
+     "gen4-turbo": 43.2692,
+     "hailuo": 53.0864,
+     "kling-v1": 48.75,
+     "pika-v2": 36.6667,
+     "pixverse-v4-5": 43.2692,
+     "sora-2": 52.1277
+    },
+    "vae_families": {
+     "cogvideox_vae": 30.7692,
+     "hunyuan_vae": 38.1643,
+     "ltx_vae": 56.9307,
+     "unknown_closed": 45.7086,
+     "wan21_vae": 47.1154,
+     "wan22_vae": 42.3077
+    }
+   },
+   "crf35": {
+    "pooled_eer": 47.191,
+    "n_real": 89,
+    "n_fake": 221,
+    "failures": 0,
+    "coverage": 1.0,
+    "trained_labels_eer": null,
+    "untrained_labels_eer": 47.191,
+    "far_at_dev_threshold": 0.2696629213483146,
+    "frr_at_dev_threshold": 0.6561085972850679,
+    "generators": {
+     "Wan2.1-VACE-1.3B-T": 54.5455,
+     "Wan2.2-I2V-14B": 66.2921,
+     "gen4-turbo": 43.8202,
+     "hailuo": 51.6854,
+     "kling-v1": 42.6966,
+     "pixverse-v4-5": 48.3871
+    },
+    "vae_families": {
+     "unknown_closed": 46.8293,
+     "wan21_vae": 56.25
+    }
+   },
+   "old-dev": {
+    "pooled_eer": 39.726,
+    "n_real": 73,
+    "n_fake": 73,
+    "failures": 0,
+    "coverage": 1.0,
+    "trained_labels_eer": 39.726,
+    "untrained_labels_eer": null,
+    "far_at_dev_threshold": 0.410958904109589,
+    "frr_at_dev_threshold": 0.3561643835616438,
+    "generators": {
+     "HunyuanVideo": 39.726
+    },
+    "vae_families": {
+     "hunyuan_vae": 39.726
+    }
+   }
+  },
+  "AE_sd1_L1": {
+   "new-dev": {
+    "pooled_eer": 47.3934,
+    "n_real": 422,
+    "n_fake": 422,
+    "failures": 0,
+    "coverage": 1.0,
+    "trained_labels_eer": 47.3934,
+    "untrained_labels_eer": null,
+    "far_at_dev_threshold": 0.47393364928909953,
+    "frr_at_dev_threshold": 0.47393364928909953,
+    "generators": {
+     "CogVideoX1.5-5B-I2V": 49.0521,
+     "CogVideoX1.5-5B-T": 49.2308,
+     "HunyuanVideo": 47.3934,
+     "HunyuanVideo-I2V": 44.3128,
+     "Wan2.1-T2V-1.3B": 41.9431,
+     "Wan2.2-TI2V-5B-I": 46.4286,
+     "Wan2.2-TI2V-5B-T": 65.625
+    },
+    "vae_families": {
+     "cogvideox_vae": 49.0521,
+     "hunyuan_vae": 45.7346,
+     "wan21_vae": 41.9431,
+     "wan22_vae": 53.3333
+    }
+   },
+   "canonical-3p5s": {
+    "pooled_eer": 53.2249,
+    "n_real": 104,
+    "n_fake": 1845,
+    "failures": 0,
+    "coverage": 1.0,
+    "trained_labels_eer": 49.0385,
+    "untrained_labels_eer": 55.6465,
+    "far_at_dev_threshold": 0.3557692307692308,
+    "frr_at_dev_threshold": 0.6520325203252032,
+    "generators": {
+     "CogVideoX1.5-5B-T": 38.4615,
+     "HunyuanVideo": 44.2308,
+     "HunyuanVideo-I2V": 45.1923,
+     "LTX-Video-13B-I": 48.0392,
+     "LTX-Video-13B-T": 78.0,
+     "SkyReels-V2": 59.6154,
+     "SkyReels-V2-I2V-14B-540P": 56.7308,
+     "Wan2.1-T2V-1.3B": 54.8077,
+     "Wan2.1-VACE-1.3B-T": 55.7692,
+     "Wan2.2-I2V-14B": 53.8462,
+     "Wan2.2-T2V-14B": 61.5385,
+     "Wan2.2-TI2V-5B-I": 50.0,
+     "Wan2.2-TI2V-5B-T": 59.6154,
+     "gen4-turbo": 46.875,
+     "hailuo": 49.3827,
+     "kling-v1": 53.75,
+     "pika-v2": 45.1923,
+     "pixverse-v4-5": 55.7692,
+     "sora-2": 50.0
+    },
+    "vae_families": {
+     "cogvideox_vae": 38.4615,
+     "hunyuan_vae": 44.4444,
+     "ltx_vae": 61.3861,
+     "unknown_closed": 50.0,
+     "wan21_vae": 57.1429,
+     "wan22_vae": 55.7692
+    }
+   },
+   "crf35": {
+    "pooled_eer": 51.6854,
+    "n_real": 89,
+    "n_fake": 221,
+    "failures": 0,
+    "coverage": 1.0,
+    "trained_labels_eer": null,
+    "untrained_labels_eer": 51.6854,
+    "far_at_dev_threshold": 0.42696629213483145,
+    "frr_at_dev_threshold": 0.5701357466063348,
+    "generators": {
+     "Wan2.1-VACE-1.3B-T": 36.3636,
+     "Wan2.2-I2V-14B": 60.0,
+     "gen4-turbo": 51.6854,
+     "hailuo": 45.4545,
+     "kling-v1": 53.9326,
+     "pixverse-v4-5": 57.3034
+    },
+    "vae_families": {
+     "unknown_closed": 51.7073,
+     "wan21_vae": 49.4382
+    }
+   },
+   "old-dev": {
+    "pooled_eer": 50.6849,
+    "n_real": 73,
+    "n_fake": 73,
+    "failures": 0,
+    "coverage": 1.0,
+    "trained_labels_eer": 50.6849,
+    "untrained_labels_eer": null,
+    "far_at_dev_threshold": 0.5205479452054794,
+    "frr_at_dev_threshold": 0.4931506849315068,
+    "generators": {
+     "HunyuanVideo": 50.6849
+    },
+    "vae_families": {
+     "hunyuan_vae": 50.6849
+    }
+   }
+  },
+  "Wan_clip": {
+   "new-dev": {
+    "pooled_eer": 45.7346,
+    "n_real": 422,
+    "n_fake": 422,
+    "failures": 0,
+    "coverage": 1.0,
+    "trained_labels_eer": 45.7346,
+    "untrained_labels_eer": null,
+    "far_at_dev_threshold": 0.45734597156398105,
+    "frr_at_dev_threshold": 0.45734597156398105,
+    "generators": {
+     "CogVideoX1.5-5B-I2V": 50.0,
+     "CogVideoX1.5-5B-T": 43.0769,
+     "HunyuanVideo": 45.2055,
+     "HunyuanVideo-I2V": 41.5584,
+     "Wan2.1-T2V-1.3B": 41.9431,
+     "Wan2.2-TI2V-5B-I": 46.4286,
+     "Wan2.2-TI2V-5B-T": 53.7915
+    },
+    "vae_families": {
+     "cogvideox_vae": 47.7941,
+     "hunyuan_vae": 42.6667,
+     "wan21_vae": 41.9431,
+     "wan22_vae": 51.6667
+    }
+   },
+   "canonical-3p5s": {
+    "pooled_eer": 44.5528,
+    "n_real": 104,
+    "n_fake": 1845,
+    "failures": 0,
+    "coverage": 1.0,
+    "trained_labels_eer": 44.1413,
+    "untrained_labels_eer": 44.7627,
+    "far_at_dev_threshold": 0.36538461538461536,
+    "frr_at_dev_threshold": 0.5008130081300813,
+    "generators": {
+     "CogVideoX1.5-5B-T": 45.1923,
+     "HunyuanVideo": 36.5385,
+     "HunyuanVideo-I2V": 36.5385,
+     "LTX-Video-13B-I": 44.1176,
+     "LTX-Video-13B-T": 58.0,
+     "SkyReels-V2": 31.7308,
+     "SkyReels-V2-I2V-14B-540P": 43.6893,
+     "Wan2.1-T2V-1.3B": 34.6154,
+     "Wan2.1-VACE-1.3B-T": 51.9231,
+     "Wan2.2-I2V-14B": 55.7692,
+     "Wan2.2-T2V-14B": 40.3846,
+     "Wan2.2-TI2V-5B-I": 57.6923,
+     "Wan2.2-TI2V-5B-T": 45.1923,
+     "gen4-turbo": 40.3846,
+     "hailuo": 39.4231,
+     "kling-v1": 38.75,
+     "pika-v2": 52.2222,
+     "pixverse-v4-5": 29.3478,
+     "sora-2": 40.3846
+    },
+    "vae_families": {
+     "cogvideox_vae": 45.1923,
+     "hunyuan_vae": 36.5385,
+     "ltx_vae": 50.9615,
+     "unknown_closed": 40.3846,
+     "wan21_vae": 45.1043,
+     "wan22_vae": 51.9231
+    }
+   },
+   "crf35": {
+    "pooled_eer": 35.9551,
+    "n_real": 89,
+    "n_fake": 221,
+    "failures": 0,
+    "coverage": 1.0,
+    "trained_labels_eer": null,
+    "untrained_labels_eer": 35.9551,
+    "far_at_dev_threshold": 0.48314606741573035,
+    "frr_at_dev_threshold": 0.2398190045248869,
+    "generators": {
+     "Wan2.1-VACE-1.3B-T": 65.1685,
+     "Wan2.2-I2V-14B": 82.0225,
+     "gen4-turbo": 36.8421,
+     "hailuo": 38.1818,
+     "kling-v1": 32.0,
+     "pixverse-v4-5": 30.3371
+    },
+    "vae_families": {
+     "unknown_closed": 33.7079,
+     "wan21_vae": 68.75
+    }
+   }
+  },
+  "Fusion_lr": {
+   "new-dev": {
+    "pooled_eer": 30.0948,
+    "n_real": 422,
+    "n_fake": 422,
+    "failures": 0,
+    "coverage": 1.0,
+    "trained_labels_eer": 30.0948,
+    "untrained_labels_eer": null,
+    "far_at_dev_threshold": 0.3009478672985782,
+    "frr_at_dev_threshold": 0.3009478672985782,
+    "generators": {
+     "CogVideoX1.5-5B-I2V": 43.662,
+     "CogVideoX1.5-5B-T": 19.4313,
+     "HunyuanVideo": 25.5924,
+     "HunyuanVideo-I2V": 41.5584,
+     "Wan2.1-T2V-1.3B": 11.8421,
+     "Wan2.2-TI2V-5B-I": 36.7299,
+     "Wan2.2-TI2V-5B-T": 27.9621
+    },
+    "vae_families": {
+     "cogvideox_vae": 33.0882,
+     "hunyuan_vae": 35.3333,
+     "wan21_vae": 11.8421,
+     "wan22_vae": 30.5687
+    }
+   },
+   "canonical-3p5s": {
+    "pooled_eer": 29.8077,
+    "n_real": 104,
+    "n_fake": 1845,
+    "failures": 0,
+    "coverage": 1.0,
+    "trained_labels_eer": 27.4478,
+    "untrained_labels_eer": 31.7308,
+    "far_at_dev_threshold": 0.2980769230769231,
+    "frr_at_dev_threshold": 0.3100271002710027,
+    "generators": {
+     "CogVideoX1.5-5B-T": 20.1923,
+     "HunyuanVideo": 17.3077,
+     "HunyuanVideo-I2V": 38.4615,
+     "LTX-Video-13B-I": 39.2157,
+     "LTX-Video-13B-T": 19.0,
+     "SkyReels-V2": 12.5,
+     "SkyReels-V2-I2V-14B-540P": 40.3846,
+     "Wan2.1-T2V-1.3B": 13.4615,
+     "Wan2.1-VACE-1.3B-T": 29.8077,
+     "Wan2.2-I2V-14B": 43.2692,
+     "Wan2.2-T2V-14B": 24.0385,
+     "Wan2.2-TI2V-5B-I": 43.2692,
+     "Wan2.2-TI2V-5B-T": 19.2308,
+     "gen4-turbo": 38.4615,
+     "hailuo": 20.9877,
+     "kling-v1": 28.75,
+     "pika-v2": 25.0,
+     "pixverse-v4-5": 22.1154,
+     "sora-2": 37.5
+    },
+    "vae_families": {
+     "cogvideox_vae": 20.1923,
+     "hunyuan_vae": 28.0193,
+     "ltx_vae": 30.198,
+     "unknown_closed": 29.8077,
+     "wan21_vae": 30.8186,
+     "wan22_vae": 35.5769
+    }
+   },
+   "crf35": {
+    "pooled_eer": 29.8643,
+    "n_real": 89,
+    "n_fake": 221,
+    "failures": 0,
+    "coverage": 1.0,
+    "trained_labels_eer": null,
+    "untrained_labels_eer": 29.8643,
+    "far_at_dev_threshold": 0.11235955056179775,
+    "frr_at_dev_threshold": 0.669683257918552,
+    "generators": {
+     "Wan2.1-VACE-1.3B-T": 33.7079,
+     "Wan2.2-I2V-14B": 56.1798,
+     "gen4-turbo": 39.4737,
+     "hailuo": 23.6364,
+     "kling-v1": 29.2135,
+     "pixverse-v4-5": 28.0899
+    },
+    "vae_families": {
+     "unknown_closed": 29.2135,
+     "wan21_vae": 37.5
+    }
+   },
+   "old-dev": {
+    "pooled_eer": 21.9178,
+    "n_real": 73,
+    "n_fake": 73,
+    "failures": 0,
+    "coverage": 1.0,
+    "trained_labels_eer": 21.9178,
+    "untrained_labels_eer": null,
+    "far_at_dev_threshold": 0.3013698630136986,
+    "frr_at_dev_threshold": 0.1780821917808219,
+    "generators": {
+     "HunyuanVideo": 21.9178
+    },
+    "vae_families": {
+     "hunyuan_vae": 21.9178
+    }
+   }
+  },
+  "Fusion_zsum": {
+   "new-dev": {
+    "pooled_eer": 31.5166,
+    "n_real": 422,
+    "n_fake": 422,
+    "failures": 0,
+    "coverage": 1.0,
+    "trained_labels_eer": 31.5166,
+    "untrained_labels_eer": null,
+    "far_at_dev_threshold": 0.31516587677725116,
+    "frr_at_dev_threshold": 0.31516587677725116,
+    "generators": {
+     "CogVideoX1.5-5B-I2V": 42.2535,
+     "CogVideoX1.5-5B-T": 18.4615,
+     "HunyuanVideo": 25.3555,
+     "HunyuanVideo-I2V": 41.9431,
+     "Wan2.1-T2V-1.3B": 11.8483,
+     "Wan2.2-TI2V-5B-I": 37.9147,
+     "Wan2.2-TI2V-5B-T": 28.125
+    },
+    "vae_families": {
+     "cogvideox_vae": 31.9905,
+     "hunyuan_vae": 35.545,
+     "wan21_vae": 11.8483,
+     "wan22_vae": 31.9905
+    }
+   },
+   "canonical-3p5s": {
+    "pooled_eer": 28.8462,
+    "n_real": 104,
+    "n_fake": 1845,
+    "failures": 0,
+    "coverage": 1.0,
+    "trained_labels_eer": 26.9231,
+    "untrained_labels_eer": 30.4419,
+    "far_at_dev_threshold": 0.2692307692307692,
+    "frr_at_dev_threshold": 0.3154471544715447,
+    "generators": {
+     "CogVideoX1.5-5B-T": 21.1538,
+     "HunyuanVideo": 13.5922,
+     "HunyuanVideo-I2V": 38.4615,
+     "LTX-Video-13B-I": 39.2157,
+     "LTX-Video-13B-T": 16.3462,
+     "SkyReels-V2": 11.5385,
+     "SkyReels-V2-I2V-14B-540P": 39.4231,
+     "Wan2.1-T2V-1.3B": 13.4615,
+     "Wan2.1-VACE-1.3B-T": 28.8462,
+     "Wan2.2-I2V-14B": 40.3846,
+     "Wan2.2-T2V-14B": 25.9615,
+     "Wan2.2-TI2V-5B-I": 44.2308,
+     "Wan2.2-TI2V-5B-T": 19.2308,
+     "gen4-turbo": 38.4615,
+     "hailuo": 24.6914,
+     "kling-v1": 26.25,
+     "pika-v2": 25.9615,
+     "pixverse-v4-5": 21.7391,
+     "sora-2": 38.2979
+    },
+    "vae_families": {
+     "cogvideox_vae": 21.1538,
+     "hunyuan_vae": 26.9231,
+     "ltx_vae": 28.8462,
+     "unknown_closed": 28.8462,
+     "wan21_vae": 29.8077,
+     "wan22_vae": 35.0962
+    }
+   },
+   "crf35": {
+    "pooled_eer": 30.3167,
+    "n_real": 89,
+    "n_fake": 221,
+    "failures": 0,
+    "coverage": 1.0,
+    "trained_labels_eer": null,
+    "untrained_labels_eer": 30.3167,
+    "far_at_dev_threshold": 0.10112359550561797,
+    "frr_at_dev_threshold": 0.7058823529411765,
+    "generators": {
+     "Wan2.1-VACE-1.3B-T": 32.5843,
+     "Wan2.2-I2V-14B": 60.0,
+     "gen4-turbo": 39.3258,
+     "hailuo": 21.8182,
+     "kling-v1": 28.0,
+     "pixverse-v4-5": 25.8427
+    },
+    "vae_families": {
+     "unknown_closed": 28.7805,
+     "wan21_vae": 37.5
+    }
+   },
+   "old-dev": {
+    "pooled_eer": 23.2877,
+    "n_real": 73,
+    "n_fake": 73,
+    "failures": 0,
+    "coverage": 1.0,
+    "trained_labels_eer": 23.2877,
+    "untrained_labels_eer": null,
+    "far_at_dev_threshold": 0.273972602739726,
+    "frr_at_dev_threshold": 0.1643835616438356,
+    "generators": {
+     "HunyuanVideo": 23.2877
+    },
+    "vae_families": {
+     "hunyuan_vae": 23.2877
+    }
+   }
+  }
+ },
+ "derived_conditions": {
+  "B_resnet18_paired_s43": {
+   "P0_vs_a-sd1": 44.7867,
+   "P0_vs_a-wan": 48.5782
+  },
+  "WaveRep_G1": {
+   "P0_vs_a-sd1": 26.0664,
+   "P0_vs_a-wan": 33.1754,
+   "first150_P0_vs_a-wan_aligned": 36.0,
+   "first150_P0_vs_a-wan_resampled": 44.6667
+  },
+  "AE_sd1": {
+   "P0_vs_a-sd1": 19.4313,
+   "P0_vs_a-wan": 45.4976,
+   "first150_P0_vs_a-wan_aligned": 44.0,
+   "first150_P0_vs_a-wan_resampled": 44.6667
+  },
+  "Wan_clip": {
+   "P0_vs_a-wan": 41.7062,
+   "first150_P0_vs_a-wan_aligned": 43.3333,
+   "first150_P0_vs_a-wan_resampled": 46.0
+  },
+  "T1_awan": {
+   "P0_vs_a-sd1": 46.6825,
+   "P0_vs_a-wan": 49.0521
+  }
+ },
+ "fusion_params": {
+  "mean": [
+   0.175376985376586,
+   -5.7335910216048065
+  ],
+  "std": [
+   2.5175617884006165,
+   2.5814849859556146
+  ],
+  "coef": [
+   0.8868995604359456,
+   0.6044932879805299
+  ],
+  "intercept": 0.08242115557667117,
+  "fit_rows": 844
+ },
+ "waverep_alignment": {
+  "tolerance_same_tensor": 0.001,
+  "passed_same_tensor": true,
+  "max_transform_diff": 0.0,
+  "max_full_path_logit_diff": 3.933906555175781e-05,
+  "max_video_logit_diff": 2.4139881134033203e-06
+ },
+ "training": {
+  "T0": 0.3009478672985782,
+  "T1": 0.3341232227488152
+ },
+ "weights": {
+  "B_T0": "1d7cb9f5dab5cecef04ec11d67ad2323d1e85fe5b58ad0bb5efb0bfc6f143dc3",
+  "T1": "cfe0f3986c629e8bef1aac324a770db218b8bdf3f5b4ee133c55d1f21b11e26d",
+  "waverep_G1": "1c7566b26c0b0afe3f5642dd4e454039328d59f512a5d815d5edaa10b544a897",
+  "sd1_vae": "4da43b43127cd9ed07023f41c232436b27e8e40a13ff92d1669871b2cb230b73",
+  "wan21_vae": "d6e524b3fffede1787a74e81b30976dce5400c4439ba64222168e607ed19e793"
+ },
+ "code_sha256": {
+  "ae_score.py": "7ba15a8a00fbb96211954a10a72634473265eeb3b92ce7ac6f81e85d8dde9b67",
+  "aigvd.py": "a535598b31255bbc274afa7a1577b478f341a8c61c8d8f8510ec2eb04bfffaad",
+  "analyze.py": "874eee717d1513fcfa0c4529223c977564213cdda2a71f42d3d06ba79bb04d0d",
+  "b_infer_configs.py": "85560264130ad3ff12250f9476fb000aa1e514a15e53c25bc9cc8f8051fa6b5d",
+  "build_t1.py": "1c85596854b4859781376a976c5a7366c2bcd61e1c269a6d5a1086fefbe23135",
+  "clip_fusion.py": "5302d770f331d9062222909f9739a139578ce7b492e56a7669b3d4633879e06d",
+  "common.py": "fe5d753fb3de05d320b24dedccf3dd9653dce4657890c09004436f59ca85c721",
+  "fuse.py": "0d3d14f08a0904f35ea709a790b19b7e618e283fe886df8ad8a2dac2727b081d",
+  "leak_check.py": "eb31d5f1bcbdd91273287207298f9712d0f99ce05b8593be41e5652755aee15f",
+  "make_derived.py": "646d40d434902b23018a84b75669b1f8ca988bbd3673fd9ed435dd38b52d932d",
+  "make_summary.py": "bfc298b7d021b2da76b1a0989515b1ea0bc00fe9ecf304809dd0e1be5c2e7023",
+  "wan_clip.py": "052f5436ed99a5e11e3fd027ce3ae133349955bac48b2612b842bb47c8b8c353",
+  "waverep_align.py": "4436fdbc64e78369d026d02afffccffe028ccb9ec8aa0573ad08d7dce384b0a5",
+  "waverep_score.py": "704272b0cc2af20fb59d19850bea355a8e798eb307373202c548ef9efe3d22b0"
+ },
+ "aigvdbench_controlled_dev": {
+  "n_common": 1880,
+  "n_each": {
+   "WaveRep_G1": 1880,
+   "CLIP43": 1880,
+   "ResNet43": 1880
+  },
+  "dev_check": {
+   "WaveRep_G1": 31.75,
+   "CLIP43": 24.64,
+   "ResNet43": 30.09
+  },
+  "single": {
+   "WaveRep_G1": {
+    "pooled": 31.41,
+    "n": 1880,
+    "no_open_sora": 20.67,
+    "no_pyramid_flow": 31.85,
+    "open_sora_pair": 42.17,
+    "generators": {
+     "AccVideo": 22.5,
+     "AnimateDiff": 31.5,
+     "EasyAnimate": 20.0,
+     "Gen2": 14.5,
+     "Gen3": 15.0,
+     "IPOC": 17.5,
+     "Jimeng": 12.83,
+     "Luma": 16.67,
+     "Open-Sora": 42.17,
+     "Opensora": 12.5,
+     "Pyramid-Flow": 14.67,
+     "RepVideo": 30.0,
+     "SEINE": 37.5,
+     "SVD": 22.5,
+     "Sora": 24.17,
+     "VideoCrafter": 10.0,
+     "causvid_24fps": 3.83,
+     "vidu": 30.0
+    }
+   },
+   "CLIP43": {
+    "pooled": 31.33,
+    "n": 1880,
+    "no_open_sora": 29.85,
+    "no_pyramid_flow": 31.85,
+    "open_sora_pair": 32.67,
+    "generators": {
+     "AccVideo": 25.67,
+     "AnimateDiff": 22.5,
+     "EasyAnimate": 32.5,
+     "Gen2": 32.5,
+     "Gen3": 35.0,
+     "IPOC": 20.67,
+     "Jimeng": 30.0,
+     "Luma": 42.5,
+     "Open-Sora": 32.67,
+     "Opensora": 33.67,
+     "Pyramid-Flow": 25.0,
+     "RepVideo": 32.5,
+     "SEINE": 42.5,
+     "SVD": 35.0,
+     "Sora": 31.33,
+     "VideoCrafter": 22.17,
+     "causvid_24fps": 26.83,
+     "vidu": 35.0
+    }
+   },
+   "ResNet43": {
+    "pooled": 39.0,
+    "n": 1880,
+    "no_open_sora": 35.0,
+    "no_pyramid_flow": 39.52,
+    "open_sora_pair": 43.0,
+    "generators": {
+     "AccVideo": 20.0,
+     "AnimateDiff": 27.5,
+     "EasyAnimate": 28.67,
+     "Gen2": 42.5,
+     "Gen3": 32.5,
+     "IPOC": 22.5,
+     "Jimeng": 33.67,
+     "Luma": 40.17,
+     "Open-Sora": 43.0,
+     "Opensora": 37.5,
+     "Pyramid-Flow": 25.5,
+     "RepVideo": 34.17,
+     "SEINE": 56.67,
+     "SVD": 37.5,
+     "Sora": 38.0,
+     "VideoCrafter": 20.0,
+     "causvid_24fps": 35.0,
+     "vidu": 42.5
+    }
+   }
+  },
+  "fusion": {
+   "CLIP43+WaveRep_G1": {
+    "fit_rows_new_dev": 844,
+    "coef": [
+     1.3668461443051254,
+     0.5686207697389872
+    ],
+    "aigvd": {
+     "pooled": 26.48,
+     "n": 1880,
+     "no_open_sora": 21.32,
+     "no_pyramid_flow": 27.02,
+     "open_sora_pair": 31.33,
+     "generators": {
+      "AccVideo": 19.0,
+      "AnimateDiff": 18.17,
+      "EasyAnimate": 22.5,
+      "Gen2": 19.33,
+      "Gen3": 25.83,
+      "IPOC": 16.0,
+      "Jimeng": 22.5,
+      "Luma": 25.5,
+      "Open-Sora": 31.33,
+      "Opensora": 15.0,
+      "Pyramid-Flow": 12.33,
+      "RepVideo": 25.0,
+      "SEINE": 40.17,
+      "SVD": 24.17,
+      "Sora": 22.5,
+      "VideoCrafter": 12.5,
+      "causvid_24fps": 7.83,
+      "vidu": 27.5
+     }
+    }
+   },
+   "ResNet43+WaveRep_G1": {
+    "fit_rows_new_dev": 844,
+    "coef": [
+     0.8868995604359456,
+     0.6044932879805299
+    ],
+    "aigvd": {
+     "pooled": 31.33,
+     "n": 1880,
+     "no_open_sora": 23.33,
+     "no_pyramid_flow": 31.94,
+     "open_sora_pair": 39.67,
+     "generators": {
+      "AccVideo": 19.33,
+      "AnimateDiff": 23.83,
+      "EasyAnimate": 25.0,
+      "Gen2": 20.0,
+      "Gen3": 17.0,
+      "IPOC": 17.5,
+      "Jimeng": 20.0,
+      "Luma": 25.5,
+      "Open-Sora": 39.67,
+      "Opensora": 17.5,
+      "Pyramid-Flow": 14.0,
+      "RepVideo": 24.67,
+      "SEINE": 49.83,
+      "SVD": 31.0,
+      "Sora": 32.5,
+      "VideoCrafter": 5.5,
+      "causvid_24fps": 10.17,
+      "vidu": 35.0
+     }
+    }
+   },
+   "CLIP43+ResNet43": {
+    "fit_rows_new_dev": 844,
+    "coef": [
+     1.314048311238819,
+     0.7472993147839737
+    ],
+    "aigvd": {
+     "pooled": 30.5,
+     "n": 1880,
+     "no_open_sora": 28.5,
+     "no_pyramid_flow": 30.89,
+     "open_sora_pair": 32.83,
+     "generators": {
+      "AccVideo": 20.0,
+      "AnimateDiff": 19.0,
+      "EasyAnimate": 27.5,
+      "Gen2": 35.67,
+      "Gen3": 30.0,
+      "IPOC": 17.5,
+      "Jimeng": 27.5,
+      "Luma": 37.5,
+      "Open-Sora": 32.83,
+      "Opensora": 30.0,
+      "Pyramid-Flow": 17.67,
+      "RepVideo": 22.5,
+      "SEINE": 43.67,
+      "SVD": 36.0,
+      "Sora": 32.5,
+      "VideoCrafter": 15.0,
+      "causvid_24fps": 22.5,
+      "vidu": 36.0
+     }
+    }
+   }
+  }
+ },
+ "clip43_waverep_fusion": {
+  "coef": [
+   1.3668461443051254,
+   0.5686207697389872
+  ],
+  "intercept": 0.04395778566979127,
+  "mean": [
+   0.6499799112061048,
+   -5.7335910216048065
+  ],
+  "std": [
+   3.2967671720293046,
+   2.5814849859556146
+  ],
+  "new-dev": {
+   "n": 844,
+   "fusion": 0.25355450236966826,
+   "clip": 0.24644549763033174,
+   "fusion_untrained": null,
+   "clip_untrained": null,
+   "fusion_families": {
+    "cogvideox_vae": 0.26303317535545023,
+    "hunyuan_vae": 0.3080568720379147,
+    "wan21_vae": 0.09210526315789473,
+    "wan22_vae": 0.2833333333333333
+   },
+   "clip_families": {
+    "cogvideox_vae": 0.2559241706161137,
+    "hunyuan_vae": 0.2914691943127962,
+    "wan21_vae": 0.13157894736842105,
+    "wan22_vae": 0.26666666666666666
+   }
+  },
+  "canonical-3p5s": {
+   "n": 1949,
+   "fusion": 0.2403846153846154,
+   "clip": 0.26558265582655827,
+   "fusion_untrained": 0.25859247135842883,
+   "clip_untrained": 0.27884615384615385,
+   "fusion_families": {
+    "cogvideox_vae": 0.15384615384615385,
+    "hunyuan_vae": 0.23076923076923078,
+    "ltx_vae": 0.2871287128712871,
+    "unknown_closed": 0.21153846153846154,
+    "wan21_vae": 0.2552166934189406,
+    "wan22_vae": 0.25961538461538464
+   },
+   "clip_families": {
+    "cogvideox_vae": 0.18269230769230768,
+    "hunyuan_vae": 0.27053140096618356,
+    "ltx_vae": 0.3173076923076923,
+    "unknown_closed": 0.2435129740518962,
+    "wan21_vae": 0.2692307692307692,
+    "wan22_vae": 0.27884615384615385
+   }
+  },
+  "crf35": {
+   "n": 310,
+   "fusion": 0.2398190045248869,
+   "clip": 0.25842696629213485,
+   "fusion_untrained": 0.2398190045248869,
+   "clip_untrained": 0.25842696629213485,
+   "fusion_families": {
+    "unknown_closed": 0.22439024390243903,
+    "wan21_vae": 0.3707865168539326
+   },
+   "clip_families": {
+    "unknown_closed": 0.24719101123595505,
+    "wan21_vae": 0.3595505617977528
+   }
+  },
+  "old-dev": {
+   "n": 146,
+   "fusion": 0.2054794520547945,
+   "clip": 0.2054794520547945,
+   "fusion_untrained": null,
+   "clip_untrained": null,
+   "fusion_families": {
+    "hunyuan_vae": 0.2054794520547945
+   },
+   "clip_families": {
+    "hunyuan_vae": 0.2054794520547945
+   }
+  }
+ },
+ "waverep_real_id_overlap": {
+  "waverep_list_sizes": {
+   "train": 1400,
+   "val": 300,
+   "test": 300
+  },
+  "new-dev": {
+   "reals": 422,
+   "overlap_reals": {
+    "train": 0,
+    "val": 0,
+    "test": 0
+   },
+   "examples": [],
+   "id_samples": [
+    [
+     "-qZM-qxiMQk"
+    ],
+    [
+     "04gETxuftTA"
+    ],
+    [
+     "0FWt2RBBIbc"
+    ]
+   ]
+  },
+  "canonical-3p5s": {
+   "reals": 104,
+   "overlap_reals": {
+    "train": 0,
+    "val": 0,
+    "test": 0
+   },
+   "examples": [],
+   "id_samples": [
+    [
+     "-0mnCHRQ-Zc"
+    ],
+    [
+     "-6Uat2UGZ9c"
+    ],
+    [
+     "-KpRqKiCZ3E"
+    ]
+   ]
+  },
+  "aigvdbench": {
+   "reals": 600,
+   "overlap_reals": {
+    "train": 0,
+    "val": 0,
+    "test": 0
+   },
+   "examples": [],
+   "id_samples": [
+    [
+     "-0BRRrQYAJ0",
+     "aigvdb:real"
+    ],
+    [
+     "-5J_PsUC_5Y",
+     "aigvdb:real"
+    ],
+    [
+     "-96ZdwBoT3Y",
+     "aigvdb:real"
+    ]
+   ]
+  },
+  "train-3614": {
+   "reals": 1807,
+   "overlap_reals": {
+    "train": 0,
+    "val": 0,
+    "test": 0
+   },
+   "examples": [],
+   "id_samples": [
+    [
+     "-EgW0xV1fsE"
+    ],
+    [
+     "-WICXywEp-o"
+    ],
+    [
+     "-ZsxlUiiOdI"
+    ]
+   ]
+  },
+     "evidence_scope": "公开上游YouTube ID与本项目文件名/登记ID候选的比较；旧Panda缺原始URL映射，候选0交集不能证明全部真实母媒体独立。",
+     "confirmed_all_project_mother_media_independence": false
+ },
+ "adapter": {
+  "architecture": "waverep_video_v1",
+  "checkpoint_sha256": "35659dbdec097790a82bfb1d9bfeb761215870ac05d7d693761eb8be15da4ce8",
+  "standard_cli_new_dev": {
+   "n": 844,
+   "eer": 31.7536,
+   "max_abs_logit_diff_vs_research": 0.15443217754364014,
+   "mean_abs_logit_diff": 0.006392223606138794
+  }
+ },
+ "runs": {
+  "aeroblade-sd1-mode/canonical-3p5s": {
+   "condition": "canonical-3p5s",
+   "manifest": "/var/tmp/deepfake-release-review-20261012/video-canonical/video_h264_crf23_448x256_16fps_3p5s/manifest.jsonl",
+   "samples": 1949,
+   "failures": 0,
+   "posterior": "mode",
+   "ae": "CompVis/stable-diffusion-v1-1 vae (fp32)",
+   "distance": "lpips_vgg_2 (score=-distance)",
+   "control": "-mean|x-x_hat|",
+   "wall_seconds": 649.8123086225241,
+   "ae_seconds": 576.123844220303,
+   "lpips_seconds": 64.72614906169474,
+   "peak_allocated_gib": 2.030679225921631,
+   "peak_reserved_gib": 3.73046875
+  },
+  "aeroblade-sd1-mode/crf35": {
+   "condition": "crf35",
+   "manifest": "/var/tmp/deepfake-video-temporal-20261012/diagnostic/size-control/canonical/video_h264_crf35_448x256/manifest.jsonl",
+   "samples": 310,
+   "failures": 0,
+   "posterior": "mode",
+   "ae": "CompVis/stable-diffusion-v1-1 vae (fp32)",
+   "distance": "lpips_vgg_2 (score=-distance)",
+   "control": "-mean|x-x_hat|",
+   "wall_seconds": 104.92590326629579,
+   "ae_seconds": 92.76927094068378,
+   "lpips_seconds": 10.483862564899027,
+   "peak_allocated_gib": 2.030679225921631,
+   "peak_reserved_gib": 3.73046875
+  },
+  "aeroblade-sd1-mode/new-dev": {
+   "condition": "new-dev",
+   "manifest": "/var/tmp/deepfake-video-multigen-20261013/canonical-2s/manifest.jsonl",
+   "samples": 844,
+   "failures": 0,
+   "posterior": "mode",
+   "ae": "CompVis/stable-diffusion-v1-1 vae (fp32)",
+   "distance": "lpips_vgg_2 (score=-distance)",
+   "control": "-mean|x-x_hat|",
+   "wall_seconds": 282.654043616727,
+   "ae_seconds": 250.45397051237524,
+   "lpips_seconds": 28.149765606969595,
+   "peak_allocated_gib": 2.030679225921631,
+   "peak_reserved_gib": 3.73046875
+  },
+  "aeroblade-sd1-mode/new-dev-a-sd1": {
+   "condition": "new-dev-a-sd1",
+   "manifest": "/var/tmp/lanjianyu-issue59-20261014/derived/new-dev-a-sd1/manifest.jsonl",
+   "samples": 422,
+   "failures": 0,
+   "posterior": "mode",
+   "ae": "CompVis/stable-diffusion-v1-1 vae (fp32)",
+   "distance": "lpips_vgg_2 (score=-distance)",
+   "control": "-mean|x-x_hat|",
+   "wall_seconds": 141.15473105199635,
+   "ae_seconds": 125.085643065162,
+   "lpips_seconds": 14.035451654344797,
+   "peak_allocated_gib": 2.030679225921631,
+   "peak_reserved_gib": 3.73046875
+  },
+  "aeroblade-sd1-mode/new-dev-a-wan": {
+   "condition": "new-dev-a-wan",
+   "manifest": "/var/tmp/lanjianyu-issue59-20261014/derived/new-dev-a-wan/manifest.jsonl",
+   "samples": 422,
+   "failures": 0,
+   "posterior": "mode",
+   "ae": "CompVis/stable-diffusion-v1-1 vae (fp32)",
+   "distance": "lpips_vgg_2 (score=-distance)",
+   "control": "-mean|x-x_hat|",
+   "wall_seconds": 141.52235638070852,
+   "ae_seconds": 125.41564294788986,
+   "lpips_seconds": 14.095626612193882,
+   "peak_allocated_gib": 2.030679225921631,
+   "peak_reserved_gib": 3.73046875
+  },
+  "aeroblade-sd1-mode/new-dev-a-wan-rs": {
+   "condition": "new-dev-a-wan-rs",
+   "manifest": "/var/tmp/lanjianyu-issue59-20261014/derived/new-dev-a-wan-rs/manifest.jsonl",
+   "samples": 150,
+   "failures": 0,
+   "posterior": "mode",
+   "ae": "CompVis/stable-diffusion-v1-1 vae (fp32)",
+   "distance": "lpips_vgg_2 (score=-distance)",
+   "control": "-mean|x-x_hat|",
+   "wall_seconds": 60.82590047363192,
+   "ae_seconds": 53.6070597814396,
+   "lpips_seconds": 5.903229994699359,
+   "peak_allocated_gib": 2.030679225921631,
+   "peak_reserved_gib": 3.73046875
+  },
+  "aeroblade-sd1-mode/new-dev-crf35": {
+   "condition": "new-dev-crf35",
+   "manifest": "/var/tmp/lanjianyu-issue59-20261014/derived/new-dev-crf35/manifest.jsonl",
+   "samples": 844,
+   "failures": 0,
+   "posterior": "mode",
+   "ae": "CompVis/stable-diffusion-v1-1 vae (fp32)",
+   "distance": "lpips_vgg_2 (score=-distance)",
+   "control": "-mean|x-x_hat|",
+   "wall_seconds": 282.74163493327796,
+   "ae_seconds": 250.7218265896663,
+   "lpips_seconds": 28.10614621732384,
+   "peak_allocated_gib": 2.030679225921631,
+   "peak_reserved_gib": 3.73046875
+  },
+  "aeroblade-sd1-mode/new-dev-recode23": {
+   "condition": "new-dev-recode23",
+   "manifest": "/var/tmp/lanjianyu-issue59-20261014/derived/new-dev-recode23/manifest.jsonl",
+   "samples": 844,
+   "failures": 0,
+   "posterior": "mode",
+   "ae": "CompVis/stable-diffusion-v1-1 vae (fp32)",
+   "distance": "lpips_vgg_2 (score=-distance)",
+   "control": "-mean|x-x_hat|",
+   "wall_seconds": 283.1785289440304,
+   "ae_seconds": 250.96594609506428,
+   "lpips_seconds": 28.170080236159265,
+   "peak_allocated_gib": 2.030679225921631,
+   "peak_reserved_gib": 3.73046875
+  },
+  "aeroblade-sd1-mode/new-dev-resize": {
+   "condition": "new-dev-resize",
+   "manifest": "/var/tmp/lanjianyu-issue59-20261014/derived/new-dev-resize/manifest.jsonl",
+   "samples": 844,
+   "failures": 0,
+   "posterior": "mode",
+   "ae": "CompVis/stable-diffusion-v1-1 vae (fp32)",
+   "distance": "lpips_vgg_2 (score=-distance)",
+   "control": "-mean|x-x_hat|",
+   "wall_seconds": 282.04473535437137,
+   "ae_seconds": 250.143506905064,
+   "lpips_seconds": 28.047212963923812,
+   "peak_allocated_gib": 2.030679225921631,
+   "peak_reserved_gib": 3.73046875
+  },
+  "aeroblade-sd1-mode/old-dev": {
+   "condition": "old-dev",
+   "manifest": "/var/tmp/deepfake-video-multigen-20261013/old-dev/manifest.jsonl",
+   "samples": 146,
+   "failures": 0,
+   "posterior": "mode",
+   "ae": "CompVis/stable-diffusion-v1-1 vae (fp32)",
+   "distance": "lpips_vgg_2 (score=-distance)",
+   "control": "-mean|x-x_hat|",
+   "wall_seconds": 51.40658185444772,
+   "ae_seconds": 45.44305122457445,
+   "lpips_seconds": 5.097698766738176,
+   "peak_allocated_gib": 2.0601706504821777,
+   "peak_reserved_gib": 3.7890625
+  },
+  "aeroblade-sd1-sample/new-dev": {
+   "condition": "new-dev",
+   "manifest": "/var/tmp/deepfake-video-multigen-20261013/canonical-2s/manifest.jsonl",
+   "samples": 100,
+   "failures": 0,
+   "posterior": "sample",
+   "ae": "CompVis/stable-diffusion-v1-1 vae (fp32)",
+   "distance": "lpips_vgg_2 (score=-distance)",
+   "control": "-mean|x-x_hat|",
+   "wall_seconds": 34.28390531241894,
+   "ae_seconds": 30.241579277440906,
+   "lpips_seconds": 3.4282473754137754,
+   "peak_allocated_gib": 2.0307860374450684,
+   "peak_reserved_gib": 3.73046875
+  },
+  "wan21-clip/canonical-3p5s": {
+   "condition": "canonical-3p5s",
+   "manifest": "/var/tmp/deepfake-release-review-20261012/video-canonical/video_h264_crf23_448x256_16fps_3p5s/manifest.jsonl",
+   "samples": 1949,
+   "failures": 0,
+   "clip": {
+    "start": 8,
+    "length": 17
+   },
+   "ae": "Wan2.1 VAE (diffusers, fp32, mode)",
+   "wall_seconds": 3116.421854123473,
+   "ae_seconds": 2772.813130436465,
+   "peak_allocated_gib": 3.759045124053955
+  },
+  "wan21-clip/crf35": {
+   "condition": "crf35",
+   "manifest": "/var/tmp/deepfake-video-temporal-20261012/diagnostic/size-control/canonical/video_h264_crf35_448x256/manifest.jsonl",
+   "samples": 310,
+   "failures": 0,
+   "clip": {
+    "start": 8,
+    "length": 17
+   },
+   "ae": "Wan2.1 VAE (diffusers, fp32, mode)",
+   "wall_seconds": 291.83187387976795,
+   "ae_seconds": 258.74291540216655,
+   "peak_allocated_gib": 3.759045124053955
+  },
+  "wan21-clip/new-dev": {
+   "condition": "new-dev",
+   "manifest": "/var/tmp/deepfake-video-multigen-20261013/canonical-2s/manifest.jsonl",
+   "samples": 844,
+   "failures": 0,
+   "clip": {
+    "start": 8,
+    "length": 17
+   },
+   "ae": "Wan2.1 VAE (diffusers, fp32, mode)",
+   "wall_seconds": 1546.915914248675,
+   "ae_seconds": 1390.190811467357,
+   "peak_allocated_gib": 3.759045124053955
+  },
+  "wan21-clip/new-dev-a-wan": {
+   "condition": "new-dev-a-wan",
+   "manifest": "/var/tmp/lanjianyu-issue59-20261014/derived/new-dev-a-wan/manifest.jsonl",
+   "samples": 422,
+   "failures": 0,
+   "clip": {
+    "start": 8,
+    "length": 17
+   },
+   "ae": "Wan2.1 VAE (diffusers, fp32, mode)",
+   "wall_seconds": 539.3116795765236,
+   "ae_seconds": 480.2412362182513,
+   "peak_allocated_gib": 3.759045124053955
+  },
+  "wan21-clip/new-dev-a-wan-rs": {
+   "condition": "new-dev-a-wan-rs",
+   "manifest": "/var/tmp/lanjianyu-issue59-20261014/derived/new-dev-a-wan-rs/manifest.jsonl",
+   "samples": 150,
+   "failures": 0,
+   "clip": {
+    "start": 8,
+    "length": 17
+   },
+   "ae": "Wan2.1 VAE (diffusers, fp32, mode)",
+   "wall_seconds": 307.13624060247093,
+   "ae_seconds": 272.72180937603116,
+   "peak_allocated_gib": 3.759045124053955
+  },
+  "wan21-clip/new-dev-recode23": {
+   "condition": "new-dev-recode23",
+   "manifest": "/var/tmp/lanjianyu-issue59-20261014/derived/new-dev-recode23/manifest.jsonl",
+   "samples": 844,
+   "failures": 0,
+   "clip": {
+    "start": 8,
+    "length": 17
+   },
+   "ae": "Wan2.1 VAE (diffusers, fp32, mode)",
+   "wall_seconds": 795.3719739094377,
+   "ae_seconds": 706.1950390059501,
+   "peak_allocated_gib": 3.759045124053955
+  },
+  "waverep-g1-native/canonical-3p5s": {
+   "protocol": "native",
+   "samples": 1949,
+   "failures": 0,
+   "wall_seconds": 1638.3636524882168,
+   "forward_seconds": 1634.9058398436755,
+   "decode_cpu_seconds_sum": 480.02993802074343,
+   "peak_allocated_gib": 1.852027416229248,
+   "peak_reserved_gib": 2.345703125,
+   "batch": 32,
+   "dtype": "float32",
+   "manifest": "/var/tmp/deepfake-release-review-20261012/video-canonical/video_h264_crf23_448x256_16fps_3p5s/manifest.jsonl",
+   "weights": "/var/tmp/lanjianyu-issue59-20261014/resources/weights/waverep/weights_dinov2_G1.ckpt",
+   "arc": "vit_base_patch14_reg4_dinov2.lvd142m",
+   "crop": 504
+  },
+  "waverep-g1-native/crf35": {
+   "protocol": "native",
+   "samples": 310,
+   "failures": 0,
+   "wall_seconds": 285.85772852413356,
+   "forward_seconds": 282.990044426173,
+   "decode_cpu_seconds_sum": 55.62587585859001,
+   "peak_allocated_gib": 1.852027416229248,
+   "peak_reserved_gib": 2.345703125,
+   "batch": 32,
+   "dtype": "float32",
+   "manifest": "/var/tmp/deepfake-video-temporal-20261012/diagnostic/size-control/canonical/video_h264_crf35_448x256/manifest.jsonl",
+   "weights": "/var/tmp/lanjianyu-issue59-20261014/resources/weights/waverep/weights_dinov2_G1.ckpt",
+   "arc": "vit_base_patch14_reg4_dinov2.lvd142m",
+   "crop": 504
+  },
+  "waverep-g1-native/new-dev": {
+   "protocol": "native",
+   "samples": 844,
+   "failures": 0,
+   "wall_seconds": 425.7403949871659,
+   "forward_seconds": 424.42102031223476,
+   "decode_cpu_seconds_sum": 156.21349777653813,
+   "peak_allocated_gib": 1.852027416229248,
+   "peak_reserved_gib": 2.345703125,
+   "batch": 32,
+   "dtype": "float32",
+   "manifest": "/var/tmp/deepfake-video-multigen-20261013/canonical-2s/manifest.jsonl",
+   "weights": "/var/tmp/lanjianyu-issue59-20261014/resources/weights/waverep/weights_dinov2_G1.ckpt",
+   "arc": "vit_base_patch14_reg4_dinov2.lvd142m",
+   "crop": 504
+  },
+  "waverep-g1-pipeline/aigvdbench-controlled": {
+   "protocol": "pipeline",
+   "samples": 1880,
+   "failures": 0,
+   "wall_seconds": 125.7262052334845,
+   "forward_seconds": 124.28453220427036,
+   "decode_cpu_seconds_sum": 330.24032091069967,
+   "peak_allocated_gib": 0.5237069129943848,
+   "peak_reserved_gib": 0.615234375,
+   "batch": 32,
+   "dtype": "float32",
+   "manifest": "/var/tmp/lanjianyu-issue51-20261014/aigvdbench/controlled-1p25s/video_h264_crf23_448x256_16fps_1p25s/manifest.jsonl",
+   "weights": "/var/tmp/lanjianyu-issue59-20261014/resources/weights/waverep/weights_dinov2_G1.ckpt",
+   "arc": "vit_base_patch14_reg4_dinov2.lvd142m",
+   "crop": 504
+  },
+  "waverep-g1-pipeline/canonical-3p5s": {
+   "protocol": "pipeline",
+   "samples": 1949,
+   "failures": 0,
+   "wall_seconds": 101.86856890749186,
+   "forward_seconds": 100.7230798760429,
+   "decode_cpu_seconds_sum": 333.63039948791265,
+   "peak_allocated_gib": 0.5237069129943848,
+   "peak_reserved_gib": 0.615234375,
+   "batch": 32,
+   "dtype": "float32",
+   "manifest": "/var/tmp/deepfake-release-review-20261012/video-canonical/video_h264_crf23_448x256_16fps_3p5s/manifest.jsonl",
+   "weights": "/var/tmp/lanjianyu-issue59-20261014/resources/weights/waverep/weights_dinov2_G1.ckpt",
+   "arc": "vit_base_patch14_reg4_dinov2.lvd142m",
+   "crop": 504
+  },
+  "waverep-g1-pipeline/crf35": {
+   "protocol": "pipeline",
+   "samples": 310,
+   "failures": 0,
+   "wall_seconds": 16.985836638137698,
+   "forward_seconds": 15.945987068116665,
+   "decode_cpu_seconds_sum": 48.411258860491216,
+   "peak_allocated_gib": 0.5237069129943848,
+   "peak_reserved_gib": 0.615234375,
+   "batch": 32,
+   "dtype": "float32",
+   "manifest": "/var/tmp/deepfake-video-temporal-20261012/diagnostic/size-control/canonical/video_h264_crf35_448x256/manifest.jsonl",
+   "weights": "/var/tmp/lanjianyu-issue59-20261014/resources/weights/waverep/weights_dinov2_G1.ckpt",
+   "arc": "vit_base_patch14_reg4_dinov2.lvd142m",
+   "crop": 504
+  },
+  "waverep-g1-pipeline/new-dev": {
+   "protocol": "pipeline",
+   "samples": 844,
+   "failures": 0,
+   "wall_seconds": 44.2322206441313,
+   "forward_seconds": 43.28424853179604,
+   "decode_cpu_seconds_sum": 121.96685837488621,
+   "peak_allocated_gib": 0.5237069129943848,
+   "peak_reserved_gib": 0.615234375,
+   "batch": 32,
+   "dtype": "float32",
+   "manifest": "/var/tmp/deepfake-video-multigen-20261013/canonical-2s/manifest.jsonl",
+   "weights": "/var/tmp/lanjianyu-issue59-20261014/resources/weights/waverep/weights_dinov2_G1.ckpt",
+   "arc": "vit_base_patch14_reg4_dinov2.lvd142m",
+   "crop": 504
+  },
+  "waverep-g1-pipeline/new-dev-a-sd1": {
+   "protocol": "pipeline",
+   "samples": 422,
+   "failures": 0,
+   "wall_seconds": 39.199889931827784,
+   "forward_seconds": 38.12448048219085,
+   "decode_cpu_seconds_sum": 76.22265871241689,
+   "peak_allocated_gib": 0.5237069129943848,
+   "peak_reserved_gib": 0.615234375,
+   "batch": 32,
+   "dtype": "float32",
+   "manifest": "/var/tmp/lanjianyu-issue59-20261014/derived/new-dev-a-sd1/manifest.jsonl",
+   "weights": "/var/tmp/lanjianyu-issue59-20261014/resources/weights/waverep/weights_dinov2_G1.ckpt",
+   "arc": "vit_base_patch14_reg4_dinov2.lvd142m",
+   "crop": 504
+  },
+  "waverep-g1-pipeline/new-dev-a-wan": {
+   "protocol": "pipeline",
+   "samples": 422,
+   "failures": 0,
+   "wall_seconds": 38.938738983124495,
+   "forward_seconds": 37.777144121937454,
+   "decode_cpu_seconds_sum": 76.37504715193063,
+   "peak_allocated_gib": 0.5237069129943848,
+   "peak_reserved_gib": 0.615234375,
+   "batch": 32,
+   "dtype": "float32",
+   "manifest": "/var/tmp/lanjianyu-issue59-20261014/derived/new-dev-a-wan/manifest.jsonl",
+   "weights": "/var/tmp/lanjianyu-issue59-20261014/resources/weights/waverep/weights_dinov2_G1.ckpt",
+   "arc": "vit_base_patch14_reg4_dinov2.lvd142m",
+   "crop": 504
+  },
+  "waverep-g1-pipeline/new-dev-a-wan-rs": {
+   "protocol": "pipeline",
+   "samples": 150,
+   "failures": 0,
+   "wall_seconds": 18.72446207329631,
+   "forward_seconds": 17.476955286227167,
+   "decode_cpu_seconds_sum": 39.64188443403691,
+   "peak_allocated_gib": 0.5237069129943848,
+   "peak_reserved_gib": 0.615234375,
+   "batch": 32,
+   "dtype": "float32",
+   "manifest": "/var/tmp/lanjianyu-issue59-20261014/derived/new-dev-a-wan-rs/manifest.jsonl",
+   "weights": "/var/tmp/lanjianyu-issue59-20261014/resources/weights/waverep/weights_dinov2_G1.ckpt",
+   "arc": "vit_base_patch14_reg4_dinov2.lvd142m",
+   "crop": 504
+  },
+  "waverep-g1-pipeline/new-dev-crf35": {
+   "protocol": "pipeline",
+   "samples": 844,
+   "failures": 0,
+   "wall_seconds": 43.90821406338364,
+   "forward_seconds": 42.91802485752851,
+   "decode_cpu_seconds_sum": 111.23592852521688,
+   "peak_allocated_gib": 0.5237069129943848,
+   "peak_reserved_gib": 0.615234375,
+   "batch": 32,
+   "dtype": "float32",
+   "manifest": "/var/tmp/lanjianyu-issue59-20261014/derived/new-dev-crf35/manifest.jsonl",
+   "weights": "/var/tmp/lanjianyu-issue59-20261014/resources/weights/waverep/weights_dinov2_G1.ckpt",
+   "arc": "vit_base_patch14_reg4_dinov2.lvd142m",
+   "crop": 504
+  },
+  "waverep-g1-pipeline/new-dev-recode23": {
+   "protocol": "pipeline",
+   "samples": 844,
+   "failures": 0,
+   "wall_seconds": 46.66432721354067,
+   "forward_seconds": 45.762002907693386,
+   "decode_cpu_seconds_sum": 121.29376440308988,
+   "peak_allocated_gib": 0.5237069129943848,
+   "peak_reserved_gib": 0.615234375,
+   "batch": 32,
+   "dtype": "float32",
+   "manifest": "/var/tmp/lanjianyu-issue59-20261014/derived/new-dev-recode23/manifest.jsonl",
+   "weights": "/var/tmp/lanjianyu-issue59-20261014/resources/weights/waverep/weights_dinov2_G1.ckpt",
+   "arc": "vit_base_patch14_reg4_dinov2.lvd142m",
+   "crop": 504
+  },
+  "waverep-g1-pipeline/new-dev-resize": {
+   "protocol": "pipeline",
+   "samples": 844,
+   "failures": 0,
+   "wall_seconds": 45.30926020536572,
+   "forward_seconds": 44.41826513689011,
+   "decode_cpu_seconds_sum": 119.35521743819118,
+   "peak_allocated_gib": 0.5237069129943848,
+   "peak_reserved_gib": 0.615234375,
+   "batch": 32,
+   "dtype": "float32",
+   "manifest": "/var/tmp/lanjianyu-issue59-20261014/derived/new-dev-resize/manifest.jsonl",
+   "weights": "/var/tmp/lanjianyu-issue59-20261014/resources/weights/waverep/weights_dinov2_G1.ckpt",
+   "arc": "vit_base_patch14_reg4_dinov2.lvd142m",
+   "crop": 504
+  },
+  "waverep-g1-pipeline/old-dev": {
+   "protocol": "pipeline",
+   "samples": 146,
+   "failures": 0,
+   "wall_seconds": 8.819226467050612,
+   "forward_seconds": 7.9084095330908895,
+   "decode_cpu_seconds_sum": 26.60682386532426,
+   "peak_allocated_gib": 0.5237069129943848,
+   "peak_reserved_gib": 0.615234375,
+   "batch": 32,
+   "dtype": "float32",
+   "manifest": "/var/tmp/deepfake-video-multigen-20261013/old-dev/manifest.jsonl",
+   "weights": "/var/tmp/lanjianyu-issue59-20261014/resources/weights/waverep/weights_dinov2_G1.ckpt",
+   "arc": "vit_base_patch14_reg4_dinov2.lvd142m",
+   "crop": 504
+  }
+ }
+}

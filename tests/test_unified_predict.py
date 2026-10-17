@@ -1,8 +1,10 @@
 """Real local stream discovery and unified entry orchestration regressions."""
 
+import hashlib
 import json
 import shutil
 import subprocess
+import tempfile
 from dataclasses import replace
 from pathlib import Path
 
@@ -12,14 +14,38 @@ from deepfake_detection_archive import media
 from deepfake_detection_archive.cli import main
 from deepfake_detection_archive.config import load_inference_config
 from deepfake_detection_archive.media import VideoConfig, decode_video
-from deepfake_detection_archive.models import LogMelCNN, LogMelConfig, save_checkpoint
+from deepfake_detection_archive.models import (
+    LogMelCNN,
+    LogMelConfig,
+    checkpoint,
+    save_checkpoint,
+)
 from deepfake_detection_archive.scoring import OfflineScorer
 from deepfake_detection_archive.unified_predict import (
     _validate_ast_frontend,
+    default_models,
     discover,
     predict_media,
     probe_media,
 )
+
+
+@pytest.fixture(autouse=True)
+def lightweight_host_media_identity(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Real host tools are large; reserve actual hashing for tiny selected fixtures."""
+    original = checkpoint.sha256_file
+    host_tools = {
+        Path(path).resolve()
+        for name in ("ffmpeg", "ffprobe")
+        if (path := shutil.which(name)) is not None
+    }
+
+    def digest(path: Path) -> str:
+        if path.resolve() in host_tools:
+            return hashlib.sha256(f"fixture-host:{path.name}".encode()).hexdigest()
+        return original(path)
+
+    monkeypatch.setattr(checkpoint, "sha256_file", digest)
 
 
 def ffmpeg(*args):
@@ -186,6 +212,51 @@ def test_missing_weight_records_global_abort(audio, bundle, tmp_path):
     assert json.loads((output / "results.jsonl").read_text())["status"] == "not_run"
 
 
+def test_cli_execution_options_are_effective_and_bound_to_resume(
+    audio, bundle, tmp_path
+):
+    output = tmp_path / "adaptive"
+    arguments = [
+        "predict",
+        str(audio),
+        "--device",
+        "cpu",
+        "--execution-mode",
+        "adaptive",
+        "--batch-size",
+        "1",
+        "--output",
+        str(output),
+    ]
+    assert main(arguments) == 0
+    config = json.loads((output / "input.json").read_text())["configs"]["audio"]
+    assert config["execution_mode"] == "adaptive"
+    assert config["batch_size"] == 1
+    execution = json.loads((output / "audio/execution.json").read_text())
+    assert execution["effective_batch"] == 1
+    scores = (output / "audio/scores.jsonl").read_bytes()
+    assert main([*arguments, "--resume"]) == 0
+    assert (output / "audio/scores.jsonl").read_bytes() == scores
+    changed = list(arguments)
+    changed[changed.index("adaptive")] = "reference"
+    assert main([*changed, "--resume"]) == 2
+    assert (output / "audio/scores.jsonl").read_bytes() == scores
+
+
+def test_default_output_uses_tmpdir_without_writing_checkout(
+    audio, bundle, tmp_path, monkeypatch
+):
+    scratch = tmp_path / "writable-temporary-root"
+    scratch.mkdir()
+    monkeypatch.setenv("TMPDIR", str(scratch))
+    monkeypatch.setattr(tempfile, "tempdir", None)
+    monkeypatch.chdir(bundle)
+    report = predict_media([audio], None, "cpu", resume=False)
+    assert report["failures"] == 0
+    assert Path(report["output"]).parent == scratch
+    assert not list(bundle.glob("deepfake-predict-*"))
+
+
 def test_nonmedia_only_and_explicit_failure_nonzero(bundle, tmp_path):
     folder = tmp_path / "empty"
     folder.mkdir()
@@ -217,6 +288,59 @@ def test_default_bundle_can_be_relocated(audio, bundle, tmp_path, monkeypatch):
         ]
         == 0
     )
+
+
+@pytest.mark.parametrize("create_directory", [False, True])
+def test_explicit_model_root_never_reads_checkout_registry(
+    tmp_path, monkeypatch, create_directory
+):
+    root = tmp_path / "missing model package"
+    if create_directory:
+        (root / "configs").mkdir(parents=True)
+    monkeypatch.setenv("DEEPFAKE_MODEL_PACKAGE", str(root))
+    with pytest.raises(FileNotFoundError, match="DEEPFAKE_MODEL_PACKAGE"):
+        default_models()
+
+
+def test_checkout_default_registry_remains_available(monkeypatch):
+    monkeypatch.delenv("DEEPFAKE_MODEL_PACKAGE", raising=False)
+    folder, registry = default_models()
+    assert folder == Path(__file__).resolve().parents[1] / "configs/release"
+    assert set(registry["models"]) == {"audio", "video"}
+
+
+def test_offline_bundle_default_is_relative_to_its_code(bundle, monkeypatch, tmp_path):
+    monkeypatch.delenv("DEEPFAKE_MODEL_PACKAGE")
+    monkeypatch.setattr(
+        "deepfake_detection_archive.unified_predict.__file__",
+        str(bundle / "src/deepfake_detection_archive/unified_predict.py"),
+    )
+    monkeypatch.chdir(tmp_path)
+    folder, registry = default_models()
+    assert folder == bundle / "configs"
+    assert registry["models"]["audio"]["architecture"] == "logmel_cnn_v1"
+
+
+def test_installed_package_requires_an_explicit_model_root(tmp_path, monkeypatch):
+    monkeypatch.delenv("DEEPFAKE_MODEL_PACKAGE", raising=False)
+    monkeypatch.setattr(
+        "deepfake_detection_archive.unified_predict.__file__",
+        str(tmp_path / "site-packages/deepfake_detection_archive/unified_predict.py"),
+    )
+    with pytest.raises(FileNotFoundError, match="DEEPFAKE_MODEL_PACKAGE"):
+        default_models()
+
+
+def test_relative_and_home_model_roots_resolve_before_config_loading(
+    bundle, monkeypatch, tmp_path
+):
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setenv("DEEPFAKE_MODEL_PACKAGE", bundle.name)
+    relative = default_models()
+    monkeypatch.setenv("HOME", str(tmp_path))
+    monkeypatch.setenv("DEEPFAKE_MODEL_PACKAGE", f"~/{bundle.name}")
+    assert default_models() == relative
+    assert relative[0] == bundle / "configs"
 
 
 def test_output_is_excluded_through_parent_symlink(audio, tmp_path):
@@ -378,3 +502,44 @@ def test_legacy_numpy_ast_release_runs_with_torchaudio_installed(
     report = predict_media([audio], tmp_path / "wrong-contract", "cpu", resume=False)
     assert "checkpoint AST frontend differs" in report["global_error"]
     assert report["failures"] > 0
+
+
+def test_resume_distinguishes_binary_bytes_but_not_tool_location(
+    bundle: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    first = tmp_path / "first tools"
+    first.mkdir()
+    for name in ("ffmpeg", "ffprobe"):
+        binary = first / name
+        binary.write_text("#!/bin/sh\nprintf 'fixture version\\n'\n")
+        binary.chmod(0o755)
+    hashed: list[Path] = []
+    original = checkpoint.sha256_file
+
+    def counted_hash(path: Path) -> str:
+        hashed.append(path)
+        return original(path)
+
+    monkeypatch.setattr(checkpoint, "sha256_file", counted_hash)
+    monkeypatch.setenv("DEEPFAKE_MEDIA_TOOLS", str(first))
+    output = tmp_path / "binary-identity-run"
+    predict_media([], output, "cpu", resume=False)
+    identity = json.loads((output / "input.json").read_text())
+    assert identity["media_tools_sha256"] == {
+        name: hashlib.sha256((first / name).read_bytes()).hexdigest()
+        for name in ("ffmpeg", "ffprobe")
+    }
+    assert set(identity["media_tools"].values()) == {"fixture version\n"}
+    assert len(hashed) == 2
+    relocated = tmp_path / "relocated tools"
+    shutil.copytree(first, relocated)
+    monkeypatch.setenv("DEEPFAKE_MEDIA_TOOLS", str(relocated))
+    predict_media([], output, "cpu", resume=True)
+    assert json.loads((output / "input.json").read_text()) == identity
+    assert len(hashed) == 4
+    with (relocated / "ffmpeg").open("a") as stream:
+        stream.write("# different binary, same version output\n")
+    assert media._run(["ffmpeg", "-version"], 5, 4096).decode() == "fixture version\n"
+    with pytest.raises(ValueError, match="resume rejected"):
+        predict_media([], output, "cpu", resume=True)
+    assert len(hashed) == 6

@@ -223,10 +223,16 @@ def extract_video_feature_batch(  # noqa: PLR0913, PLR0917
         ]
         inputs = [future.result() for future in futures]
     with torch.inference_mode():
-        features = [
-            encoder(frames.to(device)).cpu().float()
-            for frames in torch.cat(inputs).split(batch_size)  # type: ignore[no-untyped-call]
-        ]
+        features: list[Tensor] = []
+        for frames in torch.cat(inputs).split(batch_size):  # type: ignore[no-untyped-call]
+            encoded = encoder(frames.to(device))
+            if (
+                encoded.ndim != 2
+                or encoded.shape[0] != frames.shape[0]
+                or not bool(torch.isfinite(encoded).all())
+            ):
+                raise ValueError("encoder returned invalid feature shape or values")
+            features.append(encoded.cpu().float())
     values = torch.cat(features).reshape(len(records), video_config.n_frames, -1)
     return [value.clone() for value in values.unbind()]
 
@@ -249,6 +255,13 @@ def extract_video_frames(
     if size != (3, video_config.height, video_config.width):
         raise ValueError("video dimensions must match the backbone input_size")
     path = media_path(record, root)
+    return normalized_video_frames(path, video_config, preprocessing)
+
+
+def normalized_video_frames(
+    path: Path, video_config: VideoConfig, preprocessing: dict[str, Any]
+) -> Tensor:
+    """Decode a previously resolved media path with one branch's preprocessing."""
     with inference_stage("decode_and_preprocess"):
         video = decode_video(path, video_config)
         frames = torch.from_numpy(video.frames).permute(0, 3, 1, 2).float().div_(255)

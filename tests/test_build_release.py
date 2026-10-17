@@ -7,6 +7,7 @@ import importlib.util
 import json
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 from types import ModuleType
 
@@ -29,8 +30,12 @@ def release_module(monkeypatch: pytest.MonkeyPatch) -> ModuleType:
     return module
 
 
+@pytest.mark.parametrize("bundled_media", [False, True])
 def test_build_layout_and_launcher_after_relocation(  # noqa: PLR0915
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, release_module: ModuleType
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    release_module: ModuleType,
+    bundled_media: bool,
 ) -> None:
     repo = tmp_path / "repo"
     for directory in ("docs", "configs/release", "src/demo"):
@@ -82,7 +87,8 @@ def test_build_layout_and_launcher_after_relocation(  # noqa: PLR0915
     )
     output = tmp_path / "build"
     args = (output, runtime, python_home, weights, weights, repo / "src")
-    release_module.build_release(*args, version="0.1.1")
+    media = make_media_tools(tmp_path / "media-tools") if bundled_media else None
+    release_module.build_release(*args, version="0.1.1", media_tools=media)
     assert (output / "configs/models.json").read_text() == "configs/release/models.json"
     with pytest.raises(FileExistsError):
         release_module.build_release(*args, version="0.1.1")
@@ -91,6 +97,13 @@ def test_build_layout_and_launcher_after_relocation(  # noqa: PLR0915
     assert (output / "runtime/site-packages/torch-2.0.dist-info/LICENSE").is_file()
     assert (output / "runtime/python/bin/python").readlink() == Path("python3.12")
     metadata = json.loads((output / "release.json").read_text())
+    if media is not None:
+        assert metadata["media_tools"] == json.loads((media / "build.json").read_text())
+        assert (output / "runtime/media-tools/build.sh").is_file()
+        assert "runtime/media-tools/bin" in (output / "deps/README.md").read_text()
+    else:
+        assert "media_tools" not in metadata
+        assert "由目标机提供" in (output / "deps/README.md").read_text()
     assert metadata["ast_frontend"] == "numpy_spectrogram_v1"
     assert metadata["torch"] == "2.0"
     assert metadata["version"] == "0.1.1"
@@ -188,3 +201,211 @@ def test_release_frontend_comes_from_checkpoint(
     assert release_module.checkpoint_ast_frontend(path) == (
         frontend or "numpy_spectrogram_v1"
     )
+
+
+def make_media_tools(root: Path) -> Path:
+    for directory in ("bin", "source", "licenses"):
+        (root / directory).mkdir(parents=True)
+    tools = {}
+    for name in ("ffmpeg", "ffprobe"):
+        path = root / "bin" / name
+        path.write_bytes(b"#!/bin/sh\nexit 0\n")
+        path.chmod(0o755)
+        tools[name] = {
+            "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+            "bytes": path.stat().st_size,
+        }
+    for filename in (
+        "source/ffmpeg-n8.1.3-git.tar.gz",
+        "licenses/LICENSE.md",
+        "licenses/COPYING.LGPLv2.1",
+        "build.sh",
+    ):
+        (root / filename).write_text("fixture")
+    (root / "build.json").write_text(
+        json.dumps(
+            {
+                "schema": 1,
+                "version": "8.1.3",
+                "tools": tools,
+                "source": {
+                    "url": "https://api.github.com/repos/FFmpeg/FFmpeg/tarball/n8.1.3",
+                    "archive": "source/ffmpeg-n8.1.3-git.tar.gz",
+                    "sha256": hashlib.sha256(b"fixture").hexdigest(),
+                },
+                "configure": [],
+                "platform": "linux-x86_64",
+                "license": "LGPL-2.1-or-later",
+                "limitations": [],
+            }
+        )
+    )
+    return root
+
+
+@pytest.mark.parametrize("failure", ["missing", "hash", "executable"])
+@pytest.mark.parametrize("tool", ["ffmpeg", "ffprobe"])
+def test_release_rejects_invalid_media_tools_before_build(
+    tmp_path: Path, release_module: ModuleType, failure: str, tool: str
+) -> None:
+    media = make_media_tools(tmp_path / "media-tools")
+    binary = media / "bin" / tool
+    if failure == "missing":
+        binary.unlink()
+    elif failure == "hash":
+        binary.write_bytes(b"x" * binary.stat().st_size)
+    else:
+        binary.chmod(0o644)
+    output = tmp_path / "release"
+    with pytest.raises(ValueError, match=tool):
+        release_module.build_release(
+            output,
+            tmp_path,
+            tmp_path,
+            tmp_path,
+            tmp_path,
+            tmp_path,
+            version="test",
+            media_tools=media,
+        )
+    assert not output.exists()
+
+
+@pytest.mark.parametrize("media_mode", ["host", "bundle", "explicit"])
+def test_real_launcher_resolves_media_after_relocation(
+    tmp_path: Path, release_module: ModuleType, media_mode: str
+) -> None:
+    import prepare_offline_package  # noqa: PLC0415
+
+    package = tmp_path / "package"
+    project = package / "src/deepfake_detection_archive"
+    project.mkdir(parents=True)
+    (project / "__init__.py").write_text("")
+    shutil.copyfile(
+        Path(__file__).resolve().parents[1]
+        / "src/deepfake_detection_archive/media_tools.py",
+        project / "media_tools.py",
+    )
+    (project / "__main__.py").write_text(
+        "import json, shutil, sys\n"
+        "print(json.dumps({'tools': [shutil.which('ffmpeg'), "
+        "shutil.which('ffprobe')], 'args': sys.argv[1:]}))\n"
+    )
+    (package / "run.py").write_text(prepare_offline_package.LAUNCHER)
+    (package / "run.sh").write_text(release_module.RUN_SH)
+    interpreter = package / "runtime/python/bin/python3.12"
+    interpreter.parent.mkdir(parents=True)
+    interpreter.symlink_to(sys.executable)
+    if media_mode != "host":
+        make_media_tools(package / "runtime/media-tools")
+    moved = tmp_path / "moved package"
+    shutil.move(package, moved)
+    host_bin = tmp_path / "host-bin"
+    host_bin.mkdir()
+    host_bin.joinpath("dirname").symlink_to("/usr/bin/dirname")
+    env = {"PATH": str(host_bin)}
+    expected: list[str | None] = [None, None]
+    if media_mode != "host":
+        selected = moved / "runtime/media-tools/bin"
+        if media_mode == "explicit":
+            selected = make_media_tools(tmp_path / "explicit tools") / "bin"
+            env["DEEPFAKE_MEDIA_TOOLS"] = str(selected)
+        expected = [str(selected / name) for name in ("ffmpeg", "ffprobe")]
+    args = ["predict", "--input", "space in path"]
+    for command in (
+        [
+            str(moved / "runtime/python/bin/python3.12"),
+            "-I",
+            "-S",
+            str(moved / "run.py"),
+        ],
+        ["/bin/bash", str(moved / "run.sh")],
+    ):
+        result = subprocess.run(
+            [*command, *args],
+            cwd="/",
+            env=env,
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        assert json.loads(result.stdout) == {"tools": expected, "args": args}
+
+
+@pytest.mark.parametrize(
+    "filename",
+    [
+        "build.json",
+        "source/ffmpeg-n8.1.3-git.tar.gz",
+        "licenses/LICENSE.md",
+        "licenses/COPYING.LGPLv2.1",
+        "build.sh",
+    ],
+)
+def test_release_requires_media_bundle_assets(
+    tmp_path: Path, release_module: ModuleType, filename: str
+) -> None:
+    media = make_media_tools(tmp_path / "media-tools")
+    (media / filename).unlink()
+    with pytest.raises(ValueError, match="media bundle missing"):
+        release_module.validate_media_tools(media)
+
+
+@pytest.mark.parametrize("failure", ["missing", "executable"])
+@pytest.mark.parametrize("tool", ["ffmpeg", "ffprobe"])
+def test_launcher_rejects_invalid_explicit_media_tools(
+    tmp_path: Path, release_module: ModuleType, failure: str, tool: str
+) -> None:
+    import prepare_offline_package  # noqa: PLC0415
+
+    (tmp_path / "run.py").write_text(prepare_offline_package.LAUNCHER)
+    source = tmp_path / "src/deepfake_detection_archive"
+    source.mkdir(parents=True)
+    (source / "__init__.py").write_text("")
+    shutil.copyfile(
+        Path(__file__).resolve().parents[1]
+        / "src/deepfake_detection_archive/media_tools.py",
+        source / "media_tools.py",
+    )
+    make_media_tools(tmp_path / "runtime/media-tools")
+    explicit = make_media_tools(tmp_path / "explicit") / "bin"
+    binary = explicit / tool
+    if failure == "missing":
+        binary.unlink()
+    else:
+        binary.chmod(0o644)
+    result = subprocess.run(
+        [sys.executable, "-I", "-S", str(tmp_path / "run.py")],
+        cwd="/",
+        env={"DEEPFAKE_MEDIA_TOOLS": str(explicit)},
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode != 0
+    assert "DEEPFAKE_MEDIA_TOOLS requires executable" in result.stderr
+    assert tool in result.stderr
+
+
+@pytest.mark.parametrize(
+    "archive",
+    ["../outside.tar.gz", "/source/outside.tar.gz", "source/../outside.tar.gz"],
+)
+def test_media_bundle_source_must_stay_in_source(
+    tmp_path: Path, release_module: ModuleType, archive: str
+) -> None:
+    media = make_media_tools(tmp_path / "media-tools")
+    metadata = json.loads((media / "build.json").read_text())
+    metadata["source"]["archive"] = archive
+    (media / "build.json").write_text(json.dumps(metadata))
+    with pytest.raises(ValueError, match="relative source/ file"):
+        release_module.validate_media_tools(media)
+
+
+def test_media_bundle_source_hash_must_match(
+    tmp_path: Path, release_module: ModuleType
+) -> None:
+    media = make_media_tools(tmp_path / "media-tools")
+    (media / "source/ffmpeg-n8.1.3-git.tar.gz").write_bytes(b"changed")
+    with pytest.raises(ValueError, match="source differs"):
+        release_module.validate_media_tools(media)

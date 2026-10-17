@@ -1,0 +1,254 @@
+{
+  "source": {
+    "git_head": "2e8388ae0b3ce2489d70af33ce821ba23665ddb8",
+    "dirty": false
+  },
+  "release": "0.1.2-rc3",
+  "package": "/var/tmp/deepfake-media-build-20261016/rootfs/app/离线包 rc3",
+  "archive_root": "/mnt/deepfake-archive/C15-runtime-completion-20261016",
+  "scope": "Fixed v0.1.1 research weights, full cu126 runtime and same-source LGPL decoder; execution and portability only, no EER/new training/holdout",
+  "regression": {
+    "count": 20,
+    "tensor_arrays": 30,
+    "comparisons": {
+      "prior_cpu__cpu_reference": {
+        "score_max_abs_diff": 0.0,
+        "score_mean_abs_diff": 0.0,
+        "score_atol": 0.0001,
+        "score_tolerance_passed": true,
+        "tensor_max_abs_diff": 0.0
+      },
+      "prior_gpu__cuda_adaptive": {
+        "score_max_abs_diff": 0.0,
+        "score_mean_abs_diff": 0.0,
+        "score_atol": 0.0001,
+        "score_tolerance_passed": true,
+        "tensor_max_abs_diff": 0.0
+      },
+      "cpu_reference__cuda_adaptive": {
+        "score_max_abs_diff": 7.62939453125e-06,
+        "score_mean_abs_diff": 2.5540590286254884e-06,
+        "score_atol": 0.0001,
+        "score_tolerance_passed": true,
+        "tensor_max_abs_diff": 0.0
+      },
+      "cpu_reference__guest_new_user": {
+        "score_max_abs_diff": 4.0531158447265625e-06,
+        "score_mean_abs_diff": 1.1682510375976563e-06,
+        "score_atol": 0.0001,
+        "score_tolerance_passed": true,
+        "tensor_max_abs_diff": 0.0
+      }
+    },
+    "new_guest": {
+      "username": "contest_runner",
+      "uid": 1002,
+      "os": "Ubuntu24.04.5 userspace, glibc2.39",
+      "host_kernel_shared": true,
+      "docker": false
+    }
+  },
+  "limitations": [
+    "Previously seen diagnostics/train/dev for capacity, no blind generalization claim",
+    "Both capacity tasks ran concurrently, no speedup comparison against previous serial runs",
+    "Video H264 short controlled files 1.25–3.5 seconds",
+    "Adaptive execution not newly tested on 8GiB hardware; prior RTX4060 fixed-batch evidence remains historical",
+    "Docker execution reported separately by actual Actions run; no GPU container test",
+    "Official I/O and competition use permissions unconfirmed"
+  ],
+  "archive": {
+    "files": 162,
+    "bytes": 109657257,
+    "source": {
+      "git_head": "2e8388ae0b3ce2489d70af33ce821ba23665ddb8",
+      "dirty": false
+    },
+    "package_files_sha256": "96a7df7195edfb330bfb44892f42d5222ba53722d945133f8e3447ded1f873de",
+    "archive_root": "/mnt/deepfake-archive/C15-runtime-completion-20261016",
+    "package_files": 27985,
+    "package_bytes": 7522767208,
+    "release_json_sha256": "5b9d3a92092c2235f6edf82408188ca5b5e5dbdf11cebf29b2b34aa1e5b35b4e"
+  },
+  "capacity": {
+    "audio": {
+      "status": "passed",
+      "denominator": 10000,
+      "success": 10000,
+      "failures": 0,
+      "exit_code": 0,
+      "coverage": 1.0,
+      "wall_end_to_end_seconds": 1046.8318625260144,
+      "max_rss_kib": 1730424,
+      "wall_scope": "spawn through wait4 reap; includes package Python/Torch initialization, discovery, model load/profile, decode, scoring, writes and observer runtime capture; RSS is wait4 child+waited descendants maximum, not simultaneous tree sum",
+      "runtime": {
+        "torch": "2.14.1+cu126",
+        "cuda": "12.6",
+        "gpu": "NVIDIA GeForce RTX 4090",
+        "tf32": false
+      },
+      "execution": {
+        "requested_batch": 4,
+        "effective_batch": 1,
+        "cpu_threads": 2,
+        "precision": "fp32",
+        "profile_seconds": 0.22838414181023836,
+        "formal_seconds": 787.0734758200124,
+        "peak_allocated": 400120320,
+        "peak_reserved": 434110464,
+        "reductions": []
+      },
+      "inputs": {
+        "count": 10000,
+        "selected_bytes": 2863551136,
+        "new_copied_media_bytes": 0,
+        "selection_sha256": "7ba06cd2e1ba5b9a61953ad28b085c54c12725d205cd7da98533efbf7e11f347",
+        "selection_reused": true,
+        "holdout_consumed": false
+      },
+      "full_result": "C15-runtime-completion-20261016/capacity-audio/summary.json"
+    },
+    "video": {
+      "status": "passed",
+      "denominator": 10000,
+      "success": 10000,
+      "failures": 0,
+      "exit_code": 0,
+      "coverage": 1.0,
+      "wall_end_to_end_seconds": 1613.3152421070263,
+      "max_rss_kib": 1513624,
+      "wall_scope": "spawn through wait4 reap; includes package Python/Torch initialization, discovery, model load/profile, decode, scoring, writes and observer runtime capture; RSS is wait4 child+waited descendants maximum, not simultaneous tree sum",
+      "runtime": {
+        "torch": "2.14.1+cu126",
+        "cuda": "12.6",
+        "gpu": "NVIDIA GeForce RTX 4090",
+        "tf32": false
+      },
+      "execution": {
+        "requested_batch": 8,
+        "effective_batch": 4,
+        "cpu_threads": 2,
+        "precision": "fp32",
+        "profile_seconds": 0.8505960199981928,
+        "formal_seconds": 1359.8814164856449,
+        "peak_allocated": 110129664,
+        "peak_reserved": 134217728,
+        "reductions": []
+      },
+      "inputs": {
+        "count": 10000,
+        "selected_bytes": 698764633,
+        "new_copied_media_bytes": 0,
+        "selection_sha256": "b27d529cce42d7f630da9e4e837f70d2e4e6c24fabf051bb346476ae4290304b",
+        "selection_reused": true,
+        "holdout_consumed": false
+      },
+      "full_result": "C15-runtime-completion-20261016/capacity-video/summary.json"
+    }
+  },
+  "oom_control": {
+    "status": "passed",
+    "scope": "RTX4090 true CUDA allocator OOM under per-process quotas; not real8GiB GPU or media accuracy",
+    "fractions": [
+      0.04,
+      0.012,
+      0.001
+    ],
+    "completed_control_rows": 2,
+    "uncommitted_control_id": "2",
+    "effective_batch": 1,
+    "allocated_peak": 536870912,
+    "reserved_peak": 738197504,
+    "source_commit": "2e8388ae0b3ce2489d70af33ce821ba23665ddb8",
+    "reductions": [
+      {
+        "phase": "inference",
+        "attempt": 1,
+        "old_batch": 8,
+        "new_batch": 4
+      },
+      {
+        "phase": "inference",
+        "attempt": 1,
+        "old_batch": 4,
+        "new_batch": 2
+      },
+      {
+        "phase": "inference",
+        "attempt": 2,
+        "old_batch": 2,
+        "new_batch": 1
+      }
+    ],
+    "minimum_batch_failure": "torch.cuda.OutOfMemoryError; complete allocator diagnostics in C15-runtime-completion-20261016/oom-control/summary.json"
+  },
+  "docker": {
+    "run_id": 38916789385,
+    "run_url": "https://github.com/lanjianyu060915-web/deepfake-detection-archive/actions/runs/38916789385",
+    "conclusion": "success",
+    "pull_request_head": "e2ef985cbba2db44a144910c852caafe25f3c40d",
+    "actual_source": {
+      "git_head": "250f3b351fb8390352ce20d237d776056bfcb2f5",
+      "dirty": false
+    },
+    "archive_root": "/mnt/deepfake-archive/C16-container-runtime-20261016",
+    "conditions": {
+      "network": "none",
+      "root_filesystem": "read-only",
+      "user": "1001:1001",
+      "models_inputs": "read-only",
+      "cache": "empty before each run",
+      "host_source_or_venv_mount": false
+    },
+    "variants": {
+      "cpu": {
+        "backend": "cpu",
+        "execution_device": "cpu",
+        "count": 4,
+        "tolerance": 0.0001,
+        "host_container_max_abs_delta": 0.0,
+        "host_loaded_max_abs_delta": 0.0,
+        "container_repeat_max_abs_delta": 0.0,
+        "image_config_digest": "sha256:65166a271b273d2e4539654698983e765b9b9c0f23ac099af01223c279e28d54",
+        "archive_sha256": "a82531d422f27223972adcd87721a2aba844ac1bfe1f8a4089e329bff6134e9c",
+        "archive_bytes": 469660126,
+        "torch": "2.14.1+cpu",
+        "full_result": "C16-container-runtime-20261016/cpu/summary.json"
+      },
+      "cu126": {
+        "backend": "cu126",
+        "execution_device": "cpu",
+        "count": 4,
+        "tolerance": 0.0001,
+        "host_container_max_abs_delta": 0.0,
+        "host_loaded_max_abs_delta": 0.0,
+        "container_repeat_max_abs_delta": 0.0,
+        "image_config_digest": "sha256:53eeaf4a1acc8d7d9e9b14ae5b73e7f0e8881afb05631127f243cef7a431c826",
+        "archive_sha256": "702b05d564879437e6b03f90208a4c42c89c741b78087fdfbbc824ec2251b0e5",
+        "archive_bytes": 4050034064,
+        "torch": "2.14.1+cu126",
+        "full_result": "C16-container-runtime-20261016/cu126/summary.json"
+      }
+    }
+  },
+  "storage": {
+    "persistent_root": "/mnt/deepfake-archive",
+    "persistent_permission_limit": "fx displays Unix read-only bits but does not enforce them; SHA256 verifies integrity",
+    "readonly_workspace": "/srv/shared-data/deliveries/runtime-completion-20261016",
+    "batches": [
+      "C15-runtime-completion-20261016",
+      "C16-container-runtime-20261016"
+    ],
+    "C16_payload_files": 98,
+    "C16_payload_bytes": 4519922634,
+    "readonly_users_verified": [
+      "maochuanjun",
+      "lanjianyu"
+    ],
+    "readonly_workspace_files": 264,
+    "readonly_workspace_bytes": 4629659179,
+    "index_sha256": {
+      "C15-runtime-completion-20261016": "79e5c5ffd6b2289b60c444bcd33cd7b2bb0b0f546ccf674d7125bd5c8c6a5b00",
+      "C16-container-runtime-20261016": "9924d55327cb4f748b337023a67d82b63acf2dd7567fb178617aea62f217a034"
+    }
+  }
+}

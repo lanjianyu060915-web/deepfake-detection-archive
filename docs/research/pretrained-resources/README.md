@@ -54,3 +54,45 @@ CLIP mean/std，**无Resize**；本项目显式使用 `native_center_crop`，视
 UFD及CLIP仓库有MIT代码许可；分类头未见独立model card，训练素材和赛用/再分发范围
 仍需按各资源处理。现阶段仅作研究候选，图像论文成绩不代表本赛视频EER。
 实际权重、配置和评分位置见[资产说明](../../data.md)，结果见[实验索引](../../experiments/README.md)。
+
+## WaveRep 生成视频检测器
+
+[作者仓库](https://github.com/grip-unina/WaveRep-SyntheticVideoDetection/tree/0fd6010759c14b572b7842a28fa9f85fe1ddd2fd)
+固定commit `0fd6010759c14b572b7842a28fa9f85fe1ddd2fd`；G1 权重
+`https://www.grip.unina.it/download/prog/WaveRep_SynthVideoDet/weights_dinov2_G1.ckpt`
+（346,160,324 B，作者 md5 `bc9852a7c1d3bfdb60a20b4497e575bb`，SHA-256
+`1c7566b26c0b0afe3f5642dd4e454039328d59f512a5d815d5edaa10b544a897`）。
+网络为 timm `vit_base_patch14_reg4_dinov2.lvd142m`、`img_size=504`、单输出 logit，端到端训练于 Pyramid Flow
+生成视频及其 3D VAE 重建配对样本；权重为裸 state_dict。
+
+`tools/prepare_waverep.py` 核对来源哈希后以 `pretrained=False` 构建同一网络并严格加载，保存自包含
+`waverep_video_v1` checkpoint；运行时不联网、不读取 timm 预训练缓存。预处理为 RGB、原尺寸
+`CenterCrop(504)`（不足补零）、ImageNet mean/std，**无 Resize**，即 `native_center_crop`；视频分数为帧 logit 均值。
+
+作者代码及权重下载目录均附GRIP-UNINA informational/nonprofit许可，禁止未授权工业/营利用途，公开结果须引用作者。
+权重目录许可证仍以software措辞描述，未单独明确比赛授权，赛用范围待确认。
+[代码许可](https://github.com/grip-unina/WaveRep-SyntheticVideoDetection/blob/0fd6010759c14b572b7842a28fa9f85fe1ddd2fd/LICENSE.md)、
+[权重目录许可](https://www.grip.unina.it/download/prog/WaveRep_SynthVideoDet/LICENSE.txt)。
+现阶段仅作研究与可选融合候选，赛用范围须由负责人确认；结果见
+[生成机制鉴伪](../../experiments/generator-forensics-20261014/README.md)。
+
+## Video Swin 原生时空表征
+
+使用 torchvision `0.29.1` 的 `swin3d_t`、`KINETICS400_V1`，
+[固定实现](https://github.com/pytorch/vision/blob/v0.29.1/torchvision/models/video/swin_transformer.py)
+对应上游 commit `1f1a920d685d46dfbe187934b785b7ecb7a182f2`。
+[原始权重](https://download.pytorch.org/models/swin3d_t-7615ae03.pth)
+为127,447,114B，SHA-256
+`7615ae035996b65eb38dad437ae533d2dfcd36f9f89d28c0f0fa7bfb8e6b3130`。
+准备时严格加载骨干，仅移除原 Kinetics 分类头；运行时构建 `weights=None`，
+完整鉴伪 checkpoint 包含骨干与新头，不隐式下载。
+
+本项目研究前端为16帧、224像素 native center crop、ImageNet mean/std，
+不是任意输入与上游短边256 resize相同的声明；上游常规评测使用32帧。
+时序窗口跨帧计算，不能把视频内部16帧拆成独立帧处理。
+
+[torchvision 代码许可](https://github.com/pytorch/vision/blob/v0.29.1/LICENSE)
+为 BSD-3-Clause，原 Video Swin 项目为 Apache-2.0；
+[上游预训练权重说明](https://github.com/pytorch/vision/blob/v0.29.1/README.md#pre-trained-model-license)
+要求另行处理训练材料条款。代码许可不替代权重/素材赛用许可，本轮仅研究使用。
+原始权重、固定许可与来源材料随 C19 保存，CLIP 编码器继续复用 C6。

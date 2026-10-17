@@ -6,6 +6,7 @@ import csv
 import hashlib
 import importlib.metadata
 import os
+import shutil
 import sys
 import tempfile
 from dataclasses import replace
@@ -16,6 +17,7 @@ from typing import Any, cast
 from .config import InferenceConfig, load_inference_config, load_object
 from .contracts import load_scores
 from .data.manifest import SampleRecord, file_sha256, write_manifest
+from .media_tools import media_tool
 from .tracking import (
     atomic_json,
     canonical_json,
@@ -64,16 +66,40 @@ MEDIA_SUFFIXES = {
 }
 
 
+def _model_package_root() -> Path:
+    selected = os.environ.get("DEEPFAKE_MODEL_PACKAGE")
+    if selected is not None:
+        return Path(selected).expanduser().resolve()
+    module = Path(__file__).resolve()
+    if module.parent.parent.name != "src":
+        raise FileNotFoundError(
+            "Set DEEPFAKE_MODEL_PACKAGE to a local model package containing "
+            "configs/models.json; the installed wheel does not include weights"
+        )
+    return module.parents[2]
+
+
+def _package_resource(root: Path, base: Path, resource: str) -> Path:
+    """Resolve default-package resources once, including local symlink targets."""
+    path = (base / resource).resolve()
+    if not path.is_relative_to(root):
+        raise ValueError(f"resource escapes model package: {base / resource}")
+    return path
+
+
 def default_models() -> tuple[Path, dict[str, Any]]:
-    """Resolve a relocatable bundle; a checkout may point to an installed bundle."""
-    checkout = Path(__file__).resolve().parents[2]
-    root = Path(os.environ.get("DEEPFAKE_MODEL_PACKAGE", checkout))
+    """Use one model package; only source layouts have an implicit default."""
+    root = _model_package_root()
     folder = root / "configs"
-    registry_path = folder / "models.json"
-    if not registry_path.exists():
-        registry_path = checkout / "configs/release/models.json"
-        if root == checkout:
-            folder = registry_path.parent
+    registry_path = _package_resource(root, folder, "models.json")
+    if os.environ.get("DEEPFAKE_MODEL_PACKAGE") is None and not registry_path.is_file():
+        folder = folder / "release"
+        registry_path = _package_resource(root, folder, "models.json")
+    if not registry_path.is_file():
+        raise FileNotFoundError(
+            f"Model registry not found: {registry_path}; "
+            "DEEPFAKE_MODEL_PACKAGE must point to a package containing configs/models.json"
+        )
     registry = load_object(registry_path)
     if registry.get("schema_version") != 1 or set(
         cast(dict[str, Any], registry.get("models", {}))
@@ -244,26 +270,44 @@ def discover(
 def _resolved_config(
     folder: Path, entry: dict[str, Any], output: Path, modality: str, device: str
 ) -> InferenceConfig:
-    template = load_inference_config(folder / entry["config"])
+    root = _model_package_root()
+    config_path = _package_resource(root, folder, entry["config"])
+    template = load_inference_config(config_path)
     if template.modality != modality:
         raise ValueError("registry and inference modality disagree")
     encoder = dict(template.encoder)
     for key in ("checkpoint", "model_dir"):
         if key in encoder:
-            encoder[key] = str((folder / str(encoder[key])).resolve())
+            encoder[key] = str(
+                _package_resource(root, config_path.parent, str(encoder[key]))
+            )
+    if "model_dir" in encoder:
+        model_dir = Path(str(encoder["model_dir"]))
+        resources = {path.name for path in model_dir.iterdir()}
+        resources.update(cast(dict[str, str], encoder.get("expected_hashes", {})))
+        for name in resources:
+            _package_resource(root, model_dir, name)
     return replace(
         template,
         manifest=str(output / "manifest.jsonl"),
         data_root="/",
         output_dir=str(output),
-        checkpoint=str((folder / template.checkpoint).resolve()),
+        checkpoint=str(
+            _package_resource(root, config_path.parent, template.checkpoint)
+        ),
         encoder=encoder,
         device=device,
     )
 
 
-def predict_media(
-    inputs: list[Path], output: Path | None, device: str, *, resume: bool
+def predict_media(  # noqa: PLR0913 -- media and explicit execution controls
+    inputs: list[Path],
+    output: Path | None,
+    device: str,
+    *,
+    resume: bool,
+    execution_mode: str | None = None,
+    batch_size: int | None = None,
 ) -> dict[str, object]:
     import torch  # noqa: PLC0415
 
@@ -272,7 +316,7 @@ def predict_media(
     if resume and output is None:
         raise ValueError("--resume requires --output")
     if output is None:
-        output = Path(tempfile.mkdtemp(prefix="deepfake-predict-", dir=Path.cwd()))
+        output = Path(tempfile.mkdtemp(prefix="deepfake-predict-"))
     else:
         output = output.resolve()
         if resume:
@@ -285,7 +329,14 @@ def predict_media(
         device = "cuda" if torch.cuda.is_available() else "cpu"
     with _run_lock(output / ".predict.lock"):
         try:
-            return _predict_run(inputs, output, device, resume=resume)
+            return _predict_run(
+                inputs,
+                output,
+                device,
+                resume=resume,
+                execution_mode=execution_mode,
+                batch_size=batch_size,
+            )
         except (OSError, ValueError, RuntimeError, ImportError, MemoryError) as exc:
             if not resume:
                 atomic_json(
@@ -299,7 +350,11 @@ def _validate_ast_frontend(
     folder: Path, registry: dict[str, Any], runtime: dict[str, str | None]
 ) -> dict[str, object]:
     """Validate the selected frontend, independent of unused installed packages."""
-    release = load_object(folder.parent / registry["runtime_contract"])
+    release = load_object(
+        _package_resource(
+            _model_package_root(), folder.parent, registry["runtime_contract"]
+        )
+    )
     expected = cast(dict[str, str], release["runtime_dependencies"])
     frontend = release.get(
         "ast_frontend",
@@ -337,13 +392,21 @@ def _score_selected(
     )
 
 
-def _predict_run(  # noqa: C901, PLR0912, PLR0915 -- orchestration over the existing runner
-    inputs: list[Path], output: Path, device: str, *, resume: bool
+def _predict_run(  # noqa: C901, PLR0912, PLR0913, PLR0915 -- existing runner orchestration
+    inputs: list[Path],
+    output: Path,
+    device: str,
+    *,
+    resume: bool,
+    execution_mode: str | None = None,
+    batch_size: int | None = None,
 ) -> dict[str, object]:
     import torch  # noqa: PLC0415
 
+    from .execution import execution_signature  # noqa: PLC0415
     from .media import _run  # noqa: PLC0415
     from .models.ast import ASTClassifier  # noqa: PLC0415
+    from .models.checkpoint import sha256_file  # noqa: PLC0415
     from .scoring import OfflineScorer  # noqa: PLC0415
     from .submission.runner import run_inference  # noqa: PLC0415
 
@@ -353,25 +416,44 @@ def _predict_run(  # noqa: C901, PLR0912, PLR0915 -- orchestration over the exis
     configs: dict[str, InferenceConfig] = {}
     global_error: str | None = None
     media_tools: dict[str, str] = {}
+    media_tools_sha256: dict[str, str] = {}
+    execution: dict[str, object] = {}
     try:
         media_tools = {
             name: _run([name, "-version"], 5.0, 65_536).decode("utf-8")
             for name in ("ffmpeg", "ffprobe")
         }
+        for name in media_tools:
+            executable = shutil.which(media_tool(name))
+            if executable is None:
+                raise FileNotFoundError(f"{name} unavailable")
+            media_tools_sha256[name] = sha256_file(Path(executable))
         for modality in ("audio", "video"):
             if any(row.modality == modality for row in records):
-                configs[modality] = _resolved_config(
+                config = _resolved_config(
                     folder, models[modality], output / modality, modality, device
                 )
-    except (OSError, ValueError, TypeError) as exc:
+                configs[modality] = replace(
+                    config,
+                    execution_mode=execution_mode or config.execution_mode,
+                    batch_size=(
+                        batch_size if batch_size is not None else config.batch_size
+                    ),
+                )
+                execution[modality] = execution_signature(
+                    device, configs[modality].execution_mode
+                )
+    except (OSError, ValueError, TypeError, RuntimeError) as exc:
         global_error = f"{type(exc).__name__}: {exc}"
     package = Path(__file__).parent
     inference_paths = [
         package / name
         for name in (
             "scoring.py",
+            "media_tools.py",
             "features.py",
             "config.py",
+            "execution.py",
             "contracts.py",
             "timing.py",
             "unified_predict.py",
@@ -405,7 +487,9 @@ def _predict_run(  # noqa: C901, PLR0912, PLR0915 -- orchestration over the exis
             global_error = f"{type(exc).__name__}: {exc}"
     identity = {
         "frontend_contract": frontend_contract,
+        "execution": execution,
         "media_tools": media_tools,
+        "media_tools_sha256": media_tools_sha256,
         "runtime": runtime,
         "protocol": "unified_media_v1",
         "discovery": entries,
@@ -435,8 +519,13 @@ def _predict_run(  # noqa: C901, PLR0912, PLR0915 -- orchestration over the exis
         if global_error is not None:
             break
         subset = [row for row in records if row.modality == modality]
+        scorer: OfflineScorer | None = None
         try:
-            scorer = OfflineScorer(config, folder)
+            scorer = OfflineScorer(
+                config,
+                folder,
+                resume=resume and (output / modality / "metadata.json").exists(),
+            )
             if (
                 scorer.metadata["architecture"] != models[modality]["architecture"]
                 or scorer.metadata["schema_version"]
@@ -479,6 +568,10 @@ def _predict_run(  # noqa: C901, PLR0912, PLR0915 -- orchestration over the exis
         except (OSError, ValueError, RuntimeError, ImportError, MemoryError) as exc:
             global_error = f"{type(exc).__name__}: {exc}"
             break
+        finally:
+            if scorer is not None:
+                scorer.execution.finish()
+                del scorer
     rows: list[dict[str, Any]] = []
     scored = {
         row.sample_id: row

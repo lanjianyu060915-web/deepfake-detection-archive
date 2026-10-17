@@ -12,6 +12,7 @@ from torch import nn
 
 from .aasist import AASISTLite
 from .ast import ASTClassifier, ASTConfig
+from .clip_adapt import ClipAdaptConfig, ClipAdaptVideoClassifier
 from .core import (
     FeatureHead,
     HeadConfig,
@@ -20,8 +21,12 @@ from .core import (
     MediaFeatureClassifier,
     MediaFeatureConfig,
 )
+from .dino_adapt import DinoAdaptConfig, DinoAdaptVideoClassifier
 from .finetune import VideoFrameClassifier, VideoFrameConfig
+from .swin_video import SwinVideoClassifier, SwinVideoConfig
 from .ufd import UFDConfig, UFDVideoClassifier
+from .video_fusion import VideoFusionClassifier, VideoFusionConfig
+from .waverep import WaveRepConfig, WaveRepVideoClassifier
 
 
 SCHEMA_VERSION = 1
@@ -56,6 +61,16 @@ def create_model(architecture: str, config: dict[str, Any]) -> nn.Module:  # noq
         return VideoFrameClassifier(VideoFrameConfig(**config))
     if architecture == "ufd_video_v1":
         return UFDVideoClassifier(UFDConfig(**config))
+    if architecture == "clip_adapt_video_v1":
+        return ClipAdaptVideoClassifier(ClipAdaptConfig(**config))
+    if architecture == "video_dinov2_adapt_v1":
+        return DinoAdaptVideoClassifier(DinoAdaptConfig(**config))
+    if architecture == "video_swin3d_v1":
+        return SwinVideoClassifier(SwinVideoConfig(**config))
+    if architecture == "waverep_video_v1":
+        return WaveRepVideoClassifier(WaveRepConfig(**config))
+    if architecture == "video_fusion_v1":
+        return VideoFusionClassifier(VideoFusionConfig(**config))
     if architecture == "aasist_l_v1" and config == {}:
         return AASISTLite()
     if architecture == "audio_ast_v1":
@@ -74,6 +89,16 @@ def model_spec(model: nn.Module) -> tuple[str, dict[str, Any]]:  # noqa: PLR0911
         return "video_frame_finetune_v1", asdict(model.config)
     if type(model) is UFDVideoClassifier:
         return "ufd_video_v1", asdict(model.config)
+    if type(model) is ClipAdaptVideoClassifier:
+        return "clip_adapt_video_v1", asdict(model.config)
+    if type(model) is DinoAdaptVideoClassifier:
+        return "video_dinov2_adapt_v1", asdict(model.config)
+    if type(model) is SwinVideoClassifier:
+        return "video_swin3d_v1", asdict(model.config)
+    if type(model) is WaveRepVideoClassifier:
+        return "waverep_video_v1", asdict(model.config)
+    if type(model) is VideoFusionClassifier:
+        return "video_fusion_v1", asdict(model.config)
     if type(model) is AASISTLite:
         return "aasist_l_v1", {}
     if type(model) is ASTClassifier:

@@ -52,5 +52,9 @@ UrbanSound8K 的非商业限制及 Panda/HD-VILA 的 Data/Results 条款适用�
 CUDA 用户态库随安装分发中的许可保留，NVIDIA 驱动及 FFmpeg/ffprobe 不在包内。
 运行依赖按 wheel 元数据闭包复制，保留其 `dist-info` 和许可证；未手工删除 Torch
 声明的 Triton/CUDA 依赖。系统 FFmpeg 的 GPL 构建不随包再分发。
+当前构建器另支持独立的 FFmpeg ba987fe24d 工具包：禁用 GPL/nonfree/第三方自动探测，
+按该构建的 LGPL-2.1-or-later 保存对应完整源码、`LICENSE.md`、`COPYING.LGPLv2.1`、
+原版权声明、准确构建配方及二进制哈希，位于 `runtime/media-tools/`。
+这不是对服务器现有 GPL 构建重新贴许可，也不改变已发布 v0.1.1 的内容。
 演示媒体由 FFmpeg 的正弦波、色块和测试图自行合成，以 CC0 提供，仅用于运行示范，
 没有真假标签，不用于计算 EER 或声称模型效果。

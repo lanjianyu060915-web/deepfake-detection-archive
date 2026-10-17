@@ -1,0 +1,666 @@
+{
+  "issue": 69,
+  "decision": "不替换冻结MLP43；停止本轮轻头/帧数调参，下一投入多来源训练覆盖。",
+  "train_count": 3614,
+  "selection_dev_count": 844,
+  "selection": {
+    "selection_split": "original_dev",
+    "tie_break_seed": 42,
+    "selected_seed": 42,
+    "selected_epoch": 14,
+    "selected_dev_eer": 0.23933649289099526,
+    "seeds": {
+      "42": {
+        "best_epoch": 14,
+        "dev_eer": 0.23933649289099526,
+        "epochs_completed": 20,
+        "stop_reason": "early_stopping"
+      },
+      "43": {
+        "best_epoch": 6,
+        "dev_eer": 0.24407582938388625,
+        "epochs_completed": 12,
+        "stop_reason": "early_stopping"
+      }
+    },
+    "checkpoint": {
+      "architecture": "media_feature_head_v1",
+      "config": {
+        "aggregation": "mean",
+        "dropout": 0.1,
+        "hidden_dim": 64,
+        "input_dim": 768,
+        "temporal_kernel_size": 3,
+        "trim_fraction": 0.0
+      },
+      "schema_version": 1,
+      "score_direction": "higher_is_fake",
+      "sha256": "45bb5050bc7058f8be102669a153d028484bcda192429dc893bb552c0f737265"
+    }
+  },
+  "training": {
+    "42": {
+      "best_epoch": 14,
+      "best_dev_eer": 0.23933649289099526,
+      "epochs_completed": 20,
+      "stop_reason": "early_stopping",
+      "seconds": 41.644436230883,
+      "peak_cuda_allocated_bytes": 9199616,
+      "peak_cuda_reserved_bytes": 27262976,
+      "checkpoint": {
+        "architecture": "media_feature_head_v1",
+        "config": {
+          "aggregation": "mean",
+          "dropout": 0.1,
+          "hidden_dim": 64,
+          "input_dim": 768,
+          "temporal_kernel_size": 3,
+          "trim_fraction": 0.0
+        },
+        "schema_version": 1,
+        "score_direction": "higher_is_fake",
+        "sha256": "45bb5050bc7058f8be102669a153d028484bcda192429dc893bb552c0f737265"
+      }
+    },
+    "43": {
+      "best_epoch": 6,
+      "best_dev_eer": 0.24407582938388625,
+      "epochs_completed": 12,
+      "stop_reason": "early_stopping",
+      "seconds": 36.030212762765586,
+      "peak_cuda_allocated_bytes": 9199616,
+      "peak_cuda_reserved_bytes": 27262976,
+      "checkpoint": {
+        "architecture": "media_feature_head_v1",
+        "config": {
+          "aggregation": "mean",
+          "dropout": 0.1,
+          "hidden_dim": 64,
+          "input_dim": 768,
+          "temporal_kernel_size": 3,
+          "trim_fraction": 0.0
+        },
+        "schema_version": 1,
+        "score_direction": "higher_is_fake",
+        "sha256": "41b9a5300aaf50e25ee8a065c738dac4fe48cfdb250aace0be0c673118ea44a2"
+      }
+    }
+  },
+  "feature_provenance": {
+    "extraction_commit": "865a2c9eae8bb4a1803b6ee643f5f4c73878b7cb",
+    "pipeline_sha256": "50ff2794eb04a40b283e8e41a07cd5e81a724898e84eab245987dc64f3dc6e94",
+    "unique_cache_pairs": 4455,
+    "selected_rows": 4458,
+    "consumption": "precomputed old features; no encoder instantiated or feature extraction; identities unchanged",
+    "adapter_sha256": "47cdee0cda285b74e471377419a33f59d513c94a6dfc9eb3866d491129d74748",
+    "training_code": {
+      "code_sha256": "0ead0d8dac61cbb93d155d523e6cca6ce0bc13bcf4cca9bc88147af6c5654db7",
+      "commit": "3a4c0c8e52bb6638079e9d82af6598d2bc1bdfb8",
+      "dirty": false
+    },
+    "manifest_sha256": "10195f542a5bdeb4cc050a1242cc4ac2b8b505ab61c19f130e22c09e443a3fb6",
+    "sources_sha256": "4b992a4af234e4c4914948c86851607f022c6f750e85b852646f7c6e888398fa"
+  },
+  "models": {
+    "clip-head-seed43": {
+      "pooled": {
+        "expected": 1880,
+        "successful": 1880,
+        "failures": 0,
+        "coverage": 1.0,
+        "eer": 0.31333333333333335,
+        "roc_auc": 0.7459348958333334,
+        "real_count": 600,
+        "fake_count": 1280
+      },
+      "without_Open-Sora": {
+        "expected": 1280,
+        "successful": 1280,
+        "failures": 0,
+        "coverage": 1.0,
+        "eer": 0.2985294117647059,
+        "roc_auc": 0.7630612745098039,
+        "real_count": 600,
+        "fake_count": 680
+      },
+      "paired_Open-Sora_real": {
+        "expected": 1200,
+        "successful": 1200,
+        "failures": 0,
+        "coverage": 1.0,
+        "eer": 0.32666666666666666,
+        "roc_auc": 0.726525,
+        "real_count": 600,
+        "fake_count": 600
+      },
+      "per_generator_against_all_600_real": {
+        "AccVideo": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.25666666666666665,
+          "roc_auc": 0.817875,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "AnimateDiff": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.225,
+          "roc_auc": 0.869,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "EasyAnimate": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.325,
+          "roc_auc": 0.7562083333333334,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Gen2": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.325,
+          "roc_auc": 0.7027916666666667,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Gen3": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.35,
+          "roc_auc": 0.7119583333333334,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "IPOC": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.20666666666666667,
+          "roc_auc": 0.8768750000000001,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Jimeng": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.3,
+          "roc_auc": 0.7170416666666667,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Luma": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.425,
+          "roc_auc": 0.6798333333333334,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Open-Sora": {
+          "expected": 1200,
+          "successful": 1200,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.32666666666666666,
+          "roc_auc": 0.726525,
+          "real_count": 600,
+          "fake_count": 600
+        },
+        "Opensora": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.33666666666666667,
+          "roc_auc": 0.7504166666666666,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Pyramid-Flow": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.25,
+          "roc_auc": 0.8654166666666666,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "RepVideo": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.325,
+          "roc_auc": 0.7639166666666667,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "SEINE": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.425,
+          "roc_auc": 0.59675,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "SVD": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.35,
+          "roc_auc": 0.706875,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Sora": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.31333333333333335,
+          "roc_auc": 0.7374583333333333,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "VideoCrafter": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.22166666666666668,
+          "roc_auc": 0.8753333333333334,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "causvid_24fps": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.2683333333333333,
+          "roc_auc": 0.8136666666666666,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "vidu": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.35,
+          "roc_auc": 0.730625,
+          "real_count": 600,
+          "fake_count": 40
+        }
+      },
+      "actual_code_identity": {
+        "code_sha256": "11f178a827a8e43c39529fc69a97131e55b31bc0838dd3484cda0f16f32986ec",
+        "commit": "32f027e3be7e774ff3d9b1d360685e5bfeb2decb",
+        "dirty": false
+      },
+      "scores_sha256": "aceda4c5ac620993740e4db4d60606bae95af1819f708af5170d550d6ab54004"
+    },
+    "clip-temporal-seed42": {
+      "pooled": {
+        "expected": 1880,
+        "successful": 1880,
+        "failures": 0,
+        "coverage": 1.0,
+        "eer": 0.31171875,
+        "roc_auc": 0.75526953125,
+        "real_count": 600,
+        "fake_count": 1280
+      },
+      "without_Open-Sora": {
+        "expected": 1280,
+        "successful": 1280,
+        "failures": 0,
+        "coverage": 1.0,
+        "eer": 0.3029411764705882,
+        "roc_auc": 0.7728700980392157,
+        "real_count": 600,
+        "fake_count": 680
+      },
+      "paired_Open-Sora_real": {
+        "expected": 1200,
+        "successful": 1200,
+        "failures": 0,
+        "coverage": 1.0,
+        "eer": 0.3233333333333333,
+        "roc_auc": 0.7353222222222222,
+        "real_count": 600,
+        "fake_count": 600
+      },
+      "per_generator_against_all_600_real": {
+        "AccVideo": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.25,
+          "roc_auc": 0.8238333333333333,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "AnimateDiff": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.2,
+          "roc_auc": 0.8710416666666666,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "EasyAnimate": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.3,
+          "roc_auc": 0.7727083333333333,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Gen2": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.32666666666666666,
+          "roc_auc": 0.7150833333333334,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Gen3": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.35,
+          "roc_auc": 0.73025,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "IPOC": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.225,
+          "roc_auc": 0.8775416666666667,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Jimeng": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.2866666666666667,
+          "roc_auc": 0.74625,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Luma": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.37166666666666665,
+          "roc_auc": 0.6985416666666667,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Open-Sora": {
+          "expected": 1200,
+          "successful": 1200,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.3233333333333333,
+          "roc_auc": 0.7353222222222222,
+          "real_count": 600,
+          "fake_count": 600
+        },
+        "Opensora": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.3,
+          "roc_auc": 0.778125,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Pyramid-Flow": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.25,
+          "roc_auc": 0.8589166666666667,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "RepVideo": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.335,
+          "roc_auc": 0.7434166666666666,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "SEINE": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.4083333333333333,
+          "roc_auc": 0.6164583333333333,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "SVD": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.35,
+          "roc_auc": 0.7166666666666667,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "Sora": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.265,
+          "roc_auc": 0.783125,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "VideoCrafter": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.225,
+          "roc_auc": 0.86975,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "causvid_24fps": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.23166666666666666,
+          "roc_auc": 0.8209166666666666,
+          "real_count": 600,
+          "fake_count": 40
+        },
+        "vidu": {
+          "expected": 640,
+          "successful": 640,
+          "failures": 0,
+          "coverage": 1.0,
+          "eer": 0.365,
+          "roc_auc": 0.7161666666666666,
+          "real_count": 600,
+          "fake_count": 40
+        }
+      },
+      "actual_code_identity": {
+        "code_sha256": "0ead0d8dac61cbb93d155d523e6cca6ce0bc13bcf4cca9bc88147af6c5654db7",
+        "commit": "3a4c0c8e52bb6638079e9d82af6598d2bc1bdfb8",
+        "dirty": false
+      },
+      "scores_sha256": "dd0a00bab415a6af0705077261b7a2986b5e35f8eb33993869f894347c067842"
+    }
+  },
+  "eer_delta_percentage_points": {
+    "pooled": -0.16145833333333637,
+    "without_Open-Sora": 0.4411764705882337,
+    "paired_Open-Sora_real": -0.3333333333333355
+  },
+  "inference": {
+    "actual_config": {
+      "aggregation": "mean",
+      "audio": {},
+      "batch_size": 4,
+      "checkpoint": "/var/tmp/deepfake-video-clip-temporal-20261014/seed42-precomputed/training/best.pt",
+      "checkpoint_sha256": "45bb5050bc7058f8be102669a153d028484bcda192429dc893bb552c0f737265",
+      "data_root": "/var/tmp/lanjianyu-issue51-20261014/aigvdbench/controlled-1p25s/video_h264_crf23_448x256_16fps_1p25s",
+      "device": "cuda",
+      "encoder": {
+        "architecture": "ufd_clip_vit_l14",
+        "checkpoint": "/var/tmp/deepfake-video-ufd-20261014/models/ufd-vit-l14.pt",
+        "expected_sha256": "81907988948ab62e4ab20adc33f7eff6bee14f1067cf47e1e712525e0010d7f7",
+        "kind": "vision"
+      },
+      "manifest": "/var/tmp/lanjianyu-issue51-20261014/aigvdbench/controlled-1p25s/video_h264_crf23_448x256_16fps_1p25s/manifest.jsonl",
+      "modality": "video",
+      "model_kind": "video_features",
+      "output_dir": "/var/tmp/deepfake-video-clip-temporal-20261014/controlled",
+      "schema_version": 1,
+      "seed": 42,
+      "segment_samples": 64600,
+      "segments": 1,
+      "video": {
+        "height": 224,
+        "n_frames": 4,
+        "resize_mode": "native_center_crop",
+        "width": 224
+      }
+    },
+    "actual_code": {
+      "code_sha256": "0ead0d8dac61cbb93d155d523e6cca6ce0bc13bcf4cca9bc88147af6c5654db7",
+      "commit": "3a4c0c8e52bb6638079e9d82af6598d2bc1bdfb8",
+      "dirty": false
+    },
+    "scores_sha256": "dd0a00bab415a6af0705077261b7a2986b5e35f8eb33993869f894347c067842",
+    "sample_count": 1880,
+    "success_count": 1880,
+    "failure_count": 0,
+    "coverage": 1.0,
+    "timing": {
+      "T10k_raw_seconds": 2098.1874665238283,
+      "T10k_safe_seconds": 2622.7343331547854,
+      "current_session_elapsed_seconds_before_report_write": 389.9458857960999,
+      "current_session_instrumented_rows": 1880,
+      "current_session_new_rows": 1880,
+      "current_session_report_build_seconds": 0.09128069318830967,
+      "current_session_sample_call_seconds": 388.0703631583601,
+      "current_session_scope": "runner entry through report preparation; excludes caller preflight/model startup, final report write and lock release; stage timings cover only newly processed rows, including sample failures; uninstrumented work is unattributed",
+      "current_session_setup_seconds": 0.07656958885490894,
+      "current_session_stage_seconds": {
+        "decode_and_preprocess": 302.14998613949865,
+        "input_validation": 1.0855144774541259,
+        "model_and_feature_scoring": 84.50312083773315,
+        "unattributed_sample_call": 0.3317417036741972
+      },
+      "current_session_write_seconds": 1.5833780374377966,
+      "preflight_seconds": 2.114313387311995,
+      "preflight_seconds_per_sample": 0.0011246347804851036,
+      "projection_scope": "model startup, media/config preflight per sample, sample calls, and row writes",
+      "representative": false,
+      "representativeness_reason": "duration_content_distribution_not_verified",
+      "sample_call_seconds": 388.0703631583601,
+      "samples_per_second": 4.844482285891096,
+      "stage_clock": "host wall clock, no added CUDA synchronization; built-in successful scoring includes blocking CPU feature/score copies, transfers and pooling, not kernel-only time; failed CUDA calls may leave asynchronous work pending",
+      "startup_seconds": 14.314835762605071,
+      "write_estimate_available": true
+    },
+    "exit": {
+      "returncode": 0,
+      "pid": 1209494,
+      "started_at_unix": 1791984966.5910552,
+      "seconds": 408.36762595176697
+    },
+    "resources": {
+      "user_seconds": 246.819792,
+      "system_seconds": 114.535153,
+      "max_rss_kib": 3386420
+    },
+    "cuda_memory_note": "Exact CUDA peaks recorded for head profile/training. Inference resources record per-process max RSS and CPU/wall times; no exact inference CUDA peak collected."
+  },
+  "head_profile": {
+    "batch_size": 128,
+    "shape": [
+      128,
+      4,
+      768
+    ],
+    "amp_dtype": "bfloat16",
+    "grad_scaler_enabled": false,
+    "head_only": true,
+    "parameters": 149121,
+    "steps": [
+      {
+        "step": 1,
+        "loss": 0.7011510729789734,
+        "gradient_norm": 0.4164392054080963,
+        "seconds": 0.9860061183571815
+      },
+      {
+        "step": 2,
+        "loss": 0.6360299587249756,
+        "gradient_norm": 0.6643995642662048,
+        "seconds": 0.008796625770628452
+      }
+    ],
+    "peak_allocated_bytes": 8681472,
+    "peak_reserved_bytes": 27262976,
+    "omp_threads": "2",
+    "mkl_threads": "2"
+  },
+  "holdout_accessed": false,
+  "natural_evaluated": false,
+  "archive": "/mnt/deepfake-archive/C7-video-clip-temporal-20261014/",
+  "limit": "Both frozen CLIP systems use the same 4-frame native_center_crop224/FP32 encoder/batch4/mean settings. MLP seed43 vs temporal seed42 each selected only on original dev. Temporal parameter count changes and source code identities differ; no isolated causal claim about temporal relations. Each minor generator has only40fake; Open-Sora600 and separate Opensora40 remain distinct. Public controlled dev only; no holdout or natural evaluated in this task."
+}
