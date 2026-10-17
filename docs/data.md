@@ -14,8 +14,9 @@
 | 冻结CLIP视频头 | `/var/tmp/deepfake-video-clip-head-20261014/` | 双seed头与三组完整分数，冻结43为研究候选；复用UFD骨干，最小资产已另存C6，不替换release |
 | 生成机制鉴伪（#59） | `/var/tmp/lanjianyu-issue59-20261014/` | WaveRep G1 原权重与 `waverep_video_v1` checkpoint、SD1/Wan2.1 VAE、T1 权重、机制表、全部逐样本分数；持久副本 `/mnt/deepfake-archive/issue59-generator-forensics/`，研究用途、非营利许可 |
 | AIGVDBench首批视频 | `/var/tmp/lanjianyu-issue51-20261014/aigvdbench/` | #51：原库存dev/holdout各1880；修正已知母视频分组后整组排除11条，当前dev1878/holdout1871（新清单`/var/tmp/deepfake-pr92-corrected-20261017/`）；历史评分保留，保留部分封存，Panda母媒体交集未知；底层YouTube许可未确认，仅研究评估；[数据卡](experiments/aigvdbench-data-20261014/README.md) |
-| 人工收集真假音视频 | `/home/lanjianyu/人工收集的数据/`（清单在 `/var/tmp/lanjianyu-issue51-20261014/human-collected/`） | #51：数据负责人手工收集并按目录认定标签（2026-10-17，未逐条复核）。`real_ai_media_500_20261014/` 523条（LibriVox/维基共享AI语音/Mixkit/archive.org AI短片，逐条来源与许可CSV）、`AI生成视频/` 106条（B站）、`真实音视频/` 282条；共911条，音频404（真279/假125）、视频507（真283/假224），split未分配；7组字节重复已同组；真假在音轨、帧率、采样率上有系统差异；许可未确认，仅内部研究 |
-| 中文平台片段 china-clips-1000 | `/home/lanjianyu/人工收集的数据/china-clips-1000-20261016/`（清单在 `/var/tmp/lanjianyu-issue51-20261014/china-clips/`） | #51：B站投稿与国内生成工具官网展示的约10秒片段，音频/视频各500（mp3/wav/flac、mp4/mkv统一转码）；标签取候选方向，由数据负责人2026-10-17认定、依据上传者/官方声明、未逐条试听试看；排除方向未知1条后999条：音频真250/假249（音乐354、语音120）、视频真250/假250；视频真实全部来自B站、假视频122条来自官网展示，评估时需分开报告；按原素材999组，84位作者多条另记identity；split未分配；许可未确认，仅内部研究 |
+| 人工收集真假音视频 | `/home/lanjianyu/人工收集的数据/`（清单在 `/var/tmp/lanjianyu-issue51-20261014/human-collected/`） | #51：数据负责人手工收集并按目录认定标签（2026-10-17，未逐条复核）。`real_ai_media_500_20261014/` 523条（LibriVox/维基共享AI语音/Mixkit/archive.org AI短片，逐条来源与许可CSV）、`AI生成视频/` 106条（B站）、`真实音视频/` 282条；共911条，音频404（真279/假125）、视频507（真283/假224）；原清单保持unassigned，#95派生清单已按两批共同关系固定dev/holdout用途，无train；7组字节重复已同组；真假在音轨、帧率、采样率上有系统差异；许可未确认，仅内部研究 |
+| 中文平台片段 china-clips-1000 | `/home/lanjianyu/人工收集的数据/china-clips-1000-20261016/`（清单在 `/var/tmp/lanjianyu-issue51-20261014/china-clips/`） | #51：B站投稿与国内生成工具官网展示的约10秒片段，音频/视频各500（mp3/wav/flac、mp4/mkv统一转码）；标签取候选方向，由数据负责人2026-10-17认定、依据上传者/官方声明、未逐条试听试看；排除方向未知1条后999条：音频真250/假249（音乐354、语音120）、视频真250/假250；视频真实全部来自B站、假视频122条来自官网展示，评估时需分开报告；按原素材999组，84位作者多条另记identity；原清单保持unassigned，#95派生清单已固定dev/holdout用途，无train；许可未确认，仅内部研究 |
+| 新平台视频开发诊断（#95） | `/var/tmp/deepfake-china-video-20261017/` | 两批1910条共同组件划分：视频dev808（真415/假393）/holdout199，音频dev657/holdout246仅用途；精确BV跨批3组、字节重复与已登记关系保留。普通用户可读dev自然副本及对称受控各808，原媒体不改；自然800成功/8失败（完整EER不可算），受控808成功；原始失败保留，holdout未读；[实验](experiments/video-platform-20261017/README.md) |
 | 新来源CLIP视频评分 | `/var/tmp/deepfake-video-independent-20261014/` | 自然/受控各1880条零失败、EER21.33%/31.33%；8帧受控31.80%无收益；[实验](experiments/video-aigvdbench-20261014/README.md) |
 | CLIP最后block适配（#81） | `/var/tmp/deepfake-video-clip-adapt-20261016/` | control43/tuned43/42完整权重、配置和逐样本分数；复用C6/C9/C10媒体及初始化，C11持久副本；可重建tokens在运行完成后释放；[实验](experiments/video-clip-adapt-20261016/README.md) |
 | 三生成器扩展（#80） | `/var/tmp/deepfake-video-coverage-20261016/` | 新增1500条原媒体，整组排除训练2条后实际train5412/dev1344；control43/expanded43/42与两套完整诊断，内部研究，持久副本C10；[实验](experiments/video-generator-coverage-20261016/README.md) |
@@ -42,10 +43,17 @@
 | AST时频遮挡与广播外部诊断 | `/var/tmp/deepfake-audio-regularize-20261012/` | 扩展模型第二种子、两档遮挡训练及分数；`ai-openbmat/`含246段外部探索dev；原始子集在`upstream/ai-openbmat/` |
 | 对称音乐/语音混合与匹配对照 | `/var/tmp/deepfake-audio-speech-mix-20261012/` | `mixtures/`含3,464个波形变体；`pure-replay/`、`speech-mix/`为同规模联合训练清单；固定源码、权重及九桶评分按任务保存 |
 | 语音第二种子与 In-the-Wild | `/var/tmp/lanjianyu-issue39-20261013/` | `runs/`为#39三次LogMel训练与评分；`data/release_in_the_wild/`为31,779条外部诊断媒体，`data/in-the-wild-manifest/`为测试清单 |
-| SSL 语音检测器 | `/var/tmp/lanjianyu-issue53-20261014/` | `weights/LA_model.pth`（SSL_Anti-spoofing 官方LA权重）、`upstream/`作者源码与协议、`out/`五个语音集与非语音诊断分数、`analysis/`同协议对照；持久副本 `/mnt/deepfake-archive/C20-speech-ssl-aasist-20261014/` |
+| SSL 语音检测器 | `/var/tmp/lanjianyu-issue53-20261014/` | `weights/LA_model.pth`（SSL_Anti-spoofing 官方LA权重，PR #91已接标准infer/predict，原音频8/8、最大差2.38e-6；语音专家，不改release）、`upstream/`作者源码与协议、`out/`五个语音集与非语音诊断分数、`analysis/`同协议对照；持久副本 `/mnt/deepfake-archive/C20-speech-ssl-aasist-20261014/` |
 | FakeSound 诊断清单 | `/var/tmp/lanjianyu-issue11-20261011/fakesound-v1/` | data_root 为其 `media/`，含缺失 real 记录 |
 
 共享原媒体和模型只读；`outputs/`、`cache/` 使用各自任务目录。
+
+#95用途依据完整1910条metadata共同计算连通组件，seed20261017按组件哈希80/20固定，
+未知关系保持未知；视频生成器1007条全未知、937条作者身份未知，dev108条统计分组未知。
+首批1910条不用于梯度训练，保留视频199条未解码/未评分。自然与受控视图同时改变时长、
+尺寸、压缩和采样，不能作纯编解码对照。自然8条初始失败保持记账：7条实际时间戳异常、1条无关MP2音轨错误影响严格解码，本轮未恢复；
+用途、原路径/SHA映射与分数见上述#95运行目录，原库存及持久C21保持原样。
+
 `/var/tmp` 产物当前可定位，但不是已确认的持久卷；候选的最小集合已另存[持久归档](#持久归档)。
 音视频任务已交付的目录组为 `dlteam`，团队可读；实际配置与权重标识见实验卡。
 
@@ -78,6 +86,7 @@
 | `C20-speech-ssl-aasist-20261014/` | #53：SSL_Anti-spoofing官方`LA_model.pth`、作者源码`4acaa61d`与协议、XLS-R配置、评分脚本新旧两版、5个语音集与5个非语音诊断集完整分数/评估/加载映射、同协议汇总与来源记录；52文件1,356,326,200字节，自带`SHA256SUMS` 51/51 OK |
 | `C21-human-collected-20261017/` | #51数据负责人收集的真假音视频原媒体与项目清单：real_ai_media_500 523条（含来源CSV）、AI生成视频106条与原zip、真实音视频282条、china-clips-1000解压包根（不含与之重复的2.2GB zip，zip SHA-256记于README）；清单911+999条；2,940文件3,251,126,327字节，`SHA256SUMS` 2,939/2,939 OK；原目录 `/home/lanjianyu/人工收集的数据/` 保留，许可未确认仅内部研究 |
 | `C22-video-generator-coverage-20261017/` | 四个同初始化/预算CLIP4头、完整配置/分数/历史、采集排除与feature producer记录、标准CLI8条、必要适配器/源码；新增2400原媒体及canonical各单份tar，旧媒体/编码器/缓存不复制 |
+| `C23-platform-video-20261017/` | #95首批平台视频dev用途、固定C10/C22比较、自然/受控四份完整分数与失败、生产者源码和适配器；47内容文件60,111,997B，复制读回一致、受控tar808成员逐一SHA核对；原媒体复用C21、权重复用C6/C10/C22，不复制自然dev或特征缓存，holdout仅元数据 |
 | `shared/` | `resnet18-a1/encoder.pt`（视频共享基座）与`ast-audioset/`（AST预训练基座） |
 
 原C1–C5与shared共396个内容文件、约3.07GiB，不含原始媒体、特征缓存和可再生的发布分片。
@@ -185,7 +194,7 @@ C6的CLIP特征头则需要显式加载同批保存的视觉编码器。以持�
 | `tools/prepare_asvspoof2019.py` | 官方协议和 FLAC → 标准清单 |
 | `tools/prepare_asv_parquet.py` | 固定共享 Parquet 与官方协议 → 原始 FLAC；不重编码 |
 | `tools/prepare_in_the_wild.py` | 已解压的 In-the-Wild 发布 → 按说话人分组的 test 清单；只作冻结候选的外部诊断 |
-| `tools/score_ssl_antispoofing.py` | SSL_Anti-spoofing 官方权重 + 作者 `model.py` → 项目格式分数；不装 fairseq，XLS-R 用 transformers 严格加载 |
+| `tools/score_ssl_antispoofing.py` | SSL_Anti-spoofing 官方权重 + 作者 `model.py` → 项目格式分数；共享src加载器亦供标准infer/predict使用，`audio_ssl_antispoofing`及本地三资源模板已交付；不装fairseq |
 | `tools/prepare_asv_eval.py` | 固定官方eval协议与镜像Parquet → 未知攻击研究清单；既有发布直接复用 |
 | `tools/prepare_asv_main.py` | 既有 ASV 清单 → 训练子集；历史单条排除应显式配置 |
 | `tools/prepare_vif_panda.py` | 固定 ViF ZIP → Panda 媒体、来源与配对关系 |

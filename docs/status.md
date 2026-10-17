@@ -12,7 +12,7 @@
 | 方向 | 已有结果 | 当前选择与缺口 |
 | --- | --- | --- |
 | 语音 | 带宽seed42/43 clean 0.90%/1.08%、8kHz带限1.39%/1.04%；In-the-Wild 30.67%/31.19% | 保留带宽seed42；白噪声双种子不稳定已停止；真实网络语音仍弱；[实验](experiments/speech-robust-20261013/README.md) |
-| 语音SSL | 官方XLS-R+AASIST LA权重：ASV dev clean/AAC/8kHz 0.08%/0.08%/0.04%，A07–A19 0.19%，In-the-Wild 11.21%（LogMel 30.67%、AST 24.86%） | 保留为语音专家候选，不替换通用音频；权重1.2GB、显存约2GB；[实验](experiments/speech-ssl-20261014/README.md) |
+| 语音SSL | 官方XLS-R+AASIST LA权重：ASV dev clean/AAC/8kHz 0.08%/0.08%/0.04%，A07–A19 0.19%，In-the-Wild 11.21%（LogMel 30.67%、AST 24.86%） | PR #91 已接标准infer/predict（`audio_ssl_antispoofing`），原音频8/8成功、最大分数差2.38e-6；保留语音专家，不替换通用音频或release；权重1.2GB、显存约2GB；[实验](experiments/speech-ssl-20261014/README.md) |
 | 环境音 | Urban AST12层seed42 dev1.39%；冻结研究候选holdout已见1.43%、未见生成器6.51% | 保留环境音对照；不能代表音乐或通用音频；[实验](experiments/audio-envsdd-20261011/README.md) |
 | 音乐 | 扩展AIME无增强候选未训练路径18.75%；事后等权分数融合14.58% | 融合仅为dev探索，未接离线推理；跨来源仍弱；[实验](experiments/audio-ast-regularization-20261012/README.md) |
 | 音乐/语音混合 | 匹配对照中未训练路径合成混合32.55%→26.89%；真实广播混合仍50%、环境音退化 | 保留负结果，不替换主候选；[实验](experiments/audio-speech-mix-20261012/README.md) |
@@ -27,7 +27,8 @@
 | CLIP最后block适配（#81） | 固定主43 AIGVD18.83%→17.83%、去五训练标签21.00%→19.33%，旧dev24.88%→23.22%；ViF pooled25.96%、未训练标签28.64%，rep42为26.92%/30.36% | 保留微调研究候选，C10仍通用视频主候选；复现ViF退化，不升级Release或继续扫已见dev；完整权重已存C11，主43标准infer4/4；[实验](experiments/video-clip-adapt-20261016/README.md) |
 | CLIP/DINOv2同预算训练（#86） | 八组训练完成；新CLIP43/42 AIGVD15.86%/17.00%（C10 18.83%），ViF26.67%/26.92%（C10 25.91%）；DINO适配主43为24.53%/33.65% | C10仍为通用研究主候选，新CLIP为研究备选，停止本轮DINO训练；已见诊断非盲测，保持发布默认；[实验](experiments/video-dinov2-20261017/README.md) |
 | 原生Swin3D与CLIP16（#88） | 八组同预算训练完成；Swin适配主43 AIGVD20.94%/ViF34.58%，匹配CLIP16为16.83%/26.12%；时序置乱256条已完成 | Swin有时序敏感性但弱于CLIP，停止本轮投入；CLIP16较4帧跨集有取舍，保留对照，C10仍主候选；[实验](experiments/video-native-20261017/README.md) |
-| 三生成器训练覆盖扩展（#90） | 新增2400条officialtrain，实际train7812/dev1344；四组同预算训练，主43 AIGVD17.11%、去八训练标签20.33%，旧dev24.88%；ViF26.92% | AIGVD优于C10及匹配control，ViF却差于C10的25.91%，保留研究备选，C10仍主候选；下一轮优先中文平台数据，停止本轮同体系扩展；[实验](experiments/video-coverage-20261017/README.md) |
+| 三生成器训练覆盖扩展（#90） | 新增2400条officialtrain，实际train7812/dev1344；四组同预算训练，主43 AIGVD17.11%、去八训练标签20.33%，旧dev24.88%；ViF26.92% | AIGVD优于C10及匹配control，ViF却差于C10的25.91%，保留研究备选，C10仍主候选；新平台诊断见下一行，停止本轮同体系扩展；[实验](experiments/video-coverage-20261017/README.md) |
+| 新平台视频诊断（#95） | 新dev808：自然800/808，完整EER不可算，成功子集C10/C22为45.7002%/47.1744%；受控808/808，完整EER44.5783%/43.6145%。中文批409条自然47.2081%/51.4151%、受控48.7310%/43.3962% | 两候选在新数据上接近随机，C10仍主候选、C22不升级；199条holdout未读，不在这批dev继续扫参数或训练；[实验](experiments/video-platform-20261017/README.md) |
 | 固定CLIP＋WaveRep融合 | 真实标准入口受控dev1880/1880、零失败；EER26.41%（CLIP31.33%）、去Open-Sora21.32%；18个生成器均优于CLIP；CLI调用803.54秒、显存allocated峰值1.80GB | 已接入infer/predict、单checkpoint与搬移wheel；仅研究候选，dev已见、旧母媒体交集未知，冻结保留验收及赛用许可待确认；[实验](experiments/video-fusion-20261016/README.md) |
 | cu126与固定工具 | 完整cu126三件套实装；RC3原权重20输入在CPU/GPU/Ubuntu24新用户各20/20，30前端张量差0、CPU/GPU分数差≤7.63e-6；同设备旧/新实现分数差0 | 系统Toolkit13.2保留；固定同源码LGPL工具及对应源码随包；Ubuntu24用户态共享宿主内核，不能当作Docker；[本轮回归](experiments/runtime-completion-20261016/README.md) |
 | 离线系统 | clean `2e8388a` RC3、adaptive模式：音频10000/10000、1046.83秒；视频10000/10000、1613.32秒，均零失败；allocated/reserved峰值分别400.12/434.11MB、110.13/134.22MB | 两任务并行，耗时不与旧串行运行作加速比较；已见诊断/train-dev容量，无holdout或EER，默认仍为原v0.1.1研究权重；CPU/cu126无权重Docker镜像已实测CPU推理及save/load，未重发Release；[结果与限制](experiments/runtime-completion-20261016/README.md) |
@@ -39,13 +40,18 @@ In-the-Wild及多轮使用的dev已见，不能再作为未来盲测；正式交
 ## 候选状态（2026-10-17 核对）
 
 按产物核对，不以旧评论或 `running` 字段为准；权重哈希与持久副本见[数据说明](data.md#持久归档)。
-“复核”指他人重跑结果，不等于独立来源泛化。#51已交首批视频dev，受控组四候选完整比较已完成；
-与旧Panda训练/选择集的YouTube母媒体交集未知，最终保留评价尚未进行。
+“复核”指他人重跑结果，不等于独立来源泛化。#51此前AIGVDBench受控四候选比较已完成，
+其与旧Panda的YouTube母媒体交集未知；PR #92修正已知母视频分组，历史分数保留。
+新上传两批1910条经#95按共同组件固定用途：视频dev808（真415/假393）、holdout199未读；
+音频dev657/holdout246仅登记用途。1007视频生成器均未知、937条作者身份未知，
+dev108条统计分组未知，不能宣称生成器或人物独立。自然视图8条明确失败保留；
+自然全长与受控首1.25秒同时改变时长、尺寸、压缩和采样，不能当纯编解码比较。
 
 | 候选 | 训练/评分 | 选定 | 复核 | 合并 | 发布 | 权重可恢复 | 标准入口加载 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | v0.1.1 环境音AST + 视频ResNet18 | 完成 | 发布默认 | release复核、CPU/GPU演示 | #42、#44 | v0.1.1 | 是 | 发布包可用 |
 | 三域联合AST seed42主/seed43备 | 完成 | 研究主候选 | #56复核 | #45、#56 | 否 | 是 | 发布包`infer`可加载，归档副本80条分数逐位一致 |
+| SSL语音专家官方LA | 同协议评分与标准入口完成 | 语音研究候选，通用默认不变 | 实现与8条原音频接入核对 | #91已合入main | 否 | 是（C20） | 标准infer/predict，8/8、最大差2.38e-6 |
 | LogMel带宽 seed42冻结/seed43 | 完成 | 语音对照 | seed43经#55复核，seed42仅自评 | #37、#55 | 否 | 是 | 仓库源码入口 |
 | 七生成器视频 paired-seed43 | 完成 | 研究候选 | #48复核 | #48 | 否 | 是 | 发布包不兼容（`temporal_kernel_size`），仓库源码入口20条最大差4.9e-3 |
 | 视频时序头 seed43 | 完成 | 研究候选 | 复核目录团队不可读 | #43 | 否 | 是（原权重root 0600，归档副本可读） | 未演练 |
@@ -70,7 +76,7 @@ In-the-Wild及多轮使用的dev已见，不能再作为未来盲测；正式交
 具体认领、进程和PR在Issue维护：
 
 - 独立来源数据与评测隔离：[#51](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/51)。
-- 更强视频基线：[#52](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/52)；语音SSL对照：[#53](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/53)。
+- 更强视频基线：[#52](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/52)；语音SSL对照及公共入口：[#53](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/53)已由#91完成，后续衔接中文语音开发用途。
 - 统一媒体预测入口：[#57](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/57)已完成，经#62/#64合入main；实际交付由#54继续。
 - 视频固定融合：[#72](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/72)标准入口已完成；后续优先独立数据与困难内容，不据已见dev继续调系数。CPU/cu126安装与固定帧分批分别由#73/#74、#75交付，#74/#75/#76经#78补集成到main；本轮纠正#74的CPU TorchAudio构建，完整cu126三件套已实装并通过GPU算子与原权重回归。
 - 跨来源视频训练：[#77](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/77)完成新数据、双种子适配与冻结诊断；优先扩充困难内容及真实来源，不继续扫描已见dev。
@@ -78,7 +84,8 @@ In-the-Wild及多轮使用的dev已见，不能再作为未来盲测；正式交
 - 视频表征有限适配：[#81](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/81)完成最后block双种子与同预算头对照；AIGVD及旧域改善，ViF复现退化，研究保留而不替换C10。下一步更多真实来源/困难内容，与#51并行衔接，不继续扫已见dev。
 - 新表征匹配训练：[#86](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/86)完成原始DINOv2/CLIP双种子及DINO末block/头对照；新CLIP改善AIGVD、ViF仍有取舍，保留研究备选；停止本轮DINO训练，后续优先新真实来源、困难内容和视频时序表征。
 - 原生视频时序：[#88](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/88)完成Swin3D/CLIP16匹配双种子与Swin末stage/头对照，完整外部和时序诊断均齐备；Swin仍弱于CLIP，停止本轮训练，CLIP16保留对照。后续优先#51新真实来源/困难生成内容，不继续扫已见dev。
-- 新增三生成器训练：[#90](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/90)完成2400条扩展与四组匹配训练；AIGVD改善、ViF退化，保留研究备选。下一轮承接#51中文平台数据的分组划分，不继续仅扩AIGVD或扫已见dev。
+- 新增三生成器训练：[#90](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/90)完成2400条扩展与四组匹配训练；AIGVD改善、ViF退化，保留研究备选。已由#95消费#51新平台视频作首轮诊断，不继续仅扩AIGVD或扫已见dev。
+- 新平台泛化：[#95](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/95)已完成固定用途与首轮视频诊断。C10/C22接近随机；下一步取得与这1910条无关联的训练媒体，扩大真实来源和困难生成内容并平衡来源/内容，首批dev/holdout均不进梯度训练；不继续种子、帧数、融合或AIGVD扫描。
 - 安装与资源适配：#65/#66的实现和实际RC3回归已通过[PR #85](https://github.com/lanjianyu060915-web/deepfake-detection-archive/pull/85)合入main；默认reference、显式adaptive，有界profile/OOM缩减与恢复计划已接入。Docker CPU/cu126镜像在无GPU Actions以CPU模式做4样本及save/load演练，[运行](https://github.com/lanjianyu060915-web/deepfake-detection-archive/actions/runs/38916789385)已成功，两路4/4且host/container/save-load分数差0；不计GPU容器或万级容器验收。
 - 共享资产持久保存：[#50](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/50)原备份完成；用户后来增加的恢复要求尚未全部完成，已重新开放，C14保存部分恢复结果；离线兼容与容量：[#54](https://github.com/lanjianyu060915-web/deepfake-detection-archive/issues/54)。
 

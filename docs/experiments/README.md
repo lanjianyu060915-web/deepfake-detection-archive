@@ -8,14 +8,15 @@
 
 | 实验 | 当前结论 | 下一步 |
 | --- | --- | --- |
-| [三生成器训练覆盖扩展](video-coverage-20261017/README.md) | 新增2400train，四组同初始化/预算；主43 AIGVD18.83%→17.11%、去八训练标签23.25%→20.33%，ViF25.91%→26.92%；标准CLI8/8 | AIGVD改善但ViF退化，保留研究备选、C10仍主候选；优先中文平台数据，停止本轮同体系扩展；holdout未读 |
+| [新平台视频首轮诊断](video-platform-20261017/README.md) | 固定dev808/holdout199；自然800/808，完整EER不可算，成功子集C10/C22为45.70%/47.17%；受控808/808为44.58%/43.61% | 新数据接近随机，C10仍主候选、C22不升级；取得无关联训练数据，首批不入训练，holdout未读 |
+| [三生成器训练覆盖扩展](video-coverage-20261017/README.md) | 新增2400train，四组同初始化/预算；主43 AIGVD18.83%→17.11%、去八训练标签23.25%→20.33%，ViF25.91%→26.92%；标准CLI8/8 | AIGVD改善但ViF退化，保留研究备选、C10仍主候选；新平台诊断见上一行，停止本轮同体系扩展；holdout未读 |
 | [原生Swin3D与CLIP16匹配训练](video-native-20261017/README.md) | 八组训练；Swin适配主43 AIGVD20.94%/ViF34.58%，CLIP16为16.83%/26.12%；256条时序诊断与24条标准推理完成 | 时序敏感不等于更强鉴伪，停止本轮Swin；CLIP16保留跨集取舍对照、C10仍主候选；holdout封存 |
 | [DINOv2/CLIP匹配训练与有限适配](video-dinov2-20261017/README.md) | 八组训练；新CLIP43/42 AIGVD15.86%/17.00%，ViF26.67%/26.92%；DINO适配主43为24.53%/33.65%，弱于CLIP | C10仍主候选、新CLIP备选；停止本轮DINO训练，优先新来源/困难内容与视频时序表征；已见诊断不作盲测 |
 | [ASV 云端双种子](asv-cloud-20261011/README.md) | LogMel EER0.7849%/0.9419%；冻结HuBERT未改善同域dev | 未知攻击、跨来源及压缩评分 |
 | [语音压缩与未知攻击](audio-generalization-20261011/README.md) | LogMel42未知攻击EER2.97%；AAC退化较小，8kHz采样率带限EER13.10% | 带宽增强、跨来源及未知攻击叠加退化 |
 | [语音带宽增强](bandwidth-augmentation-20261012/README.md) | 训练期8kHz增强：带限EER13.10%→1.39%，clean+0.12点，AAC与未知子集亦改善 | seed43复现见下一行 |
 | [语音第二种子与白噪声增强](speech-robust-20261013/README.md) | 带宽seed43 8kHz 1.04%，收益稳定；白噪声增强双种子dev 1.84%/0.94%不稳定，停止；In-the-Wild约30%（冻结候选30.67%） | 真实场景语音并入三域联合训练 |
-| [SSL语音检测器对照](speech-ssl-20261014/README.md) | 官方XLS-R+AASIST LA权重同协议全面领先：A07–A19 0.19%、In-the-Wild 11.21%（LogMel 30.67%、AST 24.86%） | 中文独立来源语音评估后再定是否微调；非语音只作适用范围诊断 |
+| [SSL语音检测器对照](speech-ssl-20261014/README.md) | 官方XLS-R+AASIST LA权重同协议全面领先：A07–A19 0.19%、In-the-Wild 11.21%（LogMel 30.67%、AST 24.86%） | PR #91接标准infer/predict，原音频8/8、最大差2.38e-6；后续中文语音开发评估，语音专家不替换通用默认 |
 | [ViF 云端受控视频](vif-cloud-20261011/README.md) | Hunyuan train618/dev146；视觉EER20.55%/21.92%，优于同集元数据 | 跨来源/生成器与压缩评分，再决定微调/时序 |
 | [ViF 帧微调](video-finetune-20261011/README.md) | 同划分解冻layer4与头，双种子dev EER16.44%（冻结头对照20.55%/21.92%），覆盖率1.0 | 尺寸受控后的跨生成器验收见下一行 |
 | [CLIP最后block有限适配](video-clip-adapt-20261016/README.md) | 同初始化/预算control+两种子，各8epoch/344updates；主43 AIGVD17.83%、去五标签19.33%、旧dev23.22%；ViF25.96%基本持平、未训练28.64% | 研究保留，C10仍通用视频主候选；rep42 ViF退化，停止本轮已见dev扫描；完整权重已存C11，主43标准infer4/4，默认不变 |
