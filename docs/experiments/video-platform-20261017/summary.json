@@ -1,0 +1,977 @@
+{
+  "issue": 95,
+  "metric_units": "EER and ROC AUC are fractions, higher score means fake",
+  "frozen": {
+    "adapter_sha256": "357b6b0ea2eb7374acdd02b481c52fc86fefefdc563e7dacdf0ee616f7f154ac",
+    "candidates": {
+      "C10": {
+        "path": "/var/tmp/deepfake-video-coverage-20261016/expanded43/training/best.pt",
+        "sha256": "916f57f547c83265528f033919f41f189161b207a20b57116fa8f6ce71e4f2fc"
+      },
+      "C22": {
+        "path": "/srv/shared-data/candidates/video-coverage-20261017/expanded43/best.pt",
+        "sha256": "e6ff49dec19c8343dd340b73200b7c2b2d0dc8b897723443f3a7ecdd3bb58758"
+      }
+    },
+    "encoder": {
+      "architecture": "ufd_clip_vit_l14",
+      "checkpoint": "/var/tmp/deepfake-video-ufd-20261014/models/ufd-vit-l14.pt",
+      "expected_sha256": "81907988948ab62e4ab20adc33f7eff6bee14f1067cf47e1e712525e0010d7f7",
+      "kind": "vision"
+    },
+    "holdout_consumed": false,
+    "prepared_sha256": "c20f7b9d5724fe247763199d0fd7f344471c93c6f89353dc2c7b0847cebbf8b3",
+    "producer": {
+      "code_sha256": "34451bb995f25b21716e32bdbb447a066e3c8f0e532fdd7e42b5023b8923a544",
+      "commit": "7b15d1856fdda481822a6bbd14e6883b85c57804",
+      "dirty": false
+    },
+    "video": {
+      "height": 224,
+      "n_frames": 4,
+      "resize_mode": "native_center_crop",
+      "width": 224
+    }
+  },
+  "roles_before_scores": {
+    "seed": 20261017,
+    "all_records": 1910,
+    "video_dev": 808,
+    "video_dev_labels": {
+      "0": 415,
+      "1": 393
+    },
+    "video_holdout": 199,
+    "video_holdout_labels": {
+      "0": 118,
+      "1": 81
+    },
+    "audio_roles": {
+      "dev": 657,
+      "holdout": 246
+    },
+    "dev_statistical_unknown": 108
+  },
+  "scope": {
+    "generator_and_author_independence_unknown": true,
+    "holdout_video_samples_unscored": 199,
+    "natural_and_controlled_differ_in_duration_resolution_and_sampling": true,
+    "new_dev_first_diagnosis": true,
+    "no_training_or_refit": true,
+    "release_default_unchanged": true,
+    "scores_from_shared_fp32_features_not_full_cli_capacity": true,
+    "shared_real_pool_not_independent": true
+  },
+  "view_protocol": {
+    "natural": "original bytes; four frames uniformly sampled over full decoded timeline",
+    "controlled": "first 1.25s, 448x256, 16fps/20 frames, H.264 CRF23; four sampled frames",
+    "confounds": "duration, size, compression, sampling and native crop field of view all differ; not a codec-only ablation",
+    "labels": "owner-recognized file labels, not independently verified per-window labels"
+  },
+  "resources": {
+    "controlled": {
+      "input_samples": 808,
+      "seconds": 39.46527546830475,
+      "unique_encoded": 802,
+      "unique_failures": 0,
+      "peak_cuda_allocated_bytes": 1920996864
+    },
+    "natural": {
+      "input_samples": 808,
+      "seconds": 322.2531517436728,
+      "unique_encoded": 796,
+      "unique_failures": 8,
+      "peak_cuda_allocated_bytes": 1920996864
+    }
+  },
+  "natural_failures": {
+    "hc-116b9c13143d3ee243b6f290": [
+      "feature_failed",
+      "MediaError: invalid_timestamps: frame presentation time missing"
+    ],
+    "hc-36a55ff3e14660fb3da0323a": [
+      "feature_failed",
+      "MediaError: invalid_timestamps: frame presentation time missing"
+    ],
+    "hc-45acb7a646969440be1510e1": [
+      "feature_failed",
+      "MediaError: invalid_timestamps: frame presentation time missing"
+    ],
+    "hc-7e38b82ad5efb5daa1f59685": [
+      "feature_failed",
+      "MediaError: decode_error: [mp2 @ 0x55a2f90af640] Header missing"
+    ],
+    "hc-85a8f14a160300e91dd850a8": [
+      "feature_failed",
+      "MediaError: invalid_timestamps: frame presentation time missing"
+    ],
+    "hc-b5b14a5bed0611d63db62c31": [
+      "feature_failed",
+      "MediaError: invalid_timestamps: frame presentation time missing"
+    ],
+    "hc-e3e2580930908ac80fd86c84": [
+      "feature_failed",
+      "MediaError: invalid_timestamps: frame presentation time missing"
+    ],
+    "hc-feafd162ef0bc290374a1406": [
+      "feature_failed",
+      "MediaError: invalid_timestamps: frame presentation time missing"
+    ]
+  },
+  "failure_diagnosis": {
+    "missing_timestamps": "seven inputs lack actual PTS/DTS for the last one or two frames; genpts changes timeline and is not used",
+    "unrelated_audio_diagnostic": "hc-7e38b82ad5efb5daa1f59685 has valid video timestamps but MP2 Header missing during container probing; not evidence of damaged video",
+    "handling": "preserved all eight failures; no sampling or decoder change, no fabricated scores"
+  },
+  "results": {
+    "controlled": {
+      "C10": {
+        "by_batch": {
+          "china-clips": {
+            "sample_count": 409,
+            "success_count": 409,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "real_count": 197,
+            "fake_count": 212,
+            "group_count": 271,
+            "missing_group_count": 0,
+            "fullset_eer": 0.4873096446700508,
+            "fullset_reason": null,
+            "successful_subset_metrics": {
+              "eer": 0.4873096446700508,
+              "roc_auc": 0.5541375347188967
+            }
+          },
+          "human-collected": {
+            "sample_count": 399,
+            "success_count": 399,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "real_count": 218,
+            "fake_count": 181,
+            "group_count": 262,
+            "missing_group_count": 108,
+            "fullset_eer": 0.4198895027624309,
+            "fullset_reason": null,
+            "successful_subset_metrics": {
+              "eer": 0.4198895027624309,
+              "roc_auc": 0.5539814486289218
+            }
+          }
+        },
+        "by_source": {
+          "china-clips-bilibili": {
+            "sample_count": 294,
+            "success_count": 294,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "real_count": 197,
+            "fake_count": 97,
+            "group_count": 261,
+            "missing_group_count": 0,
+            "fullset_eer": 0.4416243654822335,
+            "fullset_reason": null,
+            "successful_subset_metrics": {
+              "eer": 0.4416243654822335,
+              "roc_auc": 0.6022816473912815
+            }
+          },
+          "china-clips-official-showcase": {
+            "sample_count": 115,
+            "success_count": 115,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "real_count": 0,
+            "fake_count": 115,
+            "group_count": 10,
+            "missing_group_count": 0,
+            "fullset_eer": null,
+            "fullset_reason": "successful_labeled_subset_missing_class",
+            "successful_subset_metrics": null
+          },
+          "human-collected-ai-video-zip": {
+            "sample_count": 89,
+            "success_count": 89,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "real_count": 0,
+            "fake_count": 89,
+            "group_count": 69,
+            "missing_group_count": 0,
+            "fullset_eer": null,
+            "fullset_reason": "successful_labeled_subset_missing_class",
+            "successful_subset_metrics": null
+          },
+          "human-collected-real-ai-media-500": {
+            "sample_count": 201,
+            "success_count": 201,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "real_count": 109,
+            "fake_count": 92,
+            "group_count": 192,
+            "missing_group_count": 0,
+            "fullset_eer": 0.45871559633027525,
+            "fullset_reason": null,
+            "successful_subset_metrics": {
+              "eer": 0.45871559633027525,
+              "roc_auc": 0.5159553250897487
+            }
+          },
+          "human-collected-real-media": {
+            "sample_count": 109,
+            "success_count": 109,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "real_count": 109,
+            "fake_count": 0,
+            "group_count": 1,
+            "missing_group_count": 108,
+            "fullset_eer": null,
+            "fullset_reason": "successful_labeled_subset_missing_class",
+            "successful_subset_metrics": null
+          }
+        },
+        "fake_source_with_shared_real_pool": {
+          "china-clips-bilibili": {
+            "sample_count": 512,
+            "success_count": 512,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "real_count": 415,
+            "fake_count": 97,
+            "group_count": 370,
+            "missing_group_count": 108,
+            "fullset_eer": 0.40963855421686746,
+            "fullset_reason": null,
+            "successful_subset_metrics": {
+              "eer": 0.40963855421686746,
+              "roc_auc": 0.6320457086076264
+            }
+          },
+          "china-clips-official-showcase": {
+            "sample_count": 530,
+            "success_count": 530,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "real_count": 415,
+            "fake_count": 115,
+            "group_count": 298,
+            "missing_group_count": 108,
+            "fullset_eer": 0.472289156626506,
+            "fullset_reason": null,
+            "successful_subset_metrics": {
+              "eer": 0.472289156626506,
+              "roc_auc": 0.5472812991094814
+            }
+          },
+          "human-collected-ai-video-zip": {
+            "sample_count": 504,
+            "success_count": 504,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "real_count": 415,
+            "fake_count": 89,
+            "group_count": 357,
+            "missing_group_count": 108,
+            "fullset_eer": 0.4433734939759036,
+            "fullset_reason": null,
+            "successful_subset_metrics": {
+              "eer": 0.4433734939759036,
+              "roc_auc": 0.5560037904426696
+            }
+          },
+          "human-collected-real-ai-media-500": {
+            "sample_count": 507,
+            "success_count": 507,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "real_count": 415,
+            "fake_count": 92,
+            "group_count": 371,
+            "missing_group_count": 108,
+            "fullset_eer": 0.472289156626506,
+            "fullset_reason": null,
+            "successful_subset_metrics": {
+              "eer": 0.472289156626506,
+              "roc_auc": 0.4901519119958093
+            }
+          }
+        },
+        "pooled": {
+          "sample_count": 808,
+          "success_count": 808,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "real_count": 415,
+          "fake_count": 393,
+          "group_count": 531,
+          "missing_group_count": 108,
+          "fullset_eer": 0.4457831325301205,
+          "fullset_reason": null,
+          "successful_subset_metrics": {
+            "eer": 0.4457831325301205,
+            "roc_auc": 0.5568043165026518
+          }
+        },
+        "sha_unique": {
+          "sample_count": 804,
+          "success_count": 804,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "real_count": 415,
+          "fake_count": 389,
+          "group_count": 531,
+          "missing_group_count": 108,
+          "fullset_eer": 0.4473007712082262,
+          "fullset_reason": null,
+          "successful_subset_metrics": {
+            "eer": 0.4473007712082262,
+            "roc_auc": 0.555133645120327
+          }
+        }
+      },
+      "C22": {
+        "by_batch": {
+          "china-clips": {
+            "sample_count": 409,
+            "success_count": 409,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "real_count": 197,
+            "fake_count": 212,
+            "group_count": 271,
+            "missing_group_count": 0,
+            "fullset_eer": 0.4339622641509434,
+            "fullset_reason": null,
+            "successful_subset_metrics": {
+              "eer": 0.4339622641509434,
+              "roc_auc": 0.5895029211761326
+            }
+          },
+          "human-collected": {
+            "sample_count": 399,
+            "success_count": 399,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "real_count": 218,
+            "fake_count": 181,
+            "group_count": 262,
+            "missing_group_count": 108,
+            "fullset_eer": 0.42201834862385323,
+            "fullset_reason": null,
+            "successful_subset_metrics": {
+              "eer": 0.42201834862385323,
+              "roc_auc": 0.5801358406406812
+            }
+          }
+        },
+        "by_source": {
+          "china-clips-bilibili": {
+            "sample_count": 294,
+            "success_count": 294,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "real_count": 197,
+            "fake_count": 97,
+            "group_count": 261,
+            "missing_group_count": 0,
+            "fullset_eer": 0.41237113402061853,
+            "fullset_reason": null,
+            "successful_subset_metrics": {
+              "eer": 0.41237113402061853,
+              "roc_auc": 0.6240514940603904
+            }
+          },
+          "china-clips-official-showcase": {
+            "sample_count": 115,
+            "success_count": 115,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "real_count": 0,
+            "fake_count": 115,
+            "group_count": 10,
+            "missing_group_count": 0,
+            "fullset_eer": null,
+            "fullset_reason": "successful_labeled_subset_missing_class",
+            "successful_subset_metrics": null
+          },
+          "human-collected-ai-video-zip": {
+            "sample_count": 89,
+            "success_count": 89,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "real_count": 0,
+            "fake_count": 89,
+            "group_count": 69,
+            "missing_group_count": 0,
+            "fullset_eer": null,
+            "fullset_reason": "successful_labeled_subset_missing_class",
+            "successful_subset_metrics": null
+          },
+          "human-collected-real-ai-media-500": {
+            "sample_count": 201,
+            "success_count": 201,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "real_count": 109,
+            "fake_count": 92,
+            "group_count": 192,
+            "missing_group_count": 0,
+            "fullset_eer": 0.43478260869565216,
+            "fullset_reason": null,
+            "successful_subset_metrics": {
+              "eer": 0.43478260869565216,
+              "roc_auc": 0.5391902672516953
+            }
+          },
+          "human-collected-real-media": {
+            "sample_count": 109,
+            "success_count": 109,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "real_count": 109,
+            "fake_count": 0,
+            "group_count": 1,
+            "missing_group_count": 108,
+            "fullset_eer": null,
+            "fullset_reason": "successful_labeled_subset_missing_class",
+            "successful_subset_metrics": null
+          }
+        },
+        "fake_source_with_shared_real_pool": {
+          "china-clips-bilibili": {
+            "sample_count": 512,
+            "success_count": 512,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "real_count": 415,
+            "fake_count": 97,
+            "group_count": 370,
+            "missing_group_count": 108,
+            "fullset_eer": 0.38795180722891565,
+            "fullset_reason": null,
+            "successful_subset_metrics": {
+              "eer": 0.38795180722891565,
+              "roc_auc": 0.6499068438703267
+            }
+          },
+          "china-clips-official-showcase": {
+            "sample_count": 530,
+            "success_count": 530,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "real_count": 415,
+            "fake_count": 115,
+            "group_count": 298,
+            "missing_group_count": 108,
+            "fullset_eer": 0.4457831325301205,
+            "fullset_reason": null,
+            "successful_subset_metrics": {
+              "eer": 0.4457831325301205,
+              "roc_auc": 0.5921843897328444
+            }
+          },
+          "human-collected-ai-video-zip": {
+            "sample_count": 504,
+            "success_count": 504,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "real_count": 415,
+            "fake_count": 89,
+            "group_count": 357,
+            "missing_group_count": 108,
+            "fullset_eer": 0.43614457831325304,
+            "fullset_reason": null,
+            "successful_subset_metrics": {
+              "eer": 0.43614457831325304,
+              "roc_auc": 0.5655881954785433
+            }
+          },
+          "human-collected-real-ai-media-500": {
+            "sample_count": 507,
+            "success_count": 507,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "real_count": 415,
+            "fake_count": 92,
+            "group_count": 371,
+            "missing_group_count": 108,
+            "fullset_eer": 0.44819277108433736,
+            "fullset_reason": null,
+            "successful_subset_metrics": {
+              "eer": 0.44819277108433736,
+              "roc_auc": 0.538239916186485
+            }
+          }
+        },
+        "pooled": {
+          "sample_count": 808,
+          "success_count": 808,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "real_count": 415,
+          "fake_count": 393,
+          "group_count": 531,
+          "missing_group_count": 108,
+          "fullset_eer": 0.43614457831325304,
+          "fullset_reason": null,
+          "successful_subset_metrics": {
+            "eer": 0.43614457831325304,
+            "roc_auc": 0.5877801281461724
+          }
+        },
+        "sha_unique": {
+          "sample_count": 804,
+          "success_count": 804,
+          "failure_count": 0,
+          "coverage": 1.0,
+          "real_count": 415,
+          "fake_count": 389,
+          "group_count": 531,
+          "missing_group_count": 108,
+          "fullset_eer": 0.43614457831325304,
+          "fullset_reason": null,
+          "successful_subset_metrics": {
+            "eer": 0.43614457831325304,
+            "roc_auc": 0.5860810852665159
+          }
+        }
+      }
+    },
+    "natural": {
+      "C10": {
+        "by_batch": {
+          "china-clips": {
+            "sample_count": 409,
+            "success_count": 409,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "real_count": 197,
+            "fake_count": 212,
+            "group_count": 271,
+            "missing_group_count": 0,
+            "fullset_eer": 0.4720812182741117,
+            "fullset_reason": null,
+            "successful_subset_metrics": {
+              "eer": 0.4720812182741117,
+              "roc_auc": 0.49913801360022986
+            }
+          },
+          "human-collected": {
+            "sample_count": 399,
+            "success_count": 391,
+            "failure_count": 8,
+            "coverage": 0.9799498746867168,
+            "real_count": 218,
+            "fake_count": 181,
+            "group_count": 262,
+            "missing_group_count": 108,
+            "fullset_eer": null,
+            "fullset_reason": "failed_samples_have_no_score",
+            "successful_subset_metrics": {
+              "eer": 0.4238095238095238,
+              "roc_auc": 0.6022362536174691
+            }
+          }
+        },
+        "by_source": {
+          "china-clips-bilibili": {
+            "sample_count": 294,
+            "success_count": 294,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "real_count": 197,
+            "fake_count": 97,
+            "group_count": 261,
+            "missing_group_count": 0,
+            "fullset_eer": 0.4720812182741117,
+            "fullset_reason": null,
+            "successful_subset_metrics": {
+              "eer": 0.4720812182741117,
+              "roc_auc": 0.495682662619708
+            }
+          },
+          "china-clips-official-showcase": {
+            "sample_count": 115,
+            "success_count": 115,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "real_count": 0,
+            "fake_count": 115,
+            "group_count": 10,
+            "missing_group_count": 0,
+            "fullset_eer": null,
+            "fullset_reason": "successful_labeled_subset_missing_class",
+            "successful_subset_metrics": null
+          },
+          "human-collected-ai-video-zip": {
+            "sample_count": 89,
+            "success_count": 89,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "real_count": 0,
+            "fake_count": 89,
+            "group_count": 69,
+            "missing_group_count": 0,
+            "fullset_eer": null,
+            "fullset_reason": "successful_labeled_subset_missing_class",
+            "successful_subset_metrics": null
+          },
+          "human-collected-real-ai-media-500": {
+            "sample_count": 201,
+            "success_count": 193,
+            "failure_count": 8,
+            "coverage": 0.9601990049751243,
+            "real_count": 109,
+            "fake_count": 92,
+            "group_count": 192,
+            "missing_group_count": 0,
+            "fullset_eer": null,
+            "fullset_reason": "failed_samples_have_no_score",
+            "successful_subset_metrics": {
+              "eer": 0.39603960396039606,
+              "roc_auc": 0.6309728798966853
+            }
+          },
+          "human-collected-real-media": {
+            "sample_count": 109,
+            "success_count": 109,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "real_count": 109,
+            "fake_count": 0,
+            "group_count": 1,
+            "missing_group_count": 108,
+            "fullset_eer": null,
+            "fullset_reason": "successful_labeled_subset_missing_class",
+            "successful_subset_metrics": null
+          }
+        },
+        "fake_source_with_shared_real_pool": {
+          "china-clips-bilibili": {
+            "sample_count": 512,
+            "success_count": 504,
+            "failure_count": 8,
+            "coverage": 0.984375,
+            "real_count": 415,
+            "fake_count": 97,
+            "group_count": 370,
+            "missing_group_count": 108,
+            "fullset_eer": null,
+            "fullset_reason": "failed_samples_have_no_score",
+            "successful_subset_metrics": {
+              "eer": 0.44329896907216493,
+              "roc_auc": 0.5536867701816156
+            }
+          },
+          "china-clips-official-showcase": {
+            "sample_count": 530,
+            "success_count": 522,
+            "failure_count": 8,
+            "coverage": 0.9849056603773585,
+            "real_count": 415,
+            "fake_count": 115,
+            "group_count": 298,
+            "missing_group_count": 108,
+            "fullset_eer": null,
+            "fullset_reason": "failed_samples_have_no_score",
+            "successful_subset_metrics": {
+              "eer": 0.4434782608695652,
+              "roc_auc": 0.5679948723426984
+            }
+          },
+          "human-collected-ai-video-zip": {
+            "sample_count": 504,
+            "success_count": 496,
+            "failure_count": 8,
+            "coverage": 0.9841269841269841,
+            "real_count": 415,
+            "fake_count": 89,
+            "group_count": 357,
+            "missing_group_count": 108,
+            "fullset_eer": null,
+            "fullset_reason": "failed_samples_have_no_score",
+            "successful_subset_metrics": {
+              "eer": 0.5282555282555282,
+              "roc_auc": 0.47456036220081166
+            }
+          },
+          "human-collected-real-ai-media-500": {
+            "sample_count": 507,
+            "success_count": 499,
+            "failure_count": 8,
+            "coverage": 0.9842209072978304,
+            "real_count": 415,
+            "fake_count": 92,
+            "group_count": 371,
+            "missing_group_count": 108,
+            "fullset_eer": null,
+            "fullset_reason": "failed_samples_have_no_score",
+            "successful_subset_metrics": {
+              "eer": 0.40217391304347827,
+              "roc_auc": 0.6113930135669265
+            }
+          }
+        },
+        "pooled": {
+          "sample_count": 808,
+          "success_count": 800,
+          "failure_count": 8,
+          "coverage": 0.9900990099009901,
+          "real_count": 415,
+          "fake_count": 393,
+          "group_count": 531,
+          "missing_group_count": 108,
+          "fullset_eer": null,
+          "fullset_reason": "failed_samples_have_no_score",
+          "successful_subset_metrics": {
+            "eer": 0.457002457002457,
+            "roc_auc": 0.5534632481197367
+          }
+        },
+        "sha_unique": {
+          "sample_count": 804,
+          "success_count": 796,
+          "failure_count": 8,
+          "coverage": 0.9900497512437811,
+          "real_count": 415,
+          "fake_count": 389,
+          "group_count": 531,
+          "missing_group_count": 108,
+          "fullset_eer": null,
+          "fullset_reason": "failed_samples_have_no_score",
+          "successful_subset_metrics": {
+            "eer": 0.45758354755784064,
+            "roc_auc": 0.5521813002532797
+          }
+        }
+      },
+      "C22": {
+        "by_batch": {
+          "china-clips": {
+            "sample_count": 409,
+            "success_count": 409,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "real_count": 197,
+            "fake_count": 212,
+            "group_count": 271,
+            "missing_group_count": 0,
+            "fullset_eer": 0.5141509433962265,
+            "fullset_reason": null,
+            "successful_subset_metrics": {
+              "eer": 0.5141509433962265,
+              "roc_auc": 0.47380519107365193
+            }
+          },
+          "human-collected": {
+            "sample_count": 399,
+            "success_count": 391,
+            "failure_count": 8,
+            "coverage": 0.9799498746867168,
+            "real_count": 218,
+            "fake_count": 181,
+            "group_count": 262,
+            "missing_group_count": 108,
+            "fullset_eer": null,
+            "fullset_reason": "failed_samples_have_no_score",
+            "successful_subset_metrics": {
+              "eer": 0.4142857142857143,
+              "roc_auc": 0.5966850828729282
+            }
+          }
+        },
+        "by_source": {
+          "china-clips-bilibili": {
+            "sample_count": 294,
+            "success_count": 294,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "real_count": 197,
+            "fake_count": 97,
+            "group_count": 261,
+            "missing_group_count": 0,
+            "fullset_eer": 0.5279187817258884,
+            "fullset_reason": null,
+            "successful_subset_metrics": {
+              "eer": 0.5279187817258884,
+              "roc_auc": 0.4527709456277147
+            }
+          },
+          "china-clips-official-showcase": {
+            "sample_count": 115,
+            "success_count": 115,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "real_count": 0,
+            "fake_count": 115,
+            "group_count": 10,
+            "missing_group_count": 0,
+            "fullset_eer": null,
+            "fullset_reason": "successful_labeled_subset_missing_class",
+            "successful_subset_metrics": null
+          },
+          "human-collected-ai-video-zip": {
+            "sample_count": 89,
+            "success_count": 89,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "real_count": 0,
+            "fake_count": 89,
+            "group_count": 69,
+            "missing_group_count": 0,
+            "fullset_eer": null,
+            "fullset_reason": "successful_labeled_subset_missing_class",
+            "successful_subset_metrics": null
+          },
+          "human-collected-real-ai-media-500": {
+            "sample_count": 201,
+            "success_count": 193,
+            "failure_count": 8,
+            "coverage": 0.9601990049751243,
+            "real_count": 109,
+            "fake_count": 92,
+            "group_count": 192,
+            "missing_group_count": 0,
+            "fullset_eer": null,
+            "fullset_reason": "failed_samples_have_no_score",
+            "successful_subset_metrics": {
+              "eer": 0.391304347826087,
+              "roc_auc": 0.6280671545415412
+            }
+          },
+          "human-collected-real-media": {
+            "sample_count": 109,
+            "success_count": 109,
+            "failure_count": 0,
+            "coverage": 1.0,
+            "real_count": 109,
+            "fake_count": 0,
+            "group_count": 1,
+            "missing_group_count": 108,
+            "fullset_eer": null,
+            "fullset_reason": "successful_labeled_subset_missing_class",
+            "successful_subset_metrics": null
+          }
+        },
+        "fake_source_with_shared_real_pool": {
+          "china-clips-bilibili": {
+            "sample_count": 512,
+            "success_count": 504,
+            "failure_count": 8,
+            "coverage": 0.984375,
+            "real_count": 415,
+            "fake_count": 97,
+            "group_count": 370,
+            "missing_group_count": 108,
+            "fullset_eer": null,
+            "fullset_reason": "failed_samples_have_no_score",
+            "successful_subset_metrics": {
+              "eer": 0.4639175257731959,
+              "roc_auc": 0.5214164492515008
+            }
+          },
+          "china-clips-official-showcase": {
+            "sample_count": 530,
+            "success_count": 522,
+            "failure_count": 8,
+            "coverage": 0.9849056603773585,
+            "real_count": 415,
+            "fake_count": 115,
+            "group_count": 298,
+            "missing_group_count": 108,
+            "fullset_eer": null,
+            "fullset_reason": "failed_samples_have_no_score",
+            "successful_subset_metrics": {
+              "eer": 0.4742014742014742,
+              "roc_auc": 0.5718192500801197
+            }
+          },
+          "human-collected-ai-video-zip": {
+            "sample_count": 504,
+            "success_count": 496,
+            "failure_count": 8,
+            "coverage": 0.9841269841269841,
+            "real_count": 415,
+            "fake_count": 89,
+            "group_count": 357,
+            "missing_group_count": 108,
+            "fullset_eer": null,
+            "fullset_reason": "failed_samples_have_no_score",
+            "successful_subset_metrics": {
+              "eer": 0.5280898876404494,
+              "roc_auc": 0.44496590564006294
+            }
+          },
+          "human-collected-real-ai-media-500": {
+            "sample_count": 507,
+            "success_count": 499,
+            "failure_count": 8,
+            "coverage": 0.9842209072978304,
+            "real_count": 415,
+            "fake_count": 92,
+            "group_count": 371,
+            "missing_group_count": 108,
+            "fullset_eer": null,
+            "fullset_reason": "failed_samples_have_no_score",
+            "successful_subset_metrics": {
+              "eer": 0.4103194103194103,
+              "roc_auc": 0.6167076167076166
+            }
+          }
+        },
+        "pooled": {
+          "sample_count": 808,
+          "success_count": 800,
+          "failure_count": 8,
+          "coverage": 0.9900990099009901,
+          "real_count": 415,
+          "fake_count": 393,
+          "group_count": 531,
+          "missing_group_count": 108,
+          "fullset_eer": null,
+          "fullset_reason": "failed_samples_have_no_score",
+          "successful_subset_metrics": {
+            "eer": 0.47174447174447176,
+            "roc_auc": 0.5411594800907777
+          }
+        },
+        "sha_unique": {
+          "sample_count": 804,
+          "success_count": 796,
+          "failure_count": 8,
+          "coverage": 0.9900497512437811,
+          "real_count": 415,
+          "fake_count": 389,
+          "group_count": 531,
+          "missing_group_count": 108,
+          "fullset_eer": null,
+          "fullset_reason": "failed_samples_have_no_score",
+          "successful_subset_metrics": {
+            "eer": 0.4730077120822622,
+            "roc_auc": 0.5398015449429331
+          }
+        }
+      }
+    }
+  },
+  "decision": {
+    "primary_video_candidate": "C10 expanded43",
+    "C22_promoted": false,
+    "platform_generalization": "weak, near chance; no competition readiness claim",
+    "next": "new unrelated platform training material and source/content coverage; first inventory remains dev/holdout",
+    "no_new_seed_frame_or_fusion_sweep": true
+  },
+  "subsequent_usage": {
+    "issue": 51,
+    "pull_request": 97,
+    "original_reserved_audio_scored": 246,
+    "original_reserved_video_scored": 199,
+    "current_unseen_reserved_samples": 0,
+    "current_inventory_use": "all1910 seen diagnostic; original scope describes the earlier PR95 run only",
+    "original_roles_and_scores_preserved": true,
+    "no_retrospective_resplit_or_training_reuse": true
+  }
+}
