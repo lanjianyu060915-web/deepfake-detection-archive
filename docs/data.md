@@ -38,6 +38,7 @@
 | AST时频遮挡与广播外部诊断 | `/var/tmp/deepfake-audio-regularize-20261012/` | 扩展模型第二种子、两档遮挡训练及分数；`ai-openbmat/`含246段外部探索dev；原始子集在`upstream/ai-openbmat/` |
 | 对称音乐/语音混合与匹配对照 | `/var/tmp/deepfake-audio-speech-mix-20261012/` | `mixtures/`含3,464个波形变体；`pure-replay/`、`speech-mix/`为同规模联合训练清单；固定源码、权重及九桶评分按任务保存 |
 | 语音第二种子与 In-the-Wild | `/var/tmp/lanjianyu-issue39-20261013/` | `runs/`为#39三次LogMel训练与评分；`data/release_in_the_wild/`为31,779条外部诊断媒体，`data/in-the-wild-manifest/`为测试清单 |
+| SSL 语音检测器 | `/var/tmp/lanjianyu-issue53-20261014/` | `weights/LA_model.pth`（SSL_Anti-spoofing 官方LA权重）、`upstream/`作者源码与协议、`out/`五个语音集与非语音诊断分数、`analysis/`同协议对照；持久副本 `/mnt/deepfake-archive/C20-speech-ssl-aasist-20261014/` |
 | FakeSound 诊断清单 | `/var/tmp/lanjianyu-issue11-20261011/fakesound-v1/` | data_root 为其 `media/`，含缺失 real 记录 |
 
 共享原媒体和模型只读；`outputs/`、`cache/` 使用各自任务目录。
@@ -159,6 +160,7 @@ C6的CLIP特征头则需要显式加载同批保存的视觉编码器。以持�
 | `tools/prepare_asvspoof2019.py` | 官方协议和 FLAC → 标准清单 |
 | `tools/prepare_asv_parquet.py` | 固定共享 Parquet 与官方协议 → 原始 FLAC；不重编码 |
 | `tools/prepare_in_the_wild.py` | 已解压的 In-the-Wild 发布 → 按说话人分组的 test 清单；只作冻结候选的外部诊断 |
+| `tools/score_ssl_antispoofing.py` | SSL_Anti-spoofing 官方权重 + 作者 `model.py` → 项目格式分数；不装 fairseq，XLS-R 用 transformers 严格加载 |
 | `tools/prepare_asv_eval.py` | 固定官方eval协议与镜像Parquet → 未知攻击研究清单；既有发布直接复用 |
 | `tools/prepare_asv_main.py` | 既有 ASV 清单 → 训练子集；历史单条排除应显式配置 |
 | `tools/prepare_vif_panda.py` | 固定 ViF ZIP → Panda 媒体、来源与配对关系 |

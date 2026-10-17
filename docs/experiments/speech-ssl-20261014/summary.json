@@ -1,0 +1,1183 @@
+{
+  "generated_at": "2026-10-14T22:25:13.066068+08:00",
+  "protocol_notes": {
+    "score_direction": "higher score = more fake (all three models normalised)",
+    "eer": "deepfake_detection_archive.evaluation.evaluate_binary",
+    "coverage": "samples with a score row / manifest samples",
+    "ast_dev_clean_source": "/mnt/deepfake-archive/C2-audio-universal/scores/seed42/dev-scores.jsonl filtered to content_type=speech (same multi-domain dev run; only the ASV speech rows kept)",
+    "ast_in_the_wild_source": "/mnt/deepfake-archive/C2-audio-universal/scores/seed42/frozen-scores/in-the-wild/scores.jsonl",
+    "logmel_source": "/mnt/deepfake-archive/C3-speech-logmel-bandwidth/scores",
+    "ssl_source": "/var/tmp/lanjianyu-issue53-20261014/out/ssl-la",
+    "gpu_memory_note": "nvidia-smi inside this container does not list our own compute apps, so per-model peak memory is taken from whole-GPU samples minus the always-present teammate baseline; treat as an upper bound"
+  },
+  "main_table": {
+    "dev-clean": {
+      "logmel": {
+        "manifest_samples": 24844,
+        "scored": 24844,
+        "coverage": 1.0,
+        "ok": 24844,
+        "failures": 0,
+        "unexpected_ids": 0,
+        "missing_ids": 0,
+        "eer": 0.00902668759811617,
+        "eer_scope": "all samples",
+        "real_count": 2548,
+        "fake_count": 22296,
+        "elapsed_seconds_total": 83.06012312322855,
+        "elapsed_seconds_mean": 0.0033432669104503524,
+        "available": true,
+        "source": "/mnt/deepfake-archive/C3-speech-logmel-bandwidth/scores/dev-clean-seed42/scores.jsonl"
+      },
+      "ast": {
+        "manifest_samples": 24844,
+        "scored": 24844,
+        "coverage": 1.0,
+        "ok": 24844,
+        "failures": 0,
+        "unexpected_ids": 0,
+        "missing_ids": 0,
+        "eer": 0.00510204081632653,
+        "eer_scope": "all samples",
+        "real_count": 2548,
+        "fake_count": 22296,
+        "elapsed_seconds_total": 95.2512473009627,
+        "elapsed_seconds_mean": 0.003833973889106533,
+        "available": true,
+        "source": "/mnt/deepfake-archive/C2-audio-universal/scores/seed42/dev-scores.jsonl"
+      },
+      "ssl": {
+        "manifest_samples": 24844,
+        "scored": 24844,
+        "coverage": 1.0,
+        "ok": 24844,
+        "failures": 0,
+        "unexpected_ids": 0,
+        "missing_ids": 0,
+        "eer": 0.0007849293563579278,
+        "eer_scope": "all samples",
+        "real_count": 2548,
+        "fake_count": 22296,
+        "elapsed_seconds_total": 2979.7197946459055,
+        "elapsed_seconds_mean": 0.11993719991329518,
+        "available": true,
+        "source": "/var/tmp/lanjianyu-issue53-20261014/out/ssl-la/dev-clean/scores.jsonl"
+      }
+    },
+    "dev-aac64k": {
+      "logmel": {
+        "manifest_samples": 24844,
+        "scored": 24844,
+        "coverage": 1.0,
+        "ok": 24844,
+        "failures": 0,
+        "unexpected_ids": 0,
+        "missing_ids": 0,
+        "eer": 0.009419152276295133,
+        "eer_scope": "all samples",
+        "real_count": 2548,
+        "fake_count": 22296,
+        "elapsed_seconds_total": 2310.4702032152563,
+        "elapsed_seconds_mean": 0.09299912265397103,
+        "available": true,
+        "source": "/mnt/deepfake-archive/C3-speech-logmel-bandwidth/scores/dev-aac64k-seed42/scores.jsonl"
+      },
+      "ast": {
+        "manifest_samples": 24844,
+        "scored": 24844,
+        "coverage": 1.0,
+        "ok": 24844,
+        "failures": 0,
+        "unexpected_ids": 0,
+        "missing_ids": 0,
+        "eer": 0.00706436420722135,
+        "eer_scope": "all samples",
+        "real_count": 2548,
+        "fake_count": 22296,
+        "elapsed_seconds_total": 3303.620558505878,
+        "elapsed_seconds_mean": 0.13297458374279011,
+        "available": true,
+        "source": "/var/tmp/lanjianyu-issue53-20261014/out/ast-joint-seed42/dev-aac64k/scores.jsonl"
+      },
+      "ssl": {
+        "manifest_samples": 24844,
+        "scored": 24844,
+        "coverage": 1.0,
+        "ok": 24844,
+        "failures": 0,
+        "unexpected_ids": 0,
+        "missing_ids": 0,
+        "eer": 0.0007849293563579278,
+        "eer_scope": "all samples",
+        "real_count": 2548,
+        "fake_count": 22296,
+        "elapsed_seconds_total": 15434.138316058554,
+        "elapsed_seconds_mean": 0.6212420832417708,
+        "available": true,
+        "source": "/var/tmp/lanjianyu-issue53-20261014/out/ssl-la/dev-aac64k/scores.jsonl"
+      }
+    },
+    "dev-bandlimit8k": {
+      "logmel": {
+        "manifest_samples": 24844,
+        "scored": 24844,
+        "coverage": 1.0,
+        "ok": 24844,
+        "failures": 0,
+        "unexpected_ids": 0,
+        "missing_ids": 0,
+        "eer": 0.013858988159311088,
+        "eer_scope": "all samples",
+        "real_count": 2548,
+        "fake_count": 22296,
+        "elapsed_seconds_total": 95.71303362958133,
+        "elapsed_seconds_mean": 0.0038525613278691567,
+        "available": true,
+        "source": "/mnt/deepfake-archive/C3-speech-logmel-bandwidth/scores/dev-bandlimit8k-seed42/scores.jsonl"
+      },
+      "ast": {
+        "manifest_samples": 24844,
+        "scored": 24844,
+        "coverage": 1.0,
+        "ok": 24844,
+        "failures": 0,
+        "unexpected_ids": 0,
+        "missing_ids": 0,
+        "eer": 0.01726767133118048,
+        "eer_scope": "all samples",
+        "real_count": 2548,
+        "fake_count": 22296,
+        "elapsed_seconds_total": 495.5331229241565,
+        "elapsed_seconds_mean": 0.01994578662550944,
+        "available": true,
+        "source": "/var/tmp/lanjianyu-issue53-20261014/out/ast-joint-seed42/dev-bandlimit8k/scores.jsonl"
+      },
+      "ssl": {
+        "manifest_samples": 24844,
+        "scored": 24844,
+        "coverage": 1.0,
+        "ok": 24844,
+        "failures": 0,
+        "unexpected_ids": 0,
+        "missing_ids": 0,
+        "eer": 0.0003924646781789639,
+        "eer_scope": "all samples",
+        "real_count": 2548,
+        "fake_count": 22296,
+        "elapsed_seconds_total": 1781.5686241891235,
+        "elapsed_seconds_mean": 0.0717102167198971,
+        "available": true,
+        "source": "/var/tmp/lanjianyu-issue53-20261014/out/ssl-la/dev-bandlimit8k/scores.jsonl"
+      }
+    },
+    "eval-subset": {
+      "logmel": {
+        "manifest_samples": 12000,
+        "scored": 12000,
+        "coverage": 1.0,
+        "ok": 12000,
+        "failures": 0,
+        "unexpected_ids": 0,
+        "missing_ids": 0,
+        "eer": 0.027019230769230768,
+        "eer_scope": "all samples",
+        "real_count": 1600,
+        "fake_count": 10400,
+        "elapsed_seconds_total": 45.42481752857566,
+        "elapsed_seconds_mean": 0.003785401460714638,
+        "available": true,
+        "source": "/mnt/deepfake-archive/C3-speech-logmel-bandwidth/scores/eval-subset-seed42/scores.jsonl"
+      },
+      "ast": {
+        "manifest_samples": 12000,
+        "scored": 12000,
+        "coverage": 1.0,
+        "ok": 12000,
+        "failures": 0,
+        "unexpected_ids": 0,
+        "missing_ids": 0,
+        "eer": 0.044375,
+        "eer_scope": "all samples",
+        "real_count": 1600,
+        "fake_count": 10400,
+        "elapsed_seconds_total": 218.18916483130306,
+        "elapsed_seconds_mean": 0.018182430402608588,
+        "available": true,
+        "source": "/var/tmp/lanjianyu-issue53-20261014/out/ast-joint-seed42/eval-subset/scores.jsonl"
+      },
+      "ssl": {
+        "manifest_samples": 12000,
+        "scored": 12000,
+        "coverage": 1.0,
+        "ok": 12000,
+        "failures": 0,
+        "unexpected_ids": 0,
+        "missing_ids": 0,
+        "eer": 0.0019230769230769232,
+        "eer_scope": "all samples",
+        "real_count": 1600,
+        "fake_count": 10400,
+        "elapsed_seconds_total": 808.5547106238082,
+        "elapsed_seconds_mean": 0.06737955921865069,
+        "available": true,
+        "source": "/var/tmp/lanjianyu-issue53-20261014/out/ssl-la/eval-subset/scores.jsonl"
+      }
+    },
+    "in-the-wild": {
+      "logmel": {
+        "manifest_samples": 31779,
+        "scored": 31779,
+        "coverage": 1.0,
+        "ok": 31779,
+        "failures": 0,
+        "unexpected_ids": 0,
+        "missing_ids": 0,
+        "eer": 0.3067027758970887,
+        "eer_scope": "all samples",
+        "real_count": 19963,
+        "fake_count": 11816,
+        "elapsed_seconds_total": 142.75207048282027,
+        "elapsed_seconds_mean": 0.004492025251984653,
+        "available": true,
+        "source": "/mnt/deepfake-archive/C3-speech-logmel-bandwidth/scores/itw-bandwidth-seed42/scores.jsonl"
+      },
+      "ast": {
+        "manifest_samples": 31779,
+        "scored": 31779,
+        "coverage": 1.0,
+        "ok": 31779,
+        "failures": 0,
+        "unexpected_ids": 0,
+        "missing_ids": 0,
+        "eer": 0.24856127285037238,
+        "eer_scope": "all samples",
+        "real_count": 19963,
+        "fake_count": 11816,
+        "elapsed_seconds_total": 529.34994241409,
+        "elapsed_seconds_mean": 0.01665722465823626,
+        "available": true,
+        "source": "/mnt/deepfake-archive/C2-audio-universal/scores/seed42/frozen-scores/in-the-wild/scores.jsonl"
+      },
+      "ssl": {
+        "manifest_samples": 31779,
+        "scored": 31779,
+        "coverage": 1.0,
+        "ok": 31779,
+        "failures": 0,
+        "unexpected_ids": 0,
+        "missing_ids": 0,
+        "eer": 0.11210739868757201,
+        "eer_scope": "all samples",
+        "real_count": 19963,
+        "fake_count": 11816,
+        "elapsed_seconds_total": 2432.034452583641,
+        "elapsed_seconds_mean": 0.07652960925717112,
+        "available": true,
+        "source": "/var/tmp/lanjianyu-issue53-20261014/out/ssl-la/in-the-wild/scores.jsonl"
+      }
+    }
+  },
+  "eval_subset_per_attack": {
+    "generators": [
+      "A07",
+      "A08",
+      "A09",
+      "A10",
+      "A11",
+      "A12",
+      "A13",
+      "A14",
+      "A15",
+      "A16",
+      "A17",
+      "A18",
+      "A19"
+    ],
+    "table": {
+      "A07": {
+        "logmel": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.01125
+        },
+        "ast": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.01
+        },
+        "ssl": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.0
+        }
+      },
+      "A08": {
+        "logmel": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.0
+        },
+        "ast": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.00125
+        },
+        "ssl": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.00125
+        }
+      },
+      "A09": {
+        "logmel": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.0
+        },
+        "ast": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.0
+        },
+        "ssl": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.0
+        }
+      },
+      "A10": {
+        "logmel": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.01375
+        },
+        "ast": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.01
+        },
+        "ssl": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.000625
+        }
+      },
+      "A11": {
+        "logmel": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.00375
+        },
+        "ast": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.00125
+        },
+        "ssl": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.00125
+        }
+      },
+      "A12": {
+        "logmel": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.00375
+        },
+        "ast": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.00125
+        },
+        "ssl": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.000625
+        }
+      },
+      "A13": {
+        "logmel": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.00125
+        },
+        "ast": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.000625
+        },
+        "ssl": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.0
+        }
+      },
+      "A14": {
+        "logmel": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.005
+        },
+        "ast": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.00125
+        },
+        "ssl": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.0
+        }
+      },
+      "A15": {
+        "logmel": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.016875
+        },
+        "ast": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.0025
+        },
+        "ssl": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.0
+        }
+      },
+      "A16": {
+        "logmel": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.015625
+        },
+        "ast": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.0075
+        },
+        "ssl": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.0
+        }
+      },
+      "A17": {
+        "logmel": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.0825
+        },
+        "ast": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.180625
+        },
+        "ssl": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.00375
+        }
+      },
+      "A18": {
+        "logmel": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.03375
+        },
+        "ast": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.04375
+        },
+        "ssl": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.005
+        }
+      },
+      "A19": {
+        "logmel": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.0375
+        },
+        "ast": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.01625
+        },
+        "ssl": {
+          "real": 1600,
+          "fake": 800,
+          "eer": 0.00625
+        }
+      }
+    }
+  },
+  "in_the_wild": {
+    "logmel": {
+      "available": true,
+      "summary": {
+        "manifest_samples": 31779,
+        "scored": 31779,
+        "coverage": 1.0,
+        "ok": 31779,
+        "failures": 0,
+        "unexpected_ids": 0,
+        "missing_ids": 0,
+        "eer": 0.3067027758970887,
+        "eer_scope": "all samples",
+        "real_count": 19963,
+        "fake_count": 11816,
+        "elapsed_seconds_total": 142.75207048282027,
+        "elapsed_seconds_mean": 0.004492025251984653,
+        "available": true,
+        "source": "/mnt/deepfake-archive/C3-speech-logmel-bandwidth/scores/itw-bandwidth-seed42/scores.jsonl"
+      },
+      "speakers": {
+        "speaker_count": 54,
+        "undefined_eer_speakers": [],
+        "worst": [
+          {
+            "speaker": "frank-sinatra",
+            "n": 55,
+            "real": 17,
+            "fake": 38,
+            "eer": 0.8421052631578947
+          },
+          {
+            "speaker": "orson-welles",
+            "n": 202,
+            "real": 26,
+            "fake": 176,
+            "eer": 0.6818181818181818
+          },
+          {
+            "speaker": "william-f-buckley",
+            "n": 26,
+            "real": 4,
+            "fake": 22,
+            "eer": 0.6818181818181818
+          },
+          {
+            "speaker": "louis-c-k",
+            "n": 66,
+            "real": 9,
+            "fake": 57,
+            "eer": 0.6666666666666666
+          },
+          {
+            "speaker": "mitch-hedberg",
+            "n": 31,
+            "real": 3,
+            "fake": 28,
+            "eer": 0.6428571428571429
+          }
+        ]
+      }
+    },
+    "ast": {
+      "available": true,
+      "summary": {
+        "manifest_samples": 31779,
+        "scored": 31779,
+        "coverage": 1.0,
+        "ok": 31779,
+        "failures": 0,
+        "unexpected_ids": 0,
+        "missing_ids": 0,
+        "eer": 0.24856127285037238,
+        "eer_scope": "all samples",
+        "real_count": 19963,
+        "fake_count": 11816,
+        "elapsed_seconds_total": 529.34994241409,
+        "elapsed_seconds_mean": 0.01665722465823626,
+        "available": true,
+        "source": "/mnt/deepfake-archive/C2-audio-universal/scores/seed42/frozen-scores/in-the-wild/scores.jsonl"
+      },
+      "speakers": {
+        "speaker_count": 54,
+        "undefined_eer_speakers": [],
+        "worst": [
+          {
+            "speaker": "fdr",
+            "n": 471,
+            "real": 308,
+            "fake": 163,
+            "eer": 0.7694805194805194
+          },
+          {
+            "speaker": "frank-sinatra",
+            "n": 55,
+            "real": 17,
+            "fake": 38,
+            "eer": 0.7647058823529411
+          },
+          {
+            "speaker": "william-f-buckley",
+            "n": 26,
+            "real": 4,
+            "fake": 22,
+            "eer": 0.75
+          },
+          {
+            "speaker": "winston-churchill",
+            "n": 882,
+            "real": 625,
+            "fake": 257,
+            "eer": 0.7088
+          },
+          {
+            "speaker": "malcolm-x",
+            "n": 176,
+            "real": 130,
+            "fake": 46,
+            "eer": 0.6956521739130435
+          }
+        ]
+      }
+    },
+    "ssl": {
+      "available": true,
+      "summary": {
+        "manifest_samples": 31779,
+        "scored": 31779,
+        "coverage": 1.0,
+        "ok": 31779,
+        "failures": 0,
+        "unexpected_ids": 0,
+        "missing_ids": 0,
+        "eer": 0.11210739868757201,
+        "eer_scope": "all samples",
+        "real_count": 19963,
+        "fake_count": 11816,
+        "elapsed_seconds_total": 2432.034452583641,
+        "elapsed_seconds_mean": 0.07652960925717112,
+        "available": true,
+        "source": "/var/tmp/lanjianyu-issue53-20261014/out/ssl-la/in-the-wild/scores.jsonl"
+      },
+      "speakers": {
+        "speaker_count": 54,
+        "undefined_eer_speakers": [],
+        "worst": [
+          {
+            "speaker": "kamala-harris",
+            "n": 29,
+            "real": 25,
+            "fake": 4,
+            "eer": 0.88
+          },
+          {
+            "speaker": "adam-driver",
+            "n": 217,
+            "real": 80,
+            "fake": 137,
+            "eer": 0.4875
+          },
+          {
+            "speaker": "frank-sinatra",
+            "n": 55,
+            "real": 17,
+            "fake": 38,
+            "eer": 0.39473684210526316
+          },
+          {
+            "speaker": "fdr",
+            "n": 471,
+            "real": 308,
+            "fake": 163,
+            "eer": 0.36688311688311687
+          },
+          {
+            "speaker": "nick-offerman",
+            "n": 169,
+            "real": 158,
+            "fake": 11,
+            "eer": 0.34177215189873417
+          }
+        ]
+      }
+    }
+  },
+  "bootstrap": {
+    "dev-clean": {
+      "ssl_minus_logmel": {
+        "common_samples": 24844,
+        "delta_eer": -0.008241758241758242,
+        "ci_lower": -0.012890369803605119,
+        "ci_upper": -0.004709618734020443,
+        "confidence": 0.95,
+        "valid_repeats": 1000,
+        "attempts": 1000,
+        "invalid_repeats": 0,
+        "invalid_fraction": 0.0,
+        "group_count": 20,
+        "real_group_count": 20,
+        "fake_group_count": 10,
+        "evidence_sufficient": true,
+        "insufficiency_reasons": [],
+        "seed": 42,
+        "draw_sha256": "a8f699e55e680965b4914a38c82c5dd07b864d8cc2bc12889b82bb858828af18"
+      },
+      "ssl_minus_ast": {
+        "common_samples": 24844,
+        "delta_eer": -0.0043171114599686025,
+        "ci_lower": -0.00952404433173664,
+        "ci_upper": -0.001051870899092575,
+        "confidence": 0.95,
+        "valid_repeats": 1000,
+        "attempts": 1000,
+        "invalid_repeats": 0,
+        "invalid_fraction": 0.0,
+        "group_count": 20,
+        "real_group_count": 20,
+        "fake_group_count": 10,
+        "evidence_sufficient": true,
+        "insufficiency_reasons": [],
+        "seed": 42,
+        "draw_sha256": "a8f699e55e680965b4914a38c82c5dd07b864d8cc2bc12889b82bb858828af18"
+      }
+    },
+    "dev-aac64k": {
+      "ssl_minus_logmel": {
+        "common_samples": 24844,
+        "delta_eer": -0.008634222919937205,
+        "ci_lower": -0.013316979077150818,
+        "ci_upper": -0.005262450846570197,
+        "confidence": 0.95,
+        "valid_repeats": 1000,
+        "attempts": 1000,
+        "invalid_repeats": 0,
+        "invalid_fraction": 0.0,
+        "group_count": 20,
+        "real_group_count": 20,
+        "fake_group_count": 10,
+        "evidence_sufficient": true,
+        "insufficiency_reasons": [],
+        "seed": 42,
+        "draw_sha256": "a8f699e55e680965b4914a38c82c5dd07b864d8cc2bc12889b82bb858828af18"
+      },
+      "ssl_minus_ast": {
+        "common_samples": 24844,
+        "delta_eer": -0.006279434850863423,
+        "ci_lower": -0.010783712656458265,
+        "ci_upper": -0.0026735060981636326,
+        "confidence": 0.95,
+        "valid_repeats": 1000,
+        "attempts": 1000,
+        "invalid_repeats": 0,
+        "invalid_fraction": 0.0,
+        "group_count": 20,
+        "real_group_count": 20,
+        "fake_group_count": 10,
+        "evidence_sufficient": true,
+        "insufficiency_reasons": [],
+        "seed": 42,
+        "draw_sha256": "a8f699e55e680965b4914a38c82c5dd07b864d8cc2bc12889b82bb858828af18"
+      }
+    },
+    "dev-bandlimit8k": {
+      "ssl_minus_logmel": {
+        "common_samples": 24844,
+        "delta_eer": -0.013466523481132123,
+        "ci_lower": -0.01855207451116409,
+        "ci_upper": -0.009076558800315708,
+        "confidence": 0.95,
+        "valid_repeats": 1000,
+        "attempts": 1000,
+        "invalid_repeats": 0,
+        "invalid_fraction": 0.0,
+        "group_count": 20,
+        "real_group_count": 20,
+        "fake_group_count": 10,
+        "evidence_sufficient": true,
+        "insufficiency_reasons": [],
+        "seed": 42,
+        "draw_sha256": "a8f699e55e680965b4914a38c82c5dd07b864d8cc2bc12889b82bb858828af18"
+      },
+      "ssl_minus_ast": {
+        "common_samples": 24844,
+        "delta_eer": -0.016875206653001518,
+        "ci_lower": -0.02242776208404939,
+        "ci_upper": -0.010313216195569136,
+        "confidence": 0.95,
+        "valid_repeats": 1000,
+        "attempts": 1000,
+        "invalid_repeats": 0,
+        "invalid_fraction": 0.0,
+        "group_count": 20,
+        "real_group_count": 20,
+        "fake_group_count": 10,
+        "evidence_sufficient": true,
+        "insufficiency_reasons": [],
+        "seed": 42,
+        "draw_sha256": "a8f699e55e680965b4914a38c82c5dd07b864d8cc2bc12889b82bb858828af18"
+      }
+    },
+    "eval-subset": {
+      "ssl_minus_logmel": {
+        "common_samples": 12000,
+        "delta_eer": -0.025096153846153844,
+        "ci_lower": -0.030253119860244655,
+        "ci_upper": -0.02,
+        "confidence": 0.95,
+        "valid_repeats": 1000,
+        "attempts": 1000,
+        "invalid_repeats": 0,
+        "invalid_fraction": 0.0,
+        "group_count": 48,
+        "real_group_count": 48,
+        "fake_group_count": 48,
+        "evidence_sufficient": true,
+        "insufficiency_reasons": [],
+        "seed": 42,
+        "draw_sha256": "ffb5260517cd35c984ab9302608b927cfcbf135dfdad0b8b21e8d208ca79c110"
+      },
+      "ssl_minus_ast": {
+        "common_samples": 12000,
+        "delta_eer": -0.042451923076923075,
+        "ci_lower": -0.04859345662474188,
+        "ci_upper": -0.03548847427070597,
+        "confidence": 0.95,
+        "valid_repeats": 1000,
+        "attempts": 1000,
+        "invalid_repeats": 0,
+        "invalid_fraction": 0.0,
+        "group_count": 48,
+        "real_group_count": 48,
+        "fake_group_count": 48,
+        "evidence_sufficient": true,
+        "insufficiency_reasons": [],
+        "seed": 42,
+        "draw_sha256": "ffb5260517cd35c984ab9302608b927cfcbf135dfdad0b8b21e8d208ca79c110"
+      }
+    },
+    "in-the-wild": {
+      "ssl_minus_logmel": {
+        "common_samples": 31779,
+        "delta_eer": -0.1945953772095167,
+        "ci_lower": -0.2446747614133542,
+        "ci_upper": -0.12010626004249775,
+        "confidence": 0.95,
+        "valid_repeats": 1000,
+        "attempts": 1000,
+        "invalid_repeats": 0,
+        "invalid_fraction": 0.0,
+        "group_count": 54,
+        "real_group_count": 54,
+        "fake_group_count": 54,
+        "evidence_sufficient": true,
+        "insufficiency_reasons": [],
+        "seed": 42,
+        "draw_sha256": "6a2866b6ac981d909207a3affe9b4c48fec79dc7fc57fbe2d73dcfeab51bf4d5"
+      },
+      "ssl_minus_ast": {
+        "common_samples": 31779,
+        "delta_eer": -0.13645387416280036,
+        "ci_lower": -0.20544736594131396,
+        "ci_upper": -0.08074291599822697,
+        "confidence": 0.95,
+        "valid_repeats": 1000,
+        "attempts": 1000,
+        "invalid_repeats": 0,
+        "invalid_fraction": 0.0,
+        "group_count": 54,
+        "real_group_count": 54,
+        "fake_group_count": 54,
+        "evidence_sufficient": true,
+        "insufficiency_reasons": [],
+        "seed": 42,
+        "draw_sha256": "6a2866b6ac981d909207a3affe9b4c48fec79dc7fc57fbe2d73dcfeab51bf4d5"
+      }
+    }
+  },
+  "cost": {
+    "logmel": {
+      "weights_path": "/mnt/deepfake-archive/C3-speech-logmel-bandwidth/weights/bandwidth-seed42/best.pt",
+      "weights_bytes": 148339,
+      "per_set": {
+        "dev-clean": {
+          "mean_elapsed_seconds": 0.0033432669104503524,
+          "total_elapsed_seconds": 83.06012312322855,
+          "ok": 24844
+        },
+        "dev-aac64k": {
+          "mean_elapsed_seconds": 0.09299912265397103,
+          "total_elapsed_seconds": 2310.4702032152563,
+          "ok": 24844
+        },
+        "dev-bandlimit8k": {
+          "mean_elapsed_seconds": 0.0038525613278691567,
+          "total_elapsed_seconds": 95.71303362958133,
+          "ok": 24844
+        },
+        "eval-subset": {
+          "mean_elapsed_seconds": 0.003785401460714638,
+          "total_elapsed_seconds": 45.42481752857566,
+          "ok": 12000
+        },
+        "in-the-wild": {
+          "mean_elapsed_seconds": 0.004492025251984653,
+          "total_elapsed_seconds": 142.75207048282027,
+          "ok": 31779
+        }
+      }
+    },
+    "ast": {
+      "weights_path": "/mnt/deepfake-archive/C2-audio-universal/weights/seed42/best.pt",
+      "weights_bytes": 342936045,
+      "per_set": {
+        "dev-clean": {
+          "mean_elapsed_seconds": 0.003833973889106533,
+          "total_elapsed_seconds": 95.2512473009627,
+          "ok": 24844
+        },
+        "dev-aac64k": {
+          "mean_elapsed_seconds": 0.13297458374279011,
+          "total_elapsed_seconds": 3303.620558505878,
+          "ok": 24844
+        },
+        "dev-bandlimit8k": {
+          "mean_elapsed_seconds": 0.01994578662550944,
+          "total_elapsed_seconds": 495.5331229241565,
+          "ok": 24844
+        },
+        "eval-subset": {
+          "mean_elapsed_seconds": 0.018182430402608588,
+          "total_elapsed_seconds": 218.18916483130306,
+          "ok": 12000
+        },
+        "in-the-wild": {
+          "mean_elapsed_seconds": 0.01665722465823626,
+          "total_elapsed_seconds": 529.34994241409,
+          "ok": 31779
+        }
+      }
+    },
+    "ssl": {
+      "weights_path": "/var/tmp/lanjianyu-issue53-20261014/weights/LA_model.pth",
+      "weights_bytes": 1271633441,
+      "per_set": {
+        "dev-clean": {
+          "mean_elapsed_seconds": 0.11993719991329518,
+          "total_elapsed_seconds": 2979.7197946459055,
+          "ok": 24844
+        },
+        "dev-aac64k": {
+          "mean_elapsed_seconds": 0.6212420832417708,
+          "total_elapsed_seconds": 15434.138316058554,
+          "ok": 24844
+        },
+        "dev-bandlimit8k": {
+          "mean_elapsed_seconds": 0.0717102167198971,
+          "total_elapsed_seconds": 1781.5686241891235,
+          "ok": 24844
+        },
+        "eval-subset": {
+          "mean_elapsed_seconds": 0.06737955921865069,
+          "total_elapsed_seconds": 808.5547106238082,
+          "ok": 12000
+        },
+        "in-the-wild": {
+          "mean_elapsed_seconds": 0.07652960925717112,
+          "total_elapsed_seconds": 2432.034452583641,
+          "ok": 31779
+        }
+      }
+    },
+    "gpu_sampling": {
+      "per_tag_peak_mib": {
+        "other": 2862
+      },
+      "total_used_peak_mib": 8337,
+      "total_used_min_mib": 9,
+      "samples": 823,
+      "own_processes_visible": false,
+      "visible_app_samples": 1873,
+      "torch_measurement": {
+        "note": "Independent peak-GPU-memory measurement for the three D09 models.\n\n`nvidia-smi` inside this container cannot attribute compute memory to our own\nprocesses, so peak memory is measured from inside a process instead:\ntorch.cuda.max_memory_allocated() around exactly the production code paths\n(OfflineScorer for the project models, ssl_route_b.build_model for SSL) with\nthe same segment length and batch size the scored runs used.\n\nLogMel is measured the same way as AST because its architecture is bundled in\nthe same package.",
+        "ast": {
+          "model": "ASTClassifier",
+          "checkpoint": "/mnt/deepfake-archive/C2-audio-universal/weights/seed42/best.pt",
+          "segment_samples": 64000,
+          "configured_batch_size": 32,
+          "scored_records": 64,
+          "peak_bytes_after_model_load": 343120384,
+          "peak_bytes_after_scoring": 400120320,
+          "peak_mib_after_model_load": 327.22509765625,
+          "peak_mib_after_scoring": 381.58447265625,
+          "device_properties": {
+            "name": "NVIDIA GeForce RTX 4090",
+            "total_mib": 24082.875
+          },
+          "score_sample": [
+            14.05534553527832,
+            13.080260276794434,
+            9.891057014465332
+          ]
+        },
+        "logmel": {
+          "model": "LogMelCNN",
+          "checkpoint": "/mnt/deepfake-archive/C3-speech-logmel-bandwidth/weights/bandwidth-seed42/best.pt",
+          "segment_samples": 64600,
+          "configured_batch_size": 16,
+          "scored_records": 64,
+          "peak_bytes_after_model_load": 33700864,
+          "peak_bytes_after_scoring": 42691584,
+          "peak_mib_after_model_load": 32.1396484375,
+          "peak_mib_after_scoring": 40.7138671875,
+          "device_properties": {
+            "name": "NVIDIA GeForce RTX 4090",
+            "total_mib": 24082.875
+          },
+          "score_sample": [
+            24.883886337280273,
+            14.8544340133667,
+            9.890676498413086
+          ]
+        },
+        "ssl": {
+          "model": "SSLModel+AASIST (upstream LA_model.pth)",
+          "checkpoint": "/var/tmp/lanjianyu-issue53-20261014/weights/LA_model.pth",
+          "segment_samples": 64600,
+          "configured_batch_size": 10,
+          "peak_bytes_after_model_load": 1297172480,
+          "peak_bytes_after_scoring": 2094534144,
+          "peak_mib_after_model_load": 1237.080078125,
+          "peak_mib_after_scoring": 1997.50341796875,
+          "score_sample": [
+            [
+              -7.843403339385986,
+              6.276594161987305
+            ],
+            [
+              -8.399849891662598,
+              6.613800048828125
+            ]
+          ]
+        }
+      }
+    },
+    "gpu_sampling_legacy": {
+      "per_tag_peak_mib": {},
+      "total_used_peak_mib": null,
+      "total_used_min_mib": null,
+      "samples": 0,
+      "own_processes_visible": false,
+      "visible_app_samples": 0
+    }
+  },
+  "paired_compare_scores": {
+    "dev-aac64k--ssl-vs-ast": {
+      "baseline": 0.00706436420722135,
+      "candidate": 0.0007849293563579278,
+      "fullset_delta_eer": -0.006279434850863423,
+      "fullset_reason": null,
+      "common_sample_count": 24844,
+      "common_coverage": 1.0,
+      "common_delta_eer": -0.006279434850863423,
+      "excluded_samples": 0,
+      "baseline_coverage": 1.0,
+      "candidate_coverage": 1.0
+    },
+    "dev-aac64k--ssl-vs-logmel": {
+      "baseline": 0.009419152276295133,
+      "candidate": 0.0007849293563579278,
+      "fullset_delta_eer": -0.008634222919937205,
+      "fullset_reason": null,
+      "common_sample_count": 24844,
+      "common_coverage": 1.0,
+      "common_delta_eer": -0.008634222919937205,
+      "excluded_samples": 0,
+      "baseline_coverage": 1.0,
+      "candidate_coverage": 1.0
+    },
+    "dev-bandlimit8k--ssl-vs-ast": {
+      "baseline": 0.01726767133118048,
+      "candidate": 0.0003924646781789639,
+      "fullset_delta_eer": -0.016875206653001518,
+      "fullset_reason": null,
+      "common_sample_count": 24844,
+      "common_coverage": 1.0,
+      "common_delta_eer": -0.016875206653001518,
+      "excluded_samples": 0,
+      "baseline_coverage": 1.0,
+      "candidate_coverage": 1.0
+    },
+    "dev-bandlimit8k--ssl-vs-logmel": {
+      "baseline": 0.013858988159311088,
+      "candidate": 0.0003924646781789639,
+      "fullset_delta_eer": -0.013466523481132123,
+      "fullset_reason": null,
+      "common_sample_count": 24844,
+      "common_coverage": 1.0,
+      "common_delta_eer": -0.013466523481132123,
+      "excluded_samples": 0,
+      "baseline_coverage": 1.0,
+      "candidate_coverage": 1.0
+    },
+    "dev-clean--ssl-vs-logmel": {
+      "baseline": 0.00902668759811617,
+      "candidate": 0.0007849293563579278,
+      "fullset_delta_eer": -0.008241758241758242,
+      "fullset_reason": null,
+      "common_sample_count": 24844,
+      "common_coverage": 1.0,
+      "common_delta_eer": -0.008241758241758242,
+      "excluded_samples": 0,
+      "baseline_coverage": 1.0,
+      "candidate_coverage": 1.0
+    },
+    "eval-subset--ssl-vs-ast": {
+      "baseline": 0.044375,
+      "candidate": 0.0019230769230769232,
+      "fullset_delta_eer": -0.042451923076923075,
+      "fullset_reason": null,
+      "common_sample_count": 12000,
+      "common_coverage": 1.0,
+      "common_delta_eer": -0.042451923076923075,
+      "excluded_samples": 0,
+      "baseline_coverage": 1.0,
+      "candidate_coverage": 1.0
+    },
+    "eval-subset--ssl-vs-logmel": {
+      "baseline": 0.027019230769230768,
+      "candidate": 0.0019230769230769232,
+      "fullset_delta_eer": -0.025096153846153844,
+      "fullset_reason": null,
+      "common_sample_count": 12000,
+      "common_coverage": 1.0,
+      "common_delta_eer": -0.025096153846153844,
+      "excluded_samples": 0,
+      "baseline_coverage": 1.0,
+      "candidate_coverage": 1.0
+    },
+    "in-the-wild--ssl-vs-ast": {
+      "baseline": 0.24856127285037238,
+      "candidate": 0.11210739868757201,
+      "fullset_delta_eer": -0.13645387416280036,
+      "fullset_reason": null,
+      "common_sample_count": 31779,
+      "common_coverage": 1.0,
+      "common_delta_eer": -0.13645387416280036,
+      "excluded_samples": 0,
+      "baseline_coverage": 1.0,
+      "candidate_coverage": 1.0
+    },
+    "in-the-wild--ssl-vs-logmel": {
+      "baseline": 0.3067027758970887,
+      "candidate": 0.11210739868757201,
+      "fullset_delta_eer": -0.1945953772095167,
+      "fullset_reason": null,
+      "common_sample_count": 31779,
+      "common_coverage": 1.0,
+      "common_delta_eer": -0.1945953772095167,
+      "excluded_samples": 0,
+      "baseline_coverage": 1.0,
+      "candidate_coverage": 1.0
+    }
+  }
+}
