@@ -21,6 +21,7 @@ VISION_ARCHITECTURES = frozenset(
         "vit_small_patch16_224",
         "convnext_tiny",
         "ufd_clip_vit_l14",
+        "vit_base_patch14_dinov2.lvd142m",
     }
 )
 AUDIO_ARCHITECTURES = frozenset({"wav2vec2", "hubert", "wavlm"})
@@ -88,6 +89,8 @@ class FrozenVisionEncoder(_FrozenEncoder):
     UFD uses a standard full checkpoint containing its projected visual encoder.
     Input RGB tensors must already use the registered model preprocessing;
     `preprocessing` exposes its size, interpolation, mean and standard deviation.
+    DINOv2 keeps its pretrained 518 position grid and interpolates it for the
+    experiment's 224 RGB center crops, using ImageNet normalization.
     """
 
     def __init__(
@@ -111,7 +114,11 @@ class FrozenVisionEncoder(_FrozenEncoder):
         import timm  # noqa: PLC0415
         from timm.data.config import resolve_model_data_config  # noqa: PLC0415
 
-        self.backbone = timm.create_model(architecture, pretrained=False, num_classes=0)
+        dinov2 = architecture == "vit_base_patch14_dinov2.lvd142m"
+        model_kwargs: dict[str, Any] = {"dynamic_img_size": True} if dinov2 else {}
+        self.backbone = timm.create_model(
+            architecture, pretrained=False, num_classes=0, **model_kwargs
+        )
         state = torch.load(checkpoint, map_location="cpu", weights_only=True)
         if not isinstance(state, dict) or any(
             not isinstance(key, str) or not isinstance(value, Tensor)
@@ -125,6 +132,10 @@ class FrozenVisionEncoder(_FrozenEncoder):
         self.preprocessing = resolve_model_data_config(  # type: ignore[no-untyped-call]
             self.backbone
         )
+        if dinov2:
+            self.preprocessing.update(
+                input_size=(3, 224, 224), resize_mode="native_center_crop"
+            )
         self._freeze()
 
     @torch.no_grad()

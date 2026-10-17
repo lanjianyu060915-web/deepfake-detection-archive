@@ -32,6 +32,7 @@ from .media import (
 from .media_tools import media_tool
 from .models import (
     AASISTLite,
+    DinoAdaptVideoClassifier,
     LogMelCNN,
     MediaFeatureClassifier,
     UFDVideoClassifier,
@@ -92,6 +93,7 @@ class OfflineScorer:
                 self.model,
                 (
                     VideoFrameClassifier,
+                    DinoAdaptVideoClassifier,
                     UFDVideoClassifier,
                     WaveRepVideoClassifier,
                     VideoFusionClassifier,
@@ -99,21 +101,22 @@ class OfflineScorer:
             ):
                 raise ValueError(
                     "video_frames requires a video_frame_finetune_v1, ufd_video_v1 "
-                    "waverep_video_v1 or video_fusion_v1 checkpoint"
+                    "waverep_video_v1, video_dinov2_adapt_v1 or video_fusion_v1 checkpoint"
                 )
             if self.model.config.aggregation != config.aggregation:
                 raise ValueError(
                     "head aggregation and inference configuration disagree"
                 )
             if isinstance(
-                self.model, (UFDVideoClassifier, WaveRepVideoClassifier)
+                self.model,
+                (UFDVideoClassifier, WaveRepVideoClassifier, DinoAdaptVideoClassifier),
             ) and (
                 self.video.resize_mode != "native_center_crop"
                 or self.model.preprocessing["input_size"]
                 != (3, self.video.height, self.video.width)
             ):
                 raise ValueError(
-                    "UFD/WaveRep require native_center_crop at their input size"
+                    "UFD/WaveRep/DINOv2 require native_center_crop at their input size"
                 )
             self.encoder = None
             if isinstance(self.model, VideoFusionClassifier):

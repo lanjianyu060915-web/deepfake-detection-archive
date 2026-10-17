@@ -33,8 +33,151 @@ from deepfake_detection_archive.experiments import (
     load_experiment_config,
     run_experiment,
 )
+from deepfake_detection_archive.models.encoders import FrozenVisionEncoder
 from deepfake_detection_archive.scoring import OfflineScorer
 from deepfake_detection_archive.training import SelectionOptions
+
+
+def test_generic_vision_cache_batches_videos_and_reuses_per_file_features(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    batches: list[int] = []
+
+    class TinyVisionEncoder(FrozenVisionEncoder):
+        def __init__(self) -> None:
+            torch.nn.Module.__init__(self)
+            self.architecture = "resnet18"
+            self.preprocessing = {"input_size": (3, 2, 2)}
+            self._freeze()
+
+        def forward(self, frames: torch.Tensor) -> torch.Tensor:
+            assert self.training is False
+            batches.append(len(frames))
+            values = frames[:, 0, 0, 0]
+            return torch.stack((values, values + 100), dim=1)
+
+    config = ExperimentConfig(
+        manifest="manifest.jsonl",
+        data_root=".",
+        sources="sources.jsonl",
+        output_dir="run",
+        modality="video",
+        architecture="media_feature_head_v1",
+        model_config={"input_dim": 2},
+        training={},
+        video={"n_frames": 4, "height": 2, "width": 2},
+        encoder={"kind": "vision", "architecture": "resnet18"},
+        feature_batch_size=5,
+        num_workers=3,
+    )
+    records = [
+        SampleRecord(
+            sample_id=f"video-{index}",
+            path=f"video-{index}.mp4",
+            modality="video",
+            label=index % 2,
+            source="synthetic",
+            sha256=f"{index:064x}",
+            split="train" if index % 2 == 0 else "dev",
+        )
+        for index in range(6)
+    ]
+    overlap = threading.Barrier(config.num_workers)
+    decoded: list[str] = []
+
+    def frames(record: SampleRecord, *args: Any) -> torch.Tensor:
+        decoded.append(record.sample_id)
+        overlap.wait(timeout=5)
+        index = int(record.sample_id.removeprefix("video-"))
+        values = torch.arange(4, dtype=torch.float32) + index * 10
+        return values[:, None, None, None].expand(4, 3, 2, 2)
+
+    monkeypatch.setattr(
+        "deepfake_detection_archive.features.extract_video_frames", frames
+    )
+    encoder = TinyVisionEncoder()
+    cache = tmp_path / "cache"
+    entries = _prepare_cache(records, config, tmp_path, cache, encoder, tmp_path)
+    assert batches == [5, 5, 2, 5, 5, 2]
+    assert sorted(decoded) == [record.sample_id for record in records]
+    for split in ("train", "dev"):
+        selected = [record for record in records if record.split == split]
+        for record, (path, _, label) in zip(selected, entries[split], strict=True):
+            index = int(record.sample_id.removeprefix("video-"))
+            values = torch.arange(4, dtype=torch.float32) + index * 10
+            tensor = torch.load(path, weights_only=True)
+            assert torch.equal(tensor, torch.stack((values, values + 100), dim=1))
+            assert label == record.label
+            sidecar = json.loads(path.with_suffix(".json").read_text())
+            assert sidecar["identity"]["media_sha256"] == record.sha256
+    timestamps = {path: path.stat().st_mtime_ns for path in cache.iterdir()}
+    assert (
+        _prepare_cache(records, config, tmp_path, cache, encoder, tmp_path) == entries
+    )
+    assert batches == [5, 5, 2, 5, 5, 2]
+    assert len(decoded) == len(records)
+    assert {path: path.stat().st_mtime_ns for path in cache.iterdir()} == timestamps
+
+
+@pytest.mark.parametrize("invalid", ["nan", "rank", "batch_length"])
+def test_vision_feature_batch_rejects_invalid_outputs_before_caching(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, invalid: str
+) -> None:
+    class InvalidVisionEncoder(FrozenVisionEncoder):
+        def __init__(self) -> None:
+            torch.nn.Module.__init__(self)
+            self.architecture = "resnet18"
+            self.preprocessing = {"input_size": (3, 2, 2)}
+            self._freeze()
+
+        def forward(self, frames: torch.Tensor) -> torch.Tensor:
+            if invalid == "nan":
+                return torch.full((len(frames), 2), float("nan"))
+            if invalid == "rank":
+                return torch.zeros(len(frames), 1, 2)
+            return torch.zeros(len(frames) * 2, 2)
+
+    config = ExperimentConfig(
+        manifest="manifest.jsonl",
+        data_root=".",
+        sources="sources.jsonl",
+        output_dir="run",
+        modality="video",
+        architecture="media_feature_head_v1",
+        model_config={"input_dim": 2},
+        training={},
+        video={"n_frames": 4, "height": 2, "width": 2},
+        encoder={"kind": "vision", "architecture": "resnet18"},
+        feature_batch_size=4,
+    )
+    record = SampleRecord(
+        "video",
+        "video.mp4",
+        "video",
+        0,
+        "synthetic",
+        sha256="a" * 64,
+        split="train",
+    )
+    monkeypatch.setattr(
+        "deepfake_detection_archive.features.extract_video_frames",
+        lambda *args: torch.ones(4, 3, 2, 2),
+    )
+    cache = tmp_path / "cache"
+    with pytest.raises(ValueError, match="sample preparation failed"):
+        _prepare_cache(
+            [record], config, tmp_path, cache, InvalidVisionEncoder(), tmp_path
+        )
+    assert not list(cache.iterdir())
+    failures = json.loads((tmp_path / "decode_failures.json").read_text())
+    assert failures == [
+        {
+            "sample_id": "video",
+            "stage": "video_feature_batch",
+            "error_type": "ValueError",
+            "error": "encoder returned invalid feature shape or values",
+        }
+    ]
 
 
 def test_dev_scores_resolve_group_evidence_before_domain_reports(

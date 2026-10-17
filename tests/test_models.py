@@ -344,6 +344,70 @@ def test_local_vision_encoder_is_frozen(tmp_path, monkeypatch):
         )
 
 
+def test_local_dinov2_preserves_position_grid_and_uses_224_crops(tmp_path, monkeypatch):
+    timm = pytest.importorskip("timm")
+    from timm.models.vision_transformer import VisionTransformer  # noqa: PLC0415
+
+    architecture = "vit_base_patch14_dinov2.lvd142m"
+    assert timm.is_model(architecture)
+    pretrained_cfg = timm.models.get_pretrained_cfg(architecture)
+
+    def tiny_model():
+        model = VisionTransformer(
+            img_size=518,
+            patch_size=14,
+            embed_dim=32,
+            depth=1,
+            num_heads=2,
+            num_classes=0,
+            dynamic_img_size=True,
+        )
+        model.pretrained_cfg = pretrained_cfg.to_dict()
+        return model.eval()
+
+    reference = tiny_model()
+    checkpoint = tmp_path / "dinov2.pt"
+    torch.save(reference.state_dict(), checkpoint)
+    calls = []
+
+    def create_local(name, **kwargs):
+        calls.append((name, kwargs))
+        return tiny_model()
+
+    monkeypatch.setattr(timm, "create_model", create_local)
+    encoder = FrozenVisionEncoder(
+        architecture, checkpoint, expected_sha256=sha256_file(checkpoint)
+    )
+    assert calls == [
+        (
+            architecture,
+            {"pretrained": False, "num_classes": 0, "dynamic_img_size": True},
+        )
+    ]
+    assert encoder.backbone.pos_embed.shape == (1, 1370, 32)
+    assert encoder.preprocessing["input_size"] == (3, 224, 224)
+    assert encoder.preprocessing["resize_mode"] == "native_center_crop"
+    assert encoder.preprocessing["mean"] == (0.485, 0.456, 0.406)
+    assert encoder.preprocessing["std"] == (0.229, 0.224, 0.225)
+    encoder.train()
+    assert not encoder.training
+    assert not encoder.backbone.training
+    assert all(not parameter.requires_grad for parameter in encoder.parameters())
+    images = torch.randn(2, 3, 224, 224)
+    features = encoder(images)
+    assert features.shape == (2, encoder.feature_dim)
+    assert encoder.feature_dim == 32
+    assert not features.requires_grad
+    torch.testing.assert_close(features, reference(images))
+    state = reference.state_dict()
+    del state["pos_embed"]
+    torch.save(state, checkpoint)
+    with pytest.raises(RuntimeError, match="Missing key"):
+        FrozenVisionEncoder(
+            architecture, checkpoint, expected_sha256=sha256_file(checkpoint)
+        )
+
+
 @pytest.mark.parametrize("feature_norm", ["layer", "group"])
 def test_local_ssl_encoder_and_bundle_integrity(tmp_path, monkeypatch, feature_norm):
     transformers = pytest.importorskip("transformers")

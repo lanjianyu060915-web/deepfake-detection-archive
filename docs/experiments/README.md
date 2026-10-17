@@ -8,6 +8,7 @@
 
 | 实验 | 当前结论 | 下一步 |
 | --- | --- | --- |
+| [DINOv2/CLIP匹配训练与有限适配](video-dinov2-20261017/README.md) | 八组训练；新CLIP43/42 AIGVD15.86%/17.00%，ViF26.67%/26.92%；DINO适配主43为24.53%/33.65%，弱于CLIP | C10仍主候选、新CLIP备选；停止本轮DINO训练，优先新来源/困难内容与视频时序表征；已见诊断不作盲测 |
 | [ASV 云端双种子](asv-cloud-20261011/README.md) | LogMel EER0.7849%/0.9419%；冻结HuBERT未改善同域dev | 未知攻击、跨来源及压缩评分 |
 | [语音压缩与未知攻击](audio-generalization-20261011/README.md) | LogMel42未知攻击EER2.97%；AAC退化较小，8kHz采样率带限EER13.10% | 带宽增强、跨来源及未知攻击叠加退化 |
 | [语音带宽增强](bandwidth-augmentation-20261012/README.md) | 训练期8kHz增强：带限EER13.10%→1.39%，clean+0.12点，AAC与未知子集亦改善 | seed43复现见下一行 |

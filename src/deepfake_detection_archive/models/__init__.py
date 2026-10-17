@@ -12,6 +12,7 @@ from .core import (
     MediaFeatureConfig,
     pool_media_scores,
 )
+from .dino_adapt import DinoAdaptConfig, DinoAdaptVideoClassifier
 from .encoders import FrozenAudioEncoder, FrozenVisionEncoder
 from .finetune import VideoFrameClassifier, VideoFrameConfig
 from .ufd import UFDConfig, UFDVideoClassifier
@@ -23,6 +24,8 @@ __all__ = [
     "AASISTLite",
     "ClipAdaptConfig",
     "ClipAdaptVideoClassifier",
+    "DinoAdaptConfig",
+    "DinoAdaptVideoClassifier",
     "FeatureHead",
     "FrozenAudioEncoder",
     "FrozenVisionEncoder",
