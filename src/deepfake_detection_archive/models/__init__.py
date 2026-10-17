@@ -15,6 +15,7 @@ from .core import (
 from .dino_adapt import DinoAdaptConfig, DinoAdaptVideoClassifier
 from .encoders import FrozenAudioEncoder, FrozenVisionEncoder
 from .finetune import VideoFrameClassifier, VideoFrameConfig
+from .swin_video import SwinVideoClassifier, SwinVideoConfig
 from .ufd import UFDConfig, UFDVideoClassifier
 from .video_fusion import VideoFusionClassifier, VideoFusionConfig
 from .waverep import WaveRepConfig, WaveRepVideoClassifier
@@ -34,6 +35,8 @@ __all__ = [
     "LogMelConfig",
     "MediaFeatureClassifier",
     "MediaFeatureConfig",
+    "SwinVideoClassifier",
+    "SwinVideoConfig",
     "UFDConfig",
     "UFDVideoClassifier",
     "VideoFrameClassifier",

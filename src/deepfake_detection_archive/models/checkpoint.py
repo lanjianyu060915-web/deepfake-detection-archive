@@ -23,6 +23,7 @@ from .core import (
 )
 from .dino_adapt import DinoAdaptConfig, DinoAdaptVideoClassifier
 from .finetune import VideoFrameClassifier, VideoFrameConfig
+from .swin_video import SwinVideoClassifier, SwinVideoConfig
 from .ufd import UFDConfig, UFDVideoClassifier
 from .video_fusion import VideoFusionClassifier, VideoFusionConfig
 from .waverep import WaveRepConfig, WaveRepVideoClassifier
@@ -64,6 +65,8 @@ def create_model(architecture: str, config: dict[str, Any]) -> nn.Module:  # noq
         return ClipAdaptVideoClassifier(ClipAdaptConfig(**config))
     if architecture == "video_dinov2_adapt_v1":
         return DinoAdaptVideoClassifier(DinoAdaptConfig(**config))
+    if architecture == "video_swin3d_v1":
+        return SwinVideoClassifier(SwinVideoConfig(**config))
     if architecture == "waverep_video_v1":
         return WaveRepVideoClassifier(WaveRepConfig(**config))
     if architecture == "video_fusion_v1":
@@ -90,6 +93,8 @@ def model_spec(model: nn.Module) -> tuple[str, dict[str, Any]]:  # noqa: PLR0911
         return "clip_adapt_video_v1", asdict(model.config)
     if type(model) is DinoAdaptVideoClassifier:
         return "video_dinov2_adapt_v1", asdict(model.config)
+    if type(model) is SwinVideoClassifier:
+        return "video_swin3d_v1", asdict(model.config)
     if type(model) is WaveRepVideoClassifier:
         return "waverep_video_v1", asdict(model.config)
     if type(model) is VideoFusionClassifier:
