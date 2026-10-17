@@ -8,6 +8,7 @@
 
 | 实验 | 当前结论 | 下一步 |
 | --- | --- | --- |
+| [原生Swin3D与CLIP16匹配训练](video-native-20261017/README.md) | 八组训练；Swin适配主43 AIGVD20.94%/ViF34.58%，CLIP16为16.83%/26.12%；256条时序诊断与24条标准推理完成 | 时序敏感不等于更强鉴伪，停止本轮Swin；CLIP16保留跨集取舍对照、C10仍主候选；holdout封存 |
 | [DINOv2/CLIP匹配训练与有限适配](video-dinov2-20261017/README.md) | 八组训练；新CLIP43/42 AIGVD15.86%/17.00%，ViF26.67%/26.92%；DINO适配主43为24.53%/33.65%，弱于CLIP | C10仍主候选、新CLIP备选；停止本轮DINO训练，优先新来源/困难内容与视频时序表征；已见诊断不作盲测 |
 | [ASV 云端双种子](asv-cloud-20261011/README.md) | LogMel EER0.7849%/0.9419%；冻结HuBERT未改善同域dev | 未知攻击、跨来源及压缩评分 |
 | [语音压缩与未知攻击](audio-generalization-20261011/README.md) | LogMel42未知攻击EER2.97%；AAC退化较小，8kHz采样率带限EER13.10% | 带宽增强、跨来源及未知攻击叠加退化 |

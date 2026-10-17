@@ -35,6 +35,7 @@ from .models import (
     DinoAdaptVideoClassifier,
     LogMelCNN,
     MediaFeatureClassifier,
+    SwinVideoClassifier,
     UFDVideoClassifier,
     VideoFrameClassifier,
     VideoFusionClassifier,
@@ -108,6 +109,7 @@ class OfflineScorer:
                 (
                     VideoFrameClassifier,
                     DinoAdaptVideoClassifier,
+                    SwinVideoClassifier,
                     UFDVideoClassifier,
                     WaveRepVideoClassifier,
                     VideoFusionClassifier,
@@ -115,7 +117,8 @@ class OfflineScorer:
             ):
                 raise ValueError(
                     "video_frames requires a video_frame_finetune_v1, ufd_video_v1 "
-                    "waverep_video_v1, video_dinov2_adapt_v1 or video_fusion_v1 checkpoint"
+                    "waverep_video_v1, video_dinov2_adapt_v1, video_swin3d_v1 "
+                    "or video_fusion_v1 checkpoint"
                 )
             if self.model.config.aggregation != config.aggregation:
                 raise ValueError(
@@ -131,6 +134,14 @@ class OfflineScorer:
             ):
                 raise ValueError(
                     "UFD/WaveRep/DINOv2 require native_center_crop at their input size"
+                )
+            if isinstance(self.model, SwinVideoClassifier) and (
+                self.video.n_frames != self.model.config.n_frames
+                or self.video.resize_mode != "native_center_crop"
+                or (self.video.height, self.video.width) != (224, 224)
+            ):
+                raise ValueError(
+                    "Video Swin requires 16 frames and native_center_crop at 224 pixels"
                 )
             self.encoder = None
             if isinstance(self.model, VideoFusionClassifier):

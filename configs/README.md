@@ -69,3 +69,12 @@ AST可设置 `training.frequency_mask_width` / `time_mask_width`，默认0关闭
 与仅训练 SSL 特征头的模板不同。需要本地 `LA_model.pth`、固定上游 `model.py` 和
 `xlsr_cfg.json` 三个资源；模板已固定本轮权重和配置哈希，不隐式下载。
 运行、逐样本失败记账和离线搬移说明见[实验](../docs/experiments/speech-ssl-20261014/README.md#标准离线推理)。
+
+原生 Swin3D 研究 checkpoint（`video_swin3d_v1`）同样使用
+`model_kind="video_frames"`，`video` 必须为16帧、224×224及
+`resize_mode="native_center_crop"`，`aggregation="mean"`；无需额外 encoder。
+其 frame batch hint 仅拆分完整 clip，不能缩减单个视频的16帧；
+小于16的 hint 仍处理一个完整 clip，不能据此宣称单 clip OOM 可减批解决。
+完整 checkpoint 已包含骨干与头，原始公开预训练文件只在实验准备时使用。
+实际训练配置与任务适配器见[原生时序实验](../docs/experiments/video-native-20261017/README.md)；
+适配器调用既有 trainer，公共 `train` CLI 当前不接受该架构配置。

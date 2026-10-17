@@ -75,3 +75,24 @@ UFD及CLIP仓库有MIT代码许可；分类头未见独立model card，训练素
 [权重目录许可](https://www.grip.unina.it/download/prog/WaveRep_SynthVideoDet/LICENSE.txt)。
 现阶段仅作研究与可选融合候选，赛用范围须由负责人确认；结果见
 [生成机制鉴伪](../../experiments/generator-forensics-20261014/README.md)。
+
+## Video Swin 原生时空表征
+
+使用 torchvision `0.29.1` 的 `swin3d_t`、`KINETICS400_V1`，
+[固定实现](https://github.com/pytorch/vision/blob/v0.29.1/torchvision/models/video/swin_transformer.py)
+对应上游 commit `1f1a920d685d46dfbe187934b785b7ecb7a182f2`。
+[原始权重](https://download.pytorch.org/models/swin3d_t-7615ae03.pth)
+为127,447,114B，SHA-256
+`7615ae035996b65eb38dad437ae533d2dfcd36f9f89d28c0f0fa7bfb8e6b3130`。
+准备时严格加载骨干，仅移除原 Kinetics 分类头；运行时构建 `weights=None`，
+完整鉴伪 checkpoint 包含骨干与新头，不隐式下载。
+
+本项目研究前端为16帧、224像素 native center crop、ImageNet mean/std，
+不是任意输入与上游短边256 resize相同的声明；上游常规评测使用32帧。
+时序窗口跨帧计算，不能把视频内部16帧拆成独立帧处理。
+
+[torchvision 代码许可](https://github.com/pytorch/vision/blob/v0.29.1/LICENSE)
+为 BSD-3-Clause，原 Video Swin 项目为 Apache-2.0；
+[上游预训练权重说明](https://github.com/pytorch/vision/blob/v0.29.1/README.md#pre-trained-model-license)
+要求另行处理训练材料条款。代码许可不替代权重/素材赛用许可，本轮仅研究使用。
+原始权重、固定许可与来源材料随 C19 保存，CLIP 编码器继续复用 C6。

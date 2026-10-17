@@ -7,6 +7,7 @@
 
 | 资产 | 实际位置 | 当前用途 |
 | --- | --- | --- |
+| 原生Swin3D/CLIP16（#88） | `/srv/shared-data/candidates/video-native-20261017/` | 八个训练checkpoint、完整冻结Swin43、复用CLIP编码器；root只读，两账号各31文件可读/10权重写入被拒；Swin负结果、CLIP16研究对照，C10仍主候选；[实验](experiments/video-native-20261017/README.md) |
 | DINOv2/CLIP新候选（#86） | `/srv/shared-data/candidates/video-dinov2-20261017/` | 四个新头、四个完整适配/对照checkpoint与两个编码器，root只读、两位账号实测可读；大权重硬链接不重复占盘；CLIP研究备选、DINO负结果，C10仍主候选；[实验](experiments/video-dinov2-20261017/README.md) |
 | UFD强视频对照 | `/var/tmp/deepfake-video-ufd-20261014/` | 完整检测器、固定配置与三组分数；公开头负结果；最小资产已另存下方C6持久归档 |
 | 冻结CLIP视频头 | `/var/tmp/deepfake-video-clip-head-20261014/` | 双seed头与三组完整分数，冻结43为研究候选；复用UFD骨干，最小资产已另存C6，不替换release |
@@ -70,6 +71,9 @@
 | `C16-container-runtime-20261016/` | Actions实际CPU/cu126无权重镜像与4输入结果、源码/digest/归档SHA；98内容文件4,519,922,634B，两路CPU推理和save/load差0，不算GPU容器验收 |
 | `C17-video-dinov2-representation-20261017/` | 四个同预算CLIP/DINO新头、DINO转换权重与固定上游模型卡/Apache-2.0许可、完整选择/诊断分数和摘要、共享访问记录、必要适配器与运行源码；CLIP编码器复用C6 |
 | `C18-video-dinov2-adapt-20261017/` | 四个自包含适配/对照checkpoint、配置/历史/完整分数、12组原视频标准结果和CRF18/35原媒体单份tar；保留必要首轮失败记账，不复制训练媒体或tokens |
+| `C19-video-native-temporal-20261017/` | Swin3D/CLIP16八组训练checkpoint与完整分数/配置/历史、完整冻结Swin43、原公开Swin权重和固定许可、时序2304条及标准入口24条结果、必要适配器与两份固定源码；CLIP编码器/媒体复用C6/C9/C10，不复制缓存 |
+| `C20-speech-ssl-aasist-20261014/` | #53：SSL_Anti-spoofing官方`LA_model.pth`、作者源码`4acaa61d`与协议、XLS-R配置、评分脚本新旧两版、5个语音集与5个非语音诊断集完整分数/评估/加载映射、同协议汇总与来源记录；52文件1,356,326,200字节，自带`SHA256SUMS` 51/51 OK |
+| `C21-human-collected-20261017/` | #51数据负责人收集的真假音视频原媒体与项目清单：real_ai_media_500 523条（含来源CSV）、AI生成视频106条与原zip、真实音视频282条、china-clips-1000解压包根（不含与之重复的2.2GB zip，zip SHA-256记于README）；清单911+999条；2,940文件3,251,126,327字节，`SHA256SUMS` 2,939/2,939 OK；原目录 `/home/lanjianyu/人工收集的数据/` 保留，许可未确认仅内部研究 |
 | `shared/` | `resnet18-a1/encoder.pt`（视频共享基座）与`ast-audioset/`（AST预训练基座） |
 
 原C1–C5与shared共396个内容文件、约3.07GiB，不含原始媒体、特征缓存和可再生的发布分片。
@@ -101,6 +105,14 @@ DINO上游原始权重SHA、URL与转换SHA在`pretrained/conversion.json`，原
 共享只读路径有30文件、2,949,553,679逻辑字节（大权重硬链接），两位账号各实测30文件可读、
 10份权重打开写入被拒；`shared-index.json`及`shared-access.json`保存于C17。
 
+C19独立登记152个内容文件、788,773,752B，复制文件均已读回核对SHA；
+保存固定运行源码`1a3ead9`及CLIP producer保留源码`0ddc71a`。后者原准备记录的
+commit为`unavailable`，package SHA不变，事后只读源映射独立保存，不改写原记录。
+八组完整分数及2304条时序/24条原视频标准评分均保留；原公开Swin权重单份归档，
+CLIP编码器和训练媒体分别复用C6、C9/C10。完整Swin checkpoint运行时无需原权重或缓存。
+共享目录31文件、1,848,935,400逻辑字节，权重硬链接；两位账号实测可读、10权重写入被拒。
+归档完成后释放12,814,208,484B RAM缓存及544,998,476B CLIP特征；不删除原媒体或候选。
+
 C14按独立 `index.json`/`SHA256SUMS` 保全#50新增要求的最小材料，旧索引、配置和分数不改写；
 数据、权重、cache、输出可分别指定根，生成器按原路径/逻辑ID精确映射，C1原sidecar与新权重相邻，
 C6轻量头显式配套完整视觉编码器。同实例新根CPU标准 `infer` 对C6两条自生成无标签
@@ -110,6 +122,9 @@ logical ID与媒体SHA对齐新cu126包 `predict`，预设分数绝对容差1e-4
 历史清单实际5个dirty候选中4份源码包与训练记录哈希一致；C3原工作副本当前源码及58个
 可达历史源码树均不匹配训练哈希，历史dirty源码仍未恢复，不能用当前clean替代。
 本轮另查本仓库3个不可达commit的4份包源码树，以及队友原C3仓库49个路径commit/reflog中的48份唯一包源码树，仍未匹配训练hash；仅记录这些已知位置，不推断其他位置不存在。RC3实际结果见[执行与容量](experiments/runtime-completion-20261016/README.md)。
+2026-10-17又在数据负责人本机仓库复算全部316个commit（`git rev-list --all --reflog`及`fsck`不可达commit）的`code_sha256`：C3 bandwidth42的`daae2a27…`仍无匹配；C3 bandwidth43（#55，原记录commit为`unavailable`）的`9dc591ca…`精确匹配`2fabb61`（其后`46bc8f1`、`97ea83f`未改包源码，哈希相同），该候选源码可从已提交树完整恢复。复算方法与`tracking.code_identity`一致：包内`.py`/`.txt`逐文件SHA-256组成的规范JSON再取SHA-256。
+
+2026-10-17 团队训练机换到端口27151的新实例（快照恢复）后实测：`/var/tmp` 下 `deepfake-*` 目录均在，但 `lanjianyu-issue10/11/19/20/21/29/30/31/39/41` 缺失，只剩 issue9/50/51/53/59。缺失目录的权重、分数与清单已在 C1–C5、C20 中，但以下媒体不在任何归档中：issue19 的 ASV dev AAC64k/8kHz 派生与 A07–A19 子集媒体（可由 issue9 原始 FLAC、`/srv/shared-data/datasets/asvspoof2019-la/` 与 `tools/prepare_robustness.py` 重建，派生字节需按记录哈希核对）、issue11 Doppelganger 媒体（fsd dev/holdout 共140条，未重建）、issue39 In-the-Wild 解压媒体（公开发布，压缩包 SHA-256 `46665f30…` 已记录，可重下）。这是一次实际的跨实例丢失实例：同机 `/var/tmp` 与 `/home` 都不能视为持久位置。SSL 评分工具在新旧两台 RTX4090 实例（同驱动、同 torch/transformers）上对同 200 条 dev 的 logit 最大差 0.0078，同机逐位一致。
 
 完整历史工作树差异、原训练媒体/缓存恢复、optimizer/RNG无损续训、独立实例恢复、旧有标签评分集/全部候选新OS验收及正式许可仍有缺口；同机根映射与本批归档不构成独立跨实例备份，#50新要求尚未全部完成。
 
