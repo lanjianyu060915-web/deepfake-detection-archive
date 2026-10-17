@@ -64,3 +64,12 @@ AST可设置 `training.frequency_mask_width` / `time_mask_width`，默认0关闭
 
 完整命令和字段边界见[开发指南](../docs/development.md)。历史实验的实值配置保留在对应实验
 记录中，不应复制成新实验默认值。
+
+原生 Swin3D 研究 checkpoint（`video_swin3d_v1`）同样使用
+`model_kind="video_frames"`，`video` 必须为16帧、224×224及
+`resize_mode="native_center_crop"`，`aggregation="mean"`；无需额外 encoder。
+其 frame batch hint 仅拆分完整 clip，不能缩减单个视频的16帧；
+小于16的 hint 仍处理一个完整 clip，不能据此宣称单 clip OOM 可减批解决。
+完整 checkpoint 已包含骨干与头，原始公开预训练文件只在实验准备时使用。
+实际训练配置与任务适配器见[原生时序实验](../docs/experiments/video-native-20261017/README.md)；
+适配器调用既有 trainer，公共 `train` CLI 当前不接受该架构配置。
