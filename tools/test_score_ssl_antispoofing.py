@@ -59,7 +59,7 @@ class KeyMappingTests(unittest.TestCase):
     def test_maps_every_fairseq_key_onto_the_transformers_model(self) -> None:
         mapped = {ssl.fairseq_to_hf(key) for key in fairseq_keys(TINY)}
         mapped.discard(None)
-        expected = set(Wav2Vec2Model(Wav2Vec2Config(**TINY)).state_dict())
+        expected = set(Wav2Vec2Model(Wav2Vec2Config.from_dict(TINY)).state_dict())
         self.assertEqual(mapped, expected)
 
     def test_drops_only_pretraining_heads(self) -> None:
@@ -73,7 +73,9 @@ class KeyMappingTests(unittest.TestCase):
 class PadTests(unittest.TestCase):
     def test_crops_from_the_head_and_tiles_short_clips(self) -> None:
         long_wave = np.arange(70000, dtype=np.float32)
-        self.assertTrue(np.array_equal(ssl.pad_or_tile(long_wave), long_wave[: ssl.CUT]))
+        self.assertTrue(
+            np.array_equal(ssl.pad_or_tile(long_wave), long_wave[: ssl.CUT])
+        )
         short = np.array([1, 2, 3], dtype=np.float32)
         tiled = ssl.pad_or_tile(short, 7)
         self.assertEqual(tiled.tolist(), [1, 2, 3, 1, 2, 3, 1])
@@ -105,7 +107,7 @@ class UpstreamLoadingTests(unittest.TestCase):
             source = Path(tmp) / "model.py"
             source.write_text(UPSTREAM, encoding="utf-8")
             digest = hashlib.sha256(UPSTREAM.encode()).hexdigest()
-            ssl.SSLModel.config = Wav2Vec2Config(**TINY)
+            ssl.SSLModel.config = Wav2Vec2Config.from_dict(TINY)
             model = ssl.upstream_model_class(source, digest)(None, "cpu")
             self.assertIsInstance(model.ssl_model, ssl.SSLModel)
             with self.assertRaisesRegex(ValueError, "sha256"):

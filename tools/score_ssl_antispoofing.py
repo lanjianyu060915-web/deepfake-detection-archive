@@ -41,7 +41,10 @@ UPSTREAM_MODEL_SHA256 = (
     "08b2b99b9cc0e90732746471325185f2eb144795ee35338e0a02951015a856c6"
 )
 RULES = (
-    (r"^feature_extractor\.conv_layers\.(\d+)\.0\.", r"feature_extractor.conv_layers.\1.conv."),
+    (
+        r"^feature_extractor\.conv_layers\.(\d+)\.0\.",
+        r"feature_extractor.conv_layers.\1.conv.",
+    ),
     (
         r"^feature_extractor\.conv_layers\.(\d+)\.2\.1\.",
         r"feature_extractor.conv_layers.\1.layer_norm.",
@@ -57,13 +60,19 @@ RULES = (
         "encoder.pos_conv_embed.conv.parametrizations.weight.original1",
     ),
     (r"^encoder\.pos_conv\.0\.bias$", "encoder.pos_conv_embed.conv.bias"),
-    (r"^encoder\.layers\.(\d+)\.self_attn_layer_norm\.", r"encoder.layers.\1.layer_norm."),
+    (
+        r"^encoder\.layers\.(\d+)\.self_attn_layer_norm\.",
+        r"encoder.layers.\1.layer_norm.",
+    ),
     (r"^encoder\.layers\.(\d+)\.self_attn\.", r"encoder.layers.\1.attention."),
     (
         r"^encoder\.layers\.(\d+)\.fc1\.",
         r"encoder.layers.\1.feed_forward.intermediate_dense.",
     ),
-    (r"^encoder\.layers\.(\d+)\.fc2\.", r"encoder.layers.\1.feed_forward.output_dense."),
+    (
+        r"^encoder\.layers\.(\d+)\.fc2\.",
+        r"encoder.layers.\1.feed_forward.output_dense.",
+    ),
 )
 
 
@@ -127,7 +136,10 @@ def upstream_model_class(source: Path, expected_sha256: str) -> type[nn.Module]:
     end = text.index("#---------AASIST back-end")
     text = text[:start] + text[end:]
     text = text.replace("import fairseq\n", "")
-    namespace: dict[str, Any] = {"__name__": "ssl_antispoofing_upstream", "SSLModel": SSLModel}
+    namespace: dict[str, Any] = {
+        "__name__": "ssl_antispoofing_upstream",
+        "SSLModel": SSLModel,
+    }
     exec(compile(text, str(source), "exec"), namespace)  # noqa: S102 -- pinned MIT source
     model_class: type[nn.Module] = namespace["Model"]
     return model_class
@@ -156,7 +168,9 @@ def build_model(
             raise ValueError(f"two checkpoint keys map to {target}")
         mapped[target] = value
     expected = model.state_dict()
-    mismatched = [k for k, v in mapped.items() if k in expected and expected[k].shape != v.shape]
+    mismatched = [
+        k for k, v in mapped.items() if k in expected and expected[k].shape != v.shape
+    ]
     if mismatched:
         raise ValueError(f"shape mismatch: {mismatched[:5]}")
     model.load_state_dict(mapped, strict=True)
@@ -203,7 +217,9 @@ def main() -> None:
     parser.add_argument("--xlsr-config", type=Path, required=True)
     parser.add_argument("--manifest", type=Path, required=True)
     parser.add_argument("--data-root", type=Path, required=True)
-    parser.add_argument("--backend", choices=("soundfile", "ffmpeg"), default="soundfile")
+    parser.add_argument(
+        "--backend", choices=("soundfile", "ffmpeg"), default="soundfile"
+    )
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--batch-size", type=int, default=10)
     parser.add_argument("--device", default="cuda")
@@ -235,8 +251,10 @@ def main() -> None:
                     wave = decode_audio(args.data_root / record.path, audio).waveform
                     waves.append(pad_or_tile(np.asarray(wave, dtype=np.float32)))
                     decoded.append((record, time.monotonic() - begin))
-                except Exception as exc:  # noqa: BLE001 -- per-file failure accounting
-                    rows.append(score_row(record, groups, None, time.monotonic() - begin, exc))
+                except Exception as exc:  # per-file failure accounting
+                    rows.append(
+                        score_row(record, groups, None, time.monotonic() - begin, exc)
+                    )
             if not waves:
                 continue
             forward = time.monotonic()
@@ -248,7 +266,11 @@ def main() -> None:
                 spoof, bonafide = float(logit[0]), float(logit[1])
                 raw.write(
                     json.dumps(
-                        {"sample_id": record.sample_id, "spoof": spoof, "bonafide": bonafide}
+                        {
+                            "sample_id": record.sample_id,
+                            "spoof": spoof,
+                            "bonafide": bonafide,
+                        }
                     )
                     + "\n"
                 )
