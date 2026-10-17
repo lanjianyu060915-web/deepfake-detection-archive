@@ -100,7 +100,9 @@ def test_standard_scorer_head_tile_direction_and_failed_row(monkeypatch, tmp_pat
     assert inputs[0, :7].tolist() == [1, 2, 3, 1, 2, 3, 1]
 
 
-@pytest.mark.parametrize("model_error", [False, True])
+@pytest.mark.parametrize(
+    "model_error", [False, True, "nan", "spoof_nan", "shape", "short"]
+)
 def test_research_tool_keeps_unavailable_and_model_failure_rows(
     monkeypatch, tmp_path, model_error
 ):
@@ -111,8 +113,16 @@ def test_research_tool_keeps_unavailable_and_model_failure_rows(
     tool = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(tool)
     model = Mock(return_value=torch.tensor([[1.0, 2.0]]))
-    if model_error:
+    if model_error is True:
         model.side_effect = RuntimeError("model failed")
+    elif model_error == "nan":
+        model.return_value = torch.tensor([[1.0, float("nan")]])
+    elif model_error == "spoof_nan":
+        model.return_value = torch.tensor([[float("nan"), 2.0]])
+    elif model_error == "shape":
+        model.return_value = torch.tensor([[1.0]])
+    elif model_error == "short":
+        model.return_value = torch.empty(0, 2)
     monkeypatch.setattr(
         tool, "build_model", Mock(return_value=(model, {"loaded_keys": 1}))
     )
@@ -203,3 +213,40 @@ def test_packaged_ssl_resources_resolve_inside_moved_bundle(monkeypatch, tmp_pat
     assert Path(resolved.ssl["upstream_model"]) == resources / "model.py"
     assert Path(resolved.ssl["xlsr_config"]) == resources / "xlsr.json"
     assert Path(resolved.checkpoint) == resources / "LA_model.pth"
+
+
+@pytest.mark.parametrize("batch_size", [0, -1])
+def test_tool_rejects_nonpositive_batch_before_loading(monkeypatch, batch_size):
+    path = Path(__file__).parents[1] / "tools/score_ssl_antispoofing.py"
+    spec = importlib.util.spec_from_file_location("score_ssl_tool_args", path)
+    assert spec is not None
+    assert spec.loader is not None
+    tool = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(tool)
+    loader = Mock()
+    monkeypatch.setattr(tool, "build_model", loader)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            str(path),
+            "--weights",
+            "unused",
+            "--upstream-model",
+            "unused",
+            "--xlsr-config",
+            "unused",
+            "--manifest",
+            "unused",
+            "--data-root",
+            "unused",
+            "--output",
+            "unused",
+            "--batch-size",
+            str(batch_size),
+        ],
+    )
+    with pytest.raises(SystemExit) as exc:
+        tool.main()
+    assert exc.value.code == 2
+    loader.assert_not_called()

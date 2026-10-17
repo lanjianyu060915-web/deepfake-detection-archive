@@ -52,7 +52,7 @@ def score_row(
     )
 
 
-def main() -> None:  # noqa: PLR0915 -- single research batch workflow
+def main() -> None:  # noqa: PLR0912, PLR0915 -- single research batch workflow
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--weights", type=Path, required=True)
     parser.add_argument("--upstream-model", type=Path, required=True)
@@ -66,6 +66,8 @@ def main() -> None:  # noqa: PLR0915 -- single research batch workflow
     parser.add_argument("--batch-size", type=int, default=10)
     parser.add_argument("--device", default="cuda")
     args = parser.parse_args()
+    if args.batch_size < 1:
+        parser.error("--batch-size must be a positive integer")
 
     torch.backends.cuda.matmul.allow_tf32 = False
     torch.backends.cudnn.allow_tf32 = False
@@ -114,19 +116,25 @@ def main() -> None:  # noqa: PLR0915 -- single research batch workflow
                     rows.append(score_row(record, groups, None, seconds + share, exc))
                 continue
             share = (time.monotonic() - forward) / len(waves)
-            for (record, seconds), logit in zip(decoded, logits, strict=True):
-                spoof, bonafide = float(logit[0]), float(logit[1])
-                raw.write(
-                    json.dumps(
-                        {
-                            "sample_id": record.sample_id,
-                            "spoof": spoof,
-                            "bonafide": bonafide,
-                        }
+            for index, (record, seconds) in enumerate(decoded):
+                try:
+                    logit = logits[index]
+                    spoof, bonafide = float(logit[0]), float(logit[1])
+                    row = score_row(record, groups, -bonafide, seconds + share, None)
+                    raw.write(
+                        json.dumps(
+                            {
+                                "sample_id": record.sample_id,
+                                "spoof": spoof,
+                                "bonafide": bonafide,
+                            },
+                            allow_nan=False,
+                        )
+                        + "\n"
                     )
-                    + "\n"
-                )
-                rows.append(score_row(record, groups, -bonafide, seconds + share, None))
+                    rows.append(row)
+                except Exception as exc:  # malformed model row stays in denominator
+                    rows.append(score_row(record, groups, None, seconds + share, exc))
     with (args.output / "scores.jsonl").open("w", encoding="utf-8") as stream:
         for row in rows:
             stream.write(json.dumps(row.to_dict(), ensure_ascii=False) + "\n")

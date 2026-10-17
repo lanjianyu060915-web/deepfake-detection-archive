@@ -164,6 +164,8 @@ def build_model(
     model.load_state_dict(mapped, strict=True)
     model.to(device).eval()
     report = {
+        "architecture": "audio_ssl_antispoofing_v1",
+        "schema_version": 1,
         "weights_sha256": weights_sha256,
         "upstream_commit": UPSTREAM_COMMIT,
         "upstream_model_sha256": UPSTREAM_MODEL_SHA256,

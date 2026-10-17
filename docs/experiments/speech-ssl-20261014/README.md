@@ -107,6 +107,9 @@ scripts/devctl run python -m deepfake_detection_archive infer \
 离线 bundle 的显式文件列表须一并提供配置、`LA_model.pth`、固定 `model.py`、
 `xlsr_cfg.json`；配置使用包内相对路径。统一预测的资源解析支持这两个 SSL 附件，
 搬移后仍从包内加载，不下载资源。现有 release 默认保持 AST。
+若建立独立研究 bundle 的 `models.json`，对应模型项使用
+`"architecture": "audio_ssl_antispoofing_v1"`、`"checkpoint_schema": 1`，
+`config` 指向上述推理配置；加载器返回同一 architecture/schema，由统一预测入口比较。
 
 2026-10-17 在当前 cu126/RTX4090 上，以8条原始 ASV dev 音频（真/假各4条）运行标准 CLI，
 8/8成功，与保留的200条工具分数按样本ID对齐，最大绝对差 **2.38×10⁻⁶**（容差10⁻⁴）。
