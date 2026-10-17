@@ -10,6 +10,7 @@
 | --- | --- | --- |
 | 第一阶段，首轮已交付 | maochuanjun | #52、#77、#80、#81已完成；#86完成CLIP/DINOv2同预算双种子及DINO末block适配。新CLIP43 AIGVD15.86%但ViF26.67%，保留备选、C10仍主候选；DINO弱于CLIP，停止本轮训练；#88已完成原生Swin3D/CLIP16八组匹配训练与时序诊断；Swin弱于CLIP、停止本轮训练，CLIP16仅保留对照。下一步真实来源/困难内容，不继续堆帧或扫已见dev |
 | 第一阶段，数据线 | lanjianyu060915-web | #50 原关键资产已持久保存，新增恢复要求部分完成，C3源码仍缺；#51 首批视频dev与隔离保留部分已取得，自然组评分已完成，补来源关系及音频覆盖 |
+| 当前模型线 | maochuanjun | #90已完成2400条三生成器扩展与四组匹配训练；AIGVD17.11%改善、ViF26.92%退化，C10仍主候选。承接#51中文平台数据，先完成来源/母媒体分组和用途划分，再登记有界适配；未划分素材不提前评分 |
 | 第二阶段，视频融合已交付 | maochuanjun | #72 固定CLIP43＋WaveRep已接infer/predict，受控dev1880 EER26.41%；#76经#78补集成到main；冻结保留评价与赛用许可待确认 |
 | 第二阶段，入口与新构建容量已交付 | maochuanjun | #57入口完成；RC3固定原权重/cu126/同源码LGPL工具，音频与视频各10000/10000、零失败；reference/adaptive、资源与有界OOM恢复由#65/#66经PR #85合入main；#54已完成CPU/cu126镜像CPU演练，继续正式发布与许可/平台缺口 |
 | 第二阶段 | lanjianyu060915-web | #51 首批视频数据交付后开展 #53 一个有界SSL语音对照 |
@@ -59,6 +60,10 @@
   AIGVD20.94%/ViF34.58%仍明显弱于CLIP16的16.83%/26.12%。固定256条置乱显示
   Swin时序敏感，但不证明更强鉴伪泛化；停止本轮Swin训练，CLIP16仅保留跨集取舍对照。
   [实验与取舍](experiments/video-native-20261017/README.md)。下一步承接#51真实来源及困难内容。
+  #90新增Real及VideoCrafter/AnimateDiff/Pyramid-Flow各600条，仅扩train，原dev1344不变。
+  四组匹配预算中主43的AIGVD17.11%、去八训练标签20.33%，但ViF26.92%差于C10的25.91%；
+  保留研究备选，停止本轮仅扩AIGVD，优先中文平台数据的隔离与有界训练。
+  [结果](experiments/video-coverage-20261017/README.md)。
   旧训练与新dev的YouTube母媒体交集未知，保留部分继续封存，发布默认保持不变。
   固定CLIP＋WaveRep融合已进入infer/predict，受控dev标准EER26.41%（CLIP31.33%），
   去Open-Sora21.32%；系数保持冻结，不反复刷该dev；WaveRep赛用许可仍待确认。
