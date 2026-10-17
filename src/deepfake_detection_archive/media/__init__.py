@@ -259,7 +259,14 @@ def decode_audio(path: str | Path, config: AudioConfig | None = None) -> AudioDa
         str(config.stream_index) if config.stream_index is not None else "a:0",
         config.timeout_seconds,
     )
-    duration = _duration(metadata, config.max_duration_seconds)
+    try:
+        duration = _duration(metadata, config.max_duration_seconds)
+    except MediaError as exc:
+        if exc.code != "invalid_metadata" or exc.message != "missing media duration":
+            raise
+        # Missing duration can accompany an empty or corrupt stream. Decode
+        # within the output bound first so that the sample failure is retained.
+        duration = None
     try:
         rate = int(metadata["streams"][0]["sample_rate"])
         channels = int(metadata["streams"][0]["channels"])
@@ -312,6 +319,8 @@ def decode_audio(path: str | Path, config: AudioConfig | None = None) -> AudioDa
     )
     if not raw or len(raw) % 4:
         raise MediaError("no_samples", "audio contains no complete samples")
+    if duration is None:
+        raise MediaError("invalid_metadata", "missing media duration")
     waveform = np.frombuffer(raw, dtype="<f4").astype(np.float32, copy=True)
     if not np.isfinite(waveform).all():
         raise MediaError("nonfinite_audio", "decoded audio contains nonfinite samples")
