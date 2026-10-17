@@ -86,6 +86,49 @@ def test_audio_limits(audio_file: Path) -> None:
         decode_audio(audio_file, AudioConfig(max_samples=100))
 
 
+@pytest.mark.parametrize(
+    ("kind", "code"),
+    [
+        ("empty", "no_samples"),
+        ("corrupt", "decode_error"),
+        ("valid", "invalid_metadata"),
+    ],
+)
+def test_flac_missing_duration_preserves_sample_failures(
+    tmp_path: Path, ffmpeg_available: None, kind: str, code: str
+) -> None:
+    path = tmp_path / "missing-duration.flac"
+    subprocess.run(
+        [
+            "ffmpeg",
+            "-v",
+            "error",
+            "-f",
+            "lavfi",
+            "-i",
+            "anoisesrc=r=44100:d=0.3:seed=42",
+            "-t",
+            "0" if kind == "empty" else "0.3",
+            "-c:a",
+            "flac",
+            str(path),
+        ],
+        check=True,
+        capture_output=True,
+        timeout=20,
+    )
+    encoded = bytearray(path.read_bytes())
+    assert encoded[:8] == b"fLaC\x00\x00\x00\x22"
+    # FLAC STREAMINFO permits an unknown total sample count (36 zero bits).
+    encoded[21] &= 0xF0
+    encoded[22:26] = bytes(4)
+    if kind == "corrupt":
+        encoded = encoded[: len(encoded) // 2]
+    path.write_bytes(encoded)
+    with pytest.raises(MediaError, match=code):
+        decode_audio(path)
+
+
 @pytest.mark.parametrize("suffix", ["wav", "flac"])
 def test_soundfile_matches_ffmpeg(
     tmp_path: Path, ffmpeg_available: None, suffix: str, monkeypatch: pytest.MonkeyPatch
